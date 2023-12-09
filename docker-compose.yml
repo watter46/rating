@@ -1,0 +1,90 @@
+version: '3.8'
+
+volumes:
+  php-fpm-socket:
+  db-store:
+
+services:
+  web:
+    container_name: ${APP_NAME}-web
+    build: 
+      context: .
+      dockerfile: ./infra/docker/nginx/Dockerfile
+      args:
+        - USER_ID=${USER_ID}
+        - USER_NAME=${USER_NAME}
+        - GROUP_ID=${GROUP_ID}
+        - GROUP_NAME=${GROUP_NAME}
+    ports:
+      - target: 8080
+        published: ${WEB_PORT}
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: volume
+        source: php-fpm-socket
+        target: /var/run/php-fpm
+      - type: bind
+        source: ./src
+        target: /var/www/src
+    environment:
+      - TZ=Asia/Tokyo
+
+  app:
+    container_name: ${APP_NAME}-app
+    ports:
+      - 5173:5173
+    build:
+      context: .
+      dockerfile: ./infra/docker/php/Dockerfile
+      args:
+        - USER_ID=${USER_ID}
+        - USER_NAME=${USER_NAME}
+        - GROUP_ID=${GROUP_ID}
+        - GROUP_NAME=${GROUP_NAME}
+    volumes:
+      - type: volume
+        source: php-fpm-socket
+        target: /var/run/php-fpm
+      - type: bind
+        source: ./src
+        target: /var/www/src
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - web
+
+  db:
+    container_name: ${APP_NAME}-db
+    build:
+      context: .
+      dockerfile: ./infra/docker/mysql/Dockerfile
+    ports:
+      - target: 3306
+        published: ${DB_PORT:-3306}
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: volume
+        source: db-store
+        target: /var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - TZ=Asia/Tokyo
+  
+  db-testing:
+    container_name: ${APP_NAME}-db-testing
+    build:
+      context: .
+      dockerfile: ./infra/docker/mysql/Dockerfile
+    ports:
+      - 3000:3306
+    environment:
+      - MYSQL_DATABASE=${DB_TEST_NAME}
+      - MYSQL_USER=${DB_TEST_USER}
+      - MYSQL_PASSWORD=${DB_TEST_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_TEST_PASS}
+      - TZ=Asia/Tokyo
