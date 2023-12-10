@@ -1,0 +1,20 @@
+.field {
+    width: 100vh;
+    height: 100vh;
+}
+
+.field__svg {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    max-height: 95vh;
+}
+
+.initial-state {
+    transform: rotateX(0deg);
+    transition: transform 0.8s ease;
+}
+
+.tilted-state {
+    transform: perspective(900px) rotateX(30deg);
+}
