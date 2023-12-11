@@ -35,10 +35,10 @@ final class PlayerController extends Controller
 
             // $players = json_decode($json)->players;
 
-            $statistics = $this->statistic();
+            $statistics = $this->startingXI();
 
-            $filtered = collect($players)->whereIn('id', $statistics->pluck('id')->toArray());
-            
+            $filtered = collect($players)->whereIn('id', $statistics->pluck('player.id')->toArray());
+
             // $filteredNotIn = (object) collect($statistics)->whereNotIn('name', collect($players)->pluck('name')->toArray());
             
             // statisticsには未登録の選手も取得される
@@ -53,24 +53,33 @@ final class PlayerController extends Controller
                     $path = public_path('images').'/'.now()->year.'_S_'.$player->id;
 
                     $image = File::exists($path) ? base64_encode(File::get($path)) : '';
-                    
+
                     // アルファベット + . の場合と普通の表記で場合分けする
 
                     // dd(PositionType::from($player->player->position)->name);
                     // $statistics->sole(fn ($statistic) => $statistic['id'] === $player->number);
+                    
+                    // return (object)[
+                    //     'id'       => $player->id,
+                    //     'name'     => $player->name,
+                    //     'number'   => $player->number,
+                    //     'position' => PositionType::from($player->position)->name,
+                    //     'rating'   => $statistics->sole(fn ($statistic) => $statistic['id'] === $player->id)['rating'],
+                    //     'img'      => $image
+                    // ];
                     
                     return (object)[
                         'id'       => $player->id,
                         'name'     => $player->name,
                         'number'   => $player->number,
                         'position' => PositionType::from($player->position)->name,
-                        'rating'   => $statistics->sole(fn ($statistic) => $statistic['id'] === $player->id)['rating'],
+                        'rating'   => $statistics->sole(fn ($statistic) => $statistic->player->id === $player->id)->statistics[0]->games->rating,
                         'img'      => $image
                     ];
                 });
                 
             $players = $players->values();
-
+            
             $players = collect([
                 'FW' => collect([
                     $players[0],
@@ -220,6 +229,26 @@ final class PlayerController extends Controller
             });
         
         return $ratings;
+    }
+
+    public function startingXI(int $id = 1035327)
+    {
+        $statisticsPath = app_path('Template/statistics');
+
+        $fileName = $statisticsPath.'/'.$id.'_player_statistic.json';
+
+        $json = File::get($fileName);
+
+        $statistic = json_decode($json)->response;
+
+        $ChelseaStatistic = collect($statistic)->filter(function ($team) {
+            return $team->team->id === 49;
+        })->sole();
+
+        $startingPlayers = collect($ChelseaStatistic->players)
+            ->filter(fn ($player) => !$player->statistics[0]->games->substitute);
+        
+        return $startingPlayers;
     }
 
     public function fetchSquads()
