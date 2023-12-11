@@ -19,7 +19,8 @@
                         </div>
                     </div>
 
-                    <x-field.rating :playerId="$player->id" :rating="6.6" />
+                    <livewire:rating :playerId="$player->id" :rating="$player->rating" :key="$player->id" />
+                    {{-- <x-field.rating :playerId="$player->id" :rating="$player->rating" /> --}}
                 @endif
             </div>
         </div>

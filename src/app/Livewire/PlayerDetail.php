@@ -25,7 +25,7 @@ class PlayerDetail extends Component
         $this->player = $this
             ->players
             ->flatten()
-            ->sole(fn($player) => $player->id === 987650);
+            ->sole(fn($player) => $player->id === 95);
     }
 
     #[On('player-selected')]
