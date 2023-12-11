@@ -3,6 +3,7 @@
 use App\Http\Controllers\FootApiController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\PlayerDetail;
 use Illuminate\Support\Facades\Route;
 
 
@@ -11,6 +12,7 @@ Route::get('/', function () {
 });
 
 Route::get('/players', [PlayerController::class, 'index']);
+Route::get('/players/detail', PlayerDetail::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
