@@ -1,0 +1,58 @@
+#ratingRange {
+    appearance:none;
+    width:100%;
+    height:20px;
+    background-color: transparent;
+}
+
+#ratingRange::-webkit-slider-runnable-track {
+    height:20px;
+    background:linear-gradient(
+        90deg,
+        #EB1C23 20%,
+        #FF7B00 45%,
+        #F4BB00 65%,
+        #C0CC00 70%,
+        #5CB400 80%,
+        #009E9E 90%
+    );
+    background-color: transparent;
+    border: solid 1px #fff;
+    border-radius:20px;
+}
+
+#ratingRange::-webkit-slider-thumb {
+    appearance:none;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background: transparent;
+    border:solid 3px #fff;
+    transform: scale(1.3)
+}
+
+#ratingRange::-moz-range-track {
+    height:20px;
+    background:linear-gradient(
+        90deg,
+        #EB1C23 20%,
+        #FF7B00 45%,
+        #F4BB00 65%,
+        #C0CC00 70%,
+        #5CB400 80%,
+        #009E9E 90%
+    );
+    background-color: transparent;
+    border: solid 1px #fff;
+    border-radius:20px;
+}
+
+#ratingRange::-moz-range-thumb {
+    appearance:none;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background: transparent;
+    border:solid 3px #fff;
+    transform: scale(1.3)
+}
