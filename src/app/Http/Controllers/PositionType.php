@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 enum PositionType: string
 {
-    case FW  = 'F';
-    case MID = 'M';
-    case DEF = 'D';
-    CASE GK  = 'G';
+    case FW  = 'Attacker';
+    case MID = 'Midfielder';
+    case DEF = 'Defender';
+    CASE GK  = 'Goalkeeper';
 }
