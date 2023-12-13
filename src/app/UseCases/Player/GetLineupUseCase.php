@@ -5,9 +5,9 @@ namespace App\UseCases\Player;
 use App\Http\Controllers\PositionType;
 use Exception;
 
-use App\UseCases\Player\Get\Util\LineupJson;
-use App\UseCases\Player\Get\Util\PlayerImage;
-use App\UseCases\Player\Get\Util\RatingJson;
+use App\UseCases\Player\Util\LineupJson;
+use App\UseCases\Player\Util\PlayerImage;
+use App\UseCases\Player\Util\RatingJson;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 

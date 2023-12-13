@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player\Get\Util;
+namespace App\UseCases\Player\Util;
 
 use Illuminate\Support\Facades\File;
 
