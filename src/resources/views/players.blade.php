@@ -10,61 +10,33 @@
     
     <title>Rating</title>
 </head>
-<body style="background-color: #2a437c;">    
-    <x-field.field-svg />
-
-    <livewire:player-detail :$players />
-
-    @props(['lineClass' => 'absolute flex flex-row-reverse gap-10 justify-evenly'])
+<body style="background-color: #2a437c;" class="h-screen p-2">    
+    <div class="flex w-full h-full">
+        <div class="flex items-center justify-center w-full h-full">
+            <div class="relative h-full">
+                <x-field.field-svg />
     
-    <div class="flex justify-center">
-        @foreach($players as $line => $position)
-            @if($line === 'FW')
-                <div id="offense-line" class="{{ $lineClass }}">
-                    @foreach($position as $player)
-                        <livewire:player :$player :key="$position->pluck('id')->join('-')" />
-                    @endforeach
-                </div>
-            @endif
-
-            @if($line === 'MID')
-                @if(count($position['line']) === 1)
-                    <div id="mid-line" class="{{ $lineClass }}">
-                        @foreach($position['line'][0] as $player)
-                            <livewire:player :$player :key="$position->pluck('id')->join('-')" />
-                        @endforeach
-                    </div>
-                @else
-                    <div class="absolute flex flex-col z-index bg-violet-500">
-                        @foreach($position as $index => $midPlayers)
-                            <div id="mid-{{ $index + 1 }}" class="{{ $lineClass }}">
-                                @foreach($midPlayers as $player)
-                                    <livewire:player :$player :key="$position->pluck('id')->join('-')" />
+                <div id="box" class="absolute top-0 flex items-end justify-center w-full h-full">
+                    <div class="flex flex-col w-full h-full pt-10">
+                        @foreach($players->reverse() as $line => $position)
+                            <div id="line-{{ $line + 1 }}" class="flex items-center h-full justify-evenly">
+                                @foreach($position->reverse() as $index => $player)
+                                    <div class="flex justify-center w-full">
+                                        <livewire:player :$player :key="$player->id" />
+                                    </div>
                                 @endforeach
                             </div>
                         @endforeach
                     </div>
-                @endif
-            @endif
-
-            @if($line === 'DF')
-                <div id="defense-line" class="{{ $lineClass }}">
-                    @foreach($position as $player)
-                        <livewire:player :$player :key="$position->pluck('id')->join('-')" />
-                    @endforeach
                 </div>
-            @endif
+            </div>
+        </div>
 
-            @if($line === 'GK')
-                <div id="keeper-line" class="{{ $lineClass }}">
-                    @foreach($position as $player)
-                        <livewire:player :$player :key="$position->pluck('id')->join('-')" />
-                    @endforeach
-                </div>
-            @endif
-        @endforeach
+        <div class="flex items-center justify-center w-full h-full p-5 players">
+            <livewire:player-detail :$players />
+        </div>
     </div>
-
+    
     @livewireScripts
 </body>
 </html>
