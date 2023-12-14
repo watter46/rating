@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player\Util;
+namespace App\Http\Controllers\Util;
 
 use Illuminate\Support\Facades\File;
 
@@ -13,7 +13,7 @@ final readonly class PlayerImage
     private const WINTER_SEASON = 'W';
     
 
-    public static function get(int $playerId): string
+    public function get(int $playerId): string
     {
         $year  = now()->year;
         $month = now()->month;
