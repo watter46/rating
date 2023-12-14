@@ -2,7 +2,9 @@
 
 namespace App\UseCases\Player\Util;
 
+use Exception;
 use GuzzleHttp\Client;
+
 
 final readonly class ApiFootballFetcher
 {
@@ -14,23 +16,32 @@ final readonly class ApiFootballFetcher
     }
 
     public function fetch(): string
-    {
-        $client = new Client();
+    {        
+        try {
+            $client = new Client();
 
-        $response = $client->request('GET', $this->url, [
-            'query' => [
-                $this->query
-            ],
-            'headers' => [
-                'X-RapidAPI-Host' => config('api-football.api-host'),
-                'X-RapidAPI-Key'  => config('api-football.api-key')
-            ],
-        ]);
+            $response = $client->request('GET', $this->url, [
+                'query' => $this->query,
+                'headers' => [
+                    'X-RapidAPI-Host' => config('api-football.api-host'),
+                    'X-RapidAPI-Key'  => config('api-football.api-key')
+                ],
+            ]);
 
-        return $response->getBody()->getContents();
+            $json = json_decode($response->getBody()->getContents());
+
+            if (!($json->response)) {                
+                throw new Exception('API-FOOTBALL Error: '.$response->errors->fixture);
+            }
+                        
+            return json_encode($json);
+
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 
-    public static function seasonFixtures(): self
+    public static function fixtures(): self
     {
         return new self(
             url:  'https://api-football-v1.p.rapidapi.com/v3/fixtures',
@@ -62,7 +73,7 @@ final readonly class ApiFootballFetcher
         );
     }
 
-    public static function allPlayer(): self
+    public static function squads(): self
     {
         return new self(
             url:  'https://api-football-v1.p.rapidapi.com/v3/players/squads',

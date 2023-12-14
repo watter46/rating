@@ -5,12 +5,17 @@ namespace App\Http\Controllers\Util;
 use Illuminate\Support\Facades\File;
 
 
-final readonly class PlayerImage
+final readonly class PlayerImageFile
 {
     private const DIR_PATH = 'images';
 
     private const SUMMER_SEASON = 'S';
     private const WINTER_SEASON = 'W';
+
+    public function __construct()
+    {
+        $this->ensureDirExists();
+    }
     
 
     public function get(int $playerId): string
@@ -23,7 +28,7 @@ final readonly class PlayerImage
         $fileName = $year.'_'.$season.'_'.$playerId;
         
         $path = public_path(self::DIR_PATH.'/'.$fileName);
-
+        
         $image = File::get($path);
         
         return $image ? base64_encode($image) : '';
@@ -32,5 +37,14 @@ final readonly class PlayerImage
     public function set()
     {
         //   
+    }
+
+    private function ensureDirExists(): void
+    {
+        $path = public_path(self::DIR_PATH);
+
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
     }
 }
