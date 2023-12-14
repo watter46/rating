@@ -16,10 +16,13 @@ Route::get('/players/detail', PlayerDetail::class);
 // Route::get('/fixtures', [PlayerController::class, 'fetchSeasonFixtures']);
 // Route::get('/statistic', [PlayerController::class, 'fetchStatistic']);
 // Route::get('/squads', [PlayerController::class, 'fetchSquads']);
+// Route::get('/starting', [PlayerController::class, 'startingXI']);
+
 Route::get('/statistic', [PlayerController::class, 'statistic']);
 Route::get('/fixtures', [PlayerController::class, 'fixtures']);
 Route::get('/squads', [PlayerController::class, 'squads']);
 Route::get('/starting', [PlayerController::class, 'startingXI']);
+
 
 
 Route::get('/dashboard', function () {

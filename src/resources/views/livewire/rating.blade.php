@@ -46,7 +46,7 @@
             playerId: {{ $playerId }},
             rating: rating
         })">
-        <p class="text-2xl font-bold text-gray-200">Evaluate</p>
+        <p class="text-xl font-bold text-gray-200">Evaluate</p>
     </button>
 </div>
 

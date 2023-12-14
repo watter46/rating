@@ -9,7 +9,7 @@ use Livewire\Component;
 
 class PlayerDetail extends Component
 {
-    public Collection $players;
+    public $players;
 
     public int $playerId;
 

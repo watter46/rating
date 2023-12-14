@@ -1,13 +1,17 @@
-<div id="player" class="hidden w-20 h-20 rounded-full" wire:ignore>
-    <div class="text-center cursor-pointer" wire:click="toDetail({{ $player->id }})">
+<div id="player" class="hidden w-full text-center" wire:ignore>
+    <div class="flex justify-center">
         @if ($player->img)
-            <img src="data:image/png;base64,<?= $player->img ?>" class="w-20 h-20 rounded-full">
+            <img src="data:image/png;base64,<?= $player->img ?>"
+                class="w-20 h-20 rounded-full cursor-pointer"
+                wire:click="toDetail({{ $player->id }})">
         @endif
 
         @unless($player->img)
-            <div class="w-20 h-20 bg-gray-400"></div>
+            <div class="w-20 h-20 bg-gray-400 rounded-full cursor-pointer"
+                wire:click="toDetail({{ $player->id }})">
+            </div>
         @endunless
-
-        <p class="font-bold text-gray-100 whitespace-nowrap">{{ $player->name }}</p>
     </div>
+
+    <p class="font-black text-white whitespace-nowrap">{{ $player->name }}</p>
 </div>
