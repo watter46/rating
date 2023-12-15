@@ -2,18 +2,25 @@
 
 namespace App\UseCases\Player;
 
-use App\Http\Controllers\PositionType;
 use Exception;
-
-use App\UseCases\Player\Get\Util\LineupJson;
-use App\UseCases\Player\Get\Util\PlayerImage;
-use App\UseCases\Player\Get\Util\RatingJson;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+use App\Http\Controllers\PositionType;
+use App\Http\Controllers\Util\LineupFile;
+use App\Http\Controllers\Util\PlayerImageFile;
+use App\Http\Controllers\Util\StatisticsFile;
 
 final readonly class GetLineupUseCase
 {
+    public function __construct(
+        private LineupFile      $lineup,
+        private PlayerImageFile $image,
+        private StatisticsFile  $statistics)
+    {
+        
+    }
+    
     public function execute(int $fixtureId)
     {
         try {
@@ -22,7 +29,7 @@ final readonly class GetLineupUseCase
 
             $players = $startingXI['startingXI']
                 ->map(function ($player) use ($rating) {
-                    $image = PlayerImage::get($player->player->id);
+                    $image = $this->image->get($player->player->id);
 
                     $rating = collect($rating)->sole(fn ($rating) => $rating['id'] === $player->player->id)['rating'];
                                         
@@ -50,7 +57,7 @@ final readonly class GetLineupUseCase
 
     private function getStartingXI(int $fixtureId)
     {
-        $lineup = LineupJson::get($fixtureId);
+        $lineup = $this->lineup->get($fixtureId);
 
         return collect([
             'formation'  => $lineup[0]->formation,
@@ -60,7 +67,7 @@ final readonly class GetLineupUseCase
 
     private function getRating(int $fixtureId)
     {
-        $statistic = RatingJson::get($fixtureId);
+        $statistic = $this->statistics->get($fixtureId);
 
         $ChelseaStatistic = collect($statistic)->filter(function ($team) {
             return $team->team->id === 49;
