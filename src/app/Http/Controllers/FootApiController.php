@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Util\PlayerImageFile;
+use App\Http\Controllers\Util\SquadsFile;
 use App\UseCases\Player\Util\FootApiFetcher;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 
 /**
  * Playerのイメージ画像を取得できるAPI
@@ -16,42 +20,27 @@ use Illuminate\Support\Facades\File;
  */
 class FootApiController extends Controller
 {
-    public function fetchPlayerImages()
+    public function fetchPlayerImages(SquadsFile $squadsFile, PlayerImageFile $imageFile)
     {
-        $json = File::get(app_path('Template/players.json'));
-
-        $players = json_decode($json);
-
-        $playerList = collect($players->players)
-            ->map(function ($detail) {
-                return collect([
-                    'id'   => $detail->player->id,
-                    'name' => Str::studly($detail->player->name)
-                ]);
-            });
-    
-        $path = public_path('images');
-
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
+        if (!$squadsFile->exists()) {
+            dd('not exists');
         }
 
-        $until = $playerList->take(13);
-
-        dd($until);
-                
-        foreach($playerList as $player) {
-            $fileName = $path.'/'.$player->get('name');
-
-            $playerId = (string) $player->get('id');
-            
-            if (File::exists($fileName)) {
+        $playerIdList = collect($squadsFile->get()[0]->players)->pluck('id');
+        
+        $invalidIdList = $playerIdList
+            ->filter(function ($playerId) use ($imageFile) {
+                return !$imageFile->exists($playerId);
+            });
+                        
+        foreach($invalidIdList as $playerId) {            
+            if ($imageFile->exists($playerId)) {
                 continue;
             }
+            
+            $image = FootApiFetcher::playerImage((string) $playerId)->fetch();
 
-            $image = FootApiFetcher::playerImage($playerId)->fetch();
-
-            File::put($fileName, $image);
+            $imageFile->write($playerId, $image);
         }
     }
 }

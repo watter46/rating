@@ -25,8 +25,6 @@ final readonly class FootApiFetcher
 
         return $response->getBody()->getContents();
     }
-
-    // team -> imageで取得できるか調べる
     
     public static function playerImage(string $playerId): self
     {

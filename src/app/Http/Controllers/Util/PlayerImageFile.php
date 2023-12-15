@@ -16,27 +16,28 @@ final readonly class PlayerImageFile
     {
         $this->ensureDirExists();
     }
-    
 
     public function get(int $playerId): string
-    {
-        $year  = now()->year;
-        $month = now()->month;
-        
-        $season = (8 <= $month && $month <= 12) ? self::SUMMER_SEASON : self::WINTER_SEASON;
-
-        $fileName = $year.'_'.$season.'_'.$playerId;
-        
-        $path = public_path(self::DIR_PATH.'/'.$fileName);
+    {        
+        $path = $this->generatePath($playerId);
         
         $image = File::get($path);
         
         return $image ? base64_encode($image) : '';
     }
 
-    public function set()
+    public function write(int $playerId, string $image): void
     {
-        //   
+        $path = $this->generatePath($playerId);
+        
+        File::put($path, $image);
+    }
+
+    public function exists(int $playerId): bool
+    {
+        $path = $this->generatePath($playerId);
+
+        return file_exists($path);
     }
 
     private function ensureDirExists(): void
@@ -46,5 +47,17 @@ final readonly class PlayerImageFile
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
+    }
+
+    private function generatePath(int $playerId): string
+    {        
+        $year  = now()->year;
+        $month = now()->month;
+        
+        $season = (8 <= $month && $month <= 12) ? self::SUMMER_SEASON : self::WINTER_SEASON;
+
+        $fileName = $year.'_'.$season.'_'.$playerId;
+        
+        return public_path(self::DIR_PATH.'/'.$fileName);
     }
 }
