@@ -5,92 +5,79 @@ namespace App\UseCases\Player;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use App\Models\Lineup;
+use App\Models\Statistic;
 use App\Http\Controllers\PositionType;
-use App\Http\Controllers\Util\LineupFile;
 use App\Http\Controllers\Util\PlayerImageFile;
-use App\Http\Controllers\Util\StatisticsFile;
+
 
 final readonly class GetLineupUseCase
 {
     public function __construct(
-        private LineupFile      $lineup,
         private PlayerImageFile $image,
-        private StatisticsFile  $statistics)
+        private Statistic $statistic,
+        private Lineup $lineup)
     {
         
     }
     
-    public function execute(int $fixtureId)
+    public function execute(int $fixtureId): Collection
     {
         try {
-            $startingXI = $this->getStartingXI($fixtureId);
-            $rating     = $this->getRating($fixtureId);
+            $lineup    = $this->fetchLineup($fixtureId);
+            $statistic = $this->fetchStatistic($fixtureId);
 
-            $players = $startingXI['startingXI']
-                ->map(function ($player) use ($rating) {
-                    $image = $this->image->get($player->player->id);
+            $players = $lineup
+                ->map(function ($player) use ($statistic) {
+                    $image = $this->image->get($player['player']['id']);
 
-                    $rating = collect($rating)->sole(fn ($rating) => $rating['id'] === $player->player->id)['rating'];
+                    $rating = $statistic->sole(function ($statistic) use ($player) {
+                            return $statistic['id'] === $player['player']['id'];
+                        })['rating'];
                                         
                     return (object) [
-                        'id'       => $player->player->id,
-                        'name'     => Str::after($player->player->name, ' '),
-                        'number'   => $player->player->number,
-                        'grid'     => $player->player->grid,
-                        'position' => PositionType::from($player->player->pos)->name,
+                        'id'       => $player['player']['id'],
+                        'name'     => Str::after($player['player']['name'], ' '),
+                        'number'   => $player['player']['number'],
+                        'grid'     => $player['player']['grid'],
+                        'position' => PositionType::from($player['player']['pos'])->name,
                         'rating'   => $rating,
                         'img'      => $image
                     ];
                 })
-                ->values();                
+                ->values()
+                ->groupBy(function ($player) {
+                    return Str::before($player->grid, ':');
+                });
                 
-            return [
-                'formation' => $startingXI['formation'],
-                'players'   => $this->formation($players)
-            ];
+            return $players;
 
         } catch (Exception $e) {
             throw $e;
         }
     }
 
-    private function getStartingXI(int $fixtureId)
+    private function fetchLineup(int $fixtureId): Collection
     {
-        $lineup = $this->lineup->get($fixtureId);
+        $lineup = $this->lineup->where('fixture_id', $fixtureId)->first();
 
-        return collect([
-            'formation'  => $lineup[0]->formation,
-            'startingXI' => collect($lineup[0]->startXI)
-        ]);
+        if (!$lineup) {
+            throw new ModelNotFoundException('Not Found Fixture: '.$fixtureId);
+        }
+        
+        return $lineup->lineup;
     }
 
-    private function getRating(int $fixtureId)
+    private function fetchStatistic(int $fixtureId): Collection
     {
-        $statistic = $this->statistics->get($fixtureId);
+        $statistic = $this->statistic->where('fixture_id', $fixtureId)->first();
 
-        $ChelseaStatistic = collect($statistic)->filter(function ($team) {
-            return $team->team->id === 49;
-        })->sole();
+        if (!$statistic) {
+            throw new ModelNotFoundException('Not Found Statistic: '.$fixtureId);
+        }
 
-        $ratings = collect($ChelseaStatistic->players)
-            ->map(function ($player) {
-                return [
-                    'id'     => $player->player->id,
-                    'name'   => $player->player->name,
-                    'rating' => $player->statistics[0]->games->rating
-                ];
-            });
-
-        return $ratings;
-    }
-
-    private function formation(Collection $players)
-    {
-        return $players
-            ->groupBy(function ($player) {
-                return Str::before($player->grid, ':');
-            })
-            ->values();
+        return $statistic->statistic;
     }
 }

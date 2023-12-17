@@ -32,8 +32,6 @@ final readonly class LineupFile
     public function write(int $fixtureId, string $lineup)
     {
         File::put($this->generatePath($fixtureId), $lineup);
-
-        dd($lineup);
     }
 
     public function exists(int $fixtureId): bool
