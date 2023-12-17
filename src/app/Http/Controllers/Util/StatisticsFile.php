@@ -29,9 +29,22 @@ final readonly class StatisticsFile
         return json_decode($json)->response;
     }
 
-    public function write(int $fixtureId, string $lineup)
+    public function json(int $fixtureId)
     {
-        File::put($this->generatePath($fixtureId), $lineup);
+        if (!$this->exists($fixtureId)) {
+            throw new Exception('StatisticsFileが存在しません。');
+        }
+        
+        $path = $this->generatePath($fixtureId);
+
+        $json = File::get($path);
+
+        return $json;
+    }
+
+    public function write(int $fixtureId, string $statistic)
+    {
+        File::put($this->generatePath($fixtureId), $statistic);
     }
 
     public function exists(int $fixtureId): bool
