@@ -26,7 +26,7 @@ final readonly class FixturesFile
 
         $json = File::get($path);
 
-        return json_decode($json)->response;
+        return json_decode($json);
     }
 
     public function write(string $fixtures)
