@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Fixture;
-use App\Http\Controllers\Util\FixturesFile;
 use App\UseCases\Player\Util\ApiFootballFetcher;
 
 
@@ -15,7 +14,7 @@ final readonly class RegisterFixtureUseCase
     const CHELSEA_TEAM_ID = 49;
     const END_STATUS = 'Match Finished';
     
-    public function __construct(private Fixture $fixture, private FixturesFile $file)
+    public function __construct(private Fixture $fixture)
     {
         //
     }

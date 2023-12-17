@@ -36,7 +36,7 @@ final readonly class GetLineupUseCase
                     $rating = $statistic->sole(function ($statistic) use ($player) {
                             return $statistic['id'] === $player['player']['id'];
                         })['rating'];
-                                        
+                        
                     return (object) [
                         'id'       => $player['player']['id'],
                         'name'     => Str::after($player['player']['name'], ' '),
@@ -61,6 +61,7 @@ final readonly class GetLineupUseCase
 
     private function fetchLineup(int $fixtureId): Collection
     {
+        /** @var Lineup $lineup */
         $lineup = $this->lineup->where('fixture_id', $fixtureId)->first();
 
         if (!$lineup) {
@@ -72,6 +73,7 @@ final readonly class GetLineupUseCase
 
     private function fetchStatistic(int $fixtureId): Collection
     {
+        /** @var Statistic $statistic */
         $statistic = $this->statistic->where('fixture_id', $fixtureId)->first();
 
         if (!$statistic) {

@@ -13,9 +13,9 @@ final readonly class RegisterStatisticUseCase
 {
     const CHELSEA_TEAM_ID = 49;
 
-    public function __construct(private Statistic $statistic)
+    public function __construct(private readonly Statistic $statistic)
     {
-        //
+        
     }
     
     /**

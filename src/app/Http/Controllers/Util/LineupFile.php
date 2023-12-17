@@ -26,7 +26,7 @@ final readonly class LineupFile
 
         $json = File::get($path);
 
-        return json_decode($json)->response;
+        return json_decode($json);
     }
 
     public function write(int $fixtureId, string $lineup)
