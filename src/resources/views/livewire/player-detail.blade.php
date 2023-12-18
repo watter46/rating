@@ -1,17 +1,10 @@
-<div class="w-full p-3 bg-gray-400 rounded-3xl">
-    @props(['playerIcon' => 'w-28 h-28 rounded-3xl'])
+<div class="w-full h-full p-3 mt-3 bg-sky-950 rounded-3xl">
     
     @if($player)
-        <div class="flex justify-center">
-            @if ($player->img)
-                <img src="data:image/png;base64,<?= $player->img ?>" class="{{ $playerIcon }}">
-            @endif
-        
-            @unless($player->img)
-                <div class="{{ $playerIcon }} bg-gray-400"></div>
-            @endunless
+        <div class="relative flex items-center">
+            <x-rating.player-image :img="$player->img" />
 
-            <div class="flex items-center justify-center w-full">
+            <div class="absolute w-full text-center">
                 <p class="font-bold text-gray-100 detail__player_name whitespace-nowrap">
                     {{ $player->name }}
                 </p>
@@ -20,4 +13,6 @@
 
         <livewire:rating :playerId="$player->id" :rating="$player->rating" :key="$player->id" />
     @endif
+
+    @vite(['resources/css/rating.css'])
 </div>

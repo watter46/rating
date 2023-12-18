@@ -10,7 +10,7 @@
     
     <title>Rating</title>
 </head>
-<body style="background-color: #2a437c;" class="h-screen p-2">    
+<body class="h-screen p-2 bg-slate-900">    
     <div class="flex w-full h-full">
         <div class="flex items-center justify-center w-full h-full">
             <div class="relative h-full">
@@ -32,7 +32,9 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-center w-full h-full p-5 players">
+        <div class="flex flex-col items-center justify-center w-full h-full players">
+            <x-score.score :fixture="$fixture" />
+            
             <livewire:player-detail :$players />
         </div>
     </div>
