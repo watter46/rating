@@ -37,7 +37,7 @@ class Lineup extends Model
         'lineup' => AsCollection::class
     ];
 
-    public function setLineup(int $fixture_id, string $lineup): self
+    public function setLineup(int $fixture_id, Collection $lineup): self
     {
         $this->fixture_id = $fixture_id;
         $this->lineup     = $lineup;

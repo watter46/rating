@@ -38,7 +38,7 @@ class Statistic extends Model
         'statistic' => AsCollection::class
     ];
 
-    public function setStatistic(int $fixture_id, string $statistic): self
+    public function setStatistic(int $fixture_id, Collection $statistic): self
     {
         $this->fixture_id = $fixture_id;
         $this->statistic  = $statistic;

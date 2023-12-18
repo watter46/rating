@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Player;
 
+use App\Http\Controllers\Util\LineupFile;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -11,7 +12,7 @@ use App\UseCases\Player\Util\ApiFootballFetcher;
 
 final readonly class RegisterLineupUseCase
 {
-    public function __construct(private Lineup $lineup)
+    public function __construct(private Lineup $lineup, private LineupFile $file)
     {
         //
     }
@@ -23,15 +24,13 @@ final readonly class RegisterLineupUseCase
                 return;
             }
             
-            $json = ApiFootballFetcher::lineup($fixtureId)->fetch();
-
-            $decoded = json_decode($json);
-
+            $fetched = ApiFootballFetcher::lineup($fixtureId)->fetch();
+            
             $lineup = $this
                 ->lineup
                 ->setLineup(
                     fixture_id: $fixtureId,
-                    lineup: json_encode($decoded[0]->startXI)
+                    lineup: collect($fetched[0]->startXI)
                 );
 
             DB::transaction(function () use ($lineup) {

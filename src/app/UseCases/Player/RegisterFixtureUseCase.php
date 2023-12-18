@@ -29,10 +29,10 @@ final readonly class RegisterFixtureUseCase
     public function execute()
     {
         try {
-            $json = ApiFootballFetcher::fixtures()->fetch();
+            $fetched = ApiFootballFetcher::fixtures()->fetch();
             
-            $this->registerTeamImage($json);
-            $this->registerLeagueImage($json); 
+            $this->registerTeamImage($fetched);
+            $this->registerLeagueImage($fetched); 
             
             $fixtures = $this
                 ->fixture
@@ -41,7 +41,7 @@ final readonly class RegisterFixtureUseCase
                 ->get()
                 ->toArray();
             
-            $data = collect(json_decode($json))
+            $data = collect($fetched)
                 ->map(function ($fixture) {
 
                     $is_home = $fixture->teams->home->id === self::CHELSEA_TEAM_ID;
@@ -93,35 +93,35 @@ final readonly class RegisterFixtureUseCase
     }
     
     /**
-     * チームの画像を保存する
+     * リーグの画像を保存する
      *
-     * @param  string $json
+     * @param  array $fetched
      * @return void
      */
-    private function registerTeamImage(string $json)
+    private function registerLeagueImage(array $fetched)
     {
-        $uniqueLeague = collect(json_decode($json))
+        $uniqueLeague = collect($fetched)
             ->map(fn ($fixture) => $fixture->league)
             ->unique('id');
 
         foreach($uniqueLeague as $league) {
-            if ($this->teamImageFile->exists($league->id)) continue;
+            if ($this->leagueImageFile->exists($league->id)) continue;
 
             $image = ApiFootballFetcher::leagueImage($league->id)->fetchImage();
 
-            $this->teamImageFile->write($league->id, $image);
+            $this->leagueImageFile->write($league->id, $image);
         }
     }
     
     /**
-     * リーグの画像を保存する
+     * チームの画像を保存する
      *
-     * @param  string $json
+     * @param  array $fetched
      * @return void
      */
-    private function registerLeagueImage(string $json)
+    private function registerTeamImage(array $fetched)
     {
-        $uniqueTeams = collect(json_decode($json))
+        $uniqueTeams = collect($fetched)
             ->flatMap(function ($fixture) {
                 return [
                     $fixture->teams->away,
@@ -131,11 +131,11 @@ final readonly class RegisterFixtureUseCase
             ->unique('id');
 
         foreach($uniqueTeams as $team) {
-            if ($this->leagueImageFile->exists($team->id)) continue;
+            if ($this->teamImageFile->exists($team->id)) continue;
 
             $image = ApiFootballFetcher::teamImage($team->id)->fetchImage();
             
-            $this->leagueImageFile->write($team->id, $image);
+            $this->teamImageFile->write($team->id, $image);
         }
     }
 }

@@ -15,7 +15,7 @@ final readonly class TeamImageFile
         $this->ensureDirExists();
     }
     
-    public function get(int $teamId): array
+    public function get(int $teamId): string
     {
         if (!$this->exists($teamId)) {
             throw new Exception('TeamImageが存在しません。');
@@ -23,9 +23,9 @@ final readonly class TeamImageFile
         
         $path = $this->generatePath($teamId);
 
-        $json = File::get($path);
+        $image = File::get($path);
 
-        return json_decode($json);
+        return $image ? base64_encode($image) : '';
     }
 
     public function write(int $teamId, string $image)

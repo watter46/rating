@@ -30,11 +30,9 @@ final readonly class RegisterStatisticUseCase
                 return;
             };
             
-            $json = ApiFootballFetcher::statistic($fixtureId)->fetch();
-            
-            $statisticJson = collect(json_decode($json));
+            $fetched = ApiFootballFetcher::statistic($fixtureId)->fetch();
 
-            $team = $statisticJson->sole(fn ($teams) => $teams->team->id === self::CHELSEA_TEAM_ID);
+            $team = collect($fetched)->sole(fn ($teams) => $teams->team->id === self::CHELSEA_TEAM_ID);
             
             $data = collect($team->players)
                 ->map(function ($player) {
@@ -48,7 +46,7 @@ final readonly class RegisterStatisticUseCase
                 ->statistic
                 ->setStatistic(
                     fixture_id: $fixtureId,
-                    statistic: json_encode($data)
+                    statistic: $data
                 );
 
             DB::transaction(function () use ($statistic) {
