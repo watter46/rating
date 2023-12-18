@@ -26,6 +26,7 @@ class Fixture extends Model
         'team_name',
         'external_league_id',
         'league_name',
+        'round',
         'season',
         'is_end',
         'is_home',

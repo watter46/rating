@@ -40,6 +40,7 @@ class FixtureSeeder extends Seeder
                     'team_name' => $opponent_name,
                     'external_league_id' => $fixture->league->id,
                     'league_name' => $fixture->league->name,
+                    'round' => $fixture->league->round,
                     'season' => $fixture->league->season,
                     'is_end' => $fixture->fixture->status->long === self::END_STATUS,
                     'is_home' => $is_home,
