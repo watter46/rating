@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('fixtures', function (Blueprint $table) {
-            $table->ulid('id');
+            $table->ulid('id')->primary();
             $table->unsignedMediumInteger('external_fixture_id');
             $table->unsignedMediumInteger('external_team_id');
             $table->tinyText('team_name');
             $table->unsignedMediumInteger('external_league_id');
             $table->tinyText('league_name');
+            $table->tinyText('round');
             $table->unsignedSmallInteger('season')->length(4);
             $table->boolean('is_end');
             $table->boolean('is_home');

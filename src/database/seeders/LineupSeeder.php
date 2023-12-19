@@ -25,7 +25,7 @@ class LineupSeeder extends Seeder
         $lineup = (new Lineup)
             ->setLineup(
                 fixture_id: $fixtureId,
-                lineup: json_encode($data[0]->startXI)
+                lineup: collect($data)
             );
 
         $lineup->save();

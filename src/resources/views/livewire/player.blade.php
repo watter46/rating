@@ -7,8 +7,9 @@
         @endif
 
         @unless($player->img)
-            <div class="w-20 h-20 bg-gray-400 rounded-full cursor-pointer"
+            <div class="cursor-pointer bg-sky-950"
                 wire:click="toDetail({{ $player->id }})">
+                <x-rating.player-default width="80" height="80" />
             </div>
         @endunless
     </div>

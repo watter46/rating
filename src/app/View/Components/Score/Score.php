@@ -1,17 +1,17 @@
 <?php
 
-namespace App\View\Components\field;
+namespace App\View\Components\Score;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Line extends Component
+class Score extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(public $fixture)
     {
         //
     }
@@ -21,6 +21,6 @@ class Line extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.field.line');
+        return view('components.score.score');
     }
 }

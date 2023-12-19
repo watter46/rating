@@ -37,7 +37,7 @@ class StatisticSeeder extends Seeder
         $statistic = (new Statistic)
             ->setStatistic(
                 fixture_id: $fixtureId,
-                statistic: json_encode($data)
+                statistic: $data
             );
 
         $statistic->save();
