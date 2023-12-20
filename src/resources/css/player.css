@@ -1,0 +1,63 @@
+/* ロード時のプレイヤーのアニメーション */
+.falling {
+    position: relative;
+    animation: fallDown 1s ease-in-out forwards;
+}
+
+@keyframes fallDown {
+    from {
+        top: -1000px;
+    }
+    to {
+        top: 0;
+    }
+}
+
+.zoomIn {
+    position: relative;
+    animation: zoomIn 1s ease-in-out forwards;
+}
+
+@keyframes zoomIn {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+}
+
+.bounce {
+    animation: bounce 0.5s cubic-bezier(0.12, 0, 0.39, 0) 1 forwards;
+}
+   
+@keyframes bounce {
+    0% {
+    transform: translateX(140px);
+    opacity: 0;
+    }
+    50% {
+    transform: translateX(0);
+    }
+    65% {
+    transform: translateX(30px);
+    }
+    100% {
+    transform: translateX(0);
+    }
+    20%,100% {
+    opacity: 1;
+    }
+}
+
+.player:hover {
+    @apply duration-100 transform scale-125;
+}
+
+@media (max-width: 1024px) {
+    .players {
+        display: none;
+    }
+}
