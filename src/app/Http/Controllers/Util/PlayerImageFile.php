@@ -49,7 +49,7 @@ final readonly class PlayerImageFile
         }
     }
 
-    private function generatePath(int $playerId): string
+    public static function generatePath(int $playerId): string
     {        
         $year  = now()->year;
         $month = now()->month;
@@ -59,5 +59,14 @@ final readonly class PlayerImageFile
         $fileName = $year.'_'.$season.'_'.$playerId;
         
         return public_path(self::DIR_PATH.'/'.$fileName);
+    }
+
+    public function findMissingFiles(array $idList): array
+    {
+        return collect($idList)
+            ->filter(function ($player) {
+                return !$this->exists($player['foot_player_id']);
+            })
+            ->toArray();
     }
 }
