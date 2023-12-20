@@ -2,12 +2,12 @@
     <div class="flex justify-center">
         @if ($player->img)
             <img src="data:image/png;base64,<?= $player->img ?>"
-                class="w-20 h-20 rounded-full cursor-pointer"
+                class="w-20 h-20 rounded-full cursor-pointer player"
                 wire:click="toDetail({{ $player->id }})">
         @endif
 
         @unless($player->img)
-            <div class="cursor-pointer bg-sky-950"
+            <div class="cursor-pointer bg-sky-950 player"
                 wire:click="toDetail({{ $player->id }})">
                 <x-rating.player-default width="80" height="80" />
             </div>
@@ -15,4 +15,6 @@
     </div>
 
     <p class="font-black text-white whitespace-nowrap">{{ $player->name }}</p>
+
+    @vite(['resources/css/player.css'])
 </div>
