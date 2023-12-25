@@ -11,7 +11,11 @@ class Score extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public $fixture)
+    public function __construct(
+        public $fixture,
+        public $teams,
+        public $league,
+        public $score)
     {
         //
     }
