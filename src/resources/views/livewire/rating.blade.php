@@ -1,11 +1,11 @@
 <div x-data="{
         rating: {{ $rating }},
-        ratingPaddingZero () {                                
-            if (Number.isInteger(Number(this.rating))) {
-                return `${this.rating}.0`;
+        ratingPaddingZero (rating) {                                
+            if (Number.isInteger(Number(rating))) {
+                return `${rating}.0`;
             }
 
-            return this.rating;
+            return rating;
         },
         changeTipsBgColor () {
             if (this.rating < 6.0)                       return '#EB1C23';
@@ -19,7 +19,7 @@
     <div class="flex">
         <div class="flex flex-col w-full h-full mt-2 border-t-2 border-gray-700">
             <p class="text-2xl font-bold text-center text-gray-100 whitespace-nowrap">Machine Rating</p>
-            <p class="text-3xl font-bold text-center text-gray-100 whitespace-nowrap">{{ $rating }}</p>
+            <p class="text-3xl font-bold text-center text-gray-100 whitespace-nowrap" x-text="ratingPaddingZero({{ $rating }})"></p>
         </div>
     </div>
 
@@ -34,7 +34,7 @@
             <div class="flex justify-center mt-5">
                 <div class="flex items-center justify-center w-1/3 border-2 border-gray-200 rounded-lg"
                     :style="`background-color: ${changeTipsBgColor()}`">
-                    <p class="py-1.5 text-3xl font-black text-gray-200" x-text="ratingPaddingZero()"></p>
+                    <p class="py-1.5 text-3xl font-black text-gray-200" x-text="ratingPaddingZero(rating)"></p>
                 </div>
             </div>
         </div>

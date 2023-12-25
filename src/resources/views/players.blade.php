@@ -38,7 +38,7 @@
                 :league="$league"
                 :score="$score" />
             
-            {{-- <livewire:player-detail :$players /> --}}
+            <livewire:player-detail :$lineups />
         </div>
     </div>
     

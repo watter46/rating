@@ -24,7 +24,6 @@ final class PlayerController extends Controller
             // $fixtureId = 1035327;
 
             // $fixtureId = 1035338;
-            $fixtureId = 1035338;
 
             // $fixtureId = 1141105;
 
@@ -40,7 +39,9 @@ final class PlayerController extends Controller
     public function register(RegisterFixtureUseCase $registerFixture)
     {
         try {            
-            $fixtureId = 1141105;
+            $fixtureId = 1035323;
+            // $fixtureId = 1035327;
+            // $fixtureId = 1141105;
             // $fixtureId = 1035338;
 
         
