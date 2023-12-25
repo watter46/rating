@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             FixtureSeeder::class,
-            LineupSeeder::class,
-            StatisticSeeder::class
+            // LineupSeeder::class,
+            // StatisticSeeder::class
         ]);
     }
 }
