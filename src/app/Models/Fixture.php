@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
+
 
 class Fixture extends Model
 {
@@ -41,15 +41,5 @@ class Fixture extends Model
         $this->fixture = $fixture;
 
         return $this;
-    }
-    
-    /**
-     * lineup
-     *
-     * @return HasOne
-     */
-    public function lineup(): HasOne
-    {
-        return $this->hasOne(Lineup::class);
     }
 }

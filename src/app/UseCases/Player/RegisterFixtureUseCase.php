@@ -15,8 +15,7 @@ final readonly class RegisterFixtureUseCase
     public function __construct(
         private FixtureFile $file,
         private FixtureDataBuilder $builder,
-        private Fixture $fixture,
-        private Lineup $lineup)
+        private Fixture $fixture)
     {
         //
     }

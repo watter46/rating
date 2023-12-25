@@ -29,13 +29,12 @@ final readonly class FixtureDataBuilder
     public function build($fetched): Collection
     {
         $data = collect($fetched)
-            ->except(['events', 'statistics'])
+            ->except(['events', 'goals', 'statistics'])
             ->map(function ($data, $key) {
                 return match ($key) {
                     'fixture' => $this->fixture($data),
                     'teams'   => $this->teams($data),
                     'league'  => $this->league($data),
-                    'goals'   => $this->goals($data),
                     'score'   => $this->score($data),
                     'lineups' => $this->lineups($data),
                     'players' => $this->players($data),
@@ -120,17 +119,6 @@ final readonly class FixtureDataBuilder
             'round'  => $data->round,
             'img'    => LeagueImageFile::generatePath($data->id)
         ];
-    }
-    
-    /**
-     * goalsの必要なデータを抽出する
-     *
-     * @param  mixed $data
-     * @return array
-     */
-    private function goals($data): array
-    {
-        return (array) $data;
     }
     
     /**
