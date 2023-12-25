@@ -2,16 +2,17 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\Util\FixtureFile;
 use App\Models\Fixture;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Http\Controllers\Util\FixturesFile;
+use App\Http\Controllers\Util\TeamImageFile;
+use App\UseCases\Player\Builder\FixtureDataBuilder;
+use App\UseCases\Player\Builder\FixtureDataListBuilder;
 
 class FixtureSeeder extends Seeder
 {
-    const CHELSEA_TEAM_ID = 49;
-    const END_STATUS = 'Match Finished';
-
     /**
      * Run the database seeds.
      */
@@ -20,40 +21,27 @@ class FixtureSeeder extends Seeder
         /** @var FixturesFile $file */
         $file = app(FixturesFile::class);
 
-        $json = $file->get();
-        
-        $data = collect($json)
-            ->map(function ($fixture) {
-                $is_home = $fixture->teams->home->id === self::CHELSEA_TEAM_ID;
-                
-                $opponent_id = $is_home
-                    ? $fixture->teams->away->id
-                    : $fixture->teams->home->id;
-                
-                $opponent_name = $is_home
-                    ? $fixture->teams->away->name
-                    : $fixture->teams->home->name;
-                
-                return [
-                    'external_fixture_id' => $fixture->fixture->id,
-                    'external_team_id' => $opponent_id,
-                    'team_name' => $opponent_name,
-                    'external_league_id' => $fixture->league->id,
-                    'league_name' => $fixture->league->name,
-                    'round' => $fixture->league->round,
-                    'season' => $fixture->league->season,
-                    'is_end' => $fixture->fixture->status->long === self::END_STATUS,
-                    'is_home' => $is_home,
-                    'home' => $fixture->score->fulltime->home,
-                    'away' => $fixture->score->fulltime->away,
-                    'first_half_at' => date('Y-m-d H:i', $fixture->fixture->periods->first),
-                    'second_half_at' => date('Y-m-d H:i', $fixture->fixture->periods->second),
-                ];
-            })->toArray();
+        $fetched = $file->get();
+
+        /** @var FixtureDataListBuilder $fixtureDataList */
+        $fixtureDataList = app(FixtureDataListBuilder::class);
+
+        $data = $fixtureDataList->build($fetched, []);
         
         $unique = ['id'];
-        $updateColumns = ['home', 'away', 'first_half_at', 'second_half_at'];
+        $updateColumns = ['date', 'is_end'];
 
         (new Fixture)->upsert($data, $unique, $updateColumns);
+
+        $fixtureId = 1035338;
+        
+        /** @var Fixture $fixture */
+        $fixture = Fixture::where('external_fixture_id', $fixtureId)->first();
+
+        $fetched = (new FixtureFile)->get($fixtureId);
+
+        $data = (new FixtureDataBuilder(new TeamImageFile))->build($fetched[0]);
+
+        $fixture->updateFixture($data)->save();
     }
 }

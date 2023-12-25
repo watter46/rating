@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Util;
 
 use Exception;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 
 
@@ -28,6 +29,18 @@ final readonly class LeagueImageFile
         return $image ? base64_encode($image) : '';
     }
 
+    public function getByPath(string $path)
+    {
+        try {
+            $image = File::get($path);
+
+            return 'data:image/png;base64,'.base64_encode($image);
+
+        } catch (FileNotFoundException $e) {
+            return '';
+        }
+    }
+
     public function write(int $leagueId, string $image)
     {
         File::put($this->generatePath($leagueId), $image);
@@ -49,7 +62,7 @@ final readonly class LeagueImageFile
         }
     }
 
-    private function generatePath(int $leagueId): string
+    public static function generatePath(int $leagueId): string
     {                
         $year = now()->year;
 

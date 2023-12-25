@@ -15,14 +15,13 @@
         <div class="flex items-center justify-center w-full h-full">
             <div class="relative h-full">
                 <x-field.field-svg />
-    
                 <div id="box" class="absolute top-0 flex items-end justify-center w-full h-full">
-                    <div class="flex flex-col w-full h-full pt-10">
-                        @foreach($players->reverse() as $line => $position)
+                    <div class="flex flex-col w-full h-full pt-10">                        
+                        @foreach($lineups['startXI'] as $line => $players)
                             <div id="line-{{ $line + 1 }}" class="flex items-center h-full justify-evenly">
-                                @foreach($position->reverse() as $index => $player)
+                                @foreach($players as $index => $player)
                                     <div class="flex justify-center w-full">
-                                        <livewire:player :$player :key="$player->id" />
+                                        <livewire:player :$player :key="$player['id']" />
                                     </div>
                                 @endforeach
                             </div>
@@ -33,9 +32,13 @@
         </div>
 
         <div class="flex flex-col items-center justify-center w-full h-full players">
-            <x-score.score :fixture="$fixture" />
+            <x-score.score
+                :fixture="$fixture"
+                :teams="$teams"
+                :league="$league"
+                :score="$score" />
             
-            <livewire:player-detail :$players />
+            <livewire:player-detail :$lineups />
         </div>
     </div>
     

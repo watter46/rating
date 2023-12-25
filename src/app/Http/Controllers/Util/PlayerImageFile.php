@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Util;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 
 
@@ -24,6 +25,18 @@ final readonly class PlayerImageFile
         $image = File::get($path);
         
         return $image ? base64_encode($image) : '';
+    }
+
+    public function getByPath(string $path)
+    {
+        try {
+            $image = File::get($path);
+
+            return 'data:image/png;base64,'.base64_encode($image);
+
+        } catch (FileNotFoundException $e) {
+            return '';
+        }
     }
 
     public function write(int $playerId, string $image): void

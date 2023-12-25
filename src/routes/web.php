@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use App\Http\Controllers\ApiFootballController;
 use App\Http\Controllers\FootApiController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ProfileController;
@@ -13,17 +14,8 @@ Route::get('/', function () {
 
 Route::get('/players', [PlayerController::class, 'index']);
 Route::get('/players/detail', PlayerDetail::class);
-// Route::get('/fixtures', [PlayerController::class, 'fetchSeasonFixtures']);
-// Route::get('/statistic', [PlayerController::class, 'fetchStatistic']);
-// Route::get('/squads', [PlayerController::class, 'fetchSquads']);
-// Route::get('/starting', [PlayerController::class, 'startingXI']);
 
-Route::get('/statistic', [PlayerController::class, 'statistic']);
-Route::get('/fixtures', [PlayerController::class, 'fixtures']);
-Route::get('/squads', [PlayerController::class, 'squads']);
-Route::get('/starting', [PlayerController::class, 'startingXI']);
-
-
+Route::get('/rg', [PlayerController::class, 'register']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

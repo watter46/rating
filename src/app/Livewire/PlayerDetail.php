@@ -2,14 +2,13 @@
 
 namespace App\Livewire;
 
-use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 
 class PlayerDetail extends Component
 {
-    public $players;
+    public $lineups;
 
     public int $playerId;
 
@@ -22,18 +21,16 @@ class PlayerDetail extends Component
 
     public function mount()
     {
-        $this->player = $this
-            ->players
-            ->flatten()
-            ->sole(fn($player) => $player->id === 95);
+        $this->player = collect($this->lineups['startXI'])
+            ->flatten(1)
+            ->first();
     }
 
     #[On('player-selected')]
     public function playerSelected(int $playerId): void
     {
-        $this->player = $this
-            ->players
-            ->flatten()
-            ->sole(fn($player) => $player->id === $playerId);
+        $this->player = collect($this->lineups['startXI'])
+            ->flatten(1)
+            ->sole(fn ($player) => $player['id'] === $playerId);
     }
 }
