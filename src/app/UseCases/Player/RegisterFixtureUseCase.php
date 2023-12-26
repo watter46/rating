@@ -2,13 +2,14 @@
 
 namespace App\UseCases\Player;
 
-use App\Http\Controllers\Util\FixtureFile;
-use App\Models\Fixture;
-use App\Models\Lineup;
-use App\UseCases\Player\Builder\FixtureDataBuilder;
-use App\UseCases\Player\Util\ApiFootballFetcher;
 use Exception;
 use Illuminate\Support\Facades\DB;
+
+use App\Http\Controllers\Util\FixtureFile;
+use App\Models\Fixture;
+use App\UseCases\Player\Builder\FixtureDataBuilder;
+use App\UseCases\Player\Util\ApiFootballFetcher;
+
 
 final readonly class RegisterFixtureUseCase
 {
