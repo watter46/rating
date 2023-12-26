@@ -3,11 +3,10 @@
 namespace App\UseCases\Player;
 
 use Exception;
-use Illuminate\Support\Collection;
 
+use App\Models\Fixture;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\Models\Fixture;
 
 
 final readonly class FetchFixtureUseCase
@@ -20,14 +19,12 @@ final readonly class FetchFixtureUseCase
         
     }
     
-    public function execute(int $fixtureId): Collection
+    public function execute(int $fixtureId): Fixture
     {
         try {
-            $fixture = Fixture::query()
+            return Fixture::query()
                 ->where('external_fixture_id', $fixtureId)
                 ->first();
-
-            return $fixture->fixture;
 
         } catch (Exception $e) {
             throw $e;

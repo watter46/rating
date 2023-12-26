@@ -8,7 +8,9 @@ use Livewire\Component;
 
 class PlayerDetail extends Component
 {
-    public $lineups;
+    public array $lineups;
+
+    public string $modelId;
 
     public int $playerId;
 

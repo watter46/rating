@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-
+use App\Models\Fixture;
 
 final readonly class FixtureResource
 {
@@ -23,12 +23,12 @@ final readonly class FixtureResource
     /**
      * チーム、リーグ、プレイヤーのファイルパスの画像を取得する
      *
-     * @param  Collection $fixture
+     * @param  Fixture $fixture
      * @return Collection
      */
-    public function format(Collection $fixture): Collection
+    public function format(Fixture $fixture): Collection
     {
-        return collect($fixture)
+        return $fixture->fixture
             ->map(function ($fixture, $key) {
                 return match($key) {
                     'teams'   => $this->addTeamImage($fixture),
@@ -36,7 +36,8 @@ final readonly class FixtureResource
                     'lineups' => $this->addLineupImage($fixture),
                     default   => $fixture
                 };
-            });
+            })
+            ->merge(['modelId' => $fixture->id]);
     }
 
     private function addTeamImage(array $teams): array

@@ -18,14 +18,15 @@ final class PlayerController extends Controller
     {
         try {            
             // Mancester United
-            $fixtureId = 1035323;
+            // $fixtureId = 1035323;
 
             // Everton
             // $fixtureId = 1035327;
 
-            // $fixtureId = 1035338;
+            $fixtureId = 1035338;
 
             // $fixtureId = 1141105;
+            // $fixtureId = 1035353;
 
             $fixture = $fetchFixture->execute($fixtureId);
             
@@ -39,10 +40,11 @@ final class PlayerController extends Controller
     public function register(RegisterFixtureUseCase $registerFixture)
     {
         try {            
-            $fixtureId = 1035323;
-            // $fixtureId = 1035327;
+            // $fixtureId = 1035323;
+            $fixtureId = 1035327;
             // $fixtureId = 1141105;
             // $fixtureId = 1035338;
+            // $fixtureId = 1035353;
 
         
             // $registerFixture->execute($fixtureId);

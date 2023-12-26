@@ -6,14 +6,10 @@ use Livewire\Component;
 
 class Rating extends Component
 {
+    public string $modelId;
     public int $playerId;
     public float $rating;
 
-    public function mount()
-    {
-        
-    }
-    
     public function render()
     {
         return view('livewire.rating');

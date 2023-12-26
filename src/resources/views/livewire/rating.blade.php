@@ -43,6 +43,7 @@
     <div class="flex justify-end mt-3">
         <button class="px-10 py-3 border-2 border-gray-200 rounded-lg bg-sky-600"
             @click="$wire.dispatch('player-evaluate', {
+                fixtureId: '{{ $modelId }}',
                 playerId: {{ $playerId }},
                 rating: rating
             })">

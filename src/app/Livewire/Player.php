@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\UseCases\Player\EvaluatePlayerUseCase;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -9,6 +10,13 @@ use Livewire\Component;
 class Player extends Component
 {
     public $player;
+
+    private readonly EvaluatePlayerUseCase $evaluatePlayer;
+    
+    public function boot(EvaluatePlayerUseCase $evaluatePlayer)
+    {
+        $this->evaluatePlayer = $evaluatePlayer;
+    }
     
     public function render()
     {
@@ -21,8 +29,8 @@ class Player extends Component
     }
 
     #[On('player-evaluate')]
-    public function evaluate(int $playerId, float $rating): void
+    public function evaluate(string $fixtureId, int $playerId, float $rating): void
     {
-        dd($playerId, $rating);
+        $this->evaluatePlayer->execute($fixtureId, $playerId, $rating);
     }
 }

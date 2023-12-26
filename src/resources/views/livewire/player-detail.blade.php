@@ -13,7 +13,11 @@
             </div>
         </div>
 
-        <livewire:rating :playerId="$player['id']" :rating="$player['rating']" :key="$player['id']" />
+        <livewire:rating
+            :$modelId
+            :playerId="$player['id']"
+            :rating="$player['rating']"
+            :key="$player['id']" />
     @endif
 
     @vite(['resources/css/rating.css'])
