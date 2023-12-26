@@ -11,7 +11,7 @@ class PlayerImage extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public $img)
+    public function __construct(public int $number, public array $img)
     {
         //
     }

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 final readonly class PlayerImageFile
 {
     private const DIR_PATH = 'images';
+    private const DEFAULT_IMAGE_PATH = 'default_uniform.png';
 
     private const SUMMER_SEASON = 'S';
     private const WINTER_SEASON = 'W';
@@ -29,13 +30,21 @@ final readonly class PlayerImageFile
 
     public function getByPath(string $path)
     {
-        try {
+        try {            
             $image = File::get($path);
 
-            return 'data:image/png;base64,'.base64_encode($image);
-
+            return [
+                'exists' => true,
+                'data'   => 'data:image/png;base64,'.base64_encode($image)
+            ];
+            
         } catch (FileNotFoundException $e) {
-            return '';
+            $image = File::get(self::DEFAULT_IMAGE_PATH);
+
+            return [
+                'exists' => false,
+                'data'   => 'data:image/png;base64,'.base64_encode($image)
+            ];
         }
     }
 
