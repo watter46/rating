@@ -18,7 +18,7 @@
                 <div id="box" class="absolute top-0 flex items-end justify-center w-full h-full">
                     <div class="flex flex-col w-full h-full pt-10">                        
                         @foreach($lineups['startXI'] as $line => $players)
-                            <div id="line-{{ $line + 1 }}" class="flex items-center h-full justify-evenly">
+                            <div id="line-{{ $line + 1 }}" class="flex items-center h-full justify-evenly" wire:ignore>
                                 @foreach($players as $index => $player)
                                     <div class="flex justify-center w-full">
                                         <livewire:player :$player :key="$player['id']" />
