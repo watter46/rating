@@ -10,7 +10,9 @@ use App\UseCases\Player\FetchPlayerUseCase;
 
 class Player extends Component
 {
-    public $player;
+    public string $fixtureId;
+    
+    public array $player;
 
     public float $rating;
 
@@ -23,7 +25,7 @@ class Player extends Component
 
     public function mount()
     {
-        $this->fetchPlayer($this->player['id']);
+        $this->fetchPlayer($this->fixtureId, $this->player['id']);
     }
     
     public function render()
@@ -41,18 +43,25 @@ class Player extends Component
     {
         if ($playerId !== $this->player['id']) return;
 
-        $this->fetchPlayer($playerId);
+        $this->fetchPlayer($this->fixtureId, $playerId);
     }
     
     /**
      * 対象のプレイヤーを取得する
      *
-     * @param  string $playerId
+     * @param  ?string $playerId
      * @return void
      */
-    private function fetchPlayer(string $playerId): void
+    private function fetchPlayer(string $fixtureId, string $playerId): void
     {
-        $player = $this->fetchPlayer->execute($playerId);
+        if (!$playerId) return;
+
+        $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+        
+        if (!$player) {
+            $this->rating = (float) $this->player['defaultRating'];
+            return;
+        }
         
         $this->rating = $player->rating;
     }

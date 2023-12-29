@@ -16,12 +16,15 @@
             <div class="relative h-full">
                 <x-field.field-svg />
                 <div id="box" class="absolute top-0 flex items-end justify-center w-full h-full">
-                    <div class="flex flex-col w-full h-full pt-10">                        
+                    <div class="flex flex-col w-full h-full pt-10">
                         @foreach($lineups['startXI'] as $line => $players)
-                            <div id="line-{{ $line + 1 }}" class="flex items-center h-full justify-evenly" wire:ignore>
-                                @foreach($players as $index => $player)
+                            <div id="line-{{ $line + 1 }}" class="flex items-center h-full justify-evenly">
+                                @foreach($players as $player)
                                     <div class="flex justify-center w-full">
-                                        <livewire:player :$player :key="$player['id']" />
+                                        <livewire:player
+                                            :$fixtureId
+                                            :$player
+                                            :key="$player['id']" />
                                     </div>
                                 @endforeach
                             </div>
@@ -38,7 +41,7 @@
                 :league="$league"
                 :score="$score" />
             
-            <livewire:player-detail :$modelId :$lineups />
+            <livewire:player-detail :$fixtureId :$lineups />
         </div>
     </div>
     

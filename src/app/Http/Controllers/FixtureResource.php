@@ -9,7 +9,8 @@ use App\Models\Fixture;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\Models\Player;
+use App\Models\PlayerInfo;
+
 
 final readonly class FixtureResource
 {
@@ -29,7 +30,7 @@ final readonly class FixtureResource
      */
     public function format(Fixture $fixture): Collection
     {
-        $players = $fixture->players;
+        $players = $fixture->playerInfos;
 
         return $fixture->fixture
             ->map(function ($fixture, $key) {
@@ -47,7 +48,7 @@ final readonly class FixtureResource
 
                 return $this->changePlayerId($fixture, $players);
             })
-            ->merge(['modelId' => $fixture->id]);
+            ->merge(['fixtureId' => $fixture->id]);
     }
 
     private function addTeamImage(array $teams): array
@@ -83,16 +84,12 @@ final readonly class FixtureResource
     }
 
     private function changePlayerId(array $lineup, Collection $players): array
-    {
+    {        
         $result = collect($lineup)
             ->map(function (array $lineup, $key) use ($players) {
                 $changeId = function (array $player) use ($players) {                                 
-                    $model = collect($players)->first(function (Player $model) use ($player) {
-                        $id = $player['id'];
-
-                        return $model
-                            ->apiPlayer
-                            ->foot_player_id === $id;
+                    $model = $players->first(function (PlayerInfo $model) use ($player) {
+                        return $model->foot_player_id === $player['id'];
                     });
 
                     return collect($player)

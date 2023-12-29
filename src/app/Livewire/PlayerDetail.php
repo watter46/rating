@@ -10,7 +10,7 @@ class PlayerDetail extends Component
 {
     public array $lineups;
 
-    public string $modelId;
+    public string $fixtureId;
 
     public int $playerId;
 

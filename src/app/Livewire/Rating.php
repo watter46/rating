@@ -11,6 +11,7 @@ use App\UseCases\Player\FetchPlayerUseCase;
 class Rating extends Component
 {
     public string $playerId;
+    public string $fixtureId;
     public float $defaultRating;
     public float $rating;
 
@@ -25,7 +26,7 @@ class Rating extends Component
 
     public function mount()
     {
-        $this->fetchPlayer($this->playerId);
+        $this->fetchPlayer($this->fixtureId, $this->playerId);
     }
 
     public function render()
@@ -33,11 +34,11 @@ class Rating extends Component
         return view('livewire.rating');
     }
 
-    public function evaluate(string $playerId, float $rating): void
+    public function evaluate(string $fixtureId, string $playerId, float $rating): void
     {
-        $this->evaluatePlayer->execute($playerId, $rating);
+        $this->evaluatePlayer->execute($fixtureId, $playerId, $rating);
 
-        $this->fetchPlayer($playerId);
+        $this->fetchPlayer($fixtureId, $playerId);
 
         $this->dispatch('player-evaluated', $playerId);
     }
@@ -45,12 +46,18 @@ class Rating extends Component
     /**
      * 対象のプレイヤーを取得する
      *
+     * @param  string $fixtureId
      * @param  string $playerId
      * @return void
      */
-    private function fetchPlayer(string $playerId): void
+    private function fetchPlayer(string $fixtureId, string $playerId): void
     {
-        $player = $this->fetchPlayer->execute($playerId);
+        $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+
+        if (!$player) {
+            $this->rating = $this->defaultRating;
+            return;
+        }
         
         $this->rating = $player->rating;
     }
