@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-use App\Models\ApiPlayer;
+use App\Models\PlayerInfo;
 use App\Models\Fixture;
 use App\Models\Player;
 
@@ -34,15 +34,15 @@ class PlayerSeeder extends Seeder
             ->toArray();
 
         // Playerの評価を8.0にする
-        $apiPlayers = ApiPlayer::query()
+        $playerInfos = PlayerInfo::query()
             ->select(['id', 'foot_player_id'])
             ->whereIn('foot_player_id', $footPlayerIdList)
             ->get();
         
-        $data = $apiPlayers->map(function (ApiPlayer $apiPlayer) use ($fixture) {
+        $data = $playerInfos->map(function (PlayerInfo $playerInfo) use ($fixture) {
             $player = new Player(['rating' => 8.0]);
 
-            $player->apiPlayer()->associate($apiPlayer);
+            $player->playerInfo()->associate($playerInfo);
             $player->fixture()->associate($fixture);
 
             return $player->getAttributes();

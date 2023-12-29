@@ -1,5 +1,5 @@
 <div x-data="{
-        rating: @entangle('rating') ?? @entangle('defaultRating')
+        rating: @entangle('rating')
     }">
     <div class="w-full h-full mt-2 border-t-2 border-gray-700"></div>
 
@@ -22,7 +22,7 @@
 
     <div class="flex justify-end mt-3">
         <button class="px-10 py-3 border-2 border-gray-200 rounded-lg bg-sky-600"
-            wire:click="evaluate('{{ $playerId }}', rating)">
+            wire:click="evaluate('{{ $fixtureId }}', '{{ $playerId }}', rating)">
             <p class="text-xl font-bold text-gray-200">Evaluate</p>
         </button>
     </div>

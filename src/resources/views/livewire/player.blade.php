@@ -1,6 +1,6 @@
 <div id="player" class="hidden w-full text-center" wire:ignore
     x-data="{
-        rating: @entangle('rating') ?? {{ $player['defaultRating'] }}
+        rating: @entangle('rating')
     }">
     <div class="flex justify-center">
         <div class="relative" wire:click="toDetail('{{ $player['id'] }}')" class="player">

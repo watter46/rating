@@ -49,8 +49,8 @@ class Fixture extends Model
      *
      * @return HasMany
      */
-    public function ratings(): HasMany
+    public function players(): HasMany
     {
-        return $this->hasMany(Rating::class);
+        return $this->hasMany(Player::class);
     }
 }

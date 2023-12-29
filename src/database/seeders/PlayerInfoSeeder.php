@@ -1,17 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\ApiPlayer;
+use App\Models\PlayerInfo;
 use App\Http\Controllers\Util\PlayerOfTeamFile;
 use App\Http\Controllers\Util\SquadsFile;
 use App\UseCases\Player\Builder\PlayerDataBuilder;
 use App\UseCases\Util\Season;
 
 
-class ApiPlayerSeeder extends Seeder
+class PlayerInfoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -28,7 +28,7 @@ class ApiPlayerSeeder extends Seeder
 
         $FOOT_fetched = $squads->get();
         
-        $playerList = ApiPlayer::query()
+        $playerList = PlayerInfo::query()
             ->select(['id', 'name', 'number', 'season'])
             ->where('season', Season::current())
             ->get()
@@ -46,6 +46,6 @@ class ApiPlayerSeeder extends Seeder
         $unique = ['id'];
         $updateColumns = ['name', 'number', 'season', 'foot_player_id', 'sofa_player_id'];
         
-        ApiPlayer::upsert($data, $unique, $updateColumns);
+        PlayerInfo::upsert($data, $unique, $updateColumns);
     }
 }

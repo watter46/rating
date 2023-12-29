@@ -12,8 +12,9 @@
                 </p> 
             </div>
         </div>
-
+        
         <livewire:rating
+            :$fixtureId
             :playerId="$player['id']"
             :defaultRating="$player['defaultRating']"
             :key="$player['id']" />

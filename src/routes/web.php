@@ -16,6 +16,8 @@ Route::get('/players', [PlayerController::class, 'index']);
 Route::get('/players/detail', PlayerDetail::class);
 
 Route::get('/rg', [PlayerController::class, 'register']);
+Route::get('/rg2', [PlayerController::class, 'register2']);
+Route::get('/rg3', [PlayerController::class, 'register3']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

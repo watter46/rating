@@ -4,7 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-
 return new class extends Migration
 {
     /**
@@ -12,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ratings', function (Blueprint $table) {
+        Schema::create('player_infos', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->tinyText('name');
+            $table->unsignedSmallInteger('season')->length(4);
+            $table->unsignedTinyInteger('number')->nullable();
             $table->unsignedMediumInteger('foot_player_id');
-            $table->unsignedFloat('rating', 3, 1);
-
-            $table->foreignUlid('fixture_id')->constrained()->onDelete('cascade');
+            $table->unsignedMediumInteger('sofa_player_id')->nullable();
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ratings');
+        Schema::dropIfExists('player_infos');
     }
 };

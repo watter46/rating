@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,26 @@ class Player extends Model
 
         return $this;
     }
+
+    public function associatePlayer(string $fixtureId, string $playerInfoId): self
+    {
+        $this->fixture_id = $fixtureId;
+        $this->player_info_id = $playerInfoId;
+
+        return $this;
+    }
+    
+    /**
+     * scopeFixture
+     *
+     * @param  Builder<Player> $query
+     * @param  string $fixtureId
+     * @return void
+     */
+    public function scopeByFixture(Builder $query, string $fixtureId)
+    {
+        $query->where('fixture_id', $fixtureId);
+    }
     
     /**
      * Fixture
@@ -45,12 +66,12 @@ class Player extends Model
     }
 
     /**
-     * ApiPlayer
+     * playerInfo
      *
      * @return BelongsTo
      */
-    public function apiPlayer(): BelongsTo
+    public function playerInfo(): BelongsTo
     {
-        return $this->belongsTo(ApiPlayer::class);
+        return $this->belongsTo(PlayerInfo::class);
     }
 }

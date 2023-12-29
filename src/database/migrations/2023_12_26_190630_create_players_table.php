@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedFloat('rating', 3, 1);
 
             $table->foreignUlid('fixture_id')->constrained()->onDelete('cascade');
-            $table->foreignUlid('api_player_id')->constrained()->onDelete('cascade');
+            $table->foreignUlid('player_info_id')->constrained()->onDelete('cascade');
         });
     }
 
