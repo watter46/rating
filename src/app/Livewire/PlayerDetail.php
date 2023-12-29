@@ -14,7 +14,7 @@ class PlayerDetail extends Component
 
     public int $playerId;
 
-    public $player;
+    public array $player;
     
     public function render()
     {
@@ -29,7 +29,7 @@ class PlayerDetail extends Component
     }
 
     #[On('player-selected')]
-    public function playerSelected(int $playerId): void
+    public function playerSelected(string $playerId): void
     {
         $this->player = collect($this->lineups['startXI'])
             ->flatten(1)

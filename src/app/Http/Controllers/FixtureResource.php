@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+use App\Models\Fixture;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\Models\Fixture;
+use App\Models\Player;
 
 final readonly class FixtureResource
 {
@@ -28,6 +29,8 @@ final readonly class FixtureResource
      */
     public function format(Fixture $fixture): Collection
     {
+        $players = $fixture->players;
+
         return $fixture->fixture
             ->map(function ($fixture, $key) {
                 return match($key) {
@@ -36,6 +39,13 @@ final readonly class FixtureResource
                     'lineups' => $this->addLineupImage($fixture),
                     default   => $fixture
                 };
+            })
+            ->map(function ($fixture, $key) use ($players) {
+                if ($key !== 'lineups') {
+                    return $fixture;
+                }
+
+                return $this->changePlayerId($fixture, $players);
             })
             ->merge(['modelId' => $fixture->id]);
     }
@@ -70,5 +80,39 @@ final readonly class FixtureResource
             })
             ->undot()
             ->toArray();
+    }
+
+    private function changePlayerId(array $lineup, Collection $players): array
+    {
+        $result = collect($lineup)
+            ->map(function (array $lineup, $key) use ($players) {
+                $changeId = function (array $player) use ($players) {                                 
+                    $model = collect($players)->first(function (Player $model) use ($player) {
+                        $id = $player['id'];
+
+                        return $model
+                            ->apiPlayer
+                            ->foot_player_id === $id;
+                    });
+
+                    return collect($player)
+                        ->merge([
+                            'id'     => $model->id,
+                            'rating' => $model->rating
+                        ])
+                        ->toArray();
+                };
+                
+                if ($key === 'startXI') {
+                    return collect($lineup)
+                        ->map(function (array $line) use ($changeId) {
+                            return collect($line)->map(fn ($player) => $changeId($player));
+                        });
+                }
+                
+                return collect($lineup)->map(fn ($player) => $changeId($player));
+            });
+
+        return $result->toArray();
     }
 }

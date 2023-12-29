@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use Exception;
 
-use App\Http\Controllers\Util\FixturesFile;
 use App\UseCases\Player\FetchFixtureUseCase;
 use App\UseCases\Player\RegisterFixtureListUseCase;
 use App\UseCases\Player\RegisterFixtureUseCase;
-use App\UseCases\Player\RegisterLineupUseCase;
-use App\UseCases\Player\RegisterPlayerListUseCase;
-use App\UseCases\Player\RegisterStatisticUseCase;
+
 
 final class PlayerController extends Controller
 {
