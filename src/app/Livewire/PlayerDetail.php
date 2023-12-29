@@ -21,18 +21,20 @@ class PlayerDetail extends Component
         return view('livewire.player-detail');
     }
 
-    public function mount()
-    {
-        $this->player = collect($this->lineups['startXI'])
-            ->flatten(1)
-            ->first();
-    }
-
     #[On('player-selected')]
     public function playerSelected(string $playerId): void
     {
-        $this->player = collect($this->lineups['startXI'])
-            ->flatten(1)
+        $lineups = collect($this->lineups)
+            ->map(function ($lineups, $key) {
+                if ($key === 'startXI') {
+                    return collect($lineups)->flatten(1);
+                }
+
+                return $lineups;
+            })
+            ->flatten(1);
+
+        $this->player = $lineups
             ->sole(fn ($player) => $player['id'] === $playerId);
     }
 }

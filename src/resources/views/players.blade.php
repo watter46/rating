@@ -11,10 +11,24 @@
     <title>Rating</title>
 </head>
 <body class="h-screen p-2 bg-slate-900">    
-    <div class="flex w-full h-full">
+    <div class="flex items-center w-full h-full">
+        <div id="substitutes" class="z-10 flex flex-col h-5/6 ml-14">
+            @foreach($lineups['substitutes'] as $player)
+                <div class="flex items-center h-full justify-evenly">
+                    <div class="flex justify-center w-full">
+                        <livewire:player
+                            :$fixtureId
+                            :$player
+                            :key="$player['id']" />
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        
         <div class="flex items-center justify-center w-full h-full">
             <div class="relative h-full">
                 <x-field.field-svg />
+                
                 <div id="box" class="absolute top-0 flex items-end justify-center w-full h-full">
                     <div class="flex flex-col w-full h-full pt-10">
                         @foreach($lineups['startXI'] as $line => $players)

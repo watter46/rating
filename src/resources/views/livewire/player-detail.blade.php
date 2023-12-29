@@ -1,4 +1,4 @@
-<div class="w-full p-3 mt-3 bg-sky-950 rounded-3xl">
+<div class="w-full h-full p-3 mt-3 bg-sky-950 rounded-3xl">
     @if($player)
         <div class="relative flex items-center">
             <x-rating.player-image
