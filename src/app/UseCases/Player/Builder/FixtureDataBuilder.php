@@ -174,8 +174,8 @@ final readonly class FixtureDataBuilder
         return collect($team['players'])
             ->map(function ($players) {
                 return [
-                    'id'     => $players->player->id,
-                    'rating' => $players->statistics[0]->games->rating
+                    'id' => $players->player->id,
+                    'defaultRating' => $players->statistics[0]->games->rating
                 ];
             })
             ->toArray();

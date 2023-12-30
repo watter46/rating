@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('players', function (Blueprint $table) {
+        Schema::create('player_infos', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->tinyText('name');
             $table->unsignedSmallInteger('season')->length(4);
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('players');
+        Schema::dropIfExists('player_infos');
     }
 };

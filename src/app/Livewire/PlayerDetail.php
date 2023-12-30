@@ -8,29 +8,33 @@ use Livewire\Component;
 
 class PlayerDetail extends Component
 {
-    public $lineups;
+    public array $lineups;
+
+    public string $fixtureId;
 
     public int $playerId;
 
-    public $player;
+    public array $player;
     
     public function render()
     {
         return view('livewire.player-detail');
     }
 
-    public function mount()
-    {
-        $this->player = collect($this->lineups['startXI'])
-            ->flatten(1)
-            ->first();
-    }
-
     #[On('player-selected')]
-    public function playerSelected(int $playerId): void
+    public function playerSelected(string $playerId): void
     {
-        $this->player = collect($this->lineups['startXI'])
-            ->flatten(1)
+        $lineups = collect($this->lineups)
+            ->map(function ($lineups, $key) {
+                if ($key === 'startXI') {
+                    return collect($lineups)->flatten(1);
+                }
+
+                return $lineups;
+            })
+            ->flatten(1);
+
+        $this->player = $lineups
             ->sole(fn ($player) => $player['id'] === $playerId);
     }
 }

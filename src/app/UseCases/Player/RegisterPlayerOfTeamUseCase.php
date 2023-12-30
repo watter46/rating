@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\PlayerOfTeamFile;
 use App\Http\Controllers\Util\SquadsFile;
-use App\Models\Player;
+use App\Models\ApiPlayer;
 use App\UseCases\Player\Builder\PlayerDataBuilder;
 use App\UseCases\Player\Util\SofaScore;
 use App\UseCases\Util\Season;
@@ -17,7 +17,7 @@ use App\UseCases\Util\Season;
 final readonly class RegisterPlayerOfTeamUseCase
 {
     public function __construct(
-        private Player $player,
+        private ApiPlayer $player,
         private PlayerDataBuilder $builder,
         private PlayerOfTeamFile $playerOfTeam,
         private SquadsFile $squads,
@@ -71,7 +71,7 @@ final readonly class RegisterPlayerOfTeamUseCase
             ->select(['foot_player_id', 'sofa_player_id'])
             ->where('season', Season::current())
             ->get()
-            ->filter(fn (Player $player) => $player->sofa_player_id)
+            ->filter(fn (ApiPlayer $player) => $player->sofa_player_id)
             ->values()
             ->toArray();
 

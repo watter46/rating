@@ -9,11 +9,15 @@
             <div class="absolute w-full text-center">
                 <p class="font-bold text-gray-100 detail__player_name whitespace-nowrap">
                     {{ $player['name'] }}
-                </p>
+                </p> 
             </div>
         </div>
-
-        <livewire:rating :playerId="$player['id']" :rating="$player['rating']" :key="$player['id']" />
+        
+        <livewire:rating
+            :$fixtureId
+            :playerId="$player['id']"
+            :defaultRating="$player['defaultRating']"
+            :key="$player['id']" />
     @endif
 
     @vite(['resources/css/rating.css'])

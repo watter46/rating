@@ -22,6 +22,7 @@ final readonly class ApiFootballFetcher
 
             $response = $client->request('GET', $this->url, [
                 'query' => $this->query,
+                'delay' => 500,
                 'headers' => [
                     'X-RapidAPI-Host' => config('api-football.api-host'),
                     'X-RapidAPI-Key'  => config('api-football.api-key')
@@ -48,6 +49,7 @@ final readonly class ApiFootballFetcher
 
             $response = $client->request('GET', $this->url, [
                 'query' => $this->query,
+                'delay' => 500,
                 'headers' => [
                     'X-RapidAPI-Host' => config('api-football.api-host'),
                     'X-RapidAPI-Key'  => config('api-football.api-key')
@@ -74,6 +76,16 @@ final readonly class ApiFootballFetcher
             query: [
                 'season' => now()->year,
                 'team'   => self::CHELSEA_TEAM_ID
+            ]
+        );
+    }
+
+    public static function fixture(int $fixtureId): self
+    {
+        return new self(
+            url:  'https://api-football-v1.p.rapidapi.com/v3/fixtures',
+            query: [
+                'id' => $fixtureId
             ]
         );
     }

@@ -2,20 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\AsCollection;
+use App\UseCases\Util\Season;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 
 
-class Fixture extends Model
+class PlayerInfo extends Model
 {
     use HasFactory;
     use HasUlids;
 
     public $incrementing = false;
+    public $timestamps   = false;
     
     protected $keyType = 'string';
 
@@ -25,32 +26,31 @@ class Fixture extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'external_fixture_id',
-        'external_league_id',
+        'name',
+        'number',
         'season',
-        'is_end',
-        'date',
-        'fixture'
+        'foot_player_id',
+        'sofa_image_id'
     ];
-
-    protected $casts = [
-        'fixture' => AsCollection::class
-    ];
-
-    public function updateFixture(Collection $fixture): self
-    {
-        $this->fixture = $fixture;
-
-        return $this;
-    }
     
     /**
-     * ratings
+     * players
      *
      * @return HasMany
      */
     public function players(): HasMany
     {
         return $this->hasMany(Player::class);
+    }
+
+    /**
+     * 今シーズンのプレイヤーを検索する
+     *
+     * @param  Builder<PlayerInfo> $query
+     * @return void
+     */
+    public function scopeCurrentSeason(Builder $query): void
+    {
+        $query->where('season', Season::current());
     }
 }

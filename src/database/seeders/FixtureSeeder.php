@@ -43,5 +43,16 @@ class FixtureSeeder extends Seeder
         $data = (new FixtureDataBuilder(new TeamImageFile))->build($fetched[0]);
 
         $fixture->updateFixture($data)->save();
+
+        $fixtureId2 = 1035359;
+
+        /** @var Fixture $fixture2 */
+        $fixture2 = Fixture::where('external_fixture_id', $fixtureId2)->first();
+
+        $fetched2 = (new FixtureFile)->get($fixtureId2);
+
+        $data2 = (new FixtureDataBuilder(new TeamImageFile))->build($fetched2[0]);
+
+        $fixture2->updateFixture($data2)->save();
     }
 }

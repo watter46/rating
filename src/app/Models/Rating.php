@@ -8,8 +8,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
-class Player extends Model
+/**
+ * Rating
+ * 
+ * @property float $rating
+ */
+class Rating extends Model
 {
     use HasFactory;
     use HasUlids;
@@ -25,53 +29,37 @@ class Player extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'foot_player_id',
         'rating'
     ];
 
-    public function evaluate(float $rating): self
+    public function evaluate(int $playerId, float $rating): self
     {
+        $this->foot_player_id = $playerId;
         $this->rating = $rating;
 
         return $this;
     }
-
-    public function associatePlayer(string $fixtureId, string $playerInfoId): self
-    {
-        $this->fixture_id = $fixtureId;
-        $this->player_info_id = $playerInfoId;
-
-        return $this;
-    }
     
     /**
-     * scopeFixture
+     * idでプレイヤーを検索する
      *
-     * @param  Builder<Player> $query
-     * @param  string $fixtureId
+     * @param  Builder<Rating> $query
+     * @param  int $playerId
      * @return void
      */
-    public function scopeByFixture(Builder $query, string $fixtureId)
+    public function scopePlayer(Builder $query, int $playerId): void
     {
-        $query->where('fixture_id', $fixtureId);
+        $query->where('foot_player_id', $playerId);
     }
     
     /**
-     * Fixture
+     * fixture
      *
      * @return BelongsTo
      */
     public function fixture(): BelongsTo
     {
         return $this->belongsTo(Fixture::class);
-    }
-
-    /**
-     * playerInfo
-     *
-     * @return BelongsTo
-     */
-    public function playerInfo(): BelongsTo
-    {
-        return $this->belongsTo(PlayerInfo::class);
     }
 }
