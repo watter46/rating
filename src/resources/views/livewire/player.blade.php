@@ -1,4 +1,4 @@
-<div id="player" class="hidden w-full text-center" wire:ignore
+<div id="player" class="hidden w-full text-center" wire:ignore.self
     x-data="{
         rating: @entangle('rating')
     }">

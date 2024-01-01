@@ -10,7 +10,9 @@
     
     <title>Rating</title>
 </head>
-<body class="h-screen p-2 bg-slate-900">    
+<body class="h-screen p-2 bg-slate-900">   
+    <livewire:message />
+     
     <div class="flex items-center w-full h-full">
         <div id="substitutes" class="z-10 flex flex-col h-5/6 ml-14">
             @foreach($lineups['substitutes'] as $player)
@@ -55,7 +57,9 @@
                 :league="$league"
                 :score="$score" />
             
-            <livewire:player-detail :$fixtureId :$lineups />
+            <livewire:player-detail
+                :$fixtureId
+                :$lineups />
         </div>
     </div>
     
