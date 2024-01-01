@@ -37,4 +37,10 @@ class PlayerDetail extends Component
         $this->player = $lineups
             ->sole(fn ($player) => $player['id'] === $playerId);
     }
+
+    #[On('player-evaluated')]
+    public function hidden()
+    {
+        $this->player = [];
+    }
 }

@@ -10,6 +10,8 @@ use App\UseCases\Player\FetchPlayerUseCase;
 
 class Rating extends Component
 {
+    private const SUCCESS_MESSAGE = 'Evaluated!!';
+    
     public string $playerId;
     public string $fixtureId;
     public float $defaultRating;
@@ -33,7 +35,15 @@ class Rating extends Component
     {
         return view('livewire.rating');
     }
-
+    
+    /**
+     * 選手のレートを評価する
+     *
+     * @param  string $fixtureId
+     * @param  string $playerId
+     * @param  float $rating
+     * @return void
+     */
     public function evaluate(string $fixtureId, string $playerId, float $rating): void
     {
         $this->evaluatePlayer->execute($fixtureId, $playerId, $rating);
@@ -41,6 +51,7 @@ class Rating extends Component
         $this->fetchPlayer($fixtureId, $playerId);
 
         $this->dispatch('player-evaluated', $playerId);
+        $this->dispatch('notify', message: self::SUCCESS_MESSAGE);
     }
 
     /**
