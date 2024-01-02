@@ -9,12 +9,12 @@
                 Rating
             </p>
 
-            <input id="ratingRange" class="w-full" type="range" min="0" max="10" step="0.1" x-model="rating">
+            <input id="ratingRange" class="w-full" type="range" min="0.1" max="10" step="0.1" x-model="rating">
             
             <div class="flex justify-center mt-5">
                 <div class="flex items-center justify-center w-1/3 border-2 border-gray-200 rounded-lg"
                     :style="`background-color: ${ratingBgColor(rating)}`">
-                    <p class="py-1.5 text-3xl font-black text-gray-200" x-text="paddingZero(rating)"></p>
+                    <p class="py-1.5 text-3xl font-black text-gray-200" x-text="ratingValue(rating)"></p>
                 </div>
             </div>
         </div>

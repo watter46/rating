@@ -20,6 +20,7 @@ final readonly class RegisterFixtureListUseCase
     
     public function __construct(
         private Fixture $fixture,
+        private Season $season,
         private TeamImageFile $teamImageFile,
         private LeagueImageFile $leagueImageFile,
         private FixturesFile $file,
@@ -40,7 +41,7 @@ final readonly class RegisterFixtureListUseCase
             $fixtureList = $this
                 ->fixture
                 ->select(['id', 'external_fixture_id'])
-                ->where('season', Season::current())
+                ->where('season', $this->season->current())
                 ->get()
                 ->toArray();
 

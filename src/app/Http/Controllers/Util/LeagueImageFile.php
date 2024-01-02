@@ -6,12 +6,14 @@ use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 
+use App\UseCases\Util\Season;
+
 
 final readonly class LeagueImageFile
 {
     private const DIR_PATH = 'leagues';
     
-    public function __construct()
+    public function __construct(private Season $season)
     {
         $this->ensureDirExists();
     }
@@ -62,10 +64,10 @@ final readonly class LeagueImageFile
         }
     }
 
-    public static function generatePath(int $leagueId): string
+    public function generatePath(int $leagueId): string
     {                
-        $year = now()->year;
+        $season = $this->season->current();
 
-        return public_path(self::DIR_PATH.'/'.$year.'_'.$leagueId);
+        return public_path(self::DIR_PATH.'/'.$season.'_'.$leagueId);
     }
 }

@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const svgEl     = document.getElementById('field-svg');
-    const playerEls = document.querySelectorAll('#player');
+    const svgEl = document.getElementById('field-svg');
+    const startXIEls = document.querySelectorAll('#startXI');
+    const substituteEls = document.querySelectorAll('#substitutes');
 
-    const reversed = [...playerEls].reverse();
+    const reversed = [...startXIEls].reverse();
 
     const animationList = ['zoomIn', 'falling', 'bounce'];
 
@@ -12,20 +13,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const interval = 50;
     let index = 0;
 
-    const showPlayers = () => {
-        if (index < playerEls.length) {
+    const showStartXI = () => {
+        if (index < startXIEls.length) {
             reversed[index].classList.remove('hidden');
             reversed[index].classList.add(`${animation}`);
 
             index++;
             
-            setTimeout(showPlayers, interval);
+            setTimeout(showStartXI, interval);
         }
     }
 
-    showPlayers();
+    const showSubstitutes = () => {
+        const substitutes = [...substituteEls];
 
-    setTimeout(() => svgEl.classList.add('tilted-state'), interval * 11);
+        substitutes.forEach((el) => {
+            el.classList.remove('hidden');
+            el.classList.add(`${animation}`);
+        })
+    }
+
+    showStartXI();
+
+    showSubstitutes();
+
+    setTimeout(() => svgEl.classList.add('tilted-state'), interval * 16);
 
     svgEl.classList.remove('hidden');
 });

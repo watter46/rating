@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace App\View\Components\Rating;
+namespace App\View\Components\svg;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class PlayerImage extends Component
+class goalImage extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct(public int $number, public array $img, public bool $isEvaluated)
+    public function __construct()
     {
         //
     }
@@ -21,6 +21,6 @@ class PlayerImage extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.rating.player-image');
+        return view('components.svg.goal-image');
     }
 }

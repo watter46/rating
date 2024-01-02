@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Util;
 
 use Exception;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+
+use App\UseCases\Util\Season;
 
 
 final readonly class PlayerListFile
@@ -12,7 +13,7 @@ final readonly class PlayerListFile
     private const DIR_PATH  = 'Template/playerList';
     private const FILE_PATH = 'player_list.json';
     
-    public function __construct()
+    public function __construct(private Season $season)
     {
         $this->ensureDirExists();
     }
@@ -53,8 +54,8 @@ final readonly class PlayerListFile
 
     private function generatePath(): string
     {                
-        $year = now()->year;
+        $season = $this->season->current();
 
-        return app_path(self::DIR_PATH.'/'.$year.'_'.self::FILE_PATH);
+        return app_path(self::DIR_PATH.'/'.$season.'_'.self::FILE_PATH);
     }
 }

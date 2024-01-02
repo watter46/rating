@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Util;
 
+use App\UseCases\Util\Season;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
@@ -11,7 +12,7 @@ final readonly class TeamImageFile
 {
     private const DIR_PATH = 'teams';
     
-    public function __construct()
+    public function __construct(private Season $season)
     {
         $this->ensureDirExists();
     }
@@ -64,8 +65,8 @@ final readonly class TeamImageFile
 
     public function generatePath(int $teamId): string
     {                
-        $year = now()->year;
+        $season = $this->season->current();
 
-        return public_path(self::DIR_PATH.'/'.$year.'_'.$teamId);
+        return public_path(self::DIR_PATH.'/'.$season.'_'.$teamId);
     }
 }

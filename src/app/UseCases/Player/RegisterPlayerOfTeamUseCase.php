@@ -9,6 +9,7 @@ use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\PlayerOfTeamFile;
 use App\Http\Controllers\Util\SquadsFile;
 use App\Models\ApiPlayer;
+use App\Models\PlayerInfo;
 use App\UseCases\Player\Builder\PlayerDataBuilder;
 use App\UseCases\Player\Util\SofaScore;
 use App\UseCases\Util\Season;
@@ -17,7 +18,8 @@ use App\UseCases\Util\Season;
 final readonly class RegisterPlayerOfTeamUseCase
 {
     public function __construct(
-        private ApiPlayer $player,
+        private PlayerInfo $player,
+        private Season $season,
         private PlayerDataBuilder $builder,
         private PlayerOfTeamFile $playerOfTeam,
         private SquadsFile $squads,
@@ -30,17 +32,18 @@ final readonly class RegisterPlayerOfTeamUseCase
     public function execute()
     {
         try {
-            // $fetched = SofaScore::playerPhoto(769333)->fetch();
-            // $fetched = SofaScore::playersOfTeam()->fetch();
             $SOFA_fetched = $this->playerOfTeam->get();
+
+            // $FOOT_fetched = SofaScore::playersOfTeam()->fetch();
+
+            // $this->playerOfTeam->write($FOOT_fetched);
 
             $FOOT_fetched = $this->squads->get();
             
-            // Modelにスコープを追加する(CurrentSeason)
             $playerList = $this
                 ->player
                 ->select(['id', 'name', 'number', 'season'])
-                ->where('season', Season::current())
+                ->where('season', $this->season->current())
                 ->get()
                 ->toArray();
                 
@@ -63,15 +66,20 @@ final readonly class RegisterPlayerOfTeamUseCase
             throw $e;
         }
     }
-
-    public function registerImage()
+    
+    /**
+     * プレイヤーの画像を保存する
+     *
+     * @return void
+     */
+    private function registerImage()
     {
         $playerIdList = $this
             ->player
             ->select(['foot_player_id', 'sofa_player_id'])
-            ->where('season', Season::current())
+            ->where('season', $this->season->current())
             ->get()
-            ->filter(fn (ApiPlayer $player) => $player->sofa_player_id)
+            ->filter(fn (PlayerInfo $player) => $player->sofa_player_id)
             ->values()
             ->toArray();
 
