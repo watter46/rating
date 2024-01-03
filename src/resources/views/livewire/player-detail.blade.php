@@ -2,6 +2,7 @@
     @if($player)
         <div class="relative flex items-center">
             <x-rating.player-image
+                :isEvaluated="false"
                 :number="$player['number']"
                 :img="$player['img']"
                 type="rating" />

@@ -14,8 +14,8 @@ class Rating extends Component
     
     public string $playerId;
     public string $fixtureId;
-    public float $defaultRating;
-    public float $rating;
+    public ?float $defaultRating;
+    public ?float $rating;
 
     private FetchPlayerUseCase $fetchPlayer;
     private readonly EvaluatePlayerUseCase $evaluatePlayer;
@@ -27,7 +27,7 @@ class Rating extends Component
     }
 
     public function mount()
-    {
+    {        
         $this->fetchPlayer($this->fixtureId, $this->playerId);
     }
 

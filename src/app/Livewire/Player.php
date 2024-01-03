@@ -16,6 +16,10 @@ class Player extends Component
 
     public float $rating;
 
+    public string $name;
+
+    public bool $isEvaluated;
+
     private readonly FetchPlayerUseCase $fetchPlayer;
     
     public function boot(FetchPlayerUseCase $fetchPlayer)
@@ -60,9 +64,11 @@ class Player extends Component
         
         if (!$player) {
             $this->rating = (float) $this->player['defaultRating'];
+            $this->isEvaluated = false;
             return;
         }
         
         $this->rating = $player->rating;
+        $this->isEvaluated = true;
     }
 }

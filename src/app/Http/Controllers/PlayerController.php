@@ -20,11 +20,13 @@ final class PlayerController extends Controller
             // Everton
             // $fixtureId = 1035327;
 
-            $fixtureId = 1035338;
+            // $fixtureId = 1035338;
 
             // $fixtureId = 1141105;
             // $fixtureId = 1035353;
-            $fixtureId = 1035359;
+            // $fixtureId = 1035359;
+
+            $fixtureId = 1035368;
             
             $fixture = $fetchFixture->execute($fixtureId);
             
@@ -43,7 +45,8 @@ final class PlayerController extends Controller
             // $fixtureId = 1141105;
             // $fixtureId = 1035338;
             // $fixtureId = 1035353;
-            $fixtureId = 1035359;
+            // $fixtureId = 1035359;
+            $fixtureId = 1035368;
         
             // $registerFixture->execute($fixtureId);
             $registerFixture->execute($fixtureId);

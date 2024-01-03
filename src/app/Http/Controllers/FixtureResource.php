@@ -108,8 +108,7 @@ final readonly class FixtureResource
                 }
                 
                 return collect($lineup)
-                    ->map(fn ($player) => $changeId($player))
-                    ->filter(fn($player) => $player['defaultRating']);
+                    ->map(fn ($player) => $changeId($player));
             });
 
         return $result->toArray();

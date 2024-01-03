@@ -51,6 +51,6 @@ class PlayerInfo extends Model
      */
     public function scopeCurrentSeason(Builder $query): void
     {
-        $query->where('season', Season::current());
+        $query->where('season', (new Season)->current());
     }
 }

@@ -14,16 +14,13 @@
     <livewire:message />
      
     <div class="flex items-center w-full h-full">
-        <div id="substitutes" class="z-10 flex flex-col h-5/6 ml-14">
+        <div class="z-10 h-full py-10 ml-10 space-y-5">
             @foreach($lineups['substitutes'] as $player)
-                <div class="flex items-center h-full justify-evenly">
-                    <div class="flex justify-center w-full">
-                        <livewire:player
-                            :$fixtureId
-                            :$player
-                            :key="$player['id']" />
-                    </div>
-                </div>
+                <livewire:player
+                    name="substitutes"
+                    :$fixtureId
+                    :$player
+                    :key="$player['id']" />
             @endforeach
         </div>
         
@@ -38,6 +35,7 @@
                                 @foreach($players as $player)
                                     <div class="flex justify-center w-full">
                                         <livewire:player
+                                            name="startXI"
                                             :$fixtureId
                                             :$player
                                             :key="$player['id']" />

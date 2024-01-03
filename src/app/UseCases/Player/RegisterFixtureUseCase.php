@@ -28,12 +28,12 @@ final readonly class RegisterFixtureUseCase
                 ->where('external_fixture_id', $fixtureId)
                 ->first();
             
-            $fetched = ApiFootballFetcher::fixture($fixtureId)->fetch();
+            // $fetched = ApiFootballFetcher::fixture($fixtureId)->fetch();
 
+            $fetched = $this->file->get($fixtureId);
+            
             // $this->file->write($fixtureId, json_encode($fetched));
-            
-            // $fetched = $this->file->get($fixtureId);
-            
+                        
             $data = $this->builder->build($fetched[0]);
 
             $fixture = $model->updateFixture($data);

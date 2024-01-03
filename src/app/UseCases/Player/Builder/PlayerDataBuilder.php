@@ -8,6 +8,10 @@ use Illuminate\Support\Str;
 
 final readonly class PlayerDataBuilder
 {    
+    public function __construct(private Season $season)
+    {
+        
+    }
     /**
      * build
      *
@@ -28,7 +32,7 @@ final readonly class PlayerDataBuilder
                 'foot_player_id' => $player->id,
                 'name' => $player->name,
                 'number' => $player->number,
-                'season'   => Season::current()
+                'season'   => $this->season->current()
             ];
         });
 

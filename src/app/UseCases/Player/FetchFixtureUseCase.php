@@ -2,6 +2,8 @@
 
 namespace App\UseCases\Player;
 
+use App\Http\Controllers\Util\FixtureFile;
+use App\Http\Controllers\Util\FixturesFile;
 use Exception;
 use Illuminate\Support\Str;
 

@@ -15,6 +15,22 @@ class PlayerDetail extends Component
     public int $playerId;
 
     public array $player;
+
+    public function mount()
+    {
+        $lineups = collect($this->lineups)
+            ->map(function ($lineups, $key) {
+                if ($key === 'startXI') {
+                    return collect($lineups)->flatten(1);
+                }
+
+                return $lineups;
+            })
+            ->flatten(1);
+
+        $this->player = $lineups
+            ->sole(fn ($player) => $player['id'] === '01hjtx4yspw6hqd6wr1h778a07');
+    }
     
     public function render()
     {

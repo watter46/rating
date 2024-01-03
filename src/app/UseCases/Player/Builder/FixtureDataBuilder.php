@@ -2,20 +2,24 @@
 
 namespace App\UseCases\Player\Builder;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+
 use App\Http\Controllers\PositionType;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\View\Components\Rating\PlayerImage;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
+
 
 final readonly class FixtureDataBuilder
 {
     private const CHELSEA_TEAM_ID = 49;
     private const END_STATUS = 'Match Finished';
 
-    public function __construct(private TeamImageFile $teamImage)
+    public function __construct(
+        private TeamImageFile $teamImage,
+        private PlayerImageFile $playerImage,
+        private LeagueImageFile $leagueImage)
     {
         
     }
@@ -40,11 +44,11 @@ final readonly class FixtureDataBuilder
                     'players' => $this->players($data),
                 };
             });
+
+        $players = $data['players'];
         
-        $result = $data->transform(function ($lineups, $key) use ($data) {
-            if ($key === 'lineups') {
-                $players = $data['players'];
-                
+        $result = $data->transform(function ($lineups, $key) use ($players) {
+            if ($key === 'lineups') {       
                 $startXI = collect($lineups['startXI'])->pluck('id');
                 $startXIRatings = collect($players)->whereIn('id', $startXI);
 
@@ -62,6 +66,7 @@ final readonly class FixtureDataBuilder
                         })
                         ->values(),
                     'substitutes' => collect($lineups['substitutes'])
+                        ->whereIn('id', collect($substituteRatings)->pluck('id'))
                         ->map(function ($lineup, $index) use ($substituteRatings) {
                             return array_merge((array) $lineup, $substituteRatings[$index]);
                         })
@@ -71,7 +76,7 @@ final readonly class FixtureDataBuilder
             return $lineups;
         })
         ->except('players');
-
+        
         return $result;
     }
         
@@ -117,7 +122,7 @@ final readonly class FixtureDataBuilder
             'name'   => $data->name,
             'season' => $data->season,
             'round'  => $data->round,
-            'img'    => LeagueImageFile::generatePath($data->id)
+            'img'    => $this->leagueImage->generatePath($data->id)
         ];
     }
     
@@ -153,7 +158,7 @@ final readonly class FixtureDataBuilder
                             'number'   => $lineup->player->number,
                             'position' => PositionType::from($lineup->player->pos)->name,
                             'grid'     => $lineup->player->grid,
-                            'img'      => PlayerImageFile::generatePath($lineup->player->id)
+                            'img'      => $this->playerImage->generatePath($lineup->player->id)
                         ];
                     });
             })
@@ -162,20 +167,25 @@ final readonly class FixtureDataBuilder
     }
     
     /**
-     * playersの必要なデータを抽出する
+     * 出場した選手のみのデータを抽出する
      *
      * @param  mixed $data
      * @return array
      */
     private function players($data): array
     {
-        $team = $this->chelseaFilter($data);
+        $Chelsea = $this->chelseaFilter($data);
 
-        return collect($team['players'])
+        return collect($Chelsea['players'])
+            ->reject(function ($players) {
+                return !$players->statistics[0]->games->minutes;
+            })
             ->map(function ($players) {
                 return [
                     'id' => $players->player->id,
-                    'defaultRating' => $players->statistics[0]->games->rating
+                    'goal' => $players->statistics[0]->goals->total, 
+                    'assists' => $players->statistics[0]->goals->assists, 
+                    'defaultRating' => $players->statistics[0]->games->rating,
                 ];
             })
             ->toArray();
