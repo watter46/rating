@@ -27,10 +27,14 @@ class PlayerInfoSeeder extends Seeder
         $SOFA_fetched = $playerOfTeam->get();
 
         $FOOT_fetched = $squads->get();
+
+        
+        /** @var Season $season */
+        $season = app(Season::class);
         
         $playerList = PlayerInfo::query()
             ->select(['id', 'name', 'number', 'season'])
-            ->where('season', Season::current())
+            ->where('season', $season->current())
             ->get()
             ->toArray();
 

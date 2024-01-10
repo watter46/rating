@@ -6,10 +6,7 @@ use App\Http\Controllers\Util\FixtureFile;
 use App\Models\Fixture;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Http\Controllers\Util\FixturesFile;
-use App\Http\Controllers\Util\TeamImageFile;
 use App\UseCases\Player\Builder\FixtureDataBuilder;
-use App\UseCases\Player\Builder\FixtureDataListBuilder;
 
 class FixtureSeeder extends Seeder
 {
@@ -17,41 +14,22 @@ class FixtureSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
+    {   
+        $this->save(1035338);
+        $this->save(1035359);
+    }
+
+    private function save(int $fixtureId)
     {
-        /** @var FixturesFile $file */
-        $file = app(FixturesFile::class);
-
-        $fetched = $file->get();
-
-        /** @var FixtureDataListBuilder $fixtureDataList */
-        $fixtureDataList = app(FixtureDataListBuilder::class);
-
-        $data = $fixtureDataList->build($fetched, []);
+        /** @var FixtureDataBuilder $builder */
+        $builder = app(FixtureDataBuilder::class);
         
-        $unique = ['id'];
-        $updateColumns = ['date', 'is_end'];
-
-        (new Fixture)->upsert($data, $unique, $updateColumns);
-
-        $fixtureId = 1035338;
-        
-        /** @var Fixture $fixture */
-        $fixture = Fixture::where('external_fixture_id', $fixtureId)->first();
-
-        $fetched = (new FixtureFile)->get($fixtureId);
-
-        $data = (new FixtureDataBuilder(new TeamImageFile))->build($fetched[0]);
-
-        $fixture->updateFixture($data)->save();
-
-        $fixtureId2 = 1035359;
-
         /** @var Fixture $fixture2 */
-        $fixture2 = Fixture::where('external_fixture_id', $fixtureId2)->first();
+        $fixture2 = Fixture::where('external_fixture_id', $fixtureId)->first();
 
-        $fetched2 = (new FixtureFile)->get($fixtureId2);
+        $fetched2 = (new FixtureFile)->get($fixtureId);
 
-        $data2 = (new FixtureDataBuilder(new TeamImageFile))->build($fetched2[0]);
+        $data2 = $builder->build($fetched2[0]);
 
         $fixture2->updateFixture($data2)->save();
     }
