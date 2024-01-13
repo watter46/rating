@@ -23,13 +23,13 @@ final readonly class FetchFixtureUseCase
         
     }
     
-    public function execute(int $fixtureId): Fixture
+    public function execute(string $fixtureId): Fixture
     {
         try {
-            $fixture = Fixture::query()
-                // ->with('players.apiPlayer')
-                ->where('external_fixture_id', $fixtureId)
-                ->first();
+            $fixture = Fixture::find($fixtureId);
+
+            // 試合の情報がないときの処理
+            dd($fixture->fixture);
 
             $idList = collect($fixture->fixture['lineups'])
                 ->dot()

@@ -28,13 +28,15 @@ class Fixture extends Model
         'external_fixture_id',
         'external_league_id',
         'season',
+        'score',
         'is_end',
         'date',
         'fixture'
     ];
 
     protected $casts = [
-        'fixture' => AsCollection::class
+        'score' => AsCollection::class,
+        'fixture' => AsCollection::class,
     ];
 
     public function updateFixture(Collection $fixture): self

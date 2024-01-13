@@ -1,4 +1,4 @@
-<div class="w-full p-2 rounded-2xl bg-sky-950 h-1/3">
+<div {{ $attributes->merge(['class' => 'w-full p-2 rounded-2xl bg-sky-950']) }}>
     <div class="bg-sky-900 rounded-2xl">
         <div class="flex items-center p-2">
             @if ($league['img'])
