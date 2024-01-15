@@ -17,7 +17,7 @@
                     </div>
             
                     <template x-if="isOpen">
-                        <div class="top-0 left-0 z-10 flex items-center justify-center w-full h-full abs olute"
+                        <div class="absolute top-0 left-0 z-10 flex items-center justify-center w-full h-full"
                             style="background: rgba(0, 0, 0, 0.8);">
                             <div class="flex justify-center w-3/6 p-5 bg-gray-500 rounded-lg h-3/6">
                                 <form action="/admin/dashboard/refresh" method="POST"
