@@ -6,6 +6,7 @@ use App\Http\Controllers\FixturesResource;
 use App\UseCases\Fixture\FetchFixtureListUseCase;
 use App\UseCases\Fixture\RegisterFixtureListUseCase;
 use Exception;
+use Illuminate\Http\Request;
 
 class AdminFixtureController
 {
@@ -21,10 +22,30 @@ class AdminFixtureController
         }
     }
 
-    public function update(RegisterFixtureListUseCase $registerFixtureList)
+    public function update(Request $request, RegisterFixtureListUseCase $registerFixtureList)
     {
         try {
+            if ($request->input('refreshKey') !== config('refreshKey.key')) {
+                return redirect()
+                    ->route('admin.dashboard')
+                    ->with('message', [
+                        'type' => 'error',
+                        'message' => 'Keyが一致しません。'
+                    ]);
+            }
+
+            redirect()
+                ->route('admin.dashboard')
+                ->with('message', [
+                    'type' => 'success',
+                    'message' => 'Success!'
+                ]);
+            dd('good');
+            
             $registerFixtureList->execute();
+
+            return redirect()->route('admin.dashboard');
+
         } catch (Exception $e) {
 
         }

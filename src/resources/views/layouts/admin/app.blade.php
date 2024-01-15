@@ -20,6 +20,8 @@
         <div class="min-h-screen dark:bg-emerald-950">
             @include('layouts.admin.navigation')
 
+            <livewire:message />
+
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow dark:bg-emerald-800">

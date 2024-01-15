@@ -37,7 +37,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('dashboard', [AdminFixtureController::class, 'index'])->name('admin.dashboard');
-        Route::get('dashboard/update', [AdminFixtureController::class, 'update']);
+        Route::post('dashboard/refresh', [AdminFixtureController::class, 'update']);
     });
 });
 
