@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Fixture;
 
+use App\Http\Controllers\Util\FixtureFile;
 use App\Models\Fixture;
 use App\UseCases\Util\Season;
 use Exception;
@@ -17,7 +18,7 @@ final readonly class FetchFixtureListUseCase
 
     public function execute(): LengthAwarePaginator
     {
-        try {
+        try {            
             /** @var LengthAwarePaginator $fixture */
             $fixture = $this->fixture
                 ->select(['id', 'score', 'date', 'external_fixture_id', 'fixture'])
