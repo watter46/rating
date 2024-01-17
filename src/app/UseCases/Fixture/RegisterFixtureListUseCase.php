@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player;
+namespace App\UseCases\Fixture;
 
 use App\Http\Controllers\Util\FixturesFile;
 use App\Http\Controllers\Util\LeagueImageFile;
@@ -34,6 +34,9 @@ final readonly class RegisterFixtureListUseCase
         try {
             // $fetched = ApiFootballFetcher::fixtures()->fetch();
             $fetched = $this->file->get();
+            // dd($fetched);
+
+            // $this->file->write(json_encode($fetched));
             
             $this->registerTeamImage($fetched);
             $this->registerLeagueImage($fetched); 
@@ -46,7 +49,7 @@ final readonly class RegisterFixtureListUseCase
                 ->toArray();
 
             $data = $this->builder->build($fetched, $fixtureList);
-
+            
             DB::transaction(function () use ($data) {
                 $unique = ['id'];
                 $updateColumns = ['date', 'is_end'];

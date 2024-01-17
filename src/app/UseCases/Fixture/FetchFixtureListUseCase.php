@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Fixture;
 
+use App\Http\Controllers\Util\FixtureFile;
 use App\Models\Fixture;
 use App\UseCases\Util\Season;
 use Exception;
@@ -17,13 +18,25 @@ final readonly class FetchFixtureListUseCase
 
     public function execute(): LengthAwarePaginator
     {
-        try {
-            return $this->fixture
-                ->select(['id', 'score', 'date', 'external_fixture_id'])
+        try {            
+            /** @var LengthAwarePaginator $fixture */
+            $fixture = $this->fixture
+                ->select(['id', 'score', 'date', 'external_fixture_id', 'fixture'])
                 ->where('season', $this->season->current())
                 ->whereDate('date', '<=', now())
                 ->orderBy('date', 'desc')
                 ->paginate(20);
+
+            $fixture->getCollection()
+                ->transform(function (Fixture $model) {
+                    $model->dataExists = !is_null($model->fixture);
+
+                    unset($model->fixture);
+
+                    return $model;
+                });
+
+            return $fixture;
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('プロジェクトが見つかりませんでした。');

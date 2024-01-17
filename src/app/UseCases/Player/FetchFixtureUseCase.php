@@ -27,9 +27,8 @@ final readonly class FetchFixtureUseCase
     {
         try {
             $fixture = Fixture::find($fixtureId);
-
             // 試合の情報がないときの処理
-            dd($fixture->fixture);
+            // dd($fixture->fixture);
 
             $idList = collect($fixture->fixture['lineups'])
                 ->dot()
@@ -45,7 +44,7 @@ final readonly class FetchFixtureUseCase
                 ->get();
 
             $fixture['playerInfos'] = $playerInfos;
-
+            
             return $fixture;
             
         } catch (Exception $e) {

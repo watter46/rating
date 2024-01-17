@@ -40,13 +40,21 @@ final readonly class FixtureDataListBuilder
 
         $result = $fixtureList
             ? $data
-                ->zip(collect($fixtureList))
-                ->map(function ($fixture) {
-                    return array_merge($fixture[0], $fixture[1]);
+                ->map(function ($fixture) use ($fixtureList) {
+                    $filtered = collect($fixtureList)
+                        ->first(function ($model) use ($fixture) {
+                            return $model['external_fixture_id'] === $fixture['external_fixture_id'];
+                        });
+
+                    if (!$filtered) {
+                        return $fixture;
+                    }
+                    
+                    return array_merge($fixture, $filtered);
                 })
                 ->toArray()
             : $data->toArray();
-
+            
         return $result;
     }
 

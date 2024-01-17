@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Player\Util;
 
+use App\UseCases\Util\Season;
 use Exception;
 use GuzzleHttp\Client;
 
@@ -71,10 +72,12 @@ final readonly class ApiFootballFetcher
 
     public static function fixtures(): self
     {
+        $season = new Season();
+        
         return new self(
             url:  'https://api-football-v1.p.rapidapi.com/v3/fixtures',
             query: [
-                'season' => now()->year,
+                'season' => $season->current(),
                 'team'   => self::CHELSEA_TEAM_ID
             ]
         );

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             FixtureSeeder::class,
             PlayerInfoSeeder::class,
             PlayerSeeder::class,
+            AdminSeeder::class
         ]);
     }
 }

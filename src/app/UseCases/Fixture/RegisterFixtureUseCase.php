@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player;
+namespace App\UseCases\Fixture;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -9,7 +9,7 @@ use App\Http\Controllers\Util\FixtureFile;
 use App\Models\Fixture;
 use App\UseCases\Player\Builder\FixtureDataBuilder;
 use App\UseCases\Player\Util\ApiFootballFetcher;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final readonly class RegisterFixtureUseCase
 {
@@ -21,26 +21,28 @@ final readonly class RegisterFixtureUseCase
         //
     }
 
-    public function execute(int $fixtureId)
+    public function execute(string $fixtureId)
     {
         try {
-            $model = Fixture::query()
-                ->where('external_fixture_id', $fixtureId)
-                ->first();
-            
-            // $fetched = ApiFootballFetcher::fixture($fixtureId)->fetch();
+            /** @var Fixture $fixture */
+            $model = $this->fixture->findOrFail($fixtureId);
 
-            $fetched = $this->file->get($fixtureId);
+            $fetched = ApiFootballFetcher::fixture($model->external_fixture_id)->fetch();
+
+            // $fetched = $this->file->get($model->external_fixture_id);
             
-            // $this->file->write($fixtureId, json_encode($fetched));
+            // $this->file->write($model->external_fixture_id, json_encode($fetched));
                         
             $data = $this->builder->build($fetched[0]);
-
+            
             $fixture = $model->updateFixture($data);
 
             DB::transaction(function () use ($fixture) {
                 $fixture->save();
             });
+
+        } catch (ModelNotFoundException $e) {
+            throw new ModelNotFoundException('Fixture Not Exists.');
  
         } catch (Exception $e) {
             throw $e;

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Util;
 
+use App\Models\Fixture;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 
 
@@ -39,6 +41,17 @@ final readonly class FixtureFile
         $path = $this->generatePath($fixtureId);
 
         return file_exists($path);
+    }
+
+    public function bulkWrite(Collection $fixtures)
+    {
+        $fixtures->each(function (Fixture $fixture) {
+            if ($this->exists($fixture->external_fixture_id)) {
+                return true;
+            }
+            
+            $this->write($fixture->external_fixture_id, $fixture->fixture->toJson());
+        });
     }
 
     private function ensureDirExists(): void
