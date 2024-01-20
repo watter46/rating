@@ -14,16 +14,40 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
+    <body class="min-h-screen font-sans antialiased text-gray-900">
+        <div class="flex flex-col h-screen pt-6 bg-gray-100 sm:justify-center sm:pt-0 dark:bg-gray-900">
+            {{-- Header --}}
+            <div class="flex items-center p-2 border-b-2 border-gray-500 bg-sky-900 gap-x-5">
+                <div class="w-fit">
+                    <a href="/">
+                        <x-application-logo class="w-12 h-12 text-gray-500 fill-current" />
+                    </a>
+                </div>
+
+                <p class="w-full text-4xl font-black text-gray-400">Rating</p>
+
+                @if (Route::has('login'))
+                    <div class="fixed top-0 right-0 hidden px-6 py-4 sm:block">
+                        @auth
+                            <a href="{{ url('/dashboard') }}" class="text-lg font-black text-gray-400 underline dark:text-gray-400">
+                                DashBoard</a>
+                        @else
+                            <a href="{{ route('login') }}" class="text-lg font-black text-gray-400 underline dark:text-gray-400">
+                                Login</a>
+
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="ml-4 text-lg font-black text-gray-400 underline dark:text-gray-400">Register</a>
+                            @endif
+                        @endauth
+                    </div>
+                @endif
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+            {{-- Main --}}
+            <div class="flex items-center justify-center h-full">
+                <div class="w-full h-full px-6 py-3 overflow-hidden shadow-md">
+                    {{ $slot }}
+                </div>
             </div>
         </div>
     </body>
