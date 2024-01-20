@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Events\FixtureRegistered;
+use App\UseCases\Util\Season;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +21,10 @@ class Fixture extends Model
     public $incrementing = false;
     
     protected $keyType = 'string';
+
+    private const PREMIER_LEAGUE_ID = 39;
+    private const FA_CUP_ID = 45;
+    private const LEAGUE_CUP_ID = 48;
 
     /**
      * The attributes that are mass assignable.
@@ -44,6 +51,42 @@ class Fixture extends Model
         $this->fixture = $fixture;
 
         return $this;
+    }
+
+    public function registered(): void
+    {
+        FixtureRegistered::dispatch($this);
+    }
+
+    /**
+     * scopeFixture
+     *
+     * @param  Builder<Fixture> $query
+     * @return void
+     */
+    public function scopeInSeason(Builder $query): void
+    {
+        $query
+            ->whereIn('external_league_id', [
+                self::PREMIER_LEAGUE_ID,
+                self::FA_CUP_ID,
+                self::LEAGUE_CUP_ID
+            ]);
+    }
+
+    /**
+     * scopeFixture
+     *
+     * @param  Builder<Fixture> $query
+     * @return void
+     */
+    public function scopePast(Builder $query): void
+    {
+        $query
+            ->select(['id', 'score', 'date', 'external_fixture_id', 'fixture'])
+            ->where('season', Season::current())
+            ->whereDate('date', '<=', now())
+            ->orderBy('date', 'desc');
     }
     
     /**
