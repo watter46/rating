@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('top');
 });
 
 //　ユーザーアカウント
@@ -40,9 +40,5 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('dashboard/refresh', [AdminFixtureController::class, 'update']);
     });
 });
-
-Route::get('/rg', [PlayerController::class, 'register']);
-Route::get('/rg2', [PlayerController::class, 'register2']);
-Route::get('/rg3', [PlayerController::class, 'register3']);
 
 require __DIR__.'/auth.php';
