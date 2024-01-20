@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Fixture;
 
+use App\Events\FixtureRegistered;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +17,8 @@ final readonly class RegisterFixtureUseCase
     public function __construct(
         private FixtureFile $file,
         private FixtureDataBuilder $builder,
-        private Fixture $fixture)
+        private Fixture $fixture,
+        private FixtureRegistered $fixtureRegistered)
     {
         //
     }
@@ -24,27 +26,31 @@ final readonly class RegisterFixtureUseCase
     public function execute(string $fixtureId)
     {
         try {
-            /** @var Fixture $fixture */
+            /** @var Fixture $model */
             $model = $this->fixture->findOrFail($fixtureId);
 
-            $fetched = ApiFootballFetcher::fixture($model->external_fixture_id)->fetch();
+            // $fetched = ApiFootballFetcher::fixture($model->external_fixture_id)->fetch();
 
-            // $fetched = $this->file->get($model->external_fixture_id);
+            $fetched = $this->file->get($model->external_fixture_id);
             
-            // $this->file->write($model->external_fixture_id, json_encode($fetched));
+            dd($fetched);
+            // $this->file->write($model->external_fixture_id, json_encode(json_decode($fetched)->response[0]));
                         
-            $data = $this->builder->build($fetched[0]);
+            // $data = $this->builder->build($fetched[0]);
             
-            $fixture = $model->updateFixture($data);
+            // $fixture = $model->updateFixture($data);
 
-            DB::transaction(function () use ($fixture) {
-                $fixture->save();
-            });
+            // DB::transaction(function () use ($fixture) {
+            //     $fixture->save();
+            // });
+
+            // $fixture->registered();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Fixture Not Exists.');
  
         } catch (Exception $e) {
+            dd($e);
             throw $e;
         }
     }

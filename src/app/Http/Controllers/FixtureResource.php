@@ -31,7 +31,7 @@ final readonly class FixtureResource
     public function format(Fixture $fixture): Collection
     {
         $players = $fixture->playerInfos;
-
+        
         return $fixture->fixture
             ->map(function ($fixture, $key) {
                 return match($key) {
@@ -45,6 +45,9 @@ final readonly class FixtureResource
                 if ($key !== 'lineups') {
                     return $fixture;
                 }
+
+                // $isEquals = $this->countEquals($fixture, $players);
+                // dd($isEquals);
 
                 return $this->changePlayerId($fixture, $players);
             })
@@ -112,5 +115,24 @@ final readonly class FixtureResource
             });
 
         return $result->toArray();
+    }
+
+    private function countEquals(array $lineup, Collection $players): bool
+    {
+        $modelCount = $players->count();
+        
+        $lineupCount = collect($lineup)
+            ->map(function (array $lineup, $key) {                
+                if ($key === 'startXI') {
+                    return collect($lineup)
+                        ->flatten(1)
+                        ->count();
+                }
+
+                return collect($lineup)->count();
+            })
+            ->sum();
+        
+        return $modelCount === $lineupCount;
     }
 }

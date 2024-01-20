@@ -14,7 +14,7 @@ final readonly class SofaScore
         //
     }
 
-    public function fetch()
+    public function fetch(): string
     {
         $client = new Client();
 
@@ -29,8 +29,6 @@ final readonly class SofaScore
 
         return $response->getBody()->getContents();
     }
-
-    //769333 Nkunku
     
     public static function playerPhoto(int $playerId): self
     {
@@ -48,6 +46,17 @@ final readonly class SofaScore
             url: 'https://sofascores.p.rapidapi.com/v1/teams/players',
             query: [
                 'team_id' => (string) self::CHELSEA_ID
+            ]
+        );
+    }
+
+    public static function findPlayer(string $name): self
+    {
+        return new self(
+            url: 'https://sofascores.p.rapidapi.com/v1/search/multi',
+            query: [
+                'query' => $name,
+                'group' => 'players'
             ]
         );
     }
