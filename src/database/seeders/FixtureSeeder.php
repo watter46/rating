@@ -15,8 +15,11 @@ class FixtureSeeder extends Seeder
      */
     public function run(): void
     {   
-        $this->save(1035338);
-        $this->save(1035359);
+        $list = (new FixtureFile)->getIdList();
+
+        $list->each(function ($id) {
+            $this->save($id);
+        });
     }
 
     private function save(int $fixtureId)
@@ -24,13 +27,13 @@ class FixtureSeeder extends Seeder
         /** @var FixtureDataBuilder $builder */
         $builder = app(FixtureDataBuilder::class);
         
-        /** @var Fixture $fixture2 */
-        $fixture2 = Fixture::where('external_fixture_id', $fixtureId)->first();
+        /** @var Fixture $fixture */
+        $fixture = Fixture::where('external_fixture_id', $fixtureId)->first();
 
-        $fetched2 = (new FixtureFile)->get($fixtureId);
+        $fetched = (new FixtureFile)->get($fixtureId);
 
-        $data2 = $builder->build($fetched2[0]);
+        $data = $builder->build($fetched[0]);
 
-        $fixture2->updateFixture($data2)->save();
+        $fixture->updateFixture($data)->save();
     }
 }

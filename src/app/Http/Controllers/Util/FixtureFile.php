@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Util;
 
 use App\Models\Fixture;
+use App\UseCases\Player\Builder\FixtureDataBuilder;
 use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-
+use Symfony\Component\Finder\SplFileInfo;
 
 final readonly class FixtureFile
 {
@@ -18,7 +20,7 @@ final readonly class FixtureFile
         $this->ensureDirExists();
     }
     
-    public function get(int $fixtureId): array
+    public function get(int $fixtureId)
     {
         if (!$this->exists($fixtureId)) {
             throw new Exception('fixtureFileが存在しません。');
@@ -52,6 +54,20 @@ final readonly class FixtureFile
             
             $this->write($fixture->external_fixture_id, $fixture->fixture->toJson());
         });
+    }
+
+    public function getIdList(): Collection
+    {
+        $path = app_path(self::DIR_PATH);
+
+        return collect(File::files($path))
+            ->map(function (SplFileInfo $info) {
+                $fileName = $info->getFilename();
+
+                $id = Str::before($fileName, '_'.self::FILE_PATH);
+                
+                return (int) $id;
+            });
     }
 
     private function ensureDirExists(): void

@@ -16,7 +16,7 @@ final readonly class ApiFootballFetcher
         //
     }
 
-    public function fetch(): array
+    public function fetch(): string
     {        
         try {
             $client = new Client();
@@ -30,13 +30,7 @@ final readonly class ApiFootballFetcher
                 ],
             ]);
 
-            $json = json_decode($response->getBody()->getContents());
-
-            if (!($json->response)) {                
-                throw new Exception('API-FOOTBALL Error: '.$response->errors->fixture);
-            }
-                        
-            return $json->response;
+            return $response->getBody()->getContents();
 
         } catch (Exception $e) {
             dd($e);

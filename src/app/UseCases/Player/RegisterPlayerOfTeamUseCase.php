@@ -2,15 +2,16 @@
 
 namespace App\UseCases\Player;
 
+use App\Http\Controllers\Util\PlayerFile;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\PlayerOfTeamFile;
 use App\Http\Controllers\Util\SquadsFile;
-use App\Models\ApiPlayer;
 use App\Models\PlayerInfo;
 use App\UseCases\Player\Builder\PlayerDataBuilder;
+use App\UseCases\Player\Util\ApiFootballFetcher;
 use App\UseCases\Player\Util\SofaScore;
 use App\UseCases\Util\Season;
 
@@ -21,6 +22,8 @@ final readonly class RegisterPlayerOfTeamUseCase
         private PlayerInfo $player,
         private Season $season,
         private PlayerDataBuilder $builder,
+        private ApiFootballFetcher $apiFootballFetcher,
+        private SofaScore $sofaScore,
         private PlayerOfTeamFile $playerOfTeam,
         private SquadsFile $squads,
         private PlayerImageFile $file)
@@ -28,18 +31,18 @@ final readonly class RegisterPlayerOfTeamUseCase
         //
     }
 
-    // FootApiとApiFootballのidを持たせる
     public function execute()
     {
         try {
             $SOFA_fetched = $this->playerOfTeam->get();
-
-            // $FOOT_fetched = SofaScore::playersOfTeam()->fetch();
-
-            // $this->playerOfTeam->write($FOOT_fetched);
-
             $FOOT_fetched = $this->squads->get();
-            
+
+            // $this->playerOfTeam->write($SOFA_fetched);
+            // $this->squads->write($FOOT_fetched);
+
+            // $FOOT_fetched = $this->apiFootballFetcher->squads()->fetch();
+            // $SOFA_fetched = $this->sofaScore->playersOfTeam()->fetch();
+
             $playerList = $this
                 ->player
                 ->select(['id', 'name', 'number', 'season'])
@@ -62,6 +65,7 @@ final readonly class RegisterPlayerOfTeamUseCase
                 $this->registerImage();
             });
             
+
         } catch (Exception $e) {
             throw $e;
         }

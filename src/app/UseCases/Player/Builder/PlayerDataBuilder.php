@@ -27,16 +27,15 @@ final readonly class PlayerDataBuilder
     {
         // ApiFootball
         $FOOT_players = collect($FOOT_fetched[0]->players)
-        ->map(function ($player) {
-            return [
-                'foot_player_id' => $player->id,
-                'name' => $player->name,
-                'number' => $player->number,
-                'season'   => $this->season->current()
-            ];
-        });
-
-        // SofaScore
+            ->map(function ($player) {
+                return [
+                    'foot_player_id' => $player->id,
+                    'name' => $player->name,
+                    'number' => $player->number,
+                    'season'   => $this->season->current()
+                ];
+            });
+            
         $SOFA_players = collect($SOFA_fetched->data->players)
             ->map(function ($players) {
                 return [

@@ -7,7 +7,7 @@ final readonly class Season
 {
     private const SEASON_END_MONTH = 6;
     
-    public function current(): int
+    public static function current(): int
     {
         $now = now();
 
