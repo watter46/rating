@@ -46,6 +46,11 @@ class RegisterFixtureListener
     {
         $playerIdList = $this->playerIdList($model->fixture['lineups']);
 
+        $playerInfos = PlayerInfo::query()
+            ->currentSeason()
+            ->whereIn('foot_player_id', $playerIdList)
+            ->get();
+        
         $modelIdList = PlayerInfo::query()
             ->currentSeason()
             ->whereIn('foot_player_id', $playerIdList)

@@ -15,9 +15,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             FixtureListSeeder::class,
-            FixtureSeeder::class,
             PlayerInfoSeeder::class,
-            PlayerSeeder::class,
+            // FixtureSeeder::class,
+            // PlayerSeeder::class,
             UserSeeder::class,
             AdminSeeder::class
         ]);

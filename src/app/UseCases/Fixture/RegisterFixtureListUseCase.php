@@ -41,8 +41,8 @@ final readonly class RegisterFixtureListUseCase
             $this->registerTeamImage($fetched);
             $this->registerLeagueImage($fetched); 
             
-            $fixtureList = $this
-                ->fixture
+            // Modelに移行する
+            $fixtureList = $this->fixture
                 ->select(['id', 'external_fixture_id'])
                 ->where('season', $this->season->current())
                 ->get()

@@ -59,7 +59,7 @@ class Fixture extends Model
     }
 
     /**
-     * scopeFixture
+     * シーズン中の試合のみ取得する
      *
      * @param  Builder<Fixture> $query
      * @return void
@@ -75,7 +75,7 @@ class Fixture extends Model
     }
 
     /**
-     * scopeFixture
+     * 今日までの試合のみ取得する
      *
      * @param  Builder<Fixture> $query
      * @return void
@@ -84,9 +84,20 @@ class Fixture extends Model
     {
         $query
             ->select(['id', 'score', 'date', 'external_fixture_id', 'fixture'])
-            ->where('season', Season::current())
+            ->currentSeason()
             ->whereDate('date', '<=', now())
             ->orderBy('date', 'desc');
+    }
+
+    /**
+     * 今シーズンのみ取得する
+     *
+     * @param  Builder<Fixture> $query
+     * @return void
+     */
+    public function scopeCurrentSeason(Builder $query): void
+    {
+        $query->where('season', Season::current());
     }
     
     /**
