@@ -1,10 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\StatisticSeeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,7 +16,6 @@ class DatabaseSeeder extends Seeder
             FixtureListSeeder::class,
             PlayerInfoSeeder::class,
             FixtureSeeder::class,
-            // PlayerSeeder::class,
             UserSeeder::class,
             AdminSeeder::class
         ]);
