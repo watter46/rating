@@ -17,7 +17,7 @@ final readonly class PlayerFile
         $this->ensureDirExists();
     }
     
-    public function get(int $playerId): mixed
+    public function get(int $playerId): string
     {
         if (!$this->exists($playerId)) {
             throw new Exception('PlayerFileが存在しません。');
@@ -25,9 +25,7 @@ final readonly class PlayerFile
         
         $path = $this->generatePath($playerId);
 
-        $json = File::get($path);
-
-        return json_decode($json)[0];
+        return File::get($path);
     }
 
     public function write(int $playerId, string $json)

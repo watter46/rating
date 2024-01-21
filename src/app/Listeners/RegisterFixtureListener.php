@@ -2,18 +2,14 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Str;
+use Exception;
+use Illuminate\Support\Collection;
 
 use App\Events\FixtureRegistered;
 use App\Models\PlayerInfo;
 use App\Models\Fixture;
-use App\UseCases\Player\RegisterPlayerOfTeamUseCase;
 use App\UseCases\Player\RegisterPlayerUseCase;
-use App\UseCases\Player\Util\SofaScore;
-use Exception;
-use Illuminate\Support\Collection;
+
 
 class RegisterFixtureListener
 {
@@ -38,18 +34,13 @@ class RegisterFixtureListener
             $this->registerPlayer->execute($players);
             
         } catch (Exception $e) {
-            dd($e);
+            throw $e;
         }
     }
 
     private function filterPlayers(Fixture $model): Collection
     {
         $playerIdList = $this->playerIdList($model->fixture['lineups']);
-
-        $playerInfos = PlayerInfo::query()
-            ->currentSeason()
-            ->whereIn('foot_player_id', $playerIdList)
-            ->get();
         
         $modelIdList = PlayerInfo::query()
             ->currentSeason()

@@ -13,6 +13,7 @@ use App\Http\Controllers\Util\SquadsFile;
 use App\Models\Fixture;
 use App\UseCases\Player\RegisterPlayerOfTeamUseCase;
 use App\UseCases\Util\Season;
+use Database\Mocks\Fixture\MockRegisterFixtureUseCase;
 use Database\Mocks\Player\MockRegisterPlayerOfTeamUseCase;
 
 final readonly class FetchFixtureListUseCase
@@ -25,7 +26,7 @@ final readonly class FetchFixtureListUseCase
         private PlayerOfTeamFile $playerOfTeamFile,
         private SquadsFile $squadsFile,
         private RegisterPlayerOfTeamUseCase $registerPlayerOfTeam,
-        private MockRegisterPlayerOfTeamUseCase $mock)
+        private MockRegisterFixtureUseCase $mock)
     {
         //
     }
@@ -33,7 +34,7 @@ final readonly class FetchFixtureListUseCase
     public function execute(): LengthAwarePaginator
     {
         try {            
-            $this->mock->execute();
+            $this->mock->execute(1035045);
             // $this->registerPlayerOfTeam->execute();
             
             // $fixture = $this->squadsFile->get();
