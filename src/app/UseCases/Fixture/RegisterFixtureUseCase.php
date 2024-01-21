@@ -33,16 +33,15 @@ final readonly class RegisterFixtureUseCase
 
             $fetched = $this->file->get($model->external_fixture_id);
             
-            dd($fetched);
             // $this->file->write($model->external_fixture_id, json_encode(json_decode($fetched)->response[0]));
                         
-            // $data = $this->builder->build($fetched[0]);
+            $data = $this->builder->build($fetched[0]);
             
-            // $fixture = $model->updateFixture($data);
+            $fixture = $model->updateFixture($data);
 
-            // DB::transaction(function () use ($fixture) {
-            //     $fixture->save();
-            // });
+            DB::transaction(function () use ($fixture) {
+                $fixture->save();
+            });
 
             // $fixture->registered();
 

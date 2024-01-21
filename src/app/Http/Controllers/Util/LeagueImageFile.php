@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Util;
 
+use App\UseCases\Player\Util\ApiFootballFetcher;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
@@ -40,6 +41,27 @@ final readonly class LeagueImageFile
 
         } catch (FileNotFoundException $e) {
             return '';
+        }
+    }
+    
+    /**
+     * リーグの画像を保存する
+     *
+     * @param  array $fixturesFile
+     * @return void
+     */
+    public function registerAll(array $fixturesFile): void
+    {
+        $uniqueLeagues = collect($fixturesFile)
+            ->map(fn ($fixture) => $fixture->league)
+            ->unique('id');
+
+        foreach($uniqueLeagues as $league) {
+            if ($this->exists($league->id)) continue;
+
+            $image = ApiFootballFetcher::leagueImage($league->id)->fetchImage();
+
+            $this->write($league->id, $image);
         }
     }
 

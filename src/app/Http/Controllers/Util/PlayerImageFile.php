@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Util;
 
+use App\UseCases\Player\Util\SofaScore;
 use App\UseCases\Util\Season;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
+use App\Models\PlayerInfo;
 
 
 final readonly class PlayerImageFile
@@ -75,13 +78,26 @@ final readonly class PlayerImageFile
 
         return public_path(self::DIR_PATH.'/'.$fileName);
     }
-
-    public function findMissingFiles(array $idList): array
+    
+    /**
+     * registerAll
+     *
+     * @param  Collection<int, PlayerInfo> $playerInfos
+     * @return void
+     */
+    public function registerAll(Collection $playerInfos): void
     {
-        return collect($idList)
-            ->filter(function ($player) {
-                return !$this->exists($player['foot_player_id']);
-            })
-            ->toArray();
+        $missingPlayerIdList = $playerInfos
+            ->filter(function (PlayerInfo $player) {
+                return !$this->exists($player->foot_player_id);
+            });
+
+        if ($missingPlayerIdList->isEmpty()) return;
+
+        foreach($missingPlayerIdList as $player) {
+            $image = SofaScore::playerPhoto($player->sofa_player_id)->fetch();
+            
+            $this->write($player->foot_player_id, $image);
+        }
     }
 }

@@ -40,7 +40,7 @@ final readonly class RegisterPlayerUseCase
                         
                     // $this->playerFile->write($playerId, $player);
 
-                    $fetched = $this->playerFile->get(1403055);
+                    $fetched = $this->playerFile->get($player['id']);
 
                     return collect([
                             'name' => $fetched->shortName,
