@@ -10,11 +10,11 @@
                 <div class="flex items-center pl-2">
                     @if ($score['teams']['home']['img'])
                         <img src="{{ $score['teams']['home']['img'] }}"
-                            class="w-8 h-8 cursor-pointer">
+                            class="w-8 h-8">
                     @endif
 
                     @unless($score['teams']['home']['img'])
-                        <div class="w-8 h-8 bg-gray-400 cursor-pointer">
+                        <div class="w-8 h-8 bg-gray-400">
                         </div>
                     @endunless
 
@@ -26,11 +26,11 @@
                 <div class="flex items-center pl-2">
                     @if ($score['teams']['away']['img'])
                         <img src="{{ $score['teams']['away']['img'] }}"
-                            class="w-8 h-8 cursor-pointer">
+                            class="w-8 h-8">
                     @endif
 
                     @unless($score['teams']['away']['img'])
-                        <div class="w-8 h-8 bg-gray-400 cursor-pointer">
+                        <div class="w-8 h-8 bg-gray-400">
                         </div>
                     @endunless
 
@@ -44,7 +44,7 @@
         <div class="flex items-center justify-center w-1/4 rounded-lg bg-sky-900" title="{{ $score['league']['round'] }}">
             <div class="flex flex-col items-center p-2">
                 <img src="{{ $score['league']['img'] }}"
-                        class="w-10 h-10 cursor-pointer">
+                        class="w-10 h-10">
 
                 <div class="flex justify-center p-2">
                     <p class="font-black" style="text-shadow: #b8b8b8 2px 1px 5px; color: #37003C;">
