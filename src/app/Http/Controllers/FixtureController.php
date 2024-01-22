@@ -7,7 +7,7 @@ use Exception;
 use App\UseCases\Fixture\FetchFixtureListUseCase;
 use App\UseCases\Player\FetchFixtureUseCase;
 use App\Http\Controllers\FixtureResource;
-
+use App\UseCases\Fixture\FetchLatestUseCase;
 
 class FixtureController extends Controller
 {    
@@ -27,6 +27,18 @@ class FixtureController extends Controller
     {
         try {
             $fixture = $fetchFixture->execute($fixtureId);
+            
+            return view('players', $resource->format($fixture));
+
+        } catch (Exception $e) {
+            dd($e);
+        }
+    }
+
+    public function latest(FetchLatestUseCase $fetchLatest, FixtureResource $resource)
+    {
+        try {
+            $fixture = $fetchLatest->execute();
             
             return view('players', $resource->format($fixture));
 

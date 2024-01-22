@@ -16,8 +16,8 @@
                         {{ __('Fixtures') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('players')" :active="request()->routeIs('players')">
-                        {{ __('Players') }}
+                    <x-nav-link :href="route('fixtures.latest')" :active="request()->routeIs('fixtures.latest')">
+                        {{ __('Latest') }}
                     </x-nav-link>
                 </div>
             </div>
