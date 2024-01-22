@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 use App\UseCases\Player\FetchPlayerUseCase;
 
@@ -48,6 +49,18 @@ class Player extends Component
         if ($playerId !== $this->player['id']) return;
 
         $this->fetchPlayer($this->fixtureId, $playerId);
+    }
+    
+    /**
+     * ラストネームに変換する
+     *
+     * @return string
+     */
+    public function toLastName(): string
+    {
+        $shortName = Str::afterLast($this->player['name'], ' ');
+
+        return $shortName;
     }
     
     /**

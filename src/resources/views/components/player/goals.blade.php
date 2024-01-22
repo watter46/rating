@@ -1,16 +1,9 @@
 @if($goals)
-    <div class="flex">
-        @if($goals <= 3)
-            @foreach(range(1, $goals) as $num)
-                <div class="bg-white rounded-full" style="padding: 0.5px;">
-                    <x-svg.goal-image />
-                </div>
-            @endforeach
-        @else
-            <div class="flex items-center justify-center px-0.5 bg-white rounded-full">
-                <p class="pr-1 font-black text-sky-700">{{ $goals }}</p>
+    <div class="flex justify-center -space-x-2">
+        @foreach(range(1, $goals) as $num)
+            <div class="{{ 'z-'.$loop->iteration * 10 }} bg-white rounded-full p-0.5">
                 <x-svg.goal-image />
             </div>
-        @endif
+        @endforeach
     </div>
 @endif
