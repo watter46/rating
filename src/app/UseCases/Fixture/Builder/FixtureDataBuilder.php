@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player\Builder;
+namespace App\UseCases\Fixture\Builder;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

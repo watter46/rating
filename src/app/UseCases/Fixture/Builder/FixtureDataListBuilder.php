@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player\Builder;
+namespace App\UseCases\Fixture\Builder;
 
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
+
 
 final readonly class FixtureDataListBuilder
 {    
