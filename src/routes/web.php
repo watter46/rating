@@ -24,11 +24,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/fixtures', [FixtureController::class, 'index'])->name('fixtures');
     Route::get('/fixtures/{fixtureId}', [FixtureController::class, 'find'])->name('fixtures.find');
-
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware('verified')->name('dashboard');
-}); 
+});
 
 // 管理者アカウント
 Route::group(['prefix' => 'admin'], function () {
