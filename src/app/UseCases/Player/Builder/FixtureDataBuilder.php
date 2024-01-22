@@ -54,11 +54,16 @@ final readonly class FixtureDataBuilder
 
                 $substitutes = collect($lineups['substitutes'])->pluck('id');
                 $substituteRatings = collect($players)->whereIn('id', $substitutes)->values();
-                
+
                 return [
                     'startXI' => collect($lineups['startXI'])
-                        ->map(function($lineup, $index) use ($startXIRatings) {
-                            return array_merge((array) $lineup, $startXIRatings[$index]);
+                        ->map(function ($lineup) use ($startXIRatings) {
+                            $player = $startXIRatings
+                                ->sole(function ($player) use ($lineup) {
+                                    return $player['id'] === $lineup['id'];
+                                });
+                            
+                            return array_merge((array) $lineup, $player);
                         })
                         ->reverse()
                         ->groupBy(function ($player) {
@@ -66,9 +71,14 @@ final readonly class FixtureDataBuilder
                         })
                         ->values(),
                     'substitutes' => collect($lineups['substitutes'])
-                        ->whereIn('id', collect($substituteRatings)->pluck('id'))
-                        ->map(function ($lineup, $index) use ($substituteRatings) {
-                            return array_merge((array) $lineup, $substituteRatings[$index]);
+                        ->whereIn('id', $substituteRatings->pluck('id'))
+                        ->map(function ($lineup) use ($substituteRatings) {
+                            $player = $substituteRatings
+                                ->sole(function ($player) use ($lineup) {
+                                    return $player['id'] === $lineup['id'];
+                                });
+                            
+                            return array_merge((array) $lineup, $player);
                         })
                 ];
             }
@@ -146,7 +156,7 @@ final readonly class FixtureDataBuilder
     private function lineups($data): array
     {
         $team = $this->chelseaFilter($data);
-        
+                
         return $team
             ->only(['startXI', 'substitutes'])
             ->map(function ($lineups) {
@@ -183,6 +193,7 @@ final readonly class FixtureDataBuilder
             ->map(function ($players) {
                 return [
                     'id' => $players->player->id,
+                    'name' => $players->player->name,
                     'goal' => $players->statistics[0]->goals->total, 
                     'assists' => $players->statistics[0]->goals->assists, 
                     'defaultRating' => $players->statistics[0]->games->rating,

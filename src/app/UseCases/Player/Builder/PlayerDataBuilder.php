@@ -35,13 +35,16 @@ final readonly class PlayerDataBuilder
                     'season'   => $this->season->current()
                 ];
             });
-            
+
+        // SofaScore
         $SOFA_players = collect($SOFA_fetched->data->players)
             ->map(function ($players) {
                 return [
                     'sofa_player_id' => $players->player->id,
                     'name' => $players->player->name,
-                    'number' => $players->player->shirtNumber
+                    'number' => isset($players->player->shirtNumber)
+                        ? $players->player->shirtNumber
+                        : null
                 ];
             });
 
@@ -58,7 +61,7 @@ final readonly class PlayerDataBuilder
 
                 return array_merge($foot_player, $sofa_player);
             });
-
+        
         if (!$playerList) {
             return $mergedApiData->toArray();
         }
@@ -73,7 +76,7 @@ final readonly class PlayerDataBuilder
                 return array_merge($player, $data);
             })
             ->toArray();
-            
+        
         return $result;
     }
 
@@ -90,16 +93,20 @@ final readonly class PlayerDataBuilder
         return false;
     }
 
-    private function isNumberMatch($sofa_player, $foot_player)
+    private function isNumberMatch($sofa_player, $foot_player): bool
+    {
+        if (!$sofa_player['number']) {
+            return false;
+        }
+
+        return $sofa_player['number'] === $foot_player['number'];
+    }
+
+    private function isNameMatch($sofa_player, $foot_player): bool
     {
         $sofa_name = Str::after($sofa_player['name'], ' ');
         $foot_name = Str::after($foot_player['name'], ' ');
 
         return $sofa_name === $foot_name;
-    }
-
-    private function isNameMatch($sofa_player, $foot_player)
-    {
-        return $sofa_player['number'] === $foot_player['number'];
     }
 }

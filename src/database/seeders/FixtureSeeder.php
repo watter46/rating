@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use App\Http\Controllers\Util\FixtureFile;
-use App\Models\Fixture;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\UseCases\Player\Builder\FixtureDataBuilder;
+use Database\Mocks\Fixture\MockRegisterFixtureUseCase;
+
 
 class FixtureSeeder extends Seeder
 {
@@ -17,23 +16,11 @@ class FixtureSeeder extends Seeder
     {   
         $list = (new FixtureFile)->getIdList();
 
-        $list->each(function ($id) {
-            $this->save($id);
-        });
-    }
-
-    private function save(int $fixtureId)
-    {
-        /** @var FixtureDataBuilder $builder */
-        $builder = app(FixtureDataBuilder::class);
+        /** @var MockRegisterFixtureUseCase $registerFixture */
+        $registerFixture = app(MockRegisterFixtureUseCase::class);
         
-        /** @var Fixture $fixture */
-        $fixture = Fixture::where('external_fixture_id', $fixtureId)->first();
-
-        $fetched = (new FixtureFile)->get($fixtureId);
-
-        $data = $builder->build($fetched[0]);
-
-        $fixture->updateFixture($data)->save();
+        $list->each(function ($id) use ($registerFixture) {
+            $registerFixture->execute($id);
+        });
     }
 }

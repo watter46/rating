@@ -44,6 +44,18 @@ class PlayerInfo extends Model
     }
 
     /**
+     * scopeFixture
+     *
+     * @param  Builder<Player> $query
+     * @param  string $fixtureId
+     * @return void
+     */
+    public function scopeByFixture(Builder $query, string $fixtureId)
+    {
+        $query->where('fixture_id', $fixtureId);
+    }
+
+    /**
      * 今シーズンのプレイヤーを検索する
      *
      * @param  Builder<PlayerInfo> $query
@@ -51,6 +63,6 @@ class PlayerInfo extends Model
      */
     public function scopeCurrentSeason(Builder $query): void
     {
-        $query->where('season', (new Season)->current());
+        $query->where('season', Season::current());
     }
 }

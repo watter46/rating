@@ -2,20 +2,20 @@
 
 namespace App\UseCases\Player;
 
-use App\Http\Controllers\Util\PlayerFile;
-use App\Http\Controllers\Util\PlayerImageFile;
-use App\Models\PlayerInfo;
-use App\UseCases\Player\Util\SofaScore;
-use App\UseCases\Util\Season;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+
+use App\Models\PlayerInfo;
+use App\Http\Controllers\Util\PlayerFile;
+use App\Http\Controllers\Util\PlayerImageFile;
+use App\UseCases\Player\Util\SofaScore;
+use App\UseCases\Util\Season;
+
 
 final readonly class RegisterPlayerUseCase
 {
     public function __construct(
-        private PlayerInfo $player,
         private Season $season,
         private PlayerFile $playerFile,
         private PlayerImageFile $playerImage)
@@ -27,27 +27,32 @@ final readonly class RegisterPlayerUseCase
     {
         try {
             $data = $players
-                ->map(function (array $player) {
-                    // $fetched = SofaScore::findPlayer($player['name'])->fetch();
-
-                    // $player = collect(json_decode($fetched)->data)
-                    //     ->filter(function ($player) {
-                    //         return $player->team->shortName === 'Chelsea';
-                    //     })
-                    //     ->toJson();
-
-                    // $playerId = json_decode($player)[0]->id;
-                        
-                    // $this->playerFile->write($playerId, $player);
-
-                    $fetched = $this->playerFile->get(1403055);
-
-                    return collect([
-                            'name' => $fetched->shortName,
+                ->map(function (array $playerInfo) {
+                    $fetched = SofaScore::findPlayer($playerInfo['name'])->fetch();
+                    
+                    $filtered = collect(json_decode($fetched)->data)
+                        ->filter(function ($player) {
+                            return $player->team->shortName === 'Chelsea';
+                        });
+                    
+                    if ($filtered->isEmpty()) {
+                        return collect([
+                            'name' => $playerInfo['name'],
                             'season' => $this->season->current(),
-                            'number' => $fetched->jerseyNumber,
-                            'foot_player_id' => $player['id'],
-                            'sofa_player_id' => $fetched->id
+                            'number' => $playerInfo['number'],
+                            'foot_player_id' => $playerInfo['id'],
+                            'sofa_player_id' => null
+                        ]);
+                    }
+
+                    $player = json_decode($filtered->toJson())[0];
+                                                                                    
+                    return collect([
+                            'name' => $player->shortName,
+                            'season' => $this->season->current(),
+                            'number' => $player->jerseyNumber,
+                            'foot_player_id' => $playerInfo['id'],
+                            'sofa_player_id' => $player->id
                         ]);
                 })
                 ->toArray();
@@ -56,7 +61,7 @@ final readonly class RegisterPlayerUseCase
                 $unique = ['id'];
                 $updateColumns = ['name', 'number', 'season', 'foot_player_id', 'sofa_player_id'];
                 
-                $this->player->upsert($data, $unique, $updateColumns);
+                PlayerInfo::upsert($data, $unique, $updateColumns);
 
                 $this->registerImage();
             });
@@ -73,22 +78,13 @@ final readonly class RegisterPlayerUseCase
      */
     private function registerImage()
     {
-        $playerIdList = $this->player
+        $playerInfos = PlayerInfo::query()
             ->select(['foot_player_id', 'sofa_player_id'])
-            ->where('season', $this->season->current())
+            ->currentSeason()
             ->get()
             ->filter(fn (PlayerInfo $player) => $player->sofa_player_id)
-            ->values()
-            ->toArray();
+            ->values();
 
-        $missingIdList = $this->playerImage->findMissingFiles($playerIdList);
-
-        if (!$missingIdList) return;
-
-        foreach($missingIdList as $player) {
-            $image = SofaScore::playerPhoto($player['sofa_player_id'])->fetch();
-            
-            $this->playerImage->write($player['foot_player_id'], $image);
-        }
+        $this->playerImage->registerAll($playerInfos);
     }
 }

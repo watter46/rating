@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player;
+namespace Database\Mocks\Player;
 
-use App\Http\Controllers\Util\PlayerFile;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +12,7 @@ use App\Models\PlayerInfo;
 use App\UseCases\Player\Builder\PlayerDataBuilder;
 
 
-final readonly class RegisterPlayerOfTeamUseCase
+class MockRegisterPlayerOfTeamUseCase
 {
     public function __construct(
         private PlayerDataBuilder $builder,
@@ -30,17 +29,11 @@ final readonly class RegisterPlayerOfTeamUseCase
             $SOFA_fetched = $this->playerOfTeam->get();
             $FOOT_fetched = $this->squads->get();
 
-            // $this->playerOfTeam->write($SOFA_fetched);
-            // $this->squads->write($FOOT_fetched);
-
-            // $FOOT_fetched = $this->apiFootballFetcher->squads()->fetch();
-            // $SOFA_fetched = $this->sofaScore->playersOfTeam()->fetch();
-
             $playerList = PlayerInfo::query()
                 ->currentSeason()
                 ->get()
                 ->toArray();
-                
+
             $data = $this->builder->build(
                 $SOFA_fetched,
                 $FOOT_fetched,
@@ -56,7 +49,6 @@ final readonly class RegisterPlayerOfTeamUseCase
                 $this->registerImage();
             });
             
-
         } catch (Exception $e) {
             throw $e;
         }
