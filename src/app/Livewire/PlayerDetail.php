@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 
 class PlayerDetail extends Component
@@ -29,7 +30,7 @@ class PlayerDetail extends Component
         //     ->flatten(1);
 
         // $this->player = $lineups
-        //     ->sole(fn ($player) => $player['id'] === '01hjtx4yspw6hqd6wr1h778a07');
+        //     ->first();
     }
     
     public function render()
@@ -58,5 +59,17 @@ class PlayerDetail extends Component
     public function hidden()
     {
         $this->player = [];
+    }
+
+    /**
+     * ラストネームに変換する
+     *
+     * @return string
+     */
+    public function toLastName(): string
+    {
+        $shortName = Str::afterLast($this->player['name'], ' ');
+
+        return $shortName;
     }
 }

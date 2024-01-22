@@ -23,7 +23,7 @@ final readonly class FixtureResource
     }
     
     /**
-     * チーム、リーグ、プレイヤーのファイルパスの画像を取得する
+     * データをフォーマットする
      *
      * @param  Fixture $fixture
      * @return Collection
@@ -46,14 +46,17 @@ final readonly class FixtureResource
                     return $fixture;
                 }
 
-                // $isEquals = $this->countEquals($fixture, $players);
-                // dd($isEquals);
-
-                return $this->changePlayerId($fixture, $players);
+                return $this->replaceId($fixture, $players);
             })
             ->merge(['fixtureId' => $fixture->id]);
     }
-
+    
+    /**
+     * Teamの画像を取得する
+     *
+     * @param  array $teams
+     * @return array
+     */
     private function addTeamImage(array $teams): array
     {
         return collect($teams)
@@ -63,14 +66,26 @@ final readonly class FixtureResource
             })
             ->toArray();
     }
-
+    
+    /**
+     * Leagueの画像を取得する
+     *
+     * @param  array $league
+     * @return array
+     */
     private function addLeagueImage(array $league): array
     {
         return collect($league)
             ->put('img', $this->leagueImage->getByPath($league['img']))
             ->toArray();
     }
-
+    
+    /**
+     * Playerの画像を取得する
+     *
+     * @param  array $lineup
+     * @return array
+     */
     private function addLineupImage(array $lineup): array
     {
         return collect($lineup)
@@ -85,10 +100,17 @@ final readonly class FixtureResource
             ->undot()
             ->toArray();
     }
-
-    private function changePlayerId(array $lineup, Collection $players): array
+    
+    /**
+     * foot_player_idをModelのIDに置き換える
+     *
+     * @param  array $lineup
+     * @param  Collection<int, PlayerInfo> $players
+     * @return array
+     */
+    private function replaceId(array $lineup, Collection $players): array
     {        
-        $result = collect($lineup)
+        return collect($lineup)
             ->map(function (array $lineup, $key) use ($players) {
                 $changeId = function (array $player) use ($players) {                                 
                     $model = $players->first(function (PlayerInfo $model) use ($player) {
@@ -112,27 +134,7 @@ final readonly class FixtureResource
                 
                 return collect($lineup)
                     ->map(fn ($player) => $changeId($player));
-            });
-
-        return $result->toArray();
-    }
-
-    private function countEquals(array $lineup, Collection $players): bool
-    {
-        $modelCount = $players->count();
-        
-        $lineupCount = collect($lineup)
-            ->map(function (array $lineup, $key) {                
-                if ($key === 'startXI') {
-                    return collect($lineup)
-                        ->flatten(1)
-                        ->count();
-                }
-
-                return collect($lineup)->count();
             })
-            ->sum();
-        
-        return $modelCount === $lineupCount;
+            ->toArray();
     }
 }
