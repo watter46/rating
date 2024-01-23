@@ -2,16 +2,17 @@
 
 namespace App\UseCases\Fixture;
 
-use App\Http\Controllers\Util\FixturesFile;
-use App\Http\Controllers\Util\LeagueImageFile;
-use App\Http\Controllers\Util\TeamImageFile;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Fixture;
-use App\UseCases\Player\Builder\FixtureDataListBuilder;
+use App\Http\Controllers\Util\FixturesFile;
+use App\Http\Controllers\Util\LeagueImageFile;
+use App\Http\Controllers\Util\TeamImageFile;
+use App\UseCases\Fixture\Builder\FixtureDataListBuilder;
 use App\UseCases\Player\Util\ApiFootballFetcher;
 use App\UseCases\Util\Season;
+
 
 final readonly class RegisterFixtureListUseCase
 {
@@ -19,8 +20,6 @@ final readonly class RegisterFixtureListUseCase
     const END_STATUS = 'Match Finished';
     
     public function __construct(
-        private Fixture $fixture,
-        private Season $season,
         private TeamImageFile $teamImageFile,
         private LeagueImageFile $leagueImageFile,
         private FixturesFile $file,
@@ -42,9 +41,9 @@ final readonly class RegisterFixtureListUseCase
             $this->registerLeagueImage($fetched); 
             
             // Modelに移行する
-            $fixtureList = $this->fixture
+            $fixtureList = Fixture::query()
                 ->select(['id', 'external_fixture_id'])
-                ->where('season', $this->season->current())
+                ->where('season', Season::current())
                 ->get()
                 ->toArray();
 
@@ -54,7 +53,7 @@ final readonly class RegisterFixtureListUseCase
                 $unique = ['id'];
                 $updateColumns = ['date', 'is_end'];
 
-                $this->fixture->upsert($data, $unique, $updateColumns);
+                Fixture::upsert($data, $unique, $updateColumns);
             });
 
         } catch (Exception $e) {

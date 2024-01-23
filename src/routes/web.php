@@ -18,17 +18,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-  
-    Route::get('/players', [PlayerController::class, 'index'])->name('players');
-    Route::get('/players/detail', PlayerDetail::class);
+
+    Route::get('/latest', [FixtureController::class, 'latest'])->name('fixtures.latest');
 
     Route::get('/fixtures', [FixtureController::class, 'index'])->name('fixtures');
     Route::get('/fixtures/{fixtureId}', [FixtureController::class, 'find'])->name('fixtures.find');
-
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware('verified')->name('dashboard');
-}); 
+});
 
 // 管理者アカウント
 Route::group(['prefix' => 'admin'], function () {

@@ -1,34 +1,28 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player;
+namespace App\UseCases\Fixture;
 
-use App\Http\Controllers\Util\FixtureFile;
-use App\Http\Controllers\Util\FixturesFile;
 use Exception;
 use Illuminate\Support\Str;
 
 use App\Models\Fixture;
 use App\Models\PlayerInfo;
-use App\Http\Controllers\Util\LeagueImageFile;
-use App\Http\Controllers\Util\TeamImageFile;
 
 
-final readonly class FetchFixtureUseCase
+final readonly class FetchLatestUseCase
 {
-    public function __construct(
-        private Fixture $fixture,
-        private TeamImageFile $teamImage,
-        private LeagueImageFile $leagueImage)
+    public function __construct()
     {
-        
+        //
     }
-    
-    public function execute(string $fixtureId): Fixture
+
+    public function execute()
     {
         try {
-            $fixture = Fixture::find($fixtureId);
-            // 試合の情報がないときの処理
-            // dd($fixture->fixture);
+            $fixture = Fixture::query()
+                ->past()
+                ->latest()
+                ->first();
 
             $idList = collect($fixture->fixture['lineups'])
                 ->dot()
@@ -46,7 +40,7 @@ final readonly class FetchFixtureUseCase
             $fixture['playerInfos'] = $playerInfos;
             
             return $fixture;
-            
+
         } catch (Exception $e) {
             throw $e;
         }
