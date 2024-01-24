@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
@@ -20,10 +20,10 @@ final readonly class FixturesResource
     /**
      * チーム、リーグ、プレイヤーのファイルパスの画像を取得する
      *
-     * @param  LengthAwarePaginator $fixtures
-     * @return LengthAwarePaginator
+     * @param  Paginator $fixtures
+     * @return Paginator
      */
-    public function format(LengthAwarePaginator $fixtures): LengthAwarePaginator
+    public function format(Paginator $fixtures): Paginator
     {
         $fixtures
             ->getCollection()

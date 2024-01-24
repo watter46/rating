@@ -3,9 +3,10 @@
 namespace App\UseCases\Fixture;
 
 use Exception;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 use App\Models\Fixture;
+use App\Http\Controllers\TournamentType;
 
 
 final readonly class FetchFixtureListUseCase
@@ -15,15 +16,16 @@ final readonly class FetchFixtureListUseCase
         //
     }
 
-    public function execute(): LengthAwarePaginator
+    public function execute(TournamentType $tournament): Paginator
     {
         try {
-            /** @var LengthAwarePaginator $fixture */
+            /** @var Paginator $fixture */
             $fixture = Fixture::query()
                 ->past()
                 ->inSeason()
-                ->paginate(20);
-
+                ->tournament($tournament)
+                ->simplePaginate(20);
+                
             $fixture->getCollection()
                 ->transform(function (Fixture $model) {
                     $model->dataExists = !is_null($model->fixture);
