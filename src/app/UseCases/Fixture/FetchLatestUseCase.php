@@ -7,18 +7,19 @@ use Illuminate\Support\Str;
 
 use App\Models\Fixture;
 use App\Models\PlayerInfo;
+use App\UseCases\Player\DecideManOfTheMatchUseCase;
 
 
 final readonly class FetchLatestUseCase
 {
-    public function __construct()
+    public function __construct(private DecideManOfTheMatchUseCase $decideManOfTheMatch)
     {
         //
     }
 
     public function execute()
     {
-        try {
+        try {            
             $fixture = Fixture::query()
                 ->past()
                 ->latest()

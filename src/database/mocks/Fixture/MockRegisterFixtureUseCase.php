@@ -5,8 +5,7 @@ namespace Database\Mocks\Fixture;
 use App\Models\Fixture;
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\Util\FixtureFile;
-
-use App\UseCases\Player\Builder\FixtureDataBuilder;
+use App\UseCases\Fixture\Builder\FixtureDataBuilder;
 
 
 class MockRegisterFixtureUseCase

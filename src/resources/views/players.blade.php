@@ -1,7 +1,5 @@
 <x-app-layout>
     <div class="p-2" style="height: 90vh;">
-        <livewire:message />
-     
         <div class="flex items-center w-full h-full">
             <div class="flex w-1/2 h-full">
                 <div class="z-10 w-2/6 h-full py-10 space-y-5">

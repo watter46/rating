@@ -1,7 +1,7 @@
 @props([
     'util_class' => 'rounded-full cursor-pointer',
     'img_class' => $attributes['type'] === 'field'
-        ? 'w-[70px] h-[70px]'
+        ? 'w-16 h-16'
         : 'w-24 h-24',
     'number_class' => $attributes['type'] === 'field'
         ? 'text-3xl'

@@ -7,7 +7,7 @@ use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 
 use App\Models\Fixture;
-use App\UseCases\Player\Builder\FixtureDataListBuilder;
+use App\UseCases\Fixture\Builder\FixtureDataListBuilder;
 
 
 class MockRegisterFixtureListUseCase

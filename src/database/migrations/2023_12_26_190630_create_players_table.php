@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->unsignedFloat('rating', 3, 1);
+            $table->unsignedFloat('rating', 3, 1)->nullable();
+            $table->boolean('mom')->default(false);
 
             $table->foreignUlid('fixture_id')->constrained()->onDelete('cascade');
             $table->foreignUlid('player_info_id')->constrained()->onDelete('cascade');

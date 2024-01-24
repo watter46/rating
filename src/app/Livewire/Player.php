@@ -15,7 +15,9 @@ class Player extends Component
     
     public array $player;
 
-    public float $rating;
+    public ?float $rating;
+
+    public bool $mom;
 
     public string $name;
 
@@ -51,6 +53,12 @@ class Player extends Component
         $this->fetchPlayer($this->fixtureId, $playerId);
     }
     
+    #[On('player-mom-decided')]
+    public function refetchAll(): void
+    {
+        $this->fetchPlayer($this->fixtureId, $this->player['id']);
+    }
+    
     /**
      * ラストネームに変換する
      *
@@ -81,7 +89,8 @@ class Player extends Component
             return;
         }
         
-        $this->rating = $player->rating;
+        $this->rating = (float) ($player->rating ?? $this->player['defaultRating']);
         $this->isEvaluated = true;
+        $this->mom = $player->mom;
     }
 }
