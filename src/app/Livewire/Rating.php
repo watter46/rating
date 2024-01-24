@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
-use App\UseCases\Player\DecideManOfTheMatchUseCase;
+use Exception;
 use Livewire\Component;
 
+use App\Models\Player;
+use App\UseCases\Player\DecideManOfTheMatchUseCase;
 use App\UseCases\Player\EvaluatePlayerUseCase;
 use App\UseCases\Player\FetchPlayerUseCase;
-use Exception;
+
 
 class Rating extends Component
 {
@@ -52,21 +54,30 @@ class Rating extends Component
      */
     public function evaluate(float $rating): void
     {
-        $this->evaluatePlayer->execute($this->fixtureId, $this->playerId, $rating);
+        try {
+            $player = $this->evaluatePlayer->execute($this->fixtureId, $this->playerId, $rating);
 
-        $this->dispatch('player-evaluated', $this->playerId);
-        $this->dispatch('notify', message: self::Evaluated_MESSAGE);
+            $this->setProperty($player);
+
+            $this->dispatch('player-evaluated', $this->playerId);
+            $this->dispatch('notify', message: self::Evaluated_MESSAGE);
+
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
     
     /**
-     * ManOFTheMatchを決める
+     * ManOfTheMatchを決める
      *
      * @return void
      */
     public function decideMOM()
     {
         try {
-            $this->decideMOM->execute($this->fixtureId, $this->playerId);
+            $player = $this->decideMOM->execute($this->fixtureId, $this->playerId);
+
+            $this->setProperty($player);
 
             $this->dispatch('player-mom-decided');
             $this->dispatch('notify', message: self::Decided_MOM_MESSAGE);
@@ -85,8 +96,24 @@ class Rating extends Component
      */
     private function fetchPlayer(string $fixtureId, string $playerId): void
     {
-        $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+        try {
+            $player = $this->fetchPlayer->execute($fixtureId, $playerId);
         
+            $this->setProperty($player);
+
+        } catch (Exception $e) {
+            dd($e);
+        }
+    }
+    
+    /**
+     * Propertyを設定する
+     *
+     * @param  ?Player $player
+     * @return void
+     */
+    private function setProperty(?Player $player)
+    {
         if (!$player) {
             $this->rating = $this->defaultRating;
             $this->mom = false;
@@ -94,6 +121,6 @@ class Rating extends Component
         }
 
         $this->rating = $player->rating ?? $this->defaultRating;
-        $this->mom = $player->mom;
+        $this->mom = $player->mom ?? false;
     }
 }

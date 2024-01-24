@@ -1,5 +1,6 @@
 <div x-data="{
-        rating: @entangle('rating')
+        rating: @entangle('rating').live,
+        mom: @entangle('mom').live
     }">
     <div class="w-full h-full border-t-2 border-gray-700"></div>
 
@@ -22,6 +23,7 @@
 
     <div class="flex justify-end mt-2 gap-x-5">
         <button class="px-10 py-2 border-2 border-gray-200 rounded-lg bg-amber-400"
+            :class="mom ? 'pointer-events-none opacity-30' : ''"
             wire:click="decideMOM">
             <p class="text-lg font-bold text-gray-200">☆ MOM</p>
         </button>

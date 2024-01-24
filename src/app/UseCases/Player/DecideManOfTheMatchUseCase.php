@@ -15,7 +15,7 @@ final readonly class DecideManOfTheMatchUseCase
         //
     }
 
-    public function execute(string $fixtureId, string $playerInfoId): void
+    public function execute(string $fixtureId, string $playerInfoId): Player
     {
         try {            
             /** @var Player $player */
@@ -24,7 +24,9 @@ final readonly class DecideManOfTheMatchUseCase
                 ->playerInfo($playerInfoId)
                 ->first();
                         
-            if ($player?->mom) return;
+            if ($player?->mom) {
+                return $player;
+            }
 
             $newMomPlayer = $player 
                 ? $player->decideMOM()
@@ -45,6 +47,8 @@ final readonly class DecideManOfTheMatchUseCase
                 
                 $oldMomPlayer->save();
             });
+
+            return $newMomPlayer;
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');

@@ -55,12 +55,6 @@ class PlayerDetail extends Component
             ->sole(fn ($player) => $player['id'] === $playerId);
     }
 
-    #[On('player-evaluated')]
-    public function hidden()
-    {
-        $this->player = [];
-    }
-
     /**
      * ラストネームに変換する
      *
