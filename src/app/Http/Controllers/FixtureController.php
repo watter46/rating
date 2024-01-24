@@ -5,23 +5,15 @@ namespace App\Http\Controllers;
 use Exception;
 
 use App\Http\Controllers\FixtureResource;
-use App\UseCases\Fixture\FetchFixtureListUseCase;
 use App\UseCases\Fixture\FetchFixtureUseCase;
 use App\UseCases\Fixture\FetchLatestUseCase;
 
 
 class FixtureController extends Controller
 {    
-    public function index(FetchFixtureListUseCase $fetchFixtureList, FixturesResource $resource)
+    public function index()
     {
-        try {
-            $fixtures = $fetchFixtureList->execute();
-
-            return view('fixtures', ['fixtures' => $resource->format($fixtures)]);
-
-        } catch (Exception $e) {
-            dd($e);
-        }
+        return view('fixtures');
     }
 
     public function find(string $fixtureId, FetchFixtureUseCase $fetchFixture, FixtureResource $resource)

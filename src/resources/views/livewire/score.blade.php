@@ -1,29 +1,48 @@
-<div class="w-full p-2 rounded-2xl bg-sky-950">
-    <div class="flex items-center w-full h-full cursor-pointer"
-        wire:click="toFixture">        
-        <div class="flex items-center justify-center w-1/4 h-full px-2 py-1 font-black text-gray-300 border-r border-gray-500">
-            {{ $score['fixture']['date'] }}
+<div class="w-full p-1 overflow-hidden border-b border-gray-500">
+    <div class="w-full h-full cursor-pointer"
+        wire:click="toFixture">
+
+        <div class="flex justify-between w-full px-5">
+            <p class="text-gray-400">{{ $score['fixture']['date'] }}</p>
+
+            <div class="flex justify-end gap-x-2">
+                <p class="text-sm font-black text-gray-300">{{ $score['league']['name'] }}</p>
+                <p class="text-sm font-black text-gray-300">{{ $score['league']['round'] }}</p>
+                <img src="{{ $score['league']['img'] }}" class="w-5 h-5 bg-pink-500 rounded-xl">
+            </div>
         </div>
-
-        <div class="flex flex-col justify-center w-2/4 px-2 py-1">
+      
+        <div class="flex items-center justify-center w-full">        
             @if ($score['teams']['home'])
-                <div class="flex items-center pl-2">
-                    @if ($score['teams']['home']['img'])
-                        <img src="{{ $score['teams']['home']['img'] }}"
-                            class="w-8 h-8">
-                    @endif
+                <div class="flex items-center justify-end w-full px-10">
+                    <div class="flex items-center justify-end w-2/3 h-full">
+                        <p class="p-2 text-xl font-black text-gray-300 whitespace-nowrap">
+                            {{ $score['teams']['home']['name'] }}
+                        </p>
 
-                    @unless($score['teams']['home']['img'])
-                        <div class="w-8 h-8 bg-gray-400">
-                        </div>
-                    @endunless
+                        @if ($score['teams']['home']['img'])
+                            <img src="{{ $score['teams']['home']['img'] }}"
+                                class="w-8 h-8">
+                        @endif
 
-                    <p class="p-2 text-xl font-black text-gray-300 whitespace-nowrap">{{ $score['teams']['home']['name'] }}</p>
+                        @unless($score['teams']['home']['img'])
+                            <div class="w-8 h-8 bg-gray-400">
+                            </div>
+                        @endunless
+                    </div>
                 </div>
             @endif
-
+    
+            <div class="flex justify-center text-2xl font-black text-gray-300">
+                <div class="flex px-2 rounded-lg w-fit">
+                    <p class="p-1">{{ $fixture['score']['fulltime']['home'] }}</p>
+                    <p class="p-1">-</p>
+                    <p class="p-1">{{ $fixture['score']['fulltime']['away'] }}</p>
+                </div>
+            </div>
+    
             @if ($score['teams']['away'])
-                <div class="flex items-center pl-2">
+                <div class="flex items-center w-full px-10">
                     @if ($score['teams']['away']['img'])
                         <img src="{{ $score['teams']['away']['img'] }}"
                             class="w-8 h-8">
@@ -39,19 +58,6 @@
                     </p>
                 </div>
             @endif
-        </div>
-
-        <div class="flex items-center justify-center w-1/4 rounded-lg bg-sky-900" title="{{ $score['league']['round'] }}">
-            <div class="flex flex-col items-center p-2">
-                <img src="{{ $score['league']['img'] }}"
-                        class="w-10 h-10">
-
-                <div class="flex justify-center p-2">
-                    <p class="font-black" style="text-shadow: #b8b8b8 2px 1px 5px; color: #37003C;">
-                        {{ $score['league']['name'] }}
-                    </p>
-                </div>
-            </div>
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\FixturesResource;
+use App\Http\Controllers\TournamentType;
 use App\UseCases\Fixture\FetchFixtureListUseCase;
 use App\UseCases\Fixture\RegisterFixtureListUseCase;
 use Exception;
@@ -13,7 +14,7 @@ class AdminFixtureController
     public function index(FetchFixtureListUseCase $fetchFixtureList, FixturesResource $resource)
     {
         try {
-            $fixtures = $fetchFixtureList->execute();
+            $fixtures = $fetchFixtureList->execute(TournamentType::ALL);
             
             return view('admin.auth.dashboard', ['fixtures' => $resource->format($fixtures)]);
 

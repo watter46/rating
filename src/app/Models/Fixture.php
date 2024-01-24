@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\FixtureRegistered;
+use App\Http\Controllers\TournamentType;
 use App\UseCases\Util\Season;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -21,10 +22,6 @@ class Fixture extends Model
     public $incrementing = false;
     
     protected $keyType = 'string';
-
-    private const PREMIER_LEAGUE_ID = 39;
-    private const FA_CUP_ID = 45;
-    private const LEAGUE_CUP_ID = 48;
 
     /**
      * The attributes that are mass assignable.
@@ -59,6 +56,20 @@ class Fixture extends Model
     }
 
     /**
+     * ツアーでソートする
+     *
+     * @param  Builder<Fixture> $query
+     * @param  TournamentType $tournament
+     * @return void
+     */
+    public function scopeTournament(Builder $query, TournamentType $tournament): void
+    {        
+        if ($tournament->isAll()) return;
+
+        $query->where('external_league_id', $tournament->toId());
+    }
+
+    /**
      * シーズン中の試合のみ取得する
      *
      * @param  Builder<Fixture> $query
@@ -68,9 +79,9 @@ class Fixture extends Model
     {
         $query
             ->whereIn('external_league_id', [
-                self::PREMIER_LEAGUE_ID,
-                self::FA_CUP_ID,
-                self::LEAGUE_CUP_ID
+                TournamentType::PREMIER_LEAGUE->toId(),
+                TournamentType::FA_CUP->toId(),
+                TournamentType::LEAGUE_CUP->toId()
             ]);
     }
 
