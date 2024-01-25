@@ -34,9 +34,13 @@ final readonly class RegisterFixtureUseCase
 
             $fetched = $this->file->get($model->external_fixture_id);
             
-            // $this->file->write($model->external_fixture_id, json_encode(json_decode($fetched)->response[0]));
+            // $this->file->write($model->external_fixture_id, json_encode(json_decode($fetched)->response));
+
+            // dd($fetched);
                         
             $data = $this->builder->build($fetched[0]);
+
+            // dd($data);
             
             $fixture = $model->updateFixture($data);
 
@@ -44,7 +48,7 @@ final readonly class RegisterFixtureUseCase
                 $fixture->save();
             });
 
-            // $fixture->registered();
+            $fixture->registered();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Fixture Not Exists.');
