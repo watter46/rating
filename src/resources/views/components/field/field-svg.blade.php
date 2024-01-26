@@ -8,7 +8,6 @@
         <g id="Penalty area">
             <path id="Penalty area line" d="M 13.84 0 v 16.5 h 40.32 v -16.5"/>
             <path id="Goal area line" d="M 24.84 0 v 5.5 h 18.32 v -5.5"/>
-            <circle id="Penalty mark" r="0.75" cx="34" cy="10.94" fill="#fff" stroke="none"/>
             <path id="Penalty arc" d="M 26.733027 16.5 a 9.15 9.15 0 0 0 14.533946 0"/>
         </g>
         <use xlink:href="#Penalty area" transform="rotate(180,34,52.5)"/>

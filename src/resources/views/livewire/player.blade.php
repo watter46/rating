@@ -4,8 +4,9 @@
     }"
     wire:ignore.self>
     
-    <div class="flex justify-center" wire:click="toDetail('{{ $player['id'] }}')" class="player">
-        <div class="relative flex justify-center w-fit place-items-center">
+    <div class="flex justify-center" wire:click="toDetail" class="player">
+        <div class="relative flex justify-center w-fit place-items-center
+            {{ $isEvaluated ?: 'opacity-30' }}">
             {{-- PlayerImage --}}
             <x-rating.player-image
                 :number="$player['number']"

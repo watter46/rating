@@ -40,9 +40,9 @@ class Player extends Component
         return view('livewire.player');
     }
 
-    public function toDetail(string $playerId)
+    public function toDetail()
     {
-        $this->dispatch('player-selected', $playerId);
+        $this->dispatch('player-selected', $this->player['id']);
     }
 
     #[On('player-evaluated')]
