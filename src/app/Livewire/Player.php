@@ -7,7 +7,7 @@ use Livewire\Component;
 use Illuminate\Support\Str;
 
 use App\UseCases\Player\FetchPlayerUseCase;
-
+use Exception;
 
 class Player extends Component
 {
@@ -80,20 +80,25 @@ class Player extends Component
      */
     private function fetchPlayer(string $fixtureId, string $playerId): void
     {
-        if (!$playerId) return;
+        try {
+            if (!$playerId) return;
 
-        $player = $this->fetchPlayer->execute($fixtureId, $playerId);
-        
-        $this->defaultRating = (float) $this->player['defaultRating'];
-        
-        if (!$player) {
-            $this->rating = $this->defaultRating;
-            $this->isEvaluated = false;
-            return;
+            $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+            
+            $this->defaultRating = (float) $this->player['defaultRating'];
+            
+            if (!$player) {
+                $this->rating = $this->defaultRating;
+                $this->isEvaluated = false;
+                return;
+            }
+            
+            $this->rating = $player->rating ?? $this->defaultRating;
+            $this->isEvaluated = true;
+            $this->mom = $player->mom;
+            
+        } catch (Exception $e) {
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
-        
-        $this->rating = $player->rating ?? $this->defaultRating;
-        $this->isEvaluated = true;
-        $this->mom = $player->mom;
     }
 }
