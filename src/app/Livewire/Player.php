@@ -16,6 +16,7 @@ class Player extends Component
     public array $player;
 
     public ?float $rating;
+    public ?float $defaultRating;
 
     public bool $mom;
 
@@ -83,13 +84,15 @@ class Player extends Component
 
         $player = $this->fetchPlayer->execute($fixtureId, $playerId);
         
+        $this->defaultRating = (float) $this->player['defaultRating'];
+        
         if (!$player) {
-            $this->rating = (float) $this->player['defaultRating'];
+            $this->rating = $this->defaultRating;
             $this->isEvaluated = false;
             return;
         }
         
-        $this->rating = (float) ($player->rating ?? $this->player['defaultRating']);
+        $this->rating = $player->rating ?? $this->defaultRating;
         $this->isEvaluated = true;
         $this->mom = $player->mom;
     }

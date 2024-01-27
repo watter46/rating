@@ -1,4 +1,5 @@
 <div id="{{ $name }}" class="hidden text-center"
+    title="MacineRating: {{ $defaultRating }}"
     x-data="{
         rating: @entangle('rating')
     }"
