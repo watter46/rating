@@ -13,7 +13,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
-
+/**
+ * FixtureModel
+ * 
+ * @property int $external_fixture_id
+ * @property int $external_league_id
+ * @property int $season
+ * @property Collection $score
+ * @property bool $is_end
+ * @property date $date
+ * @property Collection $fixture
+ */
 class Fixture extends Model
 {
     use HasFactory;

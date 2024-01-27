@@ -8,7 +8,6 @@ use App\Http\Controllers\Util\TeamImageFile;
 
 final readonly class FixtureDataListBuilder
 {    
-    const CHELSEA_TEAM_ID = 49;
     const END_STATUS = 'Match Finished';
 
     public function __construct(
