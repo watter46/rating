@@ -3,17 +3,16 @@
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
-                {{-- <div class="flex items-center shrink-0">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block w-auto text-gray-800 fill-current h-9 dark:text-gray-200" />
-                    </a>
-                </div> --}}
-
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('admin.fixtures')" :active="request()->routeIs('admin.fixtures')">
+                        {{ __('Fixtures') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('admin.players')" :active="request()->routeIs('admin.players')">
+                        {{ __('Players') }}
                     </x-nav-link>
                 </div>
             </div>

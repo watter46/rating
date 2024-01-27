@@ -2,10 +2,9 @@
 
 use App\Http\Controllers\Admin\AdminFixtureController;
 use App\Http\Controllers\Admin\AdminLoginController;
+use App\Http\Controllers\Admin\AdminPlayerController;
 use App\Http\Controllers\FixtureController;
-use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ProfileController;
-use App\Livewire\PlayerDetail;
 use Illuminate\Support\Facades\Route;
 
 
@@ -31,8 +30,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('login', [AdminLoginController::class, 'login']);
 
     Route::middleware(['auth:admin'])->group(function () {
-        Route::get('dashboard', [AdminFixtureController::class, 'index'])->name('admin.dashboard');
-        Route::post('dashboard/refresh', [AdminFixtureController::class, 'update']);
+        Route::get('fixtures', [AdminFixtureController::class, 'index'])->name('admin.fixtures');
+        Route::get('players', [AdminPlayerController::class, 'index'])->name('admin.players');
     });
 });
 
