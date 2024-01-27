@@ -7,7 +7,7 @@ use Exception;
 use GuzzleHttp\Client;
 
 
-final readonly class ApiFootballFetcher
+final readonly class ApiFootball
 {
     private const CHELSEA_TEAM_ID = 49;
 
@@ -83,27 +83,6 @@ final readonly class ApiFootballFetcher
             url:  'https://api-football-v1.p.rapidapi.com/v3/fixtures',
             query: [
                 'id' => $fixtureId
-            ]
-        );
-    }
-
-    public static function statistic(int $fixtureId): self
-    {
-        return new self(
-            url:  'https://api-football-v1.p.rapidapi.com/v3/fixtures/players',
-            query: [
-                'fixture' => $fixtureId
-            ]
-        );
-    }
-
-    public static function lineup(int $fixtureId): self
-    {
-        return new self(
-            url:  'https://api-football-v1.p.rapidapi.com/v3/fixtures/lineups',
-            query: [
-                'fixture' => $fixtureId,
-                'team'    => self::CHELSEA_TEAM_ID
             ]
         );
     }
