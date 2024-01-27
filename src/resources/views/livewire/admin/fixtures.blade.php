@@ -10,7 +10,7 @@
                     </button>
                 </div>
         
-                <template x-if="isOpen">
+                <div x-show="isOpen" x-cloak>
                     <div class="absolute top-0 left-0 z-10 flex items-center justify-center w-full h-full"
                         style="background: rgba(0, 0, 0, 0.8);">
                         <div class="flex justify-center w-3/6 p-5 bg-gray-500 rounded-lg h-3/6">
@@ -33,7 +33,7 @@
                             </div>
                         </div>
                     </div>
-                </template>
+                </div>
                 
                 <div x-show="!isOpen">
                     <div class="grid w-full h-full gap-3 mt-3">

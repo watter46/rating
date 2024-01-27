@@ -46,16 +46,16 @@ class Players extends Component
     {
         try {
             if ($this->refreshKey !== config('refreshKey.key')) {
-                throw new Exception;
+                throw new Exception(self::ERROR_MESSAGE);
             }
 
             $registerPlayerOfTeam->execute();
     
             $this->dispatch('notify', message: self::SUCCESS_MESSAGE);
-            $this->dispatch('close-fixture-modal');
+            $this->dispatch('close-players-modal');
 
         } catch (Exception $e) {
-            $this->dispatch('notify', message: self::ERROR_MESSAGE);
+            $this->dispatch('notify', message: $e->getMessage());
         }
     }
 }

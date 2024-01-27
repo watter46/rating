@@ -70,21 +70,26 @@ class Fixtures extends Component
 
         return $this->resource->format($fixtures);
     }
-
-    public function refreshFixture()
+    
+    /**
+     * 試合一覧情報を更新する
+     *
+     * @return void
+     */
+    public function refreshFixture(): void
     {
         try {
             if ($this->refreshKey !== config('refreshKey.key')) {
-                throw new Exception;
+                throw new Exception(self::ERROR_MESSAGE);
             }
 
-            // $this->registerFixtureList->execute();
+            $this->registerFixtureList->execute();
     
             $this->dispatch('notify', message: self::SUCCESS_MESSAGE);
             $this->dispatch('close-fixtures-modal');
 
         } catch (Exception $e) {
-            dd($e);
+            $this->dispatch('notify', message: $e->getMessage());
         }
     }
 }
