@@ -113,7 +113,8 @@ final readonly class FixtureDataBuilder
                 return [
                     'id'   => $team->id,
                     'name' => $team->name,
-                    'img'  => $this->teamImage->generatePath($team->id)
+                    'img'  => $this->teamImage->generatePath($team->id),
+                    'winner' => $team->winner
                 ];
             })
             ->toArray();

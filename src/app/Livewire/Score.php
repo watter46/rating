@@ -10,6 +10,7 @@ class Score extends Component
     public string $fixtureId;
     public Collection $fixture;
     public Collection $score;
+    public ?bool $winner;
 
     public function render()
     {
