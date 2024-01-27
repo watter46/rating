@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Fixture as EqFixture;
-use App\UseCases\Fixture\RegisterFixtureUseCase;
 use Exception;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+
+use App\Livewire\MessageType;
+use App\Models\Fixture as EqFixture;
+use App\UseCases\Fixture\RegisterFixtureUseCase;
 
 
 class Fixture extends Component
@@ -31,16 +32,16 @@ class Fixture extends Component
     {
         try {
             if ($this->refreshKey !== config('refreshKey.key')) {
-                throw new Exception;
+                throw new Exception(self::ERROR_MESSAGE);
             }
 
             $registerFixture->execute($this->fixture->id);
     
-            $this->dispatch('notify', message: self::SUCCESS_MESSAGE);
+            $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close-fixture-modal');
 
         } catch (Exception $e) {
-            $this->dispatch('notify', message: self::ERROR_MESSAGE);
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
 }

@@ -1,12 +1,14 @@
-<div
-    x-data="{
+<div x-data="{
         messages: [],
         remove(message) {
             this.messages.splice(this.messages.indexOf(message), 1)
         },
-        notify(message) {
+        notify(message) {            
             this.messages.push(message);
-            setTimeout(() => { this.remove(message) }, 2500);
+            setTimeout(() => { this.remove(message) }, 5000);
+        },
+        isSuccess(message) {
+            return message.type === 'Success';
         }
     }"
     @notify.window="notify(event.detail.message)"
@@ -16,13 +18,13 @@
             class="flex items-center w-full max-w-sm p-4 overflow-hidden bg-gray-800 border-4 border-gray-700 rounded-lg shadow-lg pointer-events-auto fadeInRight">
             <div class="flex-shrink-0">
                 <svg class="w-7 h-7"
-                    fill="none" viewBox="0 0 24 24" stroke="#5CB400">
+                    fill="none" viewBox="0 0 24 24" :stroke="isSuccess(message) ? '#5CB400' : '#b40000'">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
 
             <div class="flex-1 ml-3">
-                <p x-text="message" class="text-lg font-black leading-5 text-gray-300"></p>
+                <p x-text="message.text" class="text-lg font-black leading-5 text-gray-300"></p>
             </div>
 
             <button class="inline-flex text-gray-400 transition duration-150 ease-in-out focus:outline-none focus:text-gray-500"
