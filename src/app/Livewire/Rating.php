@@ -115,7 +115,7 @@ class Rating extends Component
     private function setProperty(?Player $player)
     {
         if (!$player) {
-            $this->rating = $this->defaultRating;
+            $this->rating = $this->defaultRating ?? 0;
             $this->mom = false;
             return;
         }
