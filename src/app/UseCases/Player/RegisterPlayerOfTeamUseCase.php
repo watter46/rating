@@ -2,24 +2,21 @@
 
 namespace App\UseCases\Player;
 
-use App\Http\Controllers\Util\PlayerFile;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-use App\Http\Controllers\Util\PlayerImageFile;
-use App\Http\Controllers\Util\PlayerOfTeamFile;
-use App\Http\Controllers\Util\SquadsFile;
 use App\Models\PlayerInfo;
+use App\Http\Controllers\Util\PlayerImageFile;
 use App\UseCases\Player\Builder\PlayerDataBuilder;
+use App\UseCases\Player\Util\ApiFootball;
+use App\UseCases\Player\Util\SofaScore;
 
 
 final readonly class RegisterPlayerOfTeamUseCase
 {
     public function __construct(
-        private PlayerDataBuilder $builder,
-        private PlayerOfTeamFile $playerOfTeam,
-        private SquadsFile $squads,
-        private PlayerImageFile $playerImage)
+        private PlayerImageFile $playerImage,
+        private PlayerDataBuilder $builder)
     {
         //
     }
@@ -27,24 +24,17 @@ final readonly class RegisterPlayerOfTeamUseCase
     public function execute()
     {
         try {
-            $SOFA_fetched = $this->playerOfTeam->get();
-            $FOOT_fetched = $this->squads->get();
+            $FOOT_fetched = ApiFootball::squads()->fetch();
+            $SOFA_fetched = SofaScore::playersOfTeam()->fetch();
 
-            // $this->playerOfTeam->write($SOFA_fetched);
-            // $this->squads->write($FOOT_fetched);
-
-            // $FOOT_fetched = $this->apiFootballFetcher->squads()->fetch();
-            // $SOFA_fetched = $this->sofaScore->playersOfTeam()->fetch();
-
-            $playerList = PlayerInfo::query()
+            $playerInfoList = PlayerInfo::query()
                 ->currentSeason()
-                ->get()
-                ->toArray();
+                ->get();
                 
             $data = $this->builder->build(
                 $SOFA_fetched,
                 $FOOT_fetched,
-                $playerList
+                $playerInfoList
             );
  
             DB::transaction(function () use ($data) {

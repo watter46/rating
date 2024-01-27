@@ -17,7 +17,7 @@ final readonly class PlayerOfTeamFile
         $this->ensureDirExists();
     }
     
-    public function get()
+    public function get(): string
     {
         if (!$this->exists()) {
             throw new Exception('PlayerOfTeamFileが存在しません。');
@@ -25,9 +25,7 @@ final readonly class PlayerOfTeamFile
         
         $path = $this->generatePath();
 
-        $json = File::get($path);
-
-        return json_decode($json);
+        return File::get($path);
     }
 
     public function write(string $json)
