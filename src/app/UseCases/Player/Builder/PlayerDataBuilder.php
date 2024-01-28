@@ -2,42 +2,40 @@
 
 namespace App\UseCases\Player\Builder;
 
+use App\Models\PlayerInfo;
 use App\UseCases\Util\Season;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
 
 final readonly class PlayerDataBuilder
-{    
-    public function __construct(private Season $season)
-    {
-        
-    }
+{
     /**
      * build
      *
      * @property mixed $SOFA_fetched
      * @property mixed $FOOT_fetched
-     * @property array $playerList
+     * @property Collection<int, PlayerInfo> $playerInfoList
      * @return array
      */
     public function build(
-        $SOFA_fetched,
-        $FOOT_fetched,
-        array $playerList)
+        string $SOFA_fetched,
+        string $FOOT_fetched,
+        Collection $playerInfoList)
     {
         // ApiFootball
-        $FOOT_players = collect($FOOT_fetched[0]->players)
+        $FOOT_players = collect(json_decode($FOOT_fetched)->response[0]->players)
             ->map(function ($player) {
                 return [
                     'foot_player_id' => $player->id,
                     'name' => $player->name,
                     'number' => $player->number,
-                    'season'   => $this->season->current()
+                    'season' => Season::current()
                 ];
             });
 
         // SofaScore
-        $SOFA_players = collect($SOFA_fetched->data->players)
+        $SOFA_players = collect(json_decode($SOFA_fetched)->data->players)
             ->map(function ($players) {
                 return [
                     'sofa_player_id' => $players->player->id,
@@ -48,7 +46,21 @@ final readonly class PlayerDataBuilder
                 ];
             });
 
-        $mergedApiData = $FOOT_players
+        return $this->mergePlayerData($playerInfoList, $FOOT_players, $SOFA_players);
+    }
+    
+    /**
+     * 各種プレイヤーデータをマージする
+     *
+     * @param  Collection<int, PlayerInfo> $playerInfoList
+     * @param  mixed $FOOT_players
+     * @param  mixed $SOFA_players
+     * @return array
+     */
+    private function mergePlayerData(Collection $playerInfoList, $FOOT_players, $SOFA_players)
+    {
+        // SofaScoreとApiFootballのプレイヤーデータを統合する
+        $mergedApiPlayerList = $FOOT_players
             ->map(function (array $foot_player) use ($SOFA_players) {
                 $sofa_player = $SOFA_players
                     ->first(function ($sofa_player) use ($foot_player) {
@@ -62,24 +74,36 @@ final readonly class PlayerDataBuilder
                 return array_merge($foot_player, $sofa_player);
             });
         
-        if (!$playerList) {
-            return $mergedApiData->toArray();
+        if ($playerInfoList->isEmpty()) {
+            return $mergedApiPlayerList->toArray();
         }
 
-        $result = collect($playerList)
-            ->map(function ($player) use ($mergedApiData) {
-                $data = $mergedApiData
-                    ->first(function ($playerData) use ($player) {
-                        return $this->isPlayerMatch($playerData, $player);
+        // PlayerInfoに統合したAPIデータを統合する
+        $result = $playerInfoList
+            ->map(function (PlayerInfo $playerInfo) use ($mergedApiPlayerList) {
+                $apiPlayer = $mergedApiPlayerList
+                    ->first(function ($playerData) use ($playerInfo) {
+                        return $this->isPlayerMatch($playerData, $playerInfo);
                     });
 
-                return array_merge($player, $data);
+                if (!$apiPlayer || !$playerInfo) {
+                    return $playerInfo->toArray();
+                }
+
+                return array_merge($playerInfo->toArray(), $apiPlayer);
             })
             ->toArray();
-        
+
         return $result;
     }
-
+    
+    /**
+     * プレイヤーが一致するか判定する
+     *
+     * @param  mixed $sofa_player
+     * @param  mixed $foot_player
+     * @return bool
+     */
     private function isPlayerMatch($sofa_player, $foot_player)
     {
         if ($this->isNumberMatch($sofa_player, $foot_player)) {
@@ -92,7 +116,14 @@ final readonly class PlayerDataBuilder
 
         return false;
     }
-
+    
+    /**
+     * プレイヤーの背番号が一致するか判定する
+     *
+     * @param  mixed $sofa_player
+     * @param  mixed $foot_player
+     * @return bool
+     */
     private function isNumberMatch($sofa_player, $foot_player): bool
     {
         if (!$sofa_player['number']) {
@@ -101,7 +132,14 @@ final readonly class PlayerDataBuilder
 
         return $sofa_player['number'] === $foot_player['number'];
     }
-
+    
+    /**
+     * プレイヤーの名前が一致するか判定する
+     *
+     * @param  mixed $sofa_player
+     * @param  mixed $foot_player
+     * @return bool
+     */
     private function isNameMatch($sofa_player, $foot_player): bool
     {
         $sofa_name = Str::after($sofa_player['name'], ' ');

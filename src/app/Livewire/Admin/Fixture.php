@@ -6,15 +6,15 @@ use App\Models\Fixture as EqFixture;
 use App\UseCases\Fixture\RegisterFixtureUseCase;
 use Exception;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 
 class Fixture extends Component
 {
-    public string $fixtureId;
-    public Collection $score;
-    public bool $dataExists;
+    #[Locked]
+    public EqFixture $fixture;
 
     #[Validate('required')]
     public string $refreshKey;
@@ -34,7 +34,7 @@ class Fixture extends Component
                 throw new Exception;
             }
 
-            $registerFixture->execute($this->fixtureId);
+            $registerFixture->execute($this->fixture->id);
     
             $this->dispatch('notify', message: self::SUCCESS_MESSAGE);
             $this->dispatch('close-fixture-modal');

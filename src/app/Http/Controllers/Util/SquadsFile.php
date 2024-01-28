@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers\Util;
 
-use App\UseCases\Util\Season;
 use Exception;
 use Illuminate\Support\Facades\File;
+
+use App\UseCases\Util\Season;
 
 
 final readonly class SquadsFile
 {
     private const DIR_PATH  = 'Template/squads';
     private const FILE_PATH = '.json';
-
-    private const SUMMER_SEASON = 'post_summer';
-    private const WINTER_SEASON = 'post_winter';
     
     public function __construct(private Season $season)
     {
         $this->ensureDirExists();
     }
     
-    public function get(): array
+    public function get(): string
     {
         if (!$this->exists()) {
             throw new Exception('SquadsFileが存在しません。');
@@ -28,9 +26,7 @@ final readonly class SquadsFile
         
         $path = $this->generatePath();
 
-        $json = File::get($path);
-
-        return json_decode($json)->response;
+        return File::get($path);
     }
 
     public function write(string $fixtures)

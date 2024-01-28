@@ -2,7 +2,7 @@
     <div class="w-full h-full rounded-xl">
         <div class="relative flex items-center justify-center w-full h-full px-5">
             <div class="flex items-center w-full h-16">
-                {{ $this->fixtures->links('components.pagination') }}
+                {{ $this->fixtures->links('components.wire-pagination') }}
             </div>
 
             <div class="absolute flex items-center justify-center w-1/3 h-full px-5 py-1">

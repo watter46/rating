@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Util;
 
-use App\UseCases\Player\Util\ApiFootballFetcher;
+use App\UseCases\Player\Util\ApiFootball;
 use App\UseCases\Util\Season;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -63,7 +63,7 @@ final readonly class TeamImageFile
         foreach($uniqueTeams as $team) {
             if ($this->exists($team->id)) continue;
 
-            $image = ApiFootballFetcher::teamImage($team->id)->fetchImage();
+            $image = ApiFootball::teamImage($team->id)->fetchImage();
             
             $this->write($team->id, $image);
         }

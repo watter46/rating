@@ -10,7 +10,7 @@ use App\Models\Fixture;
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\Util\FixtureFile;
 use App\UseCases\Fixture\Builder\FixtureDataBuilder;
-use App\UseCases\Player\Util\ApiFootballFetcher;
+use App\UseCases\Player\Util\ApiFootball;
 
 
 final readonly class RegisterFixtureUseCase

@@ -7,11 +7,12 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
+use Illuminate\Pagination\Paginator;
 
 use App\Http\Controllers\FixturesResource;
 use App\Http\Controllers\TournamentType;
 use App\UseCases\Fixture\FetchFixtureListUseCase;
-use Illuminate\Pagination\Paginator;
+
 
 class Fixtures extends Component
 {
