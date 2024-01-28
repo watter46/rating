@@ -29,7 +29,7 @@
 
             {{-- machineRating --}}
             <div class="p-2">
-                <p class="text-gray-500">machineRating</p>
+                <p class="text-gray-500">MachineRating</p>
                 <p class="text-xl text-gray-300">{{ $player['defaultRating'] }}</p>
             </div>
             
@@ -50,6 +50,7 @@
             </div>
         </div>
         
+        {{-- Rating --}}
         <livewire:rating
             :$fixtureId
             :playerId="$player['id']"

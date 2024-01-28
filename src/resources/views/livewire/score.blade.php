@@ -33,11 +33,16 @@
                 </div>
             @endif
     
-            <div class="flex justify-center text-2xl font-black text-gray-300">
+            <div class="flex justify-center text-2xl font-black text-gray-300 rounded-xl
+                {{ $winner ? 'bg-green-500' : (
+                   $winner === false
+                        ? 'bg-red-600'
+                        : 'bg-gray-500'
+                ) }}">
                 <div class="flex px-2 rounded-lg w-fit">
-                    <p class="p-1">{{ $fixture['score']['fulltime']['home'] }}</p>
-                    <p class="p-1">-</p>
-                    <p class="p-1">{{ $fixture['score']['fulltime']['away'] }}</p>
+                    <p class="px-1">{{ $fixture['score']['fulltime']['home'] }}</p>
+                    <p class="px-1">-</p>
+                    <p class="px-1">{{ $fixture['score']['fulltime']['away'] }}</p>
                 </div>
             </div>
     

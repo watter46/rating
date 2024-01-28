@@ -19,18 +19,18 @@ class PlayerDetail extends Component
 
     public function mount()
     {
-        // $lineups = collect($this->lineups)
-        //     ->map(function ($lineups, $key) {
-        //         if ($key === 'startXI') {
-        //             return collect($lineups)->flatten(1);
-        //         }
+        $lineups = collect($this->lineups)
+            ->map(function ($lineups, $key) {
+                if ($key === 'startXI') {
+                    return collect($lineups)->flatten(1);
+                }
 
-        //         return $lineups;
-        //     })
-        //     ->flatten(1);
+                return $lineups;
+            })
+            ->flatten(1);
 
-        // $this->player = $lineups
-        //     ->first();
+        $this->player = $lineups
+            ->first();
     }
     
     public function render()
@@ -53,12 +53,6 @@ class PlayerDetail extends Component
 
         $this->player = $lineups
             ->sole(fn ($player) => $player['id'] === $playerId);
-    }
-
-    #[On('player-evaluated')]
-    public function hidden()
-    {
-        $this->player = [];
     }
 
     /**

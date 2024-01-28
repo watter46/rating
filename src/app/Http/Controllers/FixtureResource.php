@@ -31,7 +31,9 @@ final readonly class FixtureResource
     public function format(Fixture $fixture): Collection
     {
         $players = $fixture->playerInfos;
-        
+
+        $playerCount = $players->count();
+            
         return $fixture->fixture
             ->map(function ($fixture, $key) {
                 return match($key) {
@@ -48,7 +50,10 @@ final readonly class FixtureResource
 
                 return $this->replaceId($fixture, $players);
             })
-            ->merge(['fixtureId' => $fixture->id]);
+            ->merge([
+                'fixtureId' => $fixture->id,
+                'playerCount' => $playerCount
+            ]);
     }
     
     /**

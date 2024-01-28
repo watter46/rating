@@ -25,8 +25,27 @@ class Player extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'rating'
+        'rating',
+        'mom'
     ];
+
+    protected $casts = [
+        'mom' => 'boolean'
+    ];
+
+    public function decideMOM(): self
+    {
+        $this->mom = true;
+
+        return $this;
+    }
+
+    public function unDecideMOM(): self
+    {
+        $this->mom = false;
+
+        return $this;
+    }
 
     public function evaluate(float $rating): self
     {
@@ -44,13 +63,39 @@ class Player extends Model
     }
     
     /**
-     * scopeFixture
+     * ManOfTheMatchの選手を取得する
      *
      * @param  Builder<Player> $query
      * @param  string $fixtureId
      * @return void
      */
-    public function scopeByFixture(Builder $query, string $fixtureId)
+    public function scopeMom(Builder $query, string $fixtureId)
+    {
+        $query
+            ->fixture($fixtureId)
+            ->where('mom', true);
+    }
+
+    /**
+     * playerInfoIdでソートする
+     *
+     * @param  Builder<Player> $query
+     * @param  string $playerInfoId
+     * @return void
+     */
+    public function scopePlayerInfo(Builder $query, string $playerInfoId)
+    {
+        $query->where('player_info_id', $playerInfoId);
+    }
+
+    /**
+     * FixtureIdでソートする
+     *
+     * @param  Builder<Player> $query
+     * @param  string $fixtureId
+     * @return void
+     */
+    public function scopeFixture(Builder $query, string $fixtureId)
     {
         $query->where('fixture_id', $fixtureId);
     }

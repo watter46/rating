@@ -2,28 +2,38 @@
 
 namespace App\Livewire;
 
+use Exception;
 use Livewire\Component;
 
+use App\Models\Player;
+use App\UseCases\Player\DecideManOfTheMatchUseCase;
 use App\UseCases\Player\EvaluatePlayerUseCase;
 use App\UseCases\Player\FetchPlayerUseCase;
 
 
 class Rating extends Component
 {
-    private const SUCCESS_MESSAGE = 'Evaluated!!';
+    private const Evaluated_MESSAGE = 'Evaluated!!';
+    private const Decided_MOM_MESSAGE = 'Decided MOM!!';
     
     public string $playerId;
     public string $fixtureId;
     public ?float $defaultRating;
     public ?float $rating;
+    public bool $mom;
 
     private FetchPlayerUseCase $fetchPlayer;
     private readonly EvaluatePlayerUseCase $evaluatePlayer;
+    private readonly DecideManOfTheMatchUseCase $decideMOM;
 
-    public function boot(FetchPlayerUseCase $fetchPlayer, EvaluatePlayerUseCase $evaluatePlayer)
+    public function boot(
+        FetchPlayerUseCase $fetchPlayer,
+        EvaluatePlayerUseCase $evaluatePlayer,
+        DecideManOfTheMatchUseCase $decideMOM)
     {
         $this->fetchPlayer = $fetchPlayer;
         $this->evaluatePlayer = $evaluatePlayer;
+        $this->decideMOM = $decideMOM;
     }
 
     public function mount()
@@ -39,19 +49,42 @@ class Rating extends Component
     /**
      * 選手のレートを評価する
      *
-     * @param  string $fixtureId
-     * @param  string $playerId
      * @param  float $rating
      * @return void
      */
-    public function evaluate(string $fixtureId, string $playerId, float $rating): void
+    public function evaluate(float $rating): void
     {
-        $this->evaluatePlayer->execute($fixtureId, $playerId, $rating);
+        try {
+            $player = $this->evaluatePlayer->execute($this->fixtureId, $this->playerId, $rating);
 
-        $this->fetchPlayer($fixtureId, $playerId);
+            $this->setProperty($player);
 
-        $this->dispatch('player-evaluated', $playerId);
-        $this->dispatch('notify', message: self::SUCCESS_MESSAGE);
+            $this->dispatch('player-evaluated', $this->playerId);
+            $this->dispatch('notify', message: self::Evaluated_MESSAGE);
+
+        } catch (Exception $e) {
+            dd($e);
+        }
+    }
+    
+    /**
+     * ManOfTheMatchを決める
+     *
+     * @return void
+     */
+    public function decideMOM()
+    {
+        try {
+            $player = $this->decideMOM->execute($this->fixtureId, $this->playerId);
+
+            $this->setProperty($player);
+
+            $this->dispatch('player-mom-decided');
+            $this->dispatch('notify', message: self::Decided_MOM_MESSAGE);
+
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -63,13 +96,31 @@ class Rating extends Component
      */
     private function fetchPlayer(string $fixtureId, string $playerId): void
     {
-        $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+        try {
+            $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+        
+            $this->setProperty($player);
 
+        } catch (Exception $e) {
+            dd($e);
+        }
+    }
+    
+    /**
+     * Propertyを設定する
+     *
+     * @param  ?Player $player
+     * @return void
+     */
+    private function setProperty(?Player $player)
+    {
         if (!$player) {
-            $this->rating = $this->defaultRating;
+            $this->rating = $this->defaultRating ?? 0;
+            $this->mom = false;
             return;
         }
-        
-        $this->rating = $player->rating;
+
+        $this->rating = $player->rating ?? $this->defaultRating;
+        $this->mom = $player->mom ?? false;
     }
 }

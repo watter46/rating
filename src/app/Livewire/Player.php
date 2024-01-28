@@ -15,7 +15,10 @@ class Player extends Component
     
     public array $player;
 
-    public float $rating;
+    public ?float $rating;
+    public ?float $defaultRating;
+
+    public bool $mom;
 
     public string $name;
 
@@ -38,9 +41,9 @@ class Player extends Component
         return view('livewire.player');
     }
 
-    public function toDetail(string $playerId)
+    public function toDetail()
     {
-        $this->dispatch('player-selected', $playerId);
+        $this->dispatch('player-selected', $this->player['id']);
     }
 
     #[On('player-evaluated')]
@@ -49,6 +52,12 @@ class Player extends Component
         if ($playerId !== $this->player['id']) return;
 
         $this->fetchPlayer($this->fixtureId, $playerId);
+    }
+    
+    #[On('player-mom-decided')]
+    public function refetchAll(): void
+    {
+        $this->fetchPlayer($this->fixtureId, $this->player['id']);
     }
     
     /**
@@ -75,13 +84,16 @@ class Player extends Component
 
         $player = $this->fetchPlayer->execute($fixtureId, $playerId);
         
+        $this->defaultRating = (float) $this->player['defaultRating'];
+        
         if (!$player) {
-            $this->rating = (float) $this->player['defaultRating'];
+            $this->rating = $this->defaultRating;
             $this->isEvaluated = false;
             return;
         }
         
-        $this->rating = $player->rating;
+        $this->rating = $player->rating ?? $this->defaultRating;
         $this->isEvaluated = true;
+        $this->mom = $player->mom;
     }
 }

@@ -1,7 +1,5 @@
 <x-app-layout>
     <div class="p-2" style="height: 90vh;">
-        <livewire:message />
-     
         <div class="flex items-center w-full h-full">
             <div class="flex w-1/2 h-full">
                 <div class="z-10 w-2/6 h-full py-10 space-y-5">
@@ -16,10 +14,12 @@
                 
                 <div class="flex items-center justify-center w-full h-full">
                     <div class="relative h-full">
+                        {{-- FieldSVG --}}
                         <div class="relative -top-5" style="height: 88vh;">
                             <x-field.field-svg />
                         </div>
                         
+                        {{-- Players --}}
                         <div id="box" class="absolute flex items-end justify-center w-full h-full -top-5">
                             <div class="flex flex-col w-full h-full pt-10">
                                 @foreach($lineups['startXI'] as $line => $players)
@@ -39,6 +39,9 @@
                                 @endforeach
                             </div>
                         </div>
+
+                        {{-- EvaluatedCount --}}
+                        <livewire:evaluated-count :$fixtureId :$playerCount />
                     </div>
                 </div>
             </div>

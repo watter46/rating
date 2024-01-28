@@ -20,7 +20,7 @@ final readonly class FetchFixtureUseCase
     {
         try {
             $fixture = Fixture::find($fixtureId);
-
+            
             $idList = collect($fixture->fixture['lineups'])
                 ->dot()
                 ->filter(function ($player, $key) {

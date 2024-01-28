@@ -10,6 +10,8 @@ use Carbon\Carbon;
 
 final readonly class FixturesResource
 {
+    private const CHELSEA_TEAM_ID = 49;
+
     public function __construct(
         private LeagueImageFile $leagueImage,
         private TeamImageFile   $teamImage)
@@ -37,6 +39,11 @@ final readonly class FixturesResource
                             'fixture' => $this->addDate($fixture)
                         };
                     });
+
+                $fixture['winner'] = collect($fixture->fixture['teams'])
+                    ->sole(function ($team) {
+                        return $team['id'] === self::CHELSEA_TEAM_ID;
+                    })['winner'];
 
                 return $fixture;
             });

@@ -32,28 +32,6 @@ class PlayerInfo extends Model
         'foot_player_id',
         'sofa_image_id'
     ];
-    
-    /**
-     * players
-     *
-     * @return HasMany
-     */
-    public function players(): HasMany
-    {
-        return $this->hasMany(Player::class);
-    }
-
-    /**
-     * scopeFixture
-     *
-     * @param  Builder<Player> $query
-     * @param  string $fixtureId
-     * @return void
-     */
-    public function scopeByFixture(Builder $query, string $fixtureId)
-    {
-        $query->where('fixture_id', $fixtureId);
-    }
 
     /**
      * 今シーズンのプレイヤーを検索する
@@ -64,5 +42,15 @@ class PlayerInfo extends Model
     public function scopeCurrentSeason(Builder $query): void
     {
         $query->where('season', Season::current());
+    }
+    
+    /**
+     * players
+     *
+     * @return HasMany
+     */
+    public function players(): HasMany
+    {
+        return $this->hasMany(Player::class);
     }
 }

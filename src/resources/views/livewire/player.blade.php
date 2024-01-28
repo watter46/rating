@@ -1,11 +1,13 @@
 <div id="{{ $name }}" class="hidden text-center"
+    title="MacineRating: {{ $defaultRating }}"
     x-data="{
         rating: @entangle('rating')
     }"
     wire:ignore.self>
     
-    <div class="flex justify-center" wire:click="toDetail('{{ $player['id'] }}')" class="player">
-        <div class="relative flex justify-center w-fit place-items-center">
+    <div class="flex justify-center" wire:click="toDetail" class="player">
+        <div class="relative flex justify-center w-fit place-items-center
+            {{ $isEvaluated ?: 'opacity-30' }}">
             {{-- PlayerImage --}}
             <x-rating.player-image
                 :number="$player['number']"
@@ -24,10 +26,20 @@
             </div>
             
             {{-- Rating --}}
-            <div class="absolute bottom-0 right-0 w-10 text-center translate-x-1/2 rounded-xl"
-                :style="`background-color: ${ratingBgColor(rating)}`">
-                <p class="font-black text-gray-200" x-text="ratingValue(rating)"></p>
-            </div> 
+            <div class="absolute bottom-0 font-black text-gray-200 right-0 text-sm translate-x-1/2 w-[45px]">
+                @if($mom)
+                    <div class="flex items-center justify-center px-5 py-0.5 gap-x-0.5 rounded-xl" style="background-color: #0E87E0">
+                        <p class="text-xs">★</p>
+                        <p x-text="ratingValue(rating)"></p>
+                    </div>
+                @endif
+
+                @unless($mom)
+                    <div class="flex justify-center px-5 py-0.5 rounded-xl" :style="`background-color: ${ratingBgColor(rating)}`">
+                        <p x-text="ratingValue(rating)"></p>
+                    </div>
+                @endunless
+            </div>
         </div>
     </div>
 
