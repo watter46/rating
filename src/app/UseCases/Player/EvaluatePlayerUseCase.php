@@ -28,7 +28,7 @@ final readonly class EvaluatePlayerUseCase
                 ->where('fixture_id', $fixtureId)
                 ->where('player_info_id', $playerId)
                 ->first();
-            
+                
             /** @var Player $model */
             $model = $player ?? $this->player->associatePlayer($fixtureId, $playerId);
 
@@ -37,7 +37,7 @@ final readonly class EvaluatePlayerUseCase
             DB::transaction(function () use ($player) {
                 $player->save();
             });
-
+            
             // Attributeにするか検討する
             return $player->refresh()->evaluated();
 
@@ -45,6 +45,7 @@ final readonly class EvaluatePlayerUseCase
             throw new ModelNotFoundException('Player Not Found');
 
         } catch (Exception $e) {
+            dd($e);
             throw $e;
         }
     }
