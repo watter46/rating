@@ -13,17 +13,13 @@ use App\UseCases\Player\FetchPlayerUseCase;
 class Player extends Component
 {
     public string $fixtureId;
-    
     public array $player;
-
     public ?float $rating;
     public ?float $defaultRating;
-
     public bool $mom;
-
     public string $name;
-
     public bool $isEvaluated;
+    public bool $isUser = true;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
     
@@ -61,6 +57,12 @@ class Player extends Component
     public function refetchAll(): void
     {
         $this->fetchPlayer($this->fixtureId, $this->player['id']);
+    }
+
+    #[On('user-machine-toggled')]
+    public function toggle(bool $isUser)
+    {
+        $this->isUser = $isUser;
     }
     
     /**

@@ -1,0 +1,11 @@
+<div class="absolute flex flex-col items-center justify-center right-5 bottom-10">
+    <div class="flex items-center gap-x-1">
+        <x-svg.machine-image />
+        <p class="text-white">/</p>
+        <x-svg.user-image />
+    </div>
+    <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" value="" class="sr-only peer" wire:model.live="isUser">
+        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-0 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-700"></div>
+    </label>
+</div>

@@ -42,6 +42,9 @@
 
                         {{-- EvaluatedCount --}}
                         <livewire:evaluated-count :$fixtureId :$playerCount />
+                        
+                        {{-- Toggle UserMacine --}}
+                        <livewire:toggle-user-machine />
                     </div>
                 </div>
             </div>
