@@ -21,6 +21,7 @@ class Rating extends Component
     public ?float $defaultRating;
     public ?float $rating;
     public bool $mom;
+    public bool $canEvaluate;
 
     private FetchPlayerUseCase $fetchPlayer;
     private readonly EvaluatePlayerUseCase $evaluatePlayer;
@@ -56,7 +57,7 @@ class Rating extends Component
     {
         try {
             $player = $this->evaluatePlayer->execute($this->fixtureId, $this->playerId, $rating);
-
+            
             $this->setProperty($player);
 
             $this->dispatch('player-evaluated', $this->playerId);
@@ -96,7 +97,7 @@ class Rating extends Component
     {
         try {
             $player = $this->fetchPlayer->execute($this->fixtureId, $this->playerId);
-        
+            
             $this->setProperty($player);
 
         } catch (Exception $e) {
@@ -110,15 +111,10 @@ class Rating extends Component
      * @param  ?Player $player
      * @return void
      */
-    private function setProperty(?Player $player)
+    private function setProperty(?Player $player): void
     {
-        if (!$player) {
-            $this->rating = $this->defaultRating ?? 0;
-            $this->mom = false;
-            return;
-        }
-
-        $this->rating = $player->rating ?? $this->defaultRating;
-        $this->mom = $player->mom ?? false;
+        $this->rating = $player->rating ?? ($this->defaultRating ?? 0);
+        $this->mom    = $player->mom;
+        $this->canEvaluate = $player->canEvaluate;
     }
 }

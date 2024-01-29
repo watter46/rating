@@ -19,6 +19,7 @@ final readonly class FetchFixtureUseCase
     public function execute(string $fixtureId): Fixture
     {
         try {
+            /** @var Fixture $fixture */
             $fixture = Fixture::find($fixtureId);
             
             $idList = collect($fixture->fixture['lineups'])

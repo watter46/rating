@@ -86,23 +86,13 @@ class Fixture extends Model
     /**
      * 指定した試合でプレイヤーを評価できるか判定する
      *
-     * @param  string $fixtureId
      * @return bool
      */
-    public function canEvaluate(string $fixtureId): bool
+    public function canEvaluate(): bool
     {
-        try {
-            $fixture = $this->query()
-            ->select('date')
-            ->findOrFail($fixtureId);
-
-            $specifiedDate = Carbon::parse($fixture->date);
-                    
-            return $specifiedDate->diffInDays(now()) <= self::EVALUATION_PERIOD_DAY;
-
-        } catch (ModelNotFoundException $e) {
-            throw new Exception('Fixture Not Found');
-        }
+        $specifiedDate = Carbon::parse($this->date);
+        
+        return $specifiedDate->diffInDays(now()) <= self::EVALUATION_PERIOD_DAY;
     }
 
     /**

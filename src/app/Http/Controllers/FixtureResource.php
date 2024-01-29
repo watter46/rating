@@ -51,7 +51,7 @@ final readonly class FixtureResource
                 return $this->replaceId($fixture, $players);
             })
             ->merge([
-                'fixtureId' => $fixture->id,
+                'fixtureId'   => $fixture->id,
                 'playerCount' => $playerCount
             ]);
     }

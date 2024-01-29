@@ -31,8 +31,7 @@ class MockRegisterPlayerOfTeamUseCase
 
             $playerList = PlayerInfo::query()
                 ->currentSeason()
-                ->get()
-                ->toArray();
+                ->get();
 
             $data = $this->builder->build(
                 $SOFA_fetched,

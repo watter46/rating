@@ -38,7 +38,8 @@ final readonly class EvaluatePlayerUseCase
                 $player->save();
             });
 
-            return $player;
+            // Attributeにするか検討する
+            return $player->refresh()->evaluated();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');

@@ -19,7 +19,8 @@ final readonly class FetchLatestUseCase
 
     public function execute()
     {
-        try {            
+        try {
+            /** @var Fixture $fixture */  
             $fixture = Fixture::query()
                 ->past()
                 ->latest()

@@ -87,14 +87,8 @@ class Player extends Component
             
             $this->defaultRating = (float) $this->player['defaultRating'];
             
-            if (!$player) {
-                $this->rating = $this->defaultRating;
-                $this->isEvaluated = false;
-                return;
-            }
-            
             $this->rating = $player->rating ?? $this->defaultRating;
-            $this->isEvaluated = true;
+            $this->isEvaluated = $player->isEvaluated;
             $this->mom = $player->mom;
             
         } catch (Exception $e) {
