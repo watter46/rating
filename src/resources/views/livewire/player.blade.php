@@ -1,18 +1,14 @@
 <div id="{{ $name }}" class="hidden text-center"
     title="MacineRating: {{ $defaultRating }}"
-    x-data="{
-        rating: @entangle('rating')
-    }"
+    x-data="{ rating: @entangle('rating') }"
     wire:ignore.self>
     
     <div class="flex justify-center" wire:click="toDetail" class="player">
-        <div class="relative flex justify-center w-fit place-items-center
-            {{ $isEvaluated ?: 'opacity-30' }}">
+        <div class="relative flex justify-center w-fit place-items-center">
             {{-- PlayerImage --}}
             <x-rating.player-image
                 :number="$player['number']"
                 :img="$player['img']"
-                :isEvaluated="$isEvaluated"
                 type="field" />
 
             {{-- Goals --}}
