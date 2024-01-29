@@ -10,28 +10,9 @@ use Illuminate\Support\Str;
 class PlayerDetail extends Component
 {
     public array $lineups;
-
     public string $fixtureId;
-
     public int $playerId;
-
     public array $player;
-
-    public function mount()
-    {
-        // $lineups = collect($this->lineups)
-        //     ->map(function ($lineups, $key) {
-        //         if ($key === 'startXI') {
-        //             return collect($lineups)->flatten(1);
-        //         }
-
-        //         return $lineups;
-        //     })
-        //     ->flatten(1);
-
-        // $this->player = $lineups
-        //     ->first();
-    }
     
     public function render()
     {
@@ -51,8 +32,7 @@ class PlayerDetail extends Component
             })
             ->flatten(1);
 
-        $this->player = $lineups
-            ->sole(fn ($player) => $player['id'] === $playerId);
+        $this->player = $lineups->sole(fn ($player) => $player['id'] === $playerId);
     }
 
     /**

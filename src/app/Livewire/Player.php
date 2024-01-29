@@ -2,27 +2,24 @@
 
 namespace App\Livewire;
 
+use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Str;
 
 use App\UseCases\Player\FetchPlayerUseCase;
-use Exception;
+
 
 class Player extends Component
 {
     public string $fixtureId;
-    
     public array $player;
-
     public ?float $rating;
     public ?float $defaultRating;
-
     public bool $mom;
-
     public string $name;
-
     public bool $isEvaluated;
+    public bool $isUser = true;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
     
@@ -34,6 +31,8 @@ class Player extends Component
     public function mount()
     {
         $this->fetchPlayer($this->fixtureId, $this->player['id']);
+
+        $this->defaultRating = (float) $this->player['defaultRating'];
     }
     
     public function render()
@@ -58,6 +57,12 @@ class Player extends Component
     public function refetchAll(): void
     {
         $this->fetchPlayer($this->fixtureId, $this->player['id']);
+    }
+
+    #[On('user-machine-toggled')]
+    public function toggle(bool $isUser)
+    {
+        $this->isUser = $isUser;
     }
     
     /**
@@ -84,18 +89,9 @@ class Player extends Component
             if (!$playerId) return;
 
             $player = $this->fetchPlayer->execute($fixtureId, $playerId);
-            
-            $this->defaultRating = (float) $this->player['defaultRating'];
-            
-            if (!$player) {
-                $this->rating = $this->defaultRating;
-                $this->isEvaluated = false;
-                return;
-            }
-            
-            $this->rating = $player->rating ?? $this->defaultRating;
-            $this->isEvaluated = true;
-            $this->mom = $player->mom;
+                        
+            $this->rating = $player->rating;
+            $this->mom    = $player->mom;
             
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));

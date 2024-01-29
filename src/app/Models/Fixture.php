@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
-use App\Events\FixtureRegistered;
-use App\Http\Controllers\TournamentType;
-use App\UseCases\Util\Season;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+
+use App\Events\FixtureRegistered;
+use App\Http\Controllers\TournamentType;
+use App\UseCases\Util\Season;
 
 /**
  * FixtureModel
@@ -33,6 +37,9 @@ class Fixture extends Model
     
     protected $keyType = 'string';
 
+    private const EVALUATION_PERIOD_DAY = 3;
+    public  const EVALUATION_PERIOD_EXPIRED_MESSAGE = 'Evaluation period has expired.';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -52,17 +59,40 @@ class Fixture extends Model
         'score' => AsCollection::class,
         'fixture' => AsCollection::class,
     ];
-
+    
+    /**
+     * Fixtureカラムを更新する
+     *
+     * @param  Collection $fixture
+     * @return self
+     */
     public function updateFixture(Collection $fixture): self
     {
         $this->fixture = $fixture;
 
         return $this;
     }
-
+    
+    /**
+     * 試合で使用するデータを保存するイベントを発行する
+     *
+     * @return void
+     */
     public function registered(): void
     {
         FixtureRegistered::dispatch($this);
+    }
+    
+    /**
+     * 指定した試合でプレイヤーを評価できるか判定する
+     *
+     * @return bool
+     */
+    public function canEvaluate(): bool
+    {
+        $specifiedDate = Carbon::parse($this->date);
+        
+        return $specifiedDate->diffInDays(now()) <= self::EVALUATION_PERIOD_DAY;
     }
 
     /**

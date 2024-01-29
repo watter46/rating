@@ -2,15 +2,17 @@
 
 namespace App\UseCases\Player;
 
-use App\Models\Player;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use App\Models\Fixture;
+use App\Models\Player;
+
 
 final readonly class DecideManOfTheMatchUseCase
 {
-    public function __construct()
+    public function __construct(private Fixture $fixture, private Player $player)
     {
         //
     }
@@ -18,6 +20,10 @@ final readonly class DecideManOfTheMatchUseCase
     public function execute(string $fixtureId, string $playerInfoId): Player
     {
         try {            
+            if (!$this->fixture->canEvaluate($fixtureId)) {
+                throw new Exception(Fixture::EVALUATION_PERIOD_EXPIRED_MESSAGE);
+            }
+            
             /** @var Player $player */
             $player = Player::query()
                 ->fixture($fixtureId)
@@ -30,7 +36,7 @@ final readonly class DecideManOfTheMatchUseCase
 
             $newMomPlayer = $player 
                 ? $player->decideMOM()
-                : (new Player)
+                : $this->player
                     ->associatePlayer($fixtureId, $playerInfoId)
                     ->decideMOM();
 
@@ -48,7 +54,7 @@ final readonly class DecideManOfTheMatchUseCase
                 $oldMomPlayer->save();
             });
 
-            return $newMomPlayer;
+            return $newMomPlayer->refresh()->evaluated();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');

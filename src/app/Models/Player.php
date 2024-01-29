@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
@@ -60,6 +62,43 @@ class Player extends Model
         $this->player_info_id = $playerInfoId;
 
         return $this;
+    }
+
+    public function addCanEvaluate(): self
+    {
+        $this->canEvaluate = $this->fixture()
+            ->select('date')
+            ->firstOrFail()
+            ->canEvaluate();
+        
+        return $this;
+    }
+
+    public function evaluated()
+    {
+        try {
+            $this->isEvaluated = true;
+            
+            return $this->addCanEvaluate();
+            
+        } catch (ModelNotFoundException $e) {
+            throw new Exception('Fixture Not Found');
+        }
+    }
+
+    public function unevaluated(string $fixtureId): self
+    {
+        try {
+            $this->fixture_id = $fixtureId;
+            $this->rating = null;
+            $this->mom = false;
+            $this->isEvaluated = false;
+            
+            return $this->addCanEvaluate();
+            
+        } catch (ModelNotFoundException $e) {
+            throw new Exception('Fixture Not Found');
+        }
     }
     
     /**
