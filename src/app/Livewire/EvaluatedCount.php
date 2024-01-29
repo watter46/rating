@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\UseCases\Player\CountEvaluatedPlayerUseCase;
+use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -34,7 +35,12 @@ class EvaluatedCount extends Component
     #[On('player-evaluated')]
     public function fetch()
     {
-        $this->evaluatedCount = $this->countEvaluatedPlayer->execute($this->fixtureId);
-        $this->allEvaluated   = $this->playerCount === $this->evaluatedCount;
+        try {
+            $this->evaluatedCount = $this->countEvaluatedPlayer->execute($this->fixtureId);
+            $this->allEvaluated   = $this->playerCount === $this->evaluatedCount;
+
+        } catch (Exception $e) {
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
+        }
     }
 }

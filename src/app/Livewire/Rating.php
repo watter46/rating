@@ -38,7 +38,7 @@ class Rating extends Component
 
     public function mount()
     {        
-        $this->fetchPlayer($this->fixtureId, $this->playerId);
+        $this->fetchPlayer();
     }
 
     public function render()
@@ -60,10 +60,10 @@ class Rating extends Component
             $this->setProperty($player);
 
             $this->dispatch('player-evaluated', $this->playerId);
-            $this->dispatch('notify', message: self::Evaluated_MESSAGE);
+            $this->dispatch('notify', message: MessageType::Success->toArray(self::Evaluated_MESSAGE));
 
         } catch (Exception $e) {
-            dd($e);
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
     
@@ -80,29 +80,27 @@ class Rating extends Component
             $this->setProperty($player);
 
             $this->dispatch('player-mom-decided');
-            $this->dispatch('notify', message: self::Decided_MOM_MESSAGE);
+            $this->dispatch('notify', message: MessageType::Success->toArray(self::Decided_MOM_MESSAGE));
 
         } catch (Exception $e) {
-            dd($e);
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
 
     /**
      * 対象のプレイヤーを取得する
      *
-     * @param  string $fixtureId
-     * @param  string $playerId
      * @return void
      */
-    private function fetchPlayer(string $fixtureId, string $playerId): void
+    private function fetchPlayer(): void
     {
         try {
-            $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+            $player = $this->fetchPlayer->execute($this->fixtureId, $this->playerId);
         
             $this->setProperty($player);
 
         } catch (Exception $e) {
-            dd($e);
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
     

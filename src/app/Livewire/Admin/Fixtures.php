@@ -11,6 +11,7 @@ use Livewire\Attributes\Validate;
 
 use App\Http\Controllers\FixturesResource;
 use App\Http\Controllers\TournamentType;
+use App\Livewire\MessageType;
 use App\UseCases\Fixture\FetchFixtureListUseCase;
 use App\UseCases\Fixture\RegisterFixtureListUseCase;
 
@@ -51,7 +52,7 @@ class Fixtures extends Component
             return $this->fetch();
 
         } catch (Exception $e) {
-            $this->dispatch('notify', message: $e->getMessage());
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
             
             return $this->fetch();
         }
@@ -82,14 +83,14 @@ class Fixtures extends Component
             if ($this->refreshKey !== config('refreshKey.key')) {
                 throw new Exception(self::ERROR_MESSAGE);
             }
-
-            $this->registerFixtureList->execute();
-    
-            $this->dispatch('notify', message: self::SUCCESS_MESSAGE);
+            
+            // $this->registerFixtureList->execute();
+            
+            $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close-fixtures-modal');
 
         } catch (Exception $e) {
-            $this->dispatch('notify', message: $e->getMessage());
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
 }

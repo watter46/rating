@@ -37,7 +37,7 @@ class Fixtures extends Component
             return $this->fetch();
 
         } catch (Exception $e) {
-            $this->dispatch('notify', message: $e->getMessage());
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
             
             $this->sort = '';
 

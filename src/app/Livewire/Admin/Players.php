@@ -7,6 +7,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 
+use App\Livewire\MessageType;
 use App\UseCases\Player\FetchPlayerInfoListUseCase;
 use App\UseCases\Player\RegisterPlayerOfTeamUseCase;
 
@@ -38,7 +39,7 @@ class Players extends Component
             return $this->fetchPlayerInfoList->execute();
 
         } catch (Exception $e) {
-
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
 
@@ -51,11 +52,11 @@ class Players extends Component
 
             $registerPlayerOfTeam->execute();
     
-            $this->dispatch('notify', message: self::SUCCESS_MESSAGE);
+            $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close-players-modal');
 
         } catch (Exception $e) {
-            $this->dispatch('notify', message: $e->getMessage());
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
 }
