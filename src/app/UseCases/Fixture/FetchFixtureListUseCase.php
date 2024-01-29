@@ -21,14 +21,17 @@ final readonly class FetchFixtureListUseCase
         try {
             /** @var Paginator $fixture */
             $fixture = Fixture::query()
+                ->with('players:fixture_id')
                 ->past()
                 ->inSeason()
                 ->tournament($tournament)
                 ->simplePaginate(20);
-                
+
             $fixture->getCollection()
                 ->transform(function (Fixture $model) {
                     $model->dataExists = !is_null($model->fixture);
+
+                    $model->isEvaluate = $model->players->isNotEmpty();
 
                     unset($model->fixture);
 

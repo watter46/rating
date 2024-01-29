@@ -152,7 +152,7 @@ class Fixture extends Model
     }
     
     /**
-     * ratings
+     * players
      *
      * @return HasMany
      */

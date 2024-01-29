@@ -12,7 +12,14 @@
             </div>
         </div>
       
-        <div class="flex items-center justify-center w-full">        
+        <div class="relative flex items-center justify-center w-full">        
+            @if ($isEvaluate)
+                <div class="absolute left-0 flex items-center justify-center h-full px-5 w-fit"
+                    title="Evaluated">
+                    <x-svg.evaluated-icon-image />
+                </div>
+            @endif
+
             @if ($score['teams']['home'])
                 <div class="flex items-center justify-end w-full px-10">
                     <div class="flex items-center justify-end w-2/3 h-full">
