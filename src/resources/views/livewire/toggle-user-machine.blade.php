@@ -1,4 +1,4 @@
-<div class="absolute flex flex-col items-center justify-center right-5 bottom-10">
+<div class="flex flex-col items-center justify-center">
     <div class="flex items-center gap-x-1">
         <x-svg.machine-image />
         <p class="text-white">/</p>

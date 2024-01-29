@@ -6,6 +6,7 @@
                     @foreach($lineups['substitutes'] as $player)
                         <livewire:player
                             name="substitutes"
+                            type="fixture"
                             :$fixtureId
                             :$player
                             :key="$player['id']" />
@@ -16,7 +17,9 @@
                     <div class="relative h-full">
                         {{-- FieldSVG --}}
                         <div class="relative -top-5" style="height: 88vh;">
-                            <x-field.field-svg />
+                            <x-svg.field-image
+                                id="fixture-field"
+                                class="hidden h-full initial-state field" />
                         </div>
                         
                         {{-- Players --}}
@@ -30,6 +33,7 @@
                                                 {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
                                                 <livewire:player
                                                     name="startXI"
+                                                    type="fixture"
                                                     :$fixtureId
                                                     :$player
                                                     :key="$player['id']" />
@@ -42,9 +46,17 @@
 
                         {{-- EvaluatedCount --}}
                         <livewire:evaluated-count :$fixtureId :$playerCount />
-                        
-                        {{-- Toggle UserMacine --}}
-                        <livewire:toggle-user-machine />
+
+                        <div class="absolute flex items-center justify-center right-5 bottom-10 gap-x-3">
+                            {{-- Toggle UserMacine --}}
+                            <livewire:toggle-user-machine />
+
+                            {{-- EvaluationResult --}}
+                            <livewire:evaluation-result
+                                :$lineups
+                                :$fixtureId
+                                :$player />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,5 +75,5 @@
         </div>
     </div>
 
-    @vite('resources/js/field.js')
+    @vite(['resources/css/field.css', 'resources/js/field.js'])
 </x-app-layout>

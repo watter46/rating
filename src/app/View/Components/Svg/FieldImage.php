@@ -1,17 +1,17 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace App\View\Components\svg;
+namespace App\View\Components\Svg;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class goalImage extends Component
+class FieldImage extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(public string $id)
     {
         //
     }
@@ -21,6 +21,6 @@ class goalImage extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.svg.goal-image');
+        return view('components.svg.field-image');
     }
 }

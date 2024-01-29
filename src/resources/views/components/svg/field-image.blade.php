@@ -1,4 +1,4 @@
-<svg id="field-svg" class="hidden h-full initial-state field" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 74 111">
+<svg id="{{ $id }}" {{ $attributes }} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 74 111">
     <rect width="74" height="111" fill="#082F49"/>
     <g id="infield" fill="none" stroke="#fff" stroke-width="0.18" transform="translate(3 3)">
         <path id="Border" d="M 0 0 h 68 v 105 h -68 Z"/>
@@ -14,5 +14,3 @@
         <path id="Corner arcs" d="M 0 2 a 2 2 0 0 0 2 -2M 66 0 a 2 2 0 0 0 2 2M 68 103 a 2 2 0 0 0 -2 2M 2 105 a 2 2 0 0 0 -2 -2"/>
     </g>
 </svg>
-
-@vite(['resources/css/field.css', 'resources/js/field.js'])

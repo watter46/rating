@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const svgEl = document.getElementById('field-svg');
+    const fixtureFieldEl = document.getElementById('fixture-field');
     const startXIEls = document.querySelectorAll('#startXI');
     const substituteEls = document.querySelectorAll('#substitutes');
 
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showSubstitutes();
 
-    setTimeout(() => svgEl.classList.add('tilted-state'), interval * 16);
-
-    svgEl.classList.remove('hidden');
+    setTimeout(() => fixtureFieldEl.classList.add('tilted-state'), interval * 16);
+    
+    fixtureFieldEl.classList.remove('hidden');
 });

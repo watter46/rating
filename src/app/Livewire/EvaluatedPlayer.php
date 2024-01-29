@@ -10,17 +10,15 @@ use Illuminate\Support\Str;
 use App\UseCases\Player\FetchPlayerUseCase;
 
 
-class Player extends Component
+class EvaluatedPlayer extends Component
 {
+    public string $name;
     public string $fixtureId;
-    public array $player;
     public ?float $rating;
     public ?float $defaultRating;
+    public array $player;
     public bool $mom;
-    public string $name;
-    public string $type;
     public bool $isEvaluated;
-    public bool $isUser = true;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
     
@@ -35,20 +33,15 @@ class Player extends Component
 
         $this->defaultRating = (float) $this->player['defaultRating'];
     }
-    
+
     public function render()
     {
-        return view('livewire.player');
-    }
-
-    public function toDetail()
-    {
-        $this->dispatch('player-selected', $this->player['id']);
+        return view('livewire.evaluated-player');
     }
 
     #[On('player-evaluated')]
     public function refetch(string $playerId): void
-    {
+    {        
         if ($playerId !== $this->player['id']) return;
 
         $this->fetchPlayer($this->fixtureId, $playerId);
@@ -58,12 +51,6 @@ class Player extends Component
     public function refetchAll(): void
     {
         $this->fetchPlayer($this->fixtureId, $this->player['id']);
-    }
-
-    #[On('user-machine-toggled')]
-    public function toggle(bool $isUser)
-    {
-        $this->isUser = $isUser;
     }
     
     /**

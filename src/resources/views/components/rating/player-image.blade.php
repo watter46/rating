@@ -1,25 +1,13 @@
-@props([
-    'util_class' => 'rounded-full cursor-pointer',
-    'img_class' => $attributes['type'] === 'field'
-        ? 'w-16 h-16'
-        : 'w-20 h-20',
-    'number_class' => $attributes['type'] === 'field'
-        ? 'text-3xl'
-        : 'text-3xl'
-])
-
-<div class="flex items-center justify-center">
+<div {{ $attributes->merge(['class' => 'flex items-center justify-center bg-orange-500 rounded-full']) }}>
     @if($img['exists'])
-        <img src="{{ $img['data'] }}"
-            class="{{ $util_class }} {{ $img_class }}">
+        <img src="{{ $img['data'] }}" class="rounded-full">
     @endif
 
     @if(!$img['exists'])
-        <img src="{{ $img['data'] }}"
-            class="{{ $util_class }} {{ $img_class }}">
+        <img src="{{ $img['data'] }}" class="rounded-full">
             
-        <div class="absolute flex items-center justify-center cursor-pointer">
-            <p class="{{ $number_class }} font-black text-white">{{ $number }}</p>
+        <div class="absolute flex items-center justify-center">
+            <p class="text-3xl font-black text-white">{{ $number }}</p>
         </div>
     @endif
 </div>
