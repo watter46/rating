@@ -39,12 +39,12 @@ final readonly class FixturesResource
                             'fixture' => $this->addDate($fixture)
                         };
                     });
-
+                    
                 $fixture['winner'] = collect($fixture->fixture['teams'])
                     ->sole(function ($team) {
                         return $team['id'] === self::CHELSEA_TEAM_ID;
                     })['winner'];
-
+                
                 return $fixture;
             });
 

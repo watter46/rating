@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use App\Models\Scopes\CurrentUserScope;
+use Illuminate\Support\Facades\Auth;
 
 class Player extends Model
 {
@@ -58,6 +60,7 @@ class Player extends Model
 
     public function associatePlayer(string $fixtureId, string $playerInfoId): self
     {
+        $this->user_id = Auth::user()->id;
         $this->fixture_id = $fixtureId;
         $this->player_info_id = $playerInfoId;
 
@@ -150,6 +153,16 @@ class Player extends Model
     }
 
     /**
+     * user
+     *
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * playerInfo
      *
      * @return BelongsTo
@@ -157,5 +170,13 @@ class Player extends Model
     public function playerInfo(): BelongsTo
     {
         return $this->belongsTo(PlayerInfo::class);
+    }
+
+    /**
+     * UserBooted
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CurrentUserScope);
     }
 }

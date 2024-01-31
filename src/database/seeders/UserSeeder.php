@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -14,10 +15,14 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()
-            ->state([
+            ->count(2)
+            ->state(new Sequence([
                 'email' => 'user@gmail.com',
                 'password' => 'testuser'
-            ])
+            ], [
+                'email' => 'user2@gmail.com',
+                'password' => 'testuser2'
+            ]))
             ->create();
     }
 }

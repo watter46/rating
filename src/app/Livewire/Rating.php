@@ -23,7 +23,7 @@ class Rating extends Component
     public bool $mom;
     public bool $canEvaluate;
 
-    private FetchPlayerUseCase $fetchPlayer;
+    private readonly FetchPlayerUseCase $fetchPlayer;
     private readonly EvaluatePlayerUseCase $evaluatePlayer;
     private readonly DecideManOfTheMatchUseCase $decideMOM;
 
@@ -113,7 +113,7 @@ class Rating extends Component
      */
     private function setProperty(?Player $player): void
     {
-        $this->rating = $player->rating ?? ($this->defaultRating ?? 0);
+        $this->rating = $player->rating;
         $this->mom    = $player->mom;
         $this->canEvaluate = $player->canEvaluate;
     }
