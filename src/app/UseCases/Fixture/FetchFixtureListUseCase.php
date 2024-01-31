@@ -26,7 +26,7 @@ final readonly class FetchFixtureListUseCase
                 ->inSeason()
                 ->tournament($tournament)
                 ->simplePaginate(20);
-
+                
             $fixture->getCollection()
                 ->transform(function (Fixture $model) {
                     $model->dataExists = !is_null($model->fixture);

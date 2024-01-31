@@ -37,7 +37,7 @@ class Fixture extends Model
     
     protected $keyType = 'string';
 
-    private const EVALUATION_PERIOD_DAY = 3;
+    private const EVALUATION_PERIOD_DAY = 5;
     public  const EVALUATION_PERIOD_EXPIRED_MESSAGE = 'Evaluation period has expired.';
 
     /**
@@ -136,7 +136,7 @@ class Fixture extends Model
         $query
             ->select(['id', 'score', 'date', 'external_fixture_id', 'fixture'])
             ->currentSeason()
-            ->whereDate('date', '<=', now())
+            ->where('date', '<=', now('UTC'))
             ->orderBy('date', 'desc');
     }
 

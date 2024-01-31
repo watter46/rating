@@ -27,7 +27,7 @@ class MockRegisterFixtureListUseCase
     public function execute()
     {
         $fixtures = $this->fixtures->get();
-        
+
         $this->teamImage->registerAll($fixtures);
         $this->leagueImage->registerAll($fixtures);
         
@@ -38,7 +38,7 @@ class MockRegisterFixtureListUseCase
             ->toArray();
 
         $data = $this->builder->build($fixtures, $fixtureList);
-
+        
         $unique = ['id'];
         $updateColumns = ['date', 'is_end'];
 
