@@ -2,10 +2,9 @@
     @if($player)
         <div class="relative flex items-center">
             <x-rating.player-image
-                :isEvaluated="false"
+                class="w-20 h-20"
                 :number="$player['number']"
-                :img="$player['img']"
-                type="rating" />
+                :img="$player['img']" />
 
             <div class="absolute flex justify-center w-full font-bold text-center text-gray-100 gap-x-3">                    
                 <p class="detail__player_name whitespace-nowrap">

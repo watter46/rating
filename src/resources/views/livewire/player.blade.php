@@ -5,13 +5,13 @@
     }"
     wire:ignore.self>
     
-    <div class="flex justify-center" wire:click="toDetail" class="player">
+    <div class="flex justify-center player" wire:click="toDetail">
         <div class="relative flex justify-center w-fit place-items-center">
             {{-- PlayerImage --}}
             <x-rating.player-image
+                class="w-16 h-16 cursor-pointer"
                 :number="$player['number']"
-                :img="$player['img']"
-                type="field" />
+                :img="$player['img']" />
 
             {{-- Goals --}}
             <div class="absolute top-0 left-0 -translate-x-1/3">
