@@ -44,8 +44,16 @@
                             </div>
                         </div>
 
-                        {{-- EvaluatedCount --}}
-                        <livewire:evaluated-count :$fixtureId :$playerCount />
+                        <div class="absolute flex items-center justify-center font-black left-5 bottom-10 gap-x-3">
+                            {{-- EvaluatedCount --}}
+                            <livewire:evaluated-count :$fixtureId :$playerCount />
+
+                            {{-- RateAllPlayers --}}
+                            <livewire:rate-all-players
+                                :$lineups
+                                :$fixtureId />
+                        </div>
+
 
                         <div class="absolute flex items-center justify-center right-5 bottom-10 gap-x-3">
                             {{-- Toggle UserMacine --}}
@@ -54,8 +62,7 @@
                             {{-- EvaluationResult --}}
                             <livewire:evaluation-result
                                 :$lineups
-                                :$fixtureId
-                                :$player />
+                                :$fixtureId />
                         </div>
                     </div>
                 </div>

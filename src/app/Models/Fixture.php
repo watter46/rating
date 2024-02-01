@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -92,7 +90,7 @@ class Fixture extends Model
     {
         $specifiedDate = Carbon::parse($this->date);
         
-        return $specifiedDate->diffInDays(now()) <= self::EVALUATION_PERIOD_DAY;
+        return $specifiedDate->diffInDays(now('UTC')) <= self::EVALUATION_PERIOD_DAY;
     }
 
     /**

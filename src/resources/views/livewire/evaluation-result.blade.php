@@ -5,7 +5,7 @@
     </div>
 
     @if($isOpen)
-        <div class="fixed top-0 left-0 z-10 flex items-center justify-center w-full h-screen px-10 py-5"
+        <div class="fixed top-0 left-0 z-[99] flex items-center justify-center w-full h-screen px-10 py-5"
             style="background: rgba(31, 41, 55, 0.95);">
             <div class="relative flex w-full h-full bg-gray-800 border border-gray-700 rounded-lg">
                 <div class="flex justify-center w-full h-full">

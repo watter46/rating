@@ -30,7 +30,8 @@ class Player extends Model
      */
     protected $fillable = [
         'rating',
-        'mom'
+        'mom',
+        'player_info_id'
     ];
 
     protected $casts = [
@@ -74,6 +75,16 @@ class Player extends Model
             ->firstOrFail()
             ->canEvaluate();
         
+        return $this;
+    }
+
+    public function init(string $playerInfoId): self
+    {
+        $this->player_info_id = $playerInfoId;
+        $this->rating = null;
+        $this->mom = false;
+        $this->isEvaluate = false;
+
         return $this;
     }
 
