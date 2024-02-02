@@ -2,10 +2,12 @@
 
 namespace App\UseCases\Player;
 
-use App\Models\Player;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+
+use App\Models\Fixture;
+use App\Models\Player;
+
 
 final readonly class FetchPlayersUseCase
 {
@@ -13,7 +15,14 @@ final readonly class FetchPlayersUseCase
     {
         //
     }
-
+    
+    /**
+     * 試合に出場したプレイヤーをすべて取得する
+     *
+     * @param  Collection $playerInfoIdList
+     * @param  string $fixtureId
+     * @return Collection<array{players: Collection<int, Player>, canEvaluate: bool}>
+     */
     public function execute(Collection $playerInfoIdList, string $fixtureId): Collection
     {
         try {
@@ -24,7 +33,7 @@ final readonly class FetchPlayersUseCase
                 ->whereIn('player_info_id', $playerInfoIdList)
                 ->get();
                 
-            $result = $playerInfoIdList
+            $data = $playerInfoIdList
                 ->map(fn ($playerInfoId) =>(new Player)->init($playerInfoId))
                 ->when($players->isNotEmpty(), function (Collection $newPlayers) use ($players) {
                     return $newPlayers
@@ -44,10 +53,10 @@ final readonly class FetchPlayersUseCase
                     return $newPlayers->map(fn(Player $player) => $player->toArray());
                 });
 
-            return $result;
-
-        } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException('プロジェクトが見つかりませんでした。');
+            return collect([
+                'players'  => $data,
+                'canRated' => Fixture::find($fixtureId)->canEvaluate()
+            ]);
 
         } catch (Exception $e) {
             throw $e;

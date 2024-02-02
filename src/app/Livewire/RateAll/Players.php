@@ -19,13 +19,13 @@ class Players extends Component
     public string $fixtureId;
 
     public Collection $players;
+    public bool $canRated;
 
     private readonly RateAllPlayersUseCase $rateAllPlayers;
     private readonly FetchPlayersUseCase $fetchPlayers;
     private readonly RateAllPlayersResource $resource;
 
     private const Evaluated_MESSAGE = 'Evaluated!!';
-    private const Decided_MOM_MESSAGE = 'Decided MOM!!';
     
     public function boot(
         RateAllPlayersUseCase $rateAllPlayers,
@@ -71,12 +71,13 @@ class Players extends Component
                 ->lineupsToPlayers($this->lineups)
                 ->pluck('id');
 
-            $players = $this->fetchPlayers->execute($playerInfoIdList, $this->fixtureId);
+            $data = $this->fetchPlayers->execute($playerInfoIdList, $this->fixtureId);
 
-            $this->players = $this->resource->format($this->lineups, $players);
+            $this->players  = $this->resource->format($this->lineups, $data->get('players'));
+            $this->canRated = $data->get('canRated');
 
         } catch (Exception $e) {
-
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
     
@@ -86,7 +87,7 @@ class Players extends Component
      * @param  array $players
      * @return void
      */
-    public function rateAll(array $players)
+    public function rateAll(array $players): void
     {
         try {
             $this->rateAllPlayers->execute($this->fixtureId, collect($players));

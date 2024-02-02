@@ -1,6 +1,7 @@
 <div class="flex flex-col w-full"
     x-data="{
         players: @js($players),
+        canRated: @entangle('canRated'),
         selectMom(index, mom) {
             this.players.forEach((p, i) => {
                 if (i === index) {
@@ -42,14 +43,17 @@
                 
                 <div class="grid content-center w-4/6 h-full">
                     <input id="ratingRange"
-                        class="scale-75" 
+                        class="scale-75"
                         type="range" min="0.1" max="10" step="0.1"
                         x-model="players[{{ $index }}].rating">
                 </div>
                 
                 <div class="grid content-center w-16">
-                    <div class="flex items-center justify-center border-2 border-gray-200 rounded-lg"
-                        :style="`background-color: ${ratingBgColor(players[{{ $index }}].rating)}`">
+                    <div class="flex items-center justify-center border-2 border-gray-200 rounded-lg pointer-events-none opacity-30"
+                        :style="`background-color: ${ratingBgColor(players[{{ $index }}].rating)}`"
+                        x-init="$watch(`players[{{ $index }}].rating`, () => {            
+                            $el.classList.remove('pointer-events-none', 'opacity-30');
+                        })">
                         <p class="text-xl font-black text-gray-200"
                             x-text="ratingValue(players[{{ $index }}].rating)">
                         </p>
@@ -60,7 +64,11 @@
     @endforeach
 
     <div class="flex justify-end w-full p-5">
-        <button class="px-8 py-1 border-2 border-gray-200 rounded-lg bg-sky-600"
+        <button class="px-8 py-1 border-2 border-gray-200 rounded-lg pointer-events-none opacity-30 bg-sky-600"
+            :class="!canRated ? 'pointer-events-none opacity-30' : ''"
+            x-init="$watch('players', () => {
+                $el.classList.remove('pointer-events-none', 'opacity-30');
+            })"
             wire:click="rateAll(result())">
             <p class="text-xl font-black text-gray-300">Rate</p>
         </button>

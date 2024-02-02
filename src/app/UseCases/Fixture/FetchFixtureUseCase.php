@@ -36,7 +36,7 @@ final readonly class FetchFixtureUseCase
                 ->get();
 
             $fixture['playerInfos'] = $playerInfos;
-            
+                        
             return $fixture;
             
         } catch (Exception $e) {

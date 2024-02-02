@@ -74,22 +74,21 @@ class Fixture extends Model
     /**
      * 試合で使用するデータを保存するイベントを発行する
      *
-     * @return void
      */
-    public function registered(): void
+    public function registered()
     {
         FixtureRegistered::dispatch($this);
     }
     
     /**
      * 指定した試合でプレイヤーを評価できるか判定する
-     *
+     * 
      * @return bool
      */
     public function canEvaluate(): bool
     {
         $specifiedDate = Carbon::parse($this->date);
-        
+
         return $specifiedDate->diffInDays(now('UTC')) <= self::EVALUATION_PERIOD_DAY;
     }
 

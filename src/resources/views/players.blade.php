@@ -48,10 +48,12 @@
                             {{-- EvaluatedCount --}}
                             <livewire:evaluated-count :$fixtureId :$playerCount />
 
-                            {{-- RateAllPlayers --}}
-                            <livewire:rate-all-players
-                                :$lineups
-                                :$fixtureId />
+                            @if($canEvaluate)
+                                {{-- RateAllPlayers --}}
+                                <livewire:rate-all-players
+                                    :$lineups
+                                    :$fixtureId />
+                            @endif
                         </div>
 
 
