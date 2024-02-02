@@ -21,7 +21,7 @@ final readonly class FetchPlayersUseCase
      *
      * @param  Collection $playerInfoIdList
      * @param  string $fixtureId
-     * @return Collection<array{players: Collection<int, Player>, canEvaluate: bool}>
+     * @return Collection<array{players: Collection<int, Player>, canRated: bool}>
      */
     public function execute(Collection $playerInfoIdList, string $fixtureId): Collection
     {
@@ -55,7 +55,7 @@ final readonly class FetchPlayersUseCase
 
             return collect([
                 'players'  => $data,
-                'canRated' => Fixture::find($fixtureId)->canEvaluate()
+                'canRated' => Fixture::find($fixtureId)->canRate()
             ]);
 
         } catch (Exception $e) {

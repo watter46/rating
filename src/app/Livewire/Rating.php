@@ -7,13 +7,13 @@ use Livewire\Component;
 
 use App\Models\Player;
 use App\UseCases\Player\DecideManOfTheMatchUseCase;
-use App\UseCases\Player\EvaluatePlayerUseCase;
+use App\UseCases\Player\RatePlayerUseCase;
 use App\UseCases\Player\FetchPlayerUseCase;
 
 
 class Rating extends Component
 {
-    private const Evaluated_MESSAGE = 'Evaluated!!';
+    private const RATED_MESSAGE = 'Rated!!';
     private const Decided_MOM_MESSAGE = 'Decided MOM!!';
     
     public string $playerId;
@@ -21,19 +21,19 @@ class Rating extends Component
     public ?float $defaultRating;
     public ?float $rating;
     public bool $mom;
-    public bool $canEvaluate;
+    public bool $canRate;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
-    private readonly EvaluatePlayerUseCase $evaluatePlayer;
+    private readonly RatePlayerUseCase $ratePlayer;
     private readonly DecideManOfTheMatchUseCase $decideMOM;
 
     public function boot(
         FetchPlayerUseCase $fetchPlayer,
-        EvaluatePlayerUseCase $evaluatePlayer,
+        RatePlayerUseCase $ratePlayer,
         DecideManOfTheMatchUseCase $decideMOM)
     {
         $this->fetchPlayer = $fetchPlayer;
-        $this->evaluatePlayer = $evaluatePlayer;
+        $this->ratePlayer = $ratePlayer;
         $this->decideMOM = $decideMOM;
     }
 
@@ -53,15 +53,15 @@ class Rating extends Component
      * @param  float $rating
      * @return void
      */
-    public function evaluate(float $rating): void
+    public function rate(float $rating): void
     {
         try {
-            $player = $this->evaluatePlayer->execute($this->fixtureId, $this->playerId, $rating);
+            $player = $this->ratePlayer->execute($this->fixtureId, $this->playerId, $rating);
             
             $this->setProperty($player);
 
-            $this->dispatch('player-evaluated', $this->playerId);
-            $this->dispatch('notify', message: MessageType::Success->toArray(self::Evaluated_MESSAGE));
+            $this->dispatch('player-rated', $this->playerId);
+            $this->dispatch('notify', message: MessageType::Success->toArray(self::RATED_MESSAGE));
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
@@ -115,6 +115,6 @@ class Rating extends Component
     {
         $this->rating = $player->rating;
         $this->mom    = $player->mom;
-        $this->canEvaluate = $player->canEvaluate;
+        $this->canRate = $player->canRate;
     }
 }

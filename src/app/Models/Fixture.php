@@ -35,8 +35,8 @@ class Fixture extends Model
     
     protected $keyType = 'string';
 
-    private const EVALUATION_PERIOD_DAY = 5;
-    public  const EVALUATION_PERIOD_EXPIRED_MESSAGE = 'Evaluation period has expired.';
+    private const RATE_PERIOD_DAY = 5;
+    public  const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
 
     /**
      * The attributes that are mass assignable.
@@ -59,7 +59,7 @@ class Fixture extends Model
     ];
     
     /**
-     * Fixtureカラムを更新する
+     * rate
      *
      * @param  Collection $fixture
      * @return self
@@ -85,11 +85,11 @@ class Fixture extends Model
      * 
      * @return bool
      */
-    public function canEvaluate(): bool
+    public function canRate(): bool
     {
         $specifiedDate = Carbon::parse($this->date);
 
-        return $specifiedDate->diffInDays(now('UTC')) <= self::EVALUATION_PERIOD_DAY;
+        return $specifiedDate->diffInDays(now('UTC')) <= self::RATE_PERIOD_DAY;
     }
 
     /**

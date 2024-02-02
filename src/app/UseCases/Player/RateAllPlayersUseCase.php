@@ -21,8 +21,8 @@ final readonly class RateAllPlayersUseCase
     public function execute(string $fixtureId, Collection $ratedPlayers)
     {
         try {
-            if (!Fixture::find($fixtureId)->canEvaluate()) {
-                throw new Exception(Fixture::EVALUATION_PERIOD_EXPIRED_MESSAGE);
+            if (!Fixture::find($fixtureId)->canRate()) {
+                throw new Exception(Fixture::RATE_PERIOD_EXPIRED_MESSAGE);
             }
             
             $players = Player::query()

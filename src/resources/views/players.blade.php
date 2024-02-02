@@ -45,10 +45,10 @@
                         </div>
 
                         <div class="absolute flex items-center justify-center font-black left-5 bottom-10 gap-x-3">
-                            {{-- EvaluatedCount --}}
-                            <livewire:evaluated-count :$fixtureId :$playerCount />
+                            {{-- RatedCount --}}
+                            <livewire:rated-count :$fixtureId :$playerCount />
 
-                            @if($canEvaluate)
+                            @if($canRate)
                                 {{-- RateAllPlayers --}}
                                 <livewire:rate-all-players
                                     :$lineups
@@ -61,8 +61,8 @@
                             {{-- Toggle UserMacine --}}
                             <livewire:toggle-user-machine />
 
-                            {{-- EvaluationResult --}}
-                            <livewire:evaluation-result
+                            {{-- RatedResult --}}
+                            <livewire:rated-result
                                 :$lineups
                                 :$fixtureId />
                         </div>

@@ -53,7 +53,7 @@ final readonly class FixtureResource
             ->merge([
                 'fixtureId'   => $fixture->id,
                 'playerCount' => $playerCount,
-                'canEvaluate' => $fixture->canEvaluate()
+                'canRate'     => $fixture->canRate()
             ]);
     }
     

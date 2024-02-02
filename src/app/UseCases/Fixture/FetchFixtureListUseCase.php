@@ -31,7 +31,7 @@ final readonly class FetchFixtureListUseCase
                 ->transform(function (Fixture $model) {
                     $model->dataExists = !is_null($model->fixture);
 
-                    $model->isEvaluate = $model->players->isNotEmpty();
+                    $model->isRate = $model->players->isNotEmpty();
 
                     unset($model->fixture);
 

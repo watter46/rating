@@ -12,7 +12,7 @@
                     {{-- Substitutes --}}
                     <div class="grid content-center h-full gap-y-3">
                         @foreach($lineups['substitutes'] as $player)
-                            <livewire:evaluated-player
+                            <livewire:rated-player
                                 name="substitutes"
                                 :$fixtureId
                                 :$player
@@ -38,7 +38,7 @@
                                                 @foreach($players as $player)
                                                     <div class="flex justify-center items-center
                                                         {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
-                                                        <livewire:evaluated-player
+                                                        <livewire:rated-player
                                                             name="startXI"
                                                             :$fixtureId
                                                             :$player

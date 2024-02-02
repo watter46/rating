@@ -25,8 +25,8 @@ final readonly class FetchPlayerUseCase
                 ->first();
             
             return $player
-                ? $player->evaluated()
-                : $this->player->unevaluated($fixtureId);
+                ? $player->rated()
+                : $this->player->unrated($fixtureId);
                         
         } catch (Exception $e) {
             throw $e;

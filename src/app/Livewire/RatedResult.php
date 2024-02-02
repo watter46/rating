@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class EvaluationResult extends Component
+class RatedResult extends Component
 {
     public array $lineups;
     public array $player;
@@ -14,6 +14,6 @@ class EvaluationResult extends Component
 
     public function render()
     {
-        return view('livewire.evaluation-result');
+        return view('livewire.rated-result');
     }
 }

@@ -25,7 +25,7 @@ class Players extends Component
     private readonly FetchPlayersUseCase $fetchPlayers;
     private readonly RateAllPlayersResource $resource;
 
-    private const Evaluated_MESSAGE = 'Evaluated!!';
+    private const RATED_MESSAGE = 'Rated!!';
     
     public function boot(
         RateAllPlayersUseCase $rateAllPlayers,
@@ -93,7 +93,7 @@ class Players extends Component
             $this->rateAllPlayers->execute($this->fixtureId, collect($players));
 
             $this->dispatch('player-mom-decided');
-            $this->dispatch('notify', message: MessageType::Success->toArray(self::Evaluated_MESSAGE));
+            $this->dispatch('notify', message: MessageType::Success->toArray(self::RATED_MESSAGE));
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));

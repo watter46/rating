@@ -24,7 +24,7 @@
                     :fixture="$fixture->fixture"
                     :score="$fixture->score"
                     :winner="$fixture->winner"
-                    :isEvaluate="$fixture->isEvaluate"
+                    :isRate="$fixture->isRate"
                     :key="$fixture->id" />
             @endforeach
         </div>

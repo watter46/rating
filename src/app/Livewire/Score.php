@@ -11,7 +11,7 @@ class Score extends Component
     public Collection $fixture;
     public Collection $score;
     public ?bool $winner;
-    public bool $isEvaluate;
+    public bool $isRate;
 
     public function render()
     {

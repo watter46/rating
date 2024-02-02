@@ -52,7 +52,7 @@ class Player extends Model
         return $this;
     }
 
-    public function evaluate(float $rating): self
+    public function rate(float $rating): self
     {
         $this->rating = $rating;
 
@@ -68,12 +68,12 @@ class Player extends Model
         return $this;
     }
 
-    public function addCanEvaluate(): self
+    public function addCanRate(): self
     {
-        $this->canEvaluate = $this->fixture()
+        $this->canRate = $this->fixture()
             ->select('date')
             ->firstOrFail()
-            ->canEvaluate();
+            ->canRate();
         
         return $this;
     }
@@ -83,32 +83,32 @@ class Player extends Model
         $this->player_info_id = $playerInfoId;
         $this->rating = null;
         $this->mom = false;
-        $this->isEvaluate = false;
+        $this->isRate = false;
 
         return $this;
     }
 
-    public function evaluated()
+    public function rated()
     {
         try {
-            $this->isEvaluated = true;
+            $this->isRated = true;
             
-            return $this->addCanEvaluate();
+            return $this->addCanRate();
             
         } catch (ModelNotFoundException $e) {
             throw new Exception('Fixture Not Found');
         }
     }
 
-    public function unevaluated(string $fixtureId): self
+    public function unrated(string $fixtureId): self
     {
         try {
             $this->fixture_id = $fixtureId;
             $this->rating = null;
             $this->mom = false;
-            $this->isEvaluated = false;
+            $this->isRated = false;
             
-            return $this->addCanEvaluate();
+            return $this->addCanRate();
             
         } catch (ModelNotFoundException $e) {
             throw new Exception('Fixture Not Found');

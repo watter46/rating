@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Player;
 
 
-final readonly class CountEvaluatedPlayerUseCase
+final readonly class CountRatedPlayerUseCase
 {
     public function __construct()
     {
