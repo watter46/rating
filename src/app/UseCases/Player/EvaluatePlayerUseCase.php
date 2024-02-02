@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Fixture;
 use App\Models\Player;
-use Illuminate\Support\Facades\Log;
+
 
 final readonly class EvaluatePlayerUseCase
 {
@@ -32,8 +32,6 @@ final readonly class EvaluatePlayerUseCase
                 ?? $this->player->associatePlayer($fixtureId, $playerInfoId);
 
             $player->evaluate($rating);
-
-            Log::info($player->rating);
 
             DB::transaction(function () use ($player) {
                 $player->save();

@@ -22,6 +22,7 @@ class EvaluatedPlayer extends Component
 
     private readonly FetchPlayerUseCase $fetchPlayer;
     
+    
     public function boot(FetchPlayerUseCase $fetchPlayer)
     {
         $this->fetchPlayer = $fetchPlayer;
