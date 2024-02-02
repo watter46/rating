@@ -30,7 +30,7 @@ final readonly class RegisterFixtureUseCase
             /** @var Fixture $model */
             $model = $this->fixture->findOrFail($fixtureId);
 
-            // $fetched = ApiFootballFetcher::fixture($model->external_fixture_id)->fetch();
+            // $fetched = ApiFootball::fixture($model->external_fixture_id)->fetch();
 
             $fetched = $this->file->get($model->external_fixture_id);
             
@@ -39,15 +39,13 @@ final readonly class RegisterFixtureUseCase
             // dd($fetched);
                         
             $data = $this->builder->build($fetched[0]);
-
-            // dd($data);
             
             $fixture = $model->updateFixture($data);
-
+            
             DB::transaction(function () use ($fixture) {
                 $fixture->save();
             });
-
+            
             $fixture->registered();
 
         } catch (ModelNotFoundException $e) {

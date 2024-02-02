@@ -40,11 +40,13 @@ final readonly class FixturesResource
                         };
                     });
                     
-                $fixture['winner'] = collect($fixture->fixture['teams'])
-                    ->sole(function ($team) {
-                        return $team['id'] === self::CHELSEA_TEAM_ID;
-                    })['winner'];
-                
+                    $fixture['winner'] = collect($fixture->fixture['teams'])
+                        ->sole(function ($team) {
+                            return $team['id'] === self::CHELSEA_TEAM_ID;
+                        })['winner'];
+                    
+                    return $fixture;
+                    
                 return $fixture;
             });
 
