@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Fixture;
 use App\Models\Player;
-use Illuminate\Support\Facades\Log;
 
-final readonly class EvaluatePlayerUseCase
+
+final readonly class RatePlayerUseCase
 {
     public function __construct(private Player $player, private Fixture $fixture)
     {
@@ -20,8 +20,8 @@ final readonly class EvaluatePlayerUseCase
     public function execute(string $fixtureId, string $playerInfoId, float $rating): Player
     {
         try {
-            if (!$this->fixture->canEvaluate($fixtureId)) {
-                throw new Exception(Fixture::EVALUATION_PERIOD_EXPIRED_MESSAGE);
+            if (!$this->fixture->canRate($fixtureId)) {
+                throw new Exception(Fixture::RATE_PERIOD_EXPIRED_MESSAGE);
             }
 
             /** @var Player $player */
@@ -31,22 +31,19 @@ final readonly class EvaluatePlayerUseCase
                 ->first()
                 ?? $this->player->associatePlayer($fixtureId, $playerInfoId);
 
-            $player->evaluate($rating);
-
-            Log::info($player->rating);
+            $player->rate($rating);
 
             DB::transaction(function () use ($player) {
                 $player->save();
             });
             
             // Attributeにするか検討する
-            return $player->refresh()->evaluated();
+            return $player->refresh()->rated();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');
 
         } catch (Exception $e) {
-            dd($e);
             throw $e;
         }
     }

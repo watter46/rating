@@ -12,7 +12,7 @@
         }
     }"
     @notify.window="notify(event.detail.message)"
-    class="fixed inset-0 z-50 flex flex-col items-end justify-center px-4 py-6 space-y-4 pointer-events-none sm:p-6 sm:justify-start">
+    class="fixed inset-0 z-[100] flex flex-col items-end justify-center px-4 py-6 space-y-4 pointer-events-none sm:p-6 sm:justify-start">
     <template x-for="(message, messageIndex) in messages" :key="messageIndex" hidden>
         <div
             class="flex items-center w-full max-w-sm p-4 overflow-hidden bg-gray-800 border-4 border-gray-700 rounded-lg shadow-lg pointer-events-auto fadeInRight">

@@ -44,18 +44,27 @@
                             </div>
                         </div>
 
-                        {{-- EvaluatedCount --}}
-                        <livewire:evaluated-count :$fixtureId :$playerCount />
+                        <div class="absolute flex items-center justify-center font-black left-5 bottom-10 gap-x-3">
+                            {{-- RatedCount --}}
+                            <livewire:rated-count :$fixtureId :$playerCount />
+
+                            @if($canRate)
+                                {{-- RateAllPlayers --}}
+                                <livewire:rate-all-players
+                                    :$lineups
+                                    :$fixtureId />
+                            @endif
+                        </div>
+
 
                         <div class="absolute flex items-center justify-center right-5 bottom-10 gap-x-3">
                             {{-- Toggle UserMacine --}}
                             <livewire:toggle-user-machine />
 
-                            {{-- EvaluationResult --}}
-                            <livewire:evaluation-result
+                            {{-- RatedResult --}}
+                            <livewire:rated-result
                                 :$lineups
-                                :$fixtureId
-                                :$player />
+                                :$fixtureId />
                         </div>
                     </div>
                 </div>

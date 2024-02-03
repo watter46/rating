@@ -28,7 +28,7 @@ class RegisterFixtureListener
     {
         try {
             $players = $this->filterPlayers($event->model);
-
+            
             if ($players->isEmpty()) return;
 
             $this->registerPlayer->execute($players);
@@ -37,47 +37,75 @@ class RegisterFixtureListener
             throw $e;
         }
     }
-
+    
+    /**
+     * sofa_player_idがnull
+     * または登録されていないプレイヤーを取得する
+     *
+     * @param  Fixture $model
+     * @return Collection<Collection<model: PlayerInfo, player: array>>
+     */
     private function filterPlayers(Fixture $model): Collection
     {
-        $playerIdList = $this->playerIdList($model->fixture['lineups']);
+        $players = $this->flatLineups($model->fixture['lineups']);
         
-        $modelIdList = PlayerInfo::query()
+        $footPlayerIdList = $players->pluck('id');
+                
+        /** @var Collection<int, PlayerInfo> $playedPlayerInfos */
+        $playedPlayerInfos = PlayerInfo::query()
             ->currentSeason()
-            ->whereIn('foot_player_id', $playerIdList)
+            ->whereIn('foot_player_id', $footPlayerIdList)
+            ->get();
+
+        $nullSofaPlayerIdList   = $this->filterNullSofaPlayerId($playedPlayerInfos);
+        $unregisteredPlayerList = $this->filterUnregisteredPlayers($playedPlayerInfos, $footPlayerIdList);
+
+        $registerFootPlayerIdList = $nullSofaPlayerIdList->merge($unregisteredPlayerList);
+
+        return $registerFootPlayerIdList
+            ->map(function (int $footPlayerId) use ($playedPlayerInfos, $players) {
+                return collect([
+                    'model'  => $playedPlayerInfos->where('foot_player_id', $footPlayerId),
+                    'player' => $players->where('id', $footPlayerId)->first()
+                ]);
+            });
+    }
+    
+    /**
+     * sofa_player_idがNullのfoot_player_idを取得する
+     *
+     * @param  Collection<int, PlayerInfo> $playedPlayerInfos
+     * @return Collection<int>
+     */
+    private function filterNullSofaPlayerId(Collection $playedPlayerInfos): Collection
+    {
+        return $playedPlayerInfos
+            ->whereNull('sofa_player_id')
             ->pluck('foot_player_id');
-
-        return collect($model->fixture['lineups'])
-            ->map(function ($lineup, $key) {                
-                if ($key === 'startXI') {
-                    return collect($lineup)
-                        ->flatten(1)
-                        ->map(function ($player) {
-                            return $player;
-                        });
-                }
-
-                return collect($lineup)->map(fn ($player) => $player);
-            })
-            ->flatten(1)
-            ->whereIn('id', $playerIdList->diff($modelIdList))
-            ->values();
     }
 
-    private function playerIdList(array $lineup): Collection
+    /**
+     * まだ保存されていないプレイヤーのfoot_player_idを取得する
+     *
+     * @param  Collection<int, PlayerInfo> $playedPlayerInfos
+     * @param  Collection<int> $footPlayerIdList
+     * @return Collection<int>
+     */
+    private function filterUnregisteredPlayers(Collection $playedPlayerInfos, Collection $footPlayerIdList): Collection
     {
-        return collect($lineup)
-            ->map(function ($lineup, $key) {                
-                if ($key === 'startXI') {
-                    return collect($lineup)
-                        ->flatten(1)
-                        ->map(function ($player) {
-                            return $player['id'];
-                        });
-                }
+        return $footPlayerIdList->diff($playedPlayerInfos->pluck('foot_player_id'));
+    }
 
-                return collect($lineup)->map(fn ($player) => $player['id']);
+    private function flatLineups(array $lineup): Collection
+    {        
+        return collect($lineup)
+            ->map(function (array $lineup, string $key) {
+                if ($key === 'startXI') {
+                    return collect($lineup)->collapse();
+                }
+                
+                return $lineup;
             })
-            ->flatten();
+            ->collapse();
     }
 }

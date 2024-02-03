@@ -20,8 +20,8 @@ final readonly class DecideManOfTheMatchUseCase
     public function execute(string $fixtureId, string $playerInfoId): Player
     {
         try {            
-            if (!$this->fixture->canEvaluate($fixtureId)) {
-                throw new Exception(Fixture::EVALUATION_PERIOD_EXPIRED_MESSAGE);
+            if (!$this->fixture->canRate($fixtureId)) {
+                throw new Exception(Fixture::RATE_PERIOD_EXPIRED_MESSAGE);
             }
             
             /** @var Player $player */
@@ -54,7 +54,7 @@ final readonly class DecideManOfTheMatchUseCase
                 $oldMomPlayer->save();
             });
 
-            return $newMomPlayer->refresh()->evaluated();
+            return $newMomPlayer->refresh()->rated();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');

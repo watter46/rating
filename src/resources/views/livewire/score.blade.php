@@ -13,10 +13,10 @@
         </div>
       
         <div class="relative flex items-center justify-center w-full">        
-            @if ($isEvaluate)
+            @if ($isRate)
                 <div class="absolute left-0 flex items-center justify-center h-full px-5 w-fit"
-                    title="Evaluated">
-                    <x-svg.evaluated-icon-image />
+                    title="Rated">
+                    <x-svg.rated-icon-image />
                 </div>
             @endif
 

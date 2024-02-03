@@ -19,7 +19,7 @@ class Player extends Component
     public bool $mom;
     public string $name;
     public string $type;
-    public bool $isEvaluated;
+    public bool $isRated;
     public bool $isUser = true;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
@@ -46,7 +46,7 @@ class Player extends Component
         $this->dispatch('player-selected', $this->player['id']);
     }
 
-    #[On('player-evaluated')]
+    #[On('player-rated')]
     public function refetch(string $playerId): void
     {
         if ($playerId !== $this->player['id']) return;

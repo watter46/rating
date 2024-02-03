@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -37,8 +35,8 @@ class Fixture extends Model
     
     protected $keyType = 'string';
 
-    private const EVALUATION_PERIOD_DAY = 5;
-    public  const EVALUATION_PERIOD_EXPIRED_MESSAGE = 'Evaluation period has expired.';
+    private const RATE_PERIOD_DAY = 5;
+    public  const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
 
     /**
      * The attributes that are mass assignable.
@@ -61,7 +59,7 @@ class Fixture extends Model
     ];
     
     /**
-     * Fixtureカラムを更新する
+     * rate
      *
      * @param  Collection $fixture
      * @return self
@@ -76,23 +74,22 @@ class Fixture extends Model
     /**
      * 試合で使用するデータを保存するイベントを発行する
      *
-     * @return void
      */
-    public function registered(): void
+    public function registered()
     {
         FixtureRegistered::dispatch($this);
     }
     
     /**
      * 指定した試合でプレイヤーを評価できるか判定する
-     *
+     * 
      * @return bool
      */
-    public function canEvaluate(): bool
+    public function canRate(): bool
     {
         $specifiedDate = Carbon::parse($this->date);
-        
-        return $specifiedDate->diffInDays(now()) <= self::EVALUATION_PERIOD_DAY;
+
+        return $specifiedDate->diffInDays(now('UTC')) <= self::RATE_PERIOD_DAY;
     }
 
     /**

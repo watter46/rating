@@ -1,4 +1,4 @@
-<div {{ $attributes->merge(['class' => 'flex items-center justify-center bg-orange-500 rounded-full']) }}>
+<div {{ $attributes->merge(['class' => 'flex items-center justify-center rounded-full']) }}>
     @if($img['exists'])
         <img src="{{ $img['data'] }}" class="rounded-full">
     @endif
