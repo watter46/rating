@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\RateAll;
+namespace App\Livewire\Lineups;
 
 use App\Livewire\MessageType;
 use Exception;
@@ -13,7 +13,7 @@ use App\UseCases\Player\RateAllPlayersUseCase;
 use App\Livewire\RateAllPlayersResource;
 
 
-class Players extends Component
+class RateAllPlayers extends Component
 {
     public array $lineups;
     public string $fixtureId;
@@ -44,7 +44,7 @@ class Players extends Component
 
     public function render()
     {
-        return view('livewire.rate-all.players');
+        return view('livewire.lineups.rate-all-players');
     }
 
     /**

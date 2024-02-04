@@ -16,7 +16,7 @@
                 </header>
                 
                 {{-- AllPlayers --}}
-                <livewire:rate-all.players
+                <livewire:lineups.rate-all-players
                     :$lineups
                     :$fixtureId />
             </div>

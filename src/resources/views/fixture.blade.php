@@ -4,7 +4,7 @@
             <div class="flex w-1/2 h-full">
                 <div class="z-10 w-2/6 h-full py-10 space-y-5">
                     @foreach($lineups['substitutes'] as $player)                    
-                        <livewire:player
+                        <livewire:lineups.player
                             name="substitutes"
                             :$fixtureId
                             :$player
@@ -14,7 +14,7 @@
                 
                 <div class="flex items-center justify-center w-full h-full">
                     <div class="relative h-full">
-                        {{-- FieldSVG --}}
+                        {{-- Field --}}
                         <div class="relative -top-5" style="height: 88vh;">
                             <x-svg.field-image
                                 id="fixture-field"
@@ -30,7 +30,7 @@
                                         @foreach($players as $player)
                                             <div class="flex justify-center items-center
                                                 {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
-                                                <livewire:player
+                                                <livewire:lineups.player
                                                     name="startXI"
                                                     :$fixtureId
                                                     :$player
@@ -44,11 +44,11 @@
 
                         <div class="absolute flex items-center justify-center font-black left-5 bottom-10 gap-x-3">
                             {{-- RatedCount --}}
-                            <livewire:rated-count :$fixtureId :$playerCount />
+                            <livewire:lineups.rated-count :$fixtureId :$playerCount />
 
                             @if($canRate)
                                 {{-- RateAllPlayers --}}
-                                <livewire:rate-all-players
+                                <livewire:lineups.rate-all
                                     :$lineups
                                     :$fixtureId />
                             @endif
@@ -56,11 +56,11 @@
 
 
                         <div class="absolute flex items-center justify-center right-5 bottom-10 gap-x-3">
-                            {{-- Toggle UserMacine --}}
-                            <livewire:toggle-user-machine />
+                            {{-- ToggleUserMacine --}}
+                            <livewire:lineups.toggle-user-machine />
 
                             {{-- RatedResult --}}
-                            <livewire:rated-result
+                            <livewire:lineups.rated-result
                                 :$lineups
                                 :$fixtureId />
                         </div>
@@ -69,13 +69,15 @@
             </div>
 
             <div class="flex flex-col items-center justify-center w-1/2 h-full players">
+                {{-- Score --}}
                 <x-score.score
                     :fixture="$fixture"
                     :teams="$teams"
                     :league="$league"
                     :score="$score" />
                 
-                <livewire:player-detail
+                {{-- PlayerDetail --}}
+                <livewire:rating.player-detail
                     :$fixtureId
                     :$lineups />
             </div>

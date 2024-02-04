@@ -50,7 +50,7 @@
         </div>
         
         {{-- Rating --}}
-        <livewire:rating
+        <livewire:rating.rating
             :$fixtureId
             :playerId="$player['id']"
             :defaultRating="$player['defaultRating']"

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Lineups;
 
 use Exception;
 use Livewire\Attributes\On;
@@ -10,18 +10,18 @@ use Illuminate\Support\Str;
 use App\UseCases\Player\FetchPlayerUseCase;
 
 
-class Player extends Component
+class RatedPlayer extends Component
 {
+    public string $name;
     public string $fixtureId;
-    public array $player;
     public ?float $rating;
     public ?float $defaultRating;
+    public array $player;
     public bool $mom;
-    public string $name;
     public bool $isRated;
-    public bool $isUser = true;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
+    
     
     public function boot(FetchPlayerUseCase $fetchPlayer)
     {
@@ -32,22 +32,17 @@ class Player extends Component
     {
         $this->fetchPlayer($this->fixtureId, $this->player['id']);
 
-        $this->defaultRating = $this->player['defaultRating'];
-    }
-    
-    public function render()
-    {
-        return view('livewire.player');
+        $this->defaultRating = (float) $this->player['defaultRating'];
     }
 
-    public function toDetail()
+    public function render()
     {
-        $this->dispatch('player-selected', $this->player['id']);
+        return view('livewire.lineups.rated-player');
     }
 
     #[On('player-rated')]
     public function refetch(string $playerId): void
-    {
+    {        
         if ($playerId !== $this->player['id']) return;
 
         $this->fetchPlayer($this->fixtureId, $playerId);
@@ -57,12 +52,6 @@ class Player extends Component
     public function refetchAll(): void
     {
         $this->fetchPlayer($this->fixtureId, $this->player['id']);
-    }
-
-    #[On('user-machine-toggled')]
-    public function toggle(bool $isUser)
-    {
-        $this->isUser = $isUser;
     }
     
     /**

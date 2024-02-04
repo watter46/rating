@@ -19,7 +19,7 @@
         
         <div class="grid mt-2 gap-y-2">
             @foreach($this->fixtures as $fixture)
-                <livewire:score
+                <livewire:fixtures.score
                     :fixtureId="$fixture->id"
                     :fixture="$fixture->fixture"
                     :score="$fixture->score"
