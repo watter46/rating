@@ -34,13 +34,12 @@ class MockRegisterFixtureListUseCase
         $fixtureList = Fixture::query()
             ->select(['id', 'external_fixture_id'])
             ->currentSeason()
-            ->get()
-            ->toArray();
+            ->get();
 
         $data = $this->builder->build($fixtures, $fixtureList);
         
         $unique = ['id'];
-        $updateColumns = ['date', 'is_end'];
+        $updateColumns = ['date'];
 
         Fixture::upsert($data, $unique, $updateColumns);
     }

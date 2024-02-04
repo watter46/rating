@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\Util\PlayerFile;
 use Illuminate\Database\Seeder;
 
 use Database\Mocks\Player\MockRegisterPlayerOfTeamUseCase;
-
+use Database\Mocks\Player\MockRegisterPlayerUseCase;
 
 class PlayerInfoSeeder extends Seeder
 {
@@ -18,5 +19,10 @@ class PlayerInfoSeeder extends Seeder
         $registerPlayerOfTeam = app(MockRegisterPlayerOfTeamUseCase::class);
 
         $registerPlayerOfTeam->execute();
+
+        /** @var MockRegisterPlayerUseCase $registerPlayer */
+        $registerPlayer = app(MockRegisterPlayerUseCase::class);
+
+        $registerPlayer->execute();
     }
 }

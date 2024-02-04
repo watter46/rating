@@ -5,6 +5,7 @@ namespace Database\Mocks\Fixture;
 use App\Models\Fixture;
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\Util\FixtureFile;
+use App\Http\Controllers\Util\PlayerFile;
 use App\UseCases\Fixture\Builder\FixtureDataBuilder;
 
 
@@ -13,7 +14,8 @@ class MockRegisterFixtureUseCase
     public function __construct(
         private FixtureFile $fixture,
         private FixtureDataBuilder $builder,
-        private FixtureRegistered $fixtureRegistered)
+        private FixtureRegistered $fixtureRegistered,
+        private PlayerFile $player)
     {
         //
     }
@@ -29,9 +31,7 @@ class MockRegisterFixtureUseCase
         $data = $this->builder->build($fetched[0]);
 
         $fixture = $model->updateFixture($data);
-
+        
         $fixture->save();
-
-        $fixture->registered();
     }
 }
