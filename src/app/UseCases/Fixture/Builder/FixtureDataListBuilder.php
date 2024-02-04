@@ -2,103 +2,57 @@
 
 namespace App\UseCases\Fixture\Builder;
 
-use App\Http\Controllers\Util\LeagueImageFile;
-use App\Http\Controllers\Util\TeamImageFile;
+use Illuminate\Support\Collection;
+
+use App\Models\Fixture;
+use App\UseCases\ApiFootball\Fixtures\Score;
 
 
 final readonly class FixtureDataListBuilder
 {    
     const END_STATUS = 'Match Finished';
 
-    public function __construct(
-        private TeamImageFile $teamImage,
-        private LeagueImageFile $leagueImage)
+    public function __construct(private Score $score)
     {
-        
+        //
     }
     
     /**
      * build
      *
-     * @param  mixed $fetched
-     * @param  mixed $fixtureList
+     * @param  array $fetched
+     * @param  Collection<int, Fixture> $fixtures
      * @return array
      */
-    public function build($fetched, $fixtureList): array
+    public function build(array $fetched, Collection $fixtures): array
     {
         $data = collect($fetched)
-            ->map(function ($fixture) {  
+            ->map(function ($fixture) {
                 return [
                     'external_fixture_id' => $fixture->fixture->id,
                     'external_league_id'  => $fixture->league->id,
-                    'score'               => $this->score($fixture),
+                    'score'               => $this->score->build($fixture),
                     'season'              => $fixture->league->season,
-                    'is_end'              => $fixture->fixture->status->long === self::END_STATUS,
-                    'date'                => date('Y-m-d H:i', $fixture->fixture->timestamp),
+                    'date'                => date('Y-m-d H:i', $fixture->fixture->timestamp)
                 ];
             });
 
-        $result = $fixtureList
+        $result = $fixtures
             ? $data
-                ->map(function ($fixture) use ($fixtureList) {
-                    $filtered = collect($fixtureList)
-                        ->first(function ($model) use ($fixture) {
-                            return $model['external_fixture_id'] === $fixture['external_fixture_id'];
-                        });
-
-                    if (!$filtered) {
+                ->map(function ($fixture) use ($fixtures) {
+                    $fixtureModel = $fixtures
+                        ->keyBy('external_fixture_id')
+                        ->get($fixture['external_fixture_id']);
+                    
+                    if (!$fixtureModel) {
                         return $fixture;
                     }
                     
-                    return array_merge($fixture, $filtered);
+                    return array_merge($fixture, $fixtureModel->toArray());
                 })
                 ->toArray()
             : $data->toArray();
             
         return $result;
-    }
-
-    private function score($fixture)
-    {
-        return collect($fixture)
-            ->except(['goals', 'score'])
-            ->map(function ($data, $key) {
-                return match ($key) {
-                    'fixture' => $this->fixture($data),
-                    'teams'   => $this->teams($data),
-                    'league'  => $this->league($data)
-                };
-            })
-            ->toJson();
-    }
-
-    private function fixture($data)
-    {
-        return [
-            'date' => $data->date,
-            'status' => $data->status->long
-        ];
-    }
-
-    private function teams($data)
-    {
-        return collect($data)
-            ->map(function ($team) {
-                return [
-                    'name' => $team->name,
-                    'img'  => $this->teamImage->generatePath($team->id)
-                ];
-            })
-            ->toArray();
-    }
-
-    private function league($data)
-    {
-        return [
-            'name' => $data->name,
-            'img'  => $this->leagueImage->generatePath($data->id),
-            'season' => $data->season,
-            'round' => $data->round
-        ];
     }
 }

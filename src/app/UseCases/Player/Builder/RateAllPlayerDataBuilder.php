@@ -71,12 +71,12 @@ readonly class RateAllPlayerDataBuilder
                 if ($ratedPlayer['mom']) {
                     return $player
                         ->decideMOM()
-                        ->evaluate((float) $ratedPlayer['rating']);
+                        ->rate((float) $ratedPlayer['rating']);
                 }
                 
                 return $player
                     ->unDecideMOM()
-                    ->evaluate((float) $ratedPlayer['rating']);
+                    ->rate((float) $ratedPlayer['rating']);
             });
     }
 }
