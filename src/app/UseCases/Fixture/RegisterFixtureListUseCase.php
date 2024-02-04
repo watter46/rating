@@ -10,7 +10,7 @@ use App\Models\Fixture;
 use App\Http\Controllers\Util\FixturesFile;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\UseCases\Player\Util\ApiFootball;
+use App\UseCases\Api\ApiFootball;
 use App\UseCases\Util\Season;
 use App\UseCases\Fixture\RegisterFixtureListBuilder;
 

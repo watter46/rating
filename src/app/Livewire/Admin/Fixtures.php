@@ -65,11 +65,17 @@ class Fixtures extends Component
      */
     private function fetch()
     {
-        $tournament = TournamentType::ALL;
+        try {
+            $tournament = TournamentType::ALL;
 
-        $fixtures = $this->fetchFixtureList->execute($tournament);
+            $fixtures = $this->fetchFixtureList->execute($tournament);
+            
+            return $this->resource->format($fixtures);
 
-        return $this->resource->format($fixtures);
+        } catch (Exception $e) {            
+
+            return $this->fetch();
+        }
     }
     
     /**

@@ -96,7 +96,7 @@ class RegisterFixtureListener
         return $footPlayerIdList->diff($playedPlayerInfos->pluck('foot_player_id'));
     }
 
-    private function flatLineups(array $lineups): Collection
+    private function flatLineups(Collection $lineups): Collection
     {        
         return collect($lineups)
             ->map(function (Collection $lineup, string $key) {

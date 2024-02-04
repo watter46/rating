@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Fixture;
 use App\Http\Controllers\Util\FixtureFile;
-use App\UseCases\Player\Util\ApiFootball;
+use App\UseCases\Api\ApiFootball;
 use App\UseCases\Fixture\RegisterFixtureBuilder;
 
 

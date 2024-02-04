@@ -3,10 +3,9 @@
         <div class="flex items-center w-full h-full">
             <div class="flex w-1/2 h-full">
                 <div class="z-10 w-2/6 h-full py-10 space-y-5">
-                    @foreach($lineups['substitutes'] as $player)
+                    @foreach($lineups['substitutes'] as $player)                    
                         <livewire:player
                             name="substitutes"
-                            type="fixture"
                             :$fixtureId
                             :$player
                             :key="$player['id']" />
@@ -33,7 +32,6 @@
                                                 {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
                                                 <livewire:player
                                                     name="startXI"
-                                                    type="fixture"
                                                     :$fixtureId
                                                     :$player
                                                     :key="$player['id']" />

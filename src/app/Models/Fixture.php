@@ -13,7 +13,9 @@ use Illuminate\Support\Collection;
 
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\TournamentType;
+use App\Models\Exceptions\FixtureNotFoundException;
 use App\UseCases\Util\Season;
+use Exception;
 
 /**
  * FixtureModel
