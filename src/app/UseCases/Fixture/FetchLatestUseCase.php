@@ -3,7 +3,6 @@
 namespace App\UseCases\Fixture;
 
 use Exception;
-use Illuminate\Support\Str;
 
 use App\Models\Fixture;
 use App\Models\PlayerInfo;
@@ -25,18 +24,11 @@ final readonly class FetchLatestUseCase
                 ->past()
                 ->latest()
                 ->first();
-
-            $idList = collect($fixture->fixture['lineups'])
-                ->dot()
-                ->filter(function ($player, $key) {
-                    return Str::afterLast($key, '.') === 'id';
-                })
-                ->values()
-                ->toArray();
             
+            /** @var PlayerInfo $playerInfos */  
             $playerInfos = PlayerInfo::query()
                 ->currentSeason()
-                ->whereIn('foot_player_id', $idList)
+                ->lineups($fixture)
                 ->get();
 
             $fixture['playerInfos'] = $playerInfos;

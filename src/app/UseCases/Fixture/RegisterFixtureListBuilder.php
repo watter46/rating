@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixture\Builder;
+namespace App\UseCases\Fixture;
 
 use Illuminate\Support\Collection;
 
 use App\Models\Fixture;
-use App\UseCases\ApiFootball\Fixtures\Score;
+use App\UseCases\Fixture\Format\FixtureList\Score;
 
 
-final readonly class FixtureDataListBuilder
+final readonly class RegisterFixtureListBuilder
 {    
     const END_STATUS = 'Match Finished';
 

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixture\Builder;
+namespace App\UseCases\Fixture;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -8,15 +8,15 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\UseCases\ApiFootball\Fixture\Fixture;
-use App\UseCases\ApiFootball\Fixture\League;
-use App\UseCases\ApiFootball\Fixture\Lineups;
-use App\UseCases\ApiFootball\Fixture\Players;
-use App\UseCases\ApiFootball\Fixture\Score;
-use App\UseCases\ApiFootball\Fixture\Teams;
+use App\UseCases\Fixture\Format\Fixture\Fixture;
+use App\UseCases\Fixture\Format\Fixture\League;
+use App\UseCases\Fixture\Format\Fixture\Lineups;
+use App\UseCases\Fixture\Format\Fixture\Players;
+use App\UseCases\Fixture\Format\Fixture\Score;
+use App\UseCases\Fixture\Format\Fixture\Teams;
 
 
-final readonly class FixtureDataBuilder
+final readonly class RegisterFixtureBuilder
 {
     public function __construct(
         private TeamImageFile $teamImage,

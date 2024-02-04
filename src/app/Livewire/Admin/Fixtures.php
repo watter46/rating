@@ -84,7 +84,7 @@ class Fixtures extends Component
                 throw new Exception(self::ERROR_MESSAGE);
             }
             
-            // $this->registerFixtureList->execute();
+            $this->registerFixtureList->execute();
             
             $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close-fixtures-modal');

@@ -7,7 +7,7 @@ use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 
 use App\Models\Fixture;
-use App\UseCases\Fixture\Builder\FixtureDataListBuilder;
+use App\UseCases\Fixture\RegisterFixtureListBuilder;
 
 
 class MockRegisterFixtureListUseCase
@@ -19,7 +19,7 @@ class MockRegisterFixtureListUseCase
         private TeamImageFile $teamImage,
         private LeagueImageFile $leagueImage,
         private FixturesFile $fixtures,
-        private FixtureDataListBuilder $builder)
+        private RegisterFixtureListBuilder $builder)
     {
         //
     }
