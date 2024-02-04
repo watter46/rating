@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Util;
 
-use App\UseCases\Util\Season;
+
 use Exception;
+use SplFileInfo;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+
+use App\UseCases\Util\Season;
 
 
 final readonly class PlayerFile
@@ -26,6 +31,15 @@ final readonly class PlayerFile
         $path = $this->generatePath($playerId);
 
         return File::get($path);
+    }
+
+    public function getAll(): Collection
+    {
+        $files = File::files(app_path(self::DIR_PATH));
+        
+        return collect($files)->map(function (SplFileInfo $file) {
+            return Str::before($file->getFilename(), '.json');
+        });
     }
 
     public function write(int $playerId, string $json)

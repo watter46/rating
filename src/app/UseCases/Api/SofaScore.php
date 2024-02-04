@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player\Util;
+namespace App\UseCases\Api;
 
 use GuzzleHttp\Client;
 

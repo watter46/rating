@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Util;
 
-use App\UseCases\Player\Util\SofaScore;
-use App\UseCases\Util\Season;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
+
+use App\UseCases\Util\Season;
 use App\Models\PlayerInfo;
+use App\UseCases\Api\SofaScore;
 
 
 final readonly class PlayerImageFile
