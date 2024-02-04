@@ -20,10 +20,10 @@ final readonly class FetchPlayerUseCase
         try {
             /** @var Player $player */
             $player = Player::query()
-                ->where('fixture_id', $fixtureId)
-                ->where('player_info_id', $playerId)
+                ->fixture($fixtureId)
+                ->playerInfo($playerId)
                 ->first();
-            
+                            
             return $player
                 ? $player->rated()
                 : $this->player->unrated($fixtureId);

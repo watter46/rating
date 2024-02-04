@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player\Builder;
+namespace App\UseCases\Player;
 
 use Illuminate\Support\Collection;
+
 use App\Models\Player;
 
 
-readonly class RateAllPlayerDataBuilder
+readonly class RateAllPlayerBuilder
 {    
     /**
      * RateAllPlayerのデータを作成する
