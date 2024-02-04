@@ -8,7 +8,7 @@
     <div class="flex justify-center">
         <div class="relative flex justify-center place-items-center">
             {{-- PlayerImage --}}
-            <x-rating.player-image
+            <x-player.player-image
                 class="w-16 h-16"
                 :number="$player['number']"
                 :img="$player['img']" />

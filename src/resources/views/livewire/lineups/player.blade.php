@@ -8,7 +8,7 @@
     <div class="flex justify-center player" wire:click="toDetail">
         <div class="relative flex justify-center w-fit place-items-center">
             {{-- PlayerImage --}}
-            <x-rating.player-image
+            <x-player.player-image
                 class="w-16 h-16 cursor-pointer"
                 :number="$player['number']"
                 :img="$player['img']" />
