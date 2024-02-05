@@ -39,7 +39,7 @@
                                                 @foreach($players as $player)
                                                     <div class="flex justify-center items-center
                                                         {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
-                                                        <livewire:rated-player
+                                                        <livewire:lineups.rated-player
                                                             name="startXI"
                                                             :$fixtureId
                                                             :$player
