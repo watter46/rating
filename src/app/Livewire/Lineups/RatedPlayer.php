@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Lineups;
 
+use App\Livewire\MessageType;
 use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
