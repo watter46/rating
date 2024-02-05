@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Fixture;
 use App\Models\Player;
-use App\UseCases\Player\Builder\RateAllPlayerDataBuilder;
+use App\UseCases\Player\RateAllPlayerBuilder;
 
 
 final readonly class RateAllPlayersUseCase
 {
-    public function __construct(private Fixture $fixture, private RateAllPlayerDataBuilder $builder)
+    public function __construct(private Fixture $fixture, private RateAllPlayerBuilder $builder)
     {
         //
     }

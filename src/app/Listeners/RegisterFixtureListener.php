@@ -47,7 +47,7 @@ class RegisterFixtureListener
      */
     private function filterPlayers(Fixture $model): Collection
     {
-        $players = $this->flatLineups($model->fixture['lineups']);
+        $players = $this->flatLineups($model->fixture->get('lineups'));
         
         $footPlayerIdList = $players->pluck('id');
                 
@@ -96,12 +96,12 @@ class RegisterFixtureListener
         return $footPlayerIdList->diff($playedPlayerInfos->pluck('foot_player_id'));
     }
 
-    private function flatLineups(array $lineup): Collection
+    private function flatLineups(Collection $lineups): Collection
     {        
-        return collect($lineup)
-            ->map(function (array $lineup, string $key) {
+        return collect($lineups)
+            ->map(function (Collection $lineup, string $key) {
                 if ($key === 'startXI') {
-                    return collect($lineup)->collapse();
+                    return $lineup->collapse();
                 }
                 
                 return $lineup;

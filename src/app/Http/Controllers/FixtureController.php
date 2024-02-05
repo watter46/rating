@@ -32,7 +32,7 @@ class FixtureController extends Controller
     {
         try {
             $fixture = $fetchLatest->execute();
-            
+                        
             return view('players', $resource->format($fixture));
 
         } catch (Exception $e) {

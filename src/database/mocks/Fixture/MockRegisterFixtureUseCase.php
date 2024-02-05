@@ -5,15 +5,17 @@ namespace Database\Mocks\Fixture;
 use App\Models\Fixture;
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\Util\FixtureFile;
-use App\UseCases\Fixture\Builder\FixtureDataBuilder;
+use App\Http\Controllers\Util\PlayerFile;
+use App\UseCases\Fixture\RegisterFixtureBuilder;
 
 
 class MockRegisterFixtureUseCase
 {
     public function __construct(
         private FixtureFile $fixture,
-        private FixtureDataBuilder $builder,
-        private FixtureRegistered $fixtureRegistered)
+        private PlayerFile $player,
+        private RegisterFixtureBuilder $builder
+       )
     {
         //
     }
@@ -29,9 +31,7 @@ class MockRegisterFixtureUseCase
         $data = $this->builder->build($fetched[0]);
 
         $fixture = $model->updateFixture($data);
-
+        
         $fixture->save();
-
-        $fixture->registered();
     }
 }

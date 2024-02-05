@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Util;
 
-use App\Models\Fixture;
-use App\UseCases\Player\Builder\FixtureDataBuilder;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Finder\SplFileInfo;
+
+use App\Models\Fixture;
+
 
 final readonly class FixtureFile
 {

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player\Builder;
+namespace App\UseCases\Player;
 
 use App\Models\PlayerInfo;
 use App\UseCases\Util\Season;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
 
-final readonly class PlayerDataBuilder
+final readonly class RegisterPlayerOfTeamBuilder
 {
     /**
      * build

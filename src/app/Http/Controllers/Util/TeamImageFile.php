@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Util;
 
-use App\UseCases\Player\Util\ApiFootball;
-use App\UseCases\Util\Season;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
+
+use App\UseCases\Util\Season;
+use App\UseCases\Api\ApiFootball;
 
 
 final readonly class TeamImageFile

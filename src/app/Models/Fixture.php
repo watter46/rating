@@ -13,7 +13,9 @@ use Illuminate\Support\Collection;
 
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\TournamentType;
+use App\Models\Exceptions\FixtureNotFoundException;
 use App\UseCases\Util\Season;
+use Exception;
 
 /**
  * FixtureModel
@@ -22,7 +24,6 @@ use App\UseCases\Util\Season;
  * @property int $external_league_id
  * @property int $season
  * @property Collection $score
- * @property bool $is_end
  * @property date $date
  * @property Collection $fixture
  */
@@ -48,7 +49,6 @@ class Fixture extends Model
         'external_league_id',
         'season',
         'score',
-        'is_end',
         'date',
         'fixture'
     ];

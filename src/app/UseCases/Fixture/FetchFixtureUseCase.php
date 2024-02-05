@@ -22,23 +22,16 @@ final readonly class FetchFixtureUseCase
             /** @var Fixture $fixture */
             $fixture = Fixture::find($fixtureId);
             
-            $idList = collect($fixture->fixture['lineups'])
-                ->dot()
-                ->filter(function ($player, $key) {
-                    return Str::afterLast($key, '.') === 'id';
-                })
-                ->values()
-                ->toArray();
-            
+            /** @var PlayerInfo $playerInfos */  
             $playerInfos = PlayerInfo::query()
                 ->currentSeason()
-                ->whereIn('foot_player_id', $idList)
+                ->lineups($fixture)
                 ->get();
 
             $fixture['playerInfos'] = $playerInfos;
-                        
-            return $fixture;
             
+            return $fixture;
+                                    
         } catch (Exception $e) {
             throw $e;
         }

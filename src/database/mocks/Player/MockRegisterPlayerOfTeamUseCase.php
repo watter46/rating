@@ -5,17 +5,17 @@ namespace Database\Mocks\Player;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\PlayerInfo;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\PlayerOfTeamFile;
 use App\Http\Controllers\Util\SquadsFile;
-use App\Models\PlayerInfo;
-use App\UseCases\Player\Builder\PlayerDataBuilder;
+use App\UseCases\Player\RegisterPlayerOfTeamBuilder;
 
 
 class MockRegisterPlayerOfTeamUseCase
 {
     public function __construct(
-        private PlayerDataBuilder $builder,
+        private RegisterPlayerOfTeamBuilder $builder,
         private PlayerOfTeamFile $playerOfTeam,
         private SquadsFile $squads,
         private PlayerImageFile $playerImage)

@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player\Builder;
+namespace App\UseCases\Player;
 
 use Illuminate\Support\Collection;
+
 use App\Models\Player;
 
 
-readonly class RateAllPlayerDataBuilder
+readonly class RateAllPlayerBuilder
 {    
     /**
      * RateAllPlayerのデータを作成する
@@ -71,12 +72,12 @@ readonly class RateAllPlayerDataBuilder
                 if ($ratedPlayer['mom']) {
                     return $player
                         ->decideMOM()
-                        ->evaluate((float) $ratedPlayer['rating']);
+                        ->rate((float) $ratedPlayer['rating']);
                 }
                 
                 return $player
                     ->unDecideMOM()
-                    ->evaluate((float) $ratedPlayer['rating']);
+                    ->rate((float) $ratedPlayer['rating']);
             });
     }
 }

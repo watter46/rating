@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedMediumInteger('external_fixture_id');
             $table->unsignedMediumInteger('external_league_id');
             $table->unsignedSmallInteger('season')->length(4);
-            $table->boolean('is_end');
             $table->timestamp('date');
             $table->json('score');
             $table->json('fixture')->nullable();

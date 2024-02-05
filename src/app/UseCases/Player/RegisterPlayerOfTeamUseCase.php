@@ -7,16 +7,16 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\PlayerInfo;
 use App\Http\Controllers\Util\PlayerImageFile;
-use App\UseCases\Player\Builder\PlayerDataBuilder;
-use App\UseCases\Player\Util\ApiFootball;
-use App\UseCases\Player\Util\SofaScore;
+use App\UseCases\Player\RegisterPlayerOfTeamBuilder;
+use App\UseCases\Api\ApiFootball;
+use App\UseCases\Api\SofaScore;
 
 
 final readonly class RegisterPlayerOfTeamUseCase
 {
     public function __construct(
         private PlayerImageFile $playerImage,
-        private PlayerDataBuilder $builder)
+        private RegisterPlayerOfTeamBuilder $builder)
     {
         //
     }
