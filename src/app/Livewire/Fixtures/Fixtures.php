@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Fixtures;
 
 use Exception;
 use Livewire\Component;
@@ -11,6 +11,7 @@ use Illuminate\Pagination\Paginator;
 
 use App\Http\Controllers\FixturesResource;
 use App\Http\Controllers\TournamentType;
+use App\Livewire\MessageType;
 use App\UseCases\Fixture\FetchFixtureListUseCase;
 
 
@@ -47,7 +48,7 @@ class Fixtures extends Component
     
     public function render()
     {
-        return view('livewire.fixtures', [
+        return view('livewire.fixtures.fixtures', [
             'tournaments' => TournamentType::toText()
         ]);
     }

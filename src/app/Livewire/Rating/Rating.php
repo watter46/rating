@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Rating;
 
 use Exception;
 use Livewire\Component;
@@ -44,7 +44,7 @@ class Rating extends Component
 
     public function render()
     {
-        return view('livewire.rating');
+        return view('livewire.rating.rating');
     }
     
     /**

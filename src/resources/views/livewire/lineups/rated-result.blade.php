@@ -12,7 +12,8 @@
                     {{-- Substitutes --}}
                     <div class="grid content-center h-full gap-y-3">
                         @foreach($lineups['substitutes'] as $player)
-                            <livewire:rated-player
+                            {{-- RatedPlayer --}}
+                            <livewire:lineups.rated-player
                                 name="substitutes"
                                 :$fixtureId
                                 :$player

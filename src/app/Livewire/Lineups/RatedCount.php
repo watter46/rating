@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Lineups;
 
 use App\UseCases\Player\CountRatedPlayerUseCase;
 use Exception;
@@ -29,7 +29,7 @@ class RatedCount extends Component
     
     public function render()
     {
-        return view('livewire.rated-count');
+        return view('livewire.lineups.rated-count');
     }
 
     #[On('player-rated')]

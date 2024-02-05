@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Lineups;
 
 use Livewire\Component;
 
 
-class RateAllPlayers extends Component
+class RateAll extends Component
 {
     public array $lineups;
     public string $fixtureId;
@@ -14,6 +14,6 @@ class RateAllPlayers extends Component
     
     public function render()
     {
-        return view('livewire.rate-all-players');
+        return view('livewire.lineups.rate-all');
     }
 }

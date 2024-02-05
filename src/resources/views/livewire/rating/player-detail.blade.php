@@ -1,7 +1,7 @@
 <div class="w-full h-full p-3 mt-3 bg-sky-950 rounded-3xl">
     @if($player)
         <div class="relative flex items-center">
-            <x-rating.player-image
+            <x-player.player-image
                 class="w-20 h-20"
                 :number="$player['number']"
                 :img="$player['img']" />
@@ -50,7 +50,7 @@
         </div>
         
         {{-- Rating --}}
-        <livewire:rating
+        <livewire:rating.rating
             :$fixtureId
             :playerId="$player['id']"
             :defaultRating="$player['defaultRating']"

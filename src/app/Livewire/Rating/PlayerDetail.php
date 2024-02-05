@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Rating;
 
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -16,7 +16,7 @@ class PlayerDetail extends Component
     
     public function render()
     {
-        return view('livewire.player-detail');
+        return view('livewire.rating.player-detail');
     }
 
     #[On('player-selected')]
