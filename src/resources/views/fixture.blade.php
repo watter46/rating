@@ -1,5 +1,12 @@
 <x-app-layout>
     <div class="flex flex-col items-stretch">
+        {{-- Score --}}
+        <x-score.score
+            :fixture="$fixture"
+            :teams="$teams"
+            :league="$league"
+            :score="$score" />
+            
         <div class="flex flex-col w-full p-2">
             {{-- StartXI --}}
             <div class="flex items-center justify-center">
@@ -89,13 +96,6 @@
                 @endforeach
             </div>
         </div>
-        
-        {{-- Score --}}
-        {{-- <x-score.score
-            :fixture="$fixture"
-            :teams="$teams"
-            :league="$league"
-            :score="$score" /> --}}
         
         {{-- PlayerDetail --}}
         <livewire:rating.player-detail
