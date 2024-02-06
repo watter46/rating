@@ -3,8 +3,8 @@
 }
 
 .field {
-    min-width: 300px;
-    max-height: 90vh;
+    /* min-width: 300px;
+    max-height: 90vh; */
 }
 
 /* ロード時のフィールドのアニメーション */

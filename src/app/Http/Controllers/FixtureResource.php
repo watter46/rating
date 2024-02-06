@@ -131,15 +131,10 @@ final readonly class FixtureResource
                         ->toArray();
                 };
                 
-                if ($key === 'startXI') {
-                    return collect($lineup)
-                        ->map(function (array $line) use ($changeId) {
-                            return collect($line)->map(fn ($player) => $changeId($player));
-                        });
-                }
-                
                 return collect($lineup)
-                    ->map(fn ($player) => $changeId($player));
+                    ->map(function (array $line) use ($changeId) {
+                        return collect($line)->map(fn ($player) => $changeId($player));
+                    });
             })
             ->toArray();
     }

@@ -16,8 +16,8 @@
 
         @livewireStyles
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen dark:bg-gray-900">
+    <body class="font-sans antialiased dark:bg-gray-900">
+        <div class="w-full">
             @include('layouts.navigation')
 
             <livewire:message />
@@ -32,7 +32,7 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="">
                 {{ $slot }}
             </main>
         </div>
