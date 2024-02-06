@@ -2,32 +2,14 @@
 
 namespace App\Livewire;
 
-use App\UseCases\Player\FetchPlayersUseCase;
-use App\UseCases\Player\RateAllPlayersUseCase;
-use Exception;
 use Illuminate\Support\Collection;
-use Livewire\Component;
-use Illuminate\Support\Str;
 
 
 readonly class RateAllPlayersResource
 {
-    public function __construct()
-    {
-        
-    }
-
     public function lineupsToPlayers(array $lineups): Collection
     {
-        return collect($lineups)
-            ->map(function ($lineups, $key) {
-                if ($key === 'startXI') {
-                    return collect($lineups)->flatten(1);
-                }
-
-                return $lineups; 
-            })
-            ->flatten(1);
+        return collect($lineups)->flatten(2);
     }
 
     public function format(array $lineups, Collection $playerModels)

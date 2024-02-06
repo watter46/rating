@@ -6,6 +6,16 @@
             :teams="$teams"
             :league="$league"
             :score="$score" />
+
+
+        @if($canRate)
+            <div class="flex justify-end pr-5">
+                {{-- RateAllPlayers --}}
+                <livewire:lineups.rate-all
+                    :$lineups
+                    :$fixtureId />
+            </div>
+        @endif
             
         <div class="flex flex-col w-full p-2">
             {{-- StartXI --}}
@@ -43,13 +53,6 @@
                     <div class="absolute flex items-center justify-center font-black left-10 bottom-14 gap-x-3">
                         {{-- RatedCount --}}
                         <livewire:lineups.rated-count :$fixtureId :$playerCount />
-
-                        @if($canRate)
-                            {{-- RateAllPlayers --}}
-                            {{-- <livewire:lineups.rate-all
-                                :$lineups
-                                :$fixtureId /> --}}
-                        @endif
                     </div>
 
                     <div class="absolute flex items-center justify-center bottom-14 right-10 gap-x-3">

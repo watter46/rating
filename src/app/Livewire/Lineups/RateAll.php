@@ -10,7 +10,7 @@ class RateAll extends Component
     public array $lineups;
     public string $fixtureId;
 
-    public bool $isOpen = false;
+    public bool $isOpen = true;
     
     public function render()
     {
