@@ -7,15 +7,23 @@
             :league="$league"
             :score="$score" />
 
+        <div class="flex items-center justify-between px-5 gap-x-3">
+            {{-- RatedResult --}}
+            <livewire:lineups.rated-result
+                :$fixture
+                :$teams
+                :$league
+                :$score
+                :$lineups
+                :$fixtureId />
 
-        @if($canRate)
-            <div class="flex justify-end pr-5">
+            @if($canRate)
                 {{-- RateAllPlayers --}}
                 <livewire:lineups.rate-all
                     :$lineups
                     :$fixtureId />
-            </div>
-        @endif
+            @endif
+        </div>
             
         <div class="flex flex-col w-full p-2">
             {{-- StartXI --}}
@@ -58,11 +66,6 @@
                     <div class="absolute flex items-center justify-center bottom-14 right-10 gap-x-3">
                         {{-- ToggleUserMacine --}}
                         <livewire:lineups.toggle-user-machine />
-
-                        {{-- RatedResult --}}
-                        {{-- <livewire:lineups.rated-result
-                            :$lineups
-                            :$fixtureId /> --}}
                     </div>
                 </div>
             </div>

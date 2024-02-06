@@ -20,6 +20,7 @@ class RatedPlayer extends Component
     public array $player;
     public bool $mom;
     public bool $isRated;
+    public string $size;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
     
