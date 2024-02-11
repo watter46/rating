@@ -5,11 +5,11 @@
     </div>
 
     @if($isOpen)
-        <div class="fixed top-0 left-0 z-[99] flex items-center justify-center w-full h-screen px-2 py-3"
+        <div class="fixed top-0 left-0 z-[99] flex items-center justify-center w-full h-full px-2 py-3"
             style="background: rgba(31, 41, 55, 0.95);">
-            <div class="relative flex flex-col w-full h-full bg-gray-800 border border-gray-700 rounded-lg">
+            <div class="relative flex flex-col w-full h-full pb-5 bg-gray-900 border border-gray-700 rounded-lg">
                 <div class="flex justify-end w-full p-2">
-                    <div class="border-gray-400 rounded-full cursor-pointer hover:border"
+                    <div class="border-gray-400 rounded-full cursor-pointer opacity-30 hover:opacity-100 hover:border"
                         wire:click="$toggle('isOpen')">
                         <x-svg.cross-image class="w-10 h-10 fill-gray-400" />
                     </div>
@@ -65,7 +65,7 @@
                                     <div class="flex justify-center w-full col-span-2">
                                         <livewire:lineups.rated-player
                                             name="substitutes"
-                                            size="w-10 h-10"
+                                            size="w-[45px] h-[45px]"
                                             :$fixtureId
                                             :$player
                                             :key="$player['id']" />
@@ -79,7 +79,7 @@
                                         @if($loop->first) col-start-2 @endif">
                                         <livewire:lineups.rated-player
                                             name="substitutes"
-                                            size="w-10 h-10"
+                                            size="w-[45px] h-[45px]"
                                             :$fixtureId
                                             :$player
                                             :key="$player['id']" />

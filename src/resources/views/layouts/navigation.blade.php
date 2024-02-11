@@ -74,6 +74,10 @@
             <x-responsive-nav-link :href="route('fixtures')" :active="request()->routeIs('fixtures')">
                 {{ __('Fixtures') }}
             </x-responsive-nav-link>
+            
+            <x-responsive-nav-link :href="route('fixtures.latest')" :active="request()->routeIs('fixtures.latest')">
+                {{ __('Latest') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

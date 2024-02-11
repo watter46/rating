@@ -14,11 +14,6 @@ class PlayerDetail extends Component
     public int $playerId;
     public array $player;
     public bool $open = false;
-
-    public function mount()
-    {
-        $this->player = collect($this->lineups)->flatten(2)->first();
-    }
     
     public function render()
     {

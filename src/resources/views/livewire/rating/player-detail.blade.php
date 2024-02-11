@@ -1,7 +1,7 @@
-<div class="absolute inset-0 hidden w-full min-h-screen"
+<div class="fixed inset-0 hidden w-full h-full"
     :class="{'block': open, 'hidden': !open}"
     x-data="{ open: @entangle('open') }">
-        <div class="flex flex-col items-stretch justify-center w-full min-h-screen">
+        <div class="flex flex-col items-stretch justify-center w-full h-full">
             @if($player)
                 {{-- <div class="relative flex items-center">
                     <x-player.player-image
@@ -63,9 +63,9 @@
             {{-- Responsive --}}
             <div x-show="open" class="absolute w-full h-full">
                 @if ($player)
-                    <div class="relative flex items-center justify-center w-full h-screen"
+                    <div class="relative flex items-center justify-center w-full h-full"
                         style="background: rgba(31, 41, 55, 0.95);">
-                        <div class="absolute flex flex-col items-stretch top-[10%] w-11/12 p-3 bg-sky-950 h-4/6 rounded-xl">
+                        <div class="absolute flex flex-col items-stretch top-50% w-11/12 p-3 bg-sky-950 h-4/6 rounded-xl">
                             <div class="flex items-center justify-end w-full h-fit">
                                 <button class="border-gray-400 rounded-full cursor-pointer hover:border"        wire:click="$toggle('open')">
                                     <x-svg.cross-image class="w-8 h-8 fill-gray-400" />

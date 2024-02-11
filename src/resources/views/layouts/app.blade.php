@@ -32,7 +32,7 @@
             @endif
 
             <!-- Page Content -->
-            <main class="relative">
+            <main>
                 {{ $slot }}
             </main>
         </div>

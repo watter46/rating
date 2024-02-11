@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex flex-col items-stretch">
+    <div class="flex flex-col items-stretch pb-10">
         {{-- Score --}}
         <x-score.score
             :fixture="$fixture"
@@ -30,13 +30,13 @@
             <div class="flex items-center justify-center">
                 <div class="relative w-full">
                     {{-- Field --}}
-                    <div class="scale-90 -translate-y-5">
+                    <div class="scale-x-[0.95] -translate-y-5">
                         <x-svg.field-image
                             id="fixture-field"
                             class="hidden initial-state titled-state" />
 
                         {{-- Players --}}
-                        <div id="box" class="absolute flex items-end justify-center w-full h-full top-5">
+                        <div id="box" class="absolute flex items-end justify-center w-full h-full top-10">
                             <div class="flex flex-col w-full h-full">
                                 @foreach($lineups['startXI'] as $line => $players)
                                     <div id="line-{{ $line + 1 }}"
@@ -58,12 +58,14 @@
                         </div>
                     </div>
 
-                    <div class="absolute flex items-center justify-center font-black left-10 bottom-14 gap-x-3">
+                    <div class="absolute flex items-center justify-center font-black left-10 bottom-14 gap-x-3"
+                        x-cloak>
                         {{-- RatedCount --}}
                         <livewire:lineups.rated-count :$fixtureId :$playerCount />
                     </div>
 
-                    <div class="absolute flex items-center justify-center bottom-14 right-10 gap-x-3">
+                    <div class="absolute flex items-center justify-center bottom-14 right-10 gap-x-3"
+                        x-cloak>
                         {{-- ToggleUserMacine --}}
                         <livewire:lineups.toggle-user-machine />
                     </div>
@@ -78,7 +80,7 @@
                             <div class="flex justify-center w-full col-span-2">
                                 <livewire:lineups.player
                                     name="substitutes"
-                                    size="w-10 h-10"
+                                    size="w-[45px] h-[45px]"
                                     :$fixtureId
                                     :$player
                                     :key="$player['id']" />
@@ -92,7 +94,7 @@
                                 @if($loop->first) col-start-2 @endif">
                                 <livewire:lineups.player
                                     name="substitutes"
-                                    size="w-10 h-10"
+                                    size="w-[45px] h-[45px]"
                                     :$fixtureId
                                     :$player
                                     :key="$player['id']" />
