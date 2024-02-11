@@ -7,7 +7,7 @@ use Illuminate\Pagination\Paginator;
 
 use App\Models\Fixture;
 use App\Http\Controllers\TournamentType;
-use App\Models\Exceptions\FixtureNotFoundException;
+
 
 final readonly class FetchFixtureListUseCase
 {    
@@ -18,7 +18,7 @@ final readonly class FetchFixtureListUseCase
     
     public function execute(TournamentType $tournament): Paginator
     {
-        try {                                                
+        try {
             /** @var Paginator $fixture */
             $fixture = Fixture::query()
                 ->with('players:fixture_id')

@@ -35,12 +35,12 @@ final readonly class RegisterFixtureBuilder
     /**
      * 必要なデータを抽出して一覧にする
      *
-     * @param  mixed $fetched
+     * @param  Collection $fetched
      * @return Collection
      */
     public function build($fetched): Collection
     {
-        $data = collect($fetched)
+        $data = $fetched
             ->except(['events', 'goals', 'statistics'])
             ->map(function ($data, $key) {
                 return match ($key) {
@@ -102,8 +102,6 @@ final readonly class RegisterFixtureBuilder
                 return $lineups;
             })
             ->except('players');
-
-            dd($result);
 
         return $result;
     }

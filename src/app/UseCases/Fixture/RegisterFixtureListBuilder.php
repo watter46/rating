@@ -20,13 +20,13 @@ final readonly class RegisterFixtureListBuilder
     /**
      * build
      *
-     * @param  array $fetched
+     * @param  Collection $fixturesData
      * @param  Collection<int, Fixture> $fixtures
      * @return array
      */
-    public function build(array $fetched, Collection $fixtures): array
+    public function build(Collection $fixturesData, Collection $fixtures): array
     {
-        $data = collect($fetched)
+        $data = collect($fixturesData)
             ->map(function ($fixture) {
                 return [
                     'external_fixture_id' => $fixture->fixture->id,

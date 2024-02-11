@@ -5,12 +5,17 @@ namespace App\UseCases\Player;
 use Illuminate\Support\Collection;
 
 use App\Models\Player;
-use App\UseCases\Api\SofaScore;
+use App\UseCases\Api\SofaScore\FindPlayer;
 use App\UseCases\Util\Season;
 
 
 final readonly class RegisterPlayerBuilder
 {
+    public function __construct(private FindPlayer $findPlayer)
+    {
+        
+    }
+    
     /**
      * build
      *
@@ -21,9 +26,9 @@ final readonly class RegisterPlayerBuilder
     {
         $data = $players
             ->map(function (Collection $player) {
-                $fetched = SofaScore::findPlayer($player['player']['name'])->fetch();
+                $playerData = $this->findPlayer->fetch($player['player']['name']);
                 
-                $filtered = collect(json_decode($fetched)->data)
+                $filtered = $playerData
                     ->filter(function ($player) {
                         return $player->team->shortName === 'Chelsea'
                             || $player->team->nameCode === 'CFC';

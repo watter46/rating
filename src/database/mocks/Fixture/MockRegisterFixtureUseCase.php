@@ -3,7 +3,6 @@
 namespace Database\Mocks\Fixture;
 
 use App\Models\Fixture;
-use App\Events\FixtureRegistered;
 use App\Http\Controllers\Util\FixtureFile;
 use App\Http\Controllers\Util\PlayerFile;
 use App\UseCases\Fixture\RegisterFixtureBuilder;
@@ -28,7 +27,7 @@ class MockRegisterFixtureUseCase
 
         $fetched = $this->fixture->get($id);
 
-        $data = $this->builder->build($fetched[0]);
+        $data = $this->builder->build($fetched);
 
         $fixture = $model->updateFixture($data);
         

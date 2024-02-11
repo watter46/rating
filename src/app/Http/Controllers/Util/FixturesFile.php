@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Util;
 
-use App\UseCases\Util\Season;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+
+use App\UseCases\Util\Season;
 
 
 final readonly class FixturesFile
@@ -12,27 +14,34 @@ final readonly class FixturesFile
     private const DIR_PATH  = 'Template/fixtures';
     private const FILE_PATH = 'fixtures.json';
     
-    public function __construct(private Season $season)
+    public function __construct()
     {
         $this->ensureDirExists();
     }
     
-    public function get(): array
-    {
+    public function get(): Collection
+    {        
         if (!$this->exists()) {
             throw new Exception('fixtureFileが存在しません。');
         }
         
         $path = $this->generatePath();
 
-        $json = File::get($path);
+        $fixtures = File::get($path);
 
-        return json_decode($json);
+        return collect(json_decode($fixtures));
     }
 
-    public function write(string $fixtures)
+    public function toJson()
     {
-        File::put($this->generatePath(), $fixtures);
+        $path = $this->generatePath();
+
+        return File::get($path);
+    }
+
+    public function write(Collection $fixtures): void
+    {
+        File::put($this->generatePath(), $fixtures->toJson());
     }
 
     public function exists(): bool
@@ -52,9 +61,7 @@ final readonly class FixturesFile
     }
 
     private function generatePath(): string
-    {        
-        $season = $this->season->current();
-        
-        return app_path(self::DIR_PATH.'/'.$season.'_'.self::FILE_PATH);
+    {                
+        return app_path(self::DIR_PATH.'/'.Season::current().'_'.self::FILE_PATH);
     }
 }

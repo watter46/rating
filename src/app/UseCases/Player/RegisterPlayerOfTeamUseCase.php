@@ -8,15 +8,17 @@ use Illuminate\Support\Facades\DB;
 use App\Models\PlayerInfo;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\UseCases\Player\RegisterPlayerOfTeamBuilder;
-use App\UseCases\Api\ApiFootball;
-use App\UseCases\Api\SofaScore;
+use App\UseCases\Api\ApiFootball\SquadsData;
+use App\UseCases\Api\SofaScore\PlayersOfTeamData;
 
 
 final readonly class RegisterPlayerOfTeamUseCase
 {
     public function __construct(
         private PlayerImageFile $playerImage,
-        private RegisterPlayerOfTeamBuilder $builder)
+        private RegisterPlayerOfTeamBuilder $builder,
+        private SquadsData $squadsData,
+        private PlayersOfTeamData $playersOfTeamData)
     {
         //
     }
@@ -24,16 +26,16 @@ final readonly class RegisterPlayerOfTeamUseCase
     public function execute()
     {
         try {
-            $FOOT_fetched = ApiFootball::squads()->fetch();
-            $SOFA_fetched = SofaScore::playersOfTeam()->fetch();
+            $FootballApiData = $this->squadsData->fetch();
+            $SofaScoreData   = $this->playersOfTeamData->fetch();
 
             $playerInfoList = PlayerInfo::query()
                 ->currentSeason()
                 ->get();
                 
             $data = $this->builder->build(
-                $SOFA_fetched,
-                $FOOT_fetched,
+                $SofaScoreData,
+                $FootballApiData,
                 $playerInfoList
             );
  

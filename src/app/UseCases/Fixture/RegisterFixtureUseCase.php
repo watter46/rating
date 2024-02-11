@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Fixture;
 use App\Http\Controllers\Util\FixtureFile;
 use App\UseCases\Api\ApiFootball;
+use App\UseCases\Api\ApiFootball\FixtureData;
 use App\UseCases\Fixture\RegisterFixtureBuilder;
 
 
@@ -16,7 +17,8 @@ final readonly class RegisterFixtureUseCase
 {
     public function __construct(
         private FixtureFile $file,
-        private RegisterFixtureBuilder $builder)
+        private RegisterFixtureBuilder $builder,
+        private FixtureData $fixtureData)
     {
         //
     }
@@ -27,15 +29,9 @@ final readonly class RegisterFixtureUseCase
             /** @var Fixture $model */
             $model = Fixture::findOrFail($fixtureId);
 
-            // $fetched = ApiFootball::fixture($model->external_fixture_id)->fetch();
-
-            $fetched = $this->file->get($model->external_fixture_id);
+            $fixtureData = $this->fixtureData->fetchOrGetFile($model->external_fixture_id);
             
-            // $this->file->write($model->external_fixture_id, json_encode(json_decode($fetched)->response));
-
-            // dd($fetched);
-                        
-            $data = $this->builder->build($fetched[0]);
+            $data = $this->builder->build($fixtureData);
                         
             $fixture = $model->updateFixture($data);
             
