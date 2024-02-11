@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Util;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Collection;
 
 use App\UseCases\Util\Season;
 use App\UseCases\Api\ApiFootball;
@@ -14,7 +15,7 @@ final readonly class TeamImageFile
 {
     private const DIR_PATH = 'teams';
     
-    public function __construct(private Season $season)
+    public function __construct()
     {
         $this->ensureDirExists();
     }
@@ -47,12 +48,12 @@ final readonly class TeamImageFile
     /**
      * チームの画像を保存する
      *
-     * @param  array $fixturesFile
+     * @param  Collection $fixtures
      * @return void
      */
-    public function registerAll(array $fixturesFile)
+    public function registerAll(Collection $fixtures): void
     {
-        $uniqueTeams = collect($fixturesFile)
+        $uniqueTeams = $fixtures
             ->flatMap(function ($fixture) {
                 return [
                     $fixture->teams->away,
@@ -64,15 +65,15 @@ final readonly class TeamImageFile
         foreach($uniqueTeams as $team) {
             if ($this->exists($team->id)) continue;
 
-            $image = ApiFootball::teamImage($team->id)->fetchImage();
+            $image = ApiFootball::teamImage($team->id)->fetch();
             
-            $this->write($team->id, $image);
+            $this->write($team->id, dd($image->toJson()));
         }
     }
 
-    public function write(int $teamId, string $image)
+    public function write(int $teamId, string $teamImage)
     {
-        File::put($this->generatePath($teamId), $image);
+        File::put($this->generatePath($teamId), $teamImage);
     }
 
     public function exists(int $teamId): bool
@@ -93,8 +94,6 @@ final readonly class TeamImageFile
 
     public function generatePath(int $teamId): string
     {                
-        $season = $this->season->current();
-
-        return public_path(self::DIR_PATH.'/'.$season.'_'.$teamId);
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$teamId);
     }
 }

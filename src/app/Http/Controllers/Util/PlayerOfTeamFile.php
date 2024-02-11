@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Util;
 
 use Exception;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Collection;
 
 use App\UseCases\Util\Season;
 
@@ -18,7 +19,7 @@ final readonly class PlayerOfTeamFile
         $this->ensureDirExists();
     }
     
-    public function get(): string
+    public function get(): Collection
     {
         if (!$this->exists()) {
             throw new Exception('PlayerOfTeamFileが存在しません。');
@@ -26,12 +27,14 @@ final readonly class PlayerOfTeamFile
         
         $path = $this->generatePath();
 
-        return File::get($path);
+        $playersOfTeam = File::get($path);
+
+        return collect(json_decode($playersOfTeam));
     }
 
-    public function write(string $json)
+    public function write(Collection $playersOfTeamData)
     {
-        File::put($this->generatePath(), $json);
+        File::put($this->generatePath(), $playersOfTeamData->toJson());
     }
 
     public function exists(): bool

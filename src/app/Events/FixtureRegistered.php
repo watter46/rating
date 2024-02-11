@@ -16,7 +16,8 @@ class FixtureRegistered
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Create a new event instance.
+     * 試合に必要なデータがあるか判定する
+     * データが欠けていればAPIを取得して保存する
      */
     public function __construct(public Fixture $model)
     {

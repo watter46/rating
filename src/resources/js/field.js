@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const reversed = [...startXIEls].reverse();
 
-    const animationList = ['zoomIn', 'falling', 'bounce'];
+    const animationList = ['zoomIn'];
 
     const randomIndex = Math.floor(Math.random() * animationList.length);
     const animation   = animationList[randomIndex];

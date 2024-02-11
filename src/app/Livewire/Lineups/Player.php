@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Lineups;
 
+use App\Livewire\MessageType;
 use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -17,9 +18,11 @@ class Player extends Component
     public ?float $rating;
     public ?float $defaultRating;
     public bool $mom;
-    public string $name;
     public bool $isRated;
     public bool $isUser = true;
+
+    public string $name;
+    public string $size;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
     

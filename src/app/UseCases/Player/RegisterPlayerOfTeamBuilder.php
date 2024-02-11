@@ -4,7 +4,7 @@ namespace App\UseCases\Player;
 
 use App\Models\PlayerInfo;
 use App\UseCases\Util\Season;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 
@@ -13,18 +13,18 @@ final readonly class RegisterPlayerOfTeamBuilder
     /**
      * build
      *
-     * @property mixed $SOFA_fetched
-     * @property mixed $FOOT_fetched
+     * @property Collection $SofaScoreData
+     * @property Collection $FootApiData
      * @property Collection<int, PlayerInfo> $playerInfoList
      * @return array
      */
     public function build(
-        string $SOFA_fetched,
-        string $FOOT_fetched,
+        Collection $SofaScoreData,
+        Collection $FootApiData,
         Collection $playerInfoList)
-    {
+    {        
         // ApiFootball
-        $FOOT_players = collect(json_decode($FOOT_fetched)->response[0]->players)
+        $FOOT_players = collect($FootApiData['players'])
             ->map(function ($player) {
                 return [
                     'foot_player_id' => $player->id,
@@ -35,7 +35,7 @@ final readonly class RegisterPlayerOfTeamBuilder
             });
 
         // SofaScore
-        $SOFA_players = collect(json_decode($SOFA_fetched)->data->players)
+        $SOFA_players = collect($SofaScoreData['players'])
             ->map(function ($players) {
                 return [
                     'sofa_player_id' => $players->player->id,

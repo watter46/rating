@@ -1,6 +1,6 @@
 <svg id="{{ $id }}" {{ $attributes }} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 74 111">
     <rect width="74" height="111" fill="#082F49"/>
-    <g id="infield" fill="none" stroke="#fff" stroke-width="0.18" transform="translate(3 3)">
+    <g id="infield" fill="none" stroke="#fff"  stroke-width="0.3" transform="translate(3 3)">
         <path id="Border" d="M 0 0 h 68 v 105 h -68 Z"/>
         <path id="Centre line" d="M 0 52.5 h 68"/>
         <circle id="Centre circle" r="9.15" cx="34" cy="52.5"/>

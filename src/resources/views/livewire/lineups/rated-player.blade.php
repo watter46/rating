@@ -9,7 +9,7 @@
         <div class="relative flex justify-center place-items-center">
             {{-- PlayerImage --}}
             <x-player.player-image
-                class="w-16 h-16"
+                class="{{ $size }}"
                 :number="$player['number']"
                 :img="$player['img']" />
 
@@ -25,16 +25,16 @@
             
             {{-- Rating --}}
             <div class="text-sm font-black text-gray-50">
-                <div class="absolute bottom-0 right-0  translate-x-1/2 w-[45px]">
+                <div class="absolute bottom-0 right-0 w-2/3 translate-x-1/2">
                     @if($mom)
-                        <div class="flex items-center justify-center px-5 py-0.5 gap-x-0.5 rounded-xl" style="background-color: #0E87E0">
+                        <div class="flex items-center justify-center px-3 py-0.5 gap-x-0.5 rounded-xl" style="background-color: #0E87E0">
                             <p class="text-xs">★</p>
                             <p x-text="ratingValue(rating)"></p>
                         </div>
                     @endif
 
                     @unless($mom)
-                        <div class="flex justify-center px-5 py-0.5 rounded-xl"
+                        <div class="flex justify-center px-3 py-0.5 rounded-xl"
                             :style="`background-color: ${ratingBgColor(rating)}`">
                             <p x-text="ratingValue(rating)"></p>
                         </div>

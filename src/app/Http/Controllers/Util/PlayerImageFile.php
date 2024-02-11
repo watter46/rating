@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Util;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 
-use App\UseCases\Util\Season;
 use App\Models\PlayerInfo;
-use App\UseCases\Api\SofaScore;
+use App\UseCases\Util\Season;
+use App\UseCases\Api\SofaScore\PlayerImage;
 
 
 final readonly class PlayerImageFile
@@ -16,7 +16,7 @@ final readonly class PlayerImageFile
     private const DIR_PATH = 'images';
     private const DEFAULT_IMAGE_PATH = 'default_uniform.png';
 
-    public function __construct(private Season $season)
+    public function __construct()
     {
         $this->ensureDirExists();
     }
@@ -50,11 +50,11 @@ final readonly class PlayerImageFile
         }
     }
 
-    public function write(int $playerId, string $image): void
+    public function write(int $playerId, string $playerImage): void
     {
         $path = $this->generatePath($playerId);
         
-        File::put($path, $image);
+        File::put($path, $playerImage);
     }
 
     public function exists(int $playerId): bool
@@ -75,7 +75,7 @@ final readonly class PlayerImageFile
 
     public function generatePath(int $playerId): string
     {                
-        $fileName = $this->season->current().'_'.$playerId;
+        $fileName = Season::current().'_'.$playerId;
 
         return public_path(self::DIR_PATH.'/'.$fileName);
     }
@@ -96,9 +96,9 @@ final readonly class PlayerImageFile
         if ($missingPlayerIdList->isEmpty()) return;
 
         foreach($missingPlayerIdList as $player) {
-            $image = SofaScore::playerPhoto($player->sofa_player_id)->fetch();
-            
-            $this->write($player->foot_player_id, $image);
+            $playerImage = (new PlayerImage($this))->fetchOrGetFile($player->sofa_player_id);
+
+            $this->write($player->foot_player_id, $playerImage);
         }
     }
 }

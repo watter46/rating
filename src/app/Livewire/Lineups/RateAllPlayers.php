@@ -70,7 +70,7 @@ class RateAllPlayers extends Component
             $playerInfoIdList = $this->resource
                 ->lineupsToPlayers($this->lineups)
                 ->pluck('id');
-
+                
             $data = $this->fetchPlayers->execute($playerInfoIdList, $this->fixtureId);
 
             $this->players  = $this->resource->format($this->lineups, $data->get('players'));

@@ -13,6 +13,12 @@ class PlayerDetail extends Component
     public string $fixtureId;
     public int $playerId;
     public array $player;
+    public bool $open = false;
+
+    public function mount()
+    {
+        $this->player = collect($this->lineups)->flatten(2)->first();
+    }
     
     public function render()
     {
@@ -22,17 +28,10 @@ class PlayerDetail extends Component
     #[On('player-selected')]
     public function playerSelected(string $playerId): void
     {
-        $lineups = collect($this->lineups)
-            ->map(function ($lineups, $key) {
-                if ($key === 'startXI') {
-                    return collect($lineups)->flatten(1);
-                }
+        $lineups = collect($this->lineups)->flatten(2);
 
-                return $lineups;
-            })
-            ->flatten(1);
-
-        $this->player = $lineups->sole(fn ($player) => $player['id'] === $playerId);
+        $this->player = $lineups->keyBy('id')->get($playerId);
+        $this->open = true;
     }
 
     /**

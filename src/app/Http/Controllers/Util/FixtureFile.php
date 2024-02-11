@@ -21,7 +21,7 @@ final readonly class FixtureFile
         $this->ensureDirExists();
     }
     
-    public function get(int $fixtureId)
+    public function get(int $fixtureId): Collection
     {
         if (!$this->exists($fixtureId)) {
             throw new Exception('fixtureFileが存在しません。');
@@ -29,14 +29,14 @@ final readonly class FixtureFile
         
         $path = $this->generatePath($fixtureId);
 
-        $json = File::get($path);
+        $fixture = File::get($path);
 
-        return json_decode($json);
+        return collect(json_decode($fixture));
     }
 
-    public function write(int $fixtureId, string $fixtureJson)
-    {
-        File::put($this->generatePath($fixtureId), $fixtureJson);
+    public function write(int $fixtureId, Collection $fixture)
+    {        
+        File::put($this->generatePath($fixtureId), $fixture->toJson());
     }
 
     public function exists(int $fixtureId): bool

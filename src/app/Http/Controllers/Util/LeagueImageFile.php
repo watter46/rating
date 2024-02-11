@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Util;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Collection;
 
 use App\UseCases\Util\Season;
 use App\UseCases\Api\ApiFootball;
@@ -14,7 +15,7 @@ final readonly class LeagueImageFile
 {
     private const DIR_PATH = 'leagues';
     
-    public function __construct(private Season $season)
+    public function __construct()
     {
         $this->ensureDirExists();
     }
@@ -47,21 +48,21 @@ final readonly class LeagueImageFile
     /**
      * リーグの画像を保存する
      *
-     * @param  array $fixturesFile
+     * @param  Collection $fixtures
      * @return void
      */
-    public function registerAll(array $fixturesFile): void
+    public function registerAll(Collection $fixtures): void
     {
-        $uniqueLeagues = collect($fixturesFile)
+        $uniqueLeagues = $fixtures
             ->map(fn ($fixture) => $fixture->league)
             ->unique('id');
 
         foreach($uniqueLeagues as $league) {
             if ($this->exists($league->id)) continue;
 
-            $image = ApiFootball::leagueImage($league->id)->fetchImage();
+            $image = ApiFootball::leagueImage($league->id)->fetch();
 
-            $this->write($league->id, $image);
+            $this->write($league->id, dd($image->toJson()));
         }
     }
 
@@ -88,8 +89,6 @@ final readonly class LeagueImageFile
 
     public function generatePath(int $leagueId): string
     {                
-        $season = $this->season->current();
-
-        return public_path(self::DIR_PATH.'/'.$season.'_'.$leagueId);
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$leagueId);
     }
 }

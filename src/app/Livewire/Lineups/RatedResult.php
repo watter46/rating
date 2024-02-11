@@ -6,11 +6,14 @@ use Livewire\Component;
 
 class RatedResult extends Component
 {
+    public array $fixture;
+    public array $teams;
+    public array $league;
+    public array $score;
     public array $lineups;
-    public array $player;
     public string $fixtureId;
 
-    public bool $isOpen;
+    public bool $isOpen = false;
 
     public function render()
     {

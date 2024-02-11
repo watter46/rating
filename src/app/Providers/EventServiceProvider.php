@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Events\FixtureRegistered;
-use App\Listeners\RegisterFixtureListener;
+use App\Listeners\CheckOrRegisterLeagueImage;
+use App\Listeners\CheckOrRegisterPlayerInfos;
+use App\Listeners\CheckOrRegisterTeamImages;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,8 +24,10 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         FixtureRegistered::class => [
-            RegisterFixtureListener::class
-        ]
+            CheckOrRegisterPlayerInfos::class,
+            CheckOrRegisterLeagueImage::class,
+            CheckOrRegisterTeamImages::class
+        ],
     ];
 
     /**

@@ -35,12 +35,12 @@ final readonly class RegisterFixtureBuilder
     /**
      * 必要なデータを抽出して一覧にする
      *
-     * @param  mixed $fetched
+     * @param  Collection $fetched
      * @return Collection
      */
     public function build($fetched): Collection
     {
-        $data = collect($fetched)
+        $data = $fetched
             ->except(['events', 'goals', 'statistics'])
             ->map(function ($data, $key) {
                 return match ($key) {
@@ -86,6 +86,7 @@ final readonly class RegisterFixtureBuilder
                     return $lineups
                         ->map(function (Collection $lineup, string $key) {
                             if ($key === 'startXI') {
+                                $this->substitutes(chunkSize: 3, items: $lineup);
                                 return $lineup
                                     ->reverse()
                                     ->groupBy(function ($player) {
@@ -94,7 +95,7 @@ final readonly class RegisterFixtureBuilder
                                     ->values();
                             }
 
-                            return $lineup;
+                            return $this->substitutes(chunkSize: 3, items: $lineup);
                         });
                 }
 
@@ -103,6 +104,28 @@ final readonly class RegisterFixtureBuilder
             ->except('players');
 
         return $result;
+    }
+
+    private function substitutes(int $chunkSize, Collection $items): Collection
+    {
+        return $this->chunk($chunkSize, true, $items, collect());
+    }
+
+    private function chunk(int $chunkSize, bool $isBig, Collection $items, Collection $result): Collection
+    {
+        if ($items->isEmpty()) {
+            return $result;
+        }
+
+        $takeItem = $items->take($isBig ? $chunkSize : $chunkSize - 1);
+        $newItems = $items->diff($takeItem);
+
+        return $this->chunk(
+            chunkSize: $chunkSize,
+            isBig: !$isBig,
+            items: $newItems,
+            result: $result->push($takeItem)
+        );
     }
 
     private function merge(Collection $players, Collection $lineup): Collection

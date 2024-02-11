@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Rating;
 
+use App\Livewire\MessageType;
 use Exception;
 use Livewire\Component;
 

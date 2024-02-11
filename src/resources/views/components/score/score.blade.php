@@ -1,4 +1,4 @@
-<div {{ $attributes->merge(['class' => 'w-full p-2 rounded-2xl bg-sky-950']) }}>
+<div {{ $attributes->merge(['class' => 'w-full p-2']) }}>
     <div class="rounded-2xl">
         <div class="flex items-center justify-start p-2">
             <div class="flex justify-center text-sm gap-x-2">
