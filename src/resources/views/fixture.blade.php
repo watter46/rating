@@ -27,17 +27,18 @@
             
         <div class="flex flex-col w-full p-2">
             {{-- StartXI --}}
-            <div class="flex items-center justify-center">
-                <div class="relative w-full">
+            <div class="flex items-center justify-center h-full">
+                <div class="relative w-full h-full">
                     {{-- Field --}}
-                    <div class="scale-x-[0.95] -translate-y-5">
+                    <div class="flex justify-center w-full">
                         <x-svg.field-image
                             id="fixture-field"
-                            class="hidden initial-state titled-state" />
+                            class="flex-grow hidden initial-state field" />
 
                         {{-- Players --}}
-                        <div id="box" class="absolute flex items-end justify-center w-full h-full top-10">
-                            <div class="flex flex-col w-full h-full">
+                        <div id="box"
+                            class="absolute flex items-end field justify-center flex-grow w-full h-full scale-[0.92]">
+                            <div class="absolute flex flex-col w-full h-full top-10">
                                 @foreach($lineups['startXI'] as $line => $players)
                                     <div id="line-{{ $line + 1 }}"
                                         class="flex items-stretch w-full h-full justify-evenly">
@@ -58,14 +59,12 @@
                         </div>
                     </div>
 
-                    <div class="absolute flex items-center justify-center font-black left-10 bottom-14 gap-x-3"
-                        x-cloak>
+                    <div class="absolute flex items-center justify-center left-5 bottom-5 gap-x-3">
                         {{-- RatedCount --}}
                         <livewire:lineups.rated-count :$fixtureId :$playerCount />
                     </div>
 
-                    <div class="absolute flex items-center justify-center bottom-14 right-10 gap-x-3"
-                        x-cloak>
+                    <div class="absolute flex items-center justify-center bottom-5 right-5 gap-x-3">
                         {{-- ToggleUserMacine --}}
                         <livewire:lineups.toggle-user-machine />
                     </div>
@@ -73,7 +72,7 @@
             </div>
 
             {{-- SubStitutes --}}
-            <div class="grid w-full grid-cols-6 gap-5 justify-items-center">
+            <div class="grid w-full grid-cols-6 gap-5 mt-5 sm:mt-10 justify-items-center">
                 @foreach($lineups['substitutes'] as $index => $substitutes)
                     @if($loop->odd)
                         @foreach($substitutes as $key => $player)

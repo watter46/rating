@@ -1,4 +1,4 @@
-<div class="flex pb-10 ">
+<div class="flex w-screen pb-10 ">
     <div class="w-full h-full p-2">
         <div class="relative flex items-center justify-center w-full h-full">
             <div class="flex items-center w-full h-16">
