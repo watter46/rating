@@ -46,7 +46,7 @@
                     <div class="flex items-center justify-center w-8 md:w-12 md:py-1 rounded-xl"
                         :style=" mom
                             ? 'background-color: #0E87E0'
-                            : `background-color: ${ratingBgColor(rating)}`
+                            : `background-color: ${ratingBgColor(machine)}`
                         ">
 
                         @if($mom)
