@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="flex items-center justify-center h-full">
+    <div class="flex items-center justify-center h-full sm:px-10">
         <div class="w-full p-5 bg-gray-800 rounded-lg">
             <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
                 {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
