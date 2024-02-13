@@ -26,7 +26,7 @@
             {{-- Rating --}}
             <div class="text-sm font-black text-gray-50">
                 @if ($isUser)
-                    <div class="absolute bottom-0 right-0 w-2/3 translate-x-1/2">
+                    <div class="absolute bottom-0 right-0 translate-x-2/3 ">
                         @if($mom)
                             <div class="flex items-center justify-center px-3 py-0.5 gap-x-0.5 rounded-xl" style="background-color: #0E87E0">
                                 <p class="text-xs">★</p>
@@ -44,7 +44,7 @@
                 @endif
 
                 @unless($isUser)
-                    <div class="absolute bottom-0 right-0 w-2/3 translate-x-1/2">
+                    <div class="absolute bottom-0 right-0 translate-x-2/3">
                         <div class="flex justify-center px-3 py-0.5 rounded-xl"
                             :style="`background-color: ${ratingBgColor(machine)}`">
                             <p x-text="ratingValue(machine)"></p>

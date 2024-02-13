@@ -17,14 +17,14 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased dark:bg-gray-900">
-        <div class="flex flex-col w-full min-h-screen">
+        <div class="flex flex-col items-center w-full min-h-screen min-w-screen">
             @include('layouts.navigation')
 
             <livewire:message />
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow dark:bg-gray-800">
+                <header class="w-full bg-white shadow dark:bg-gray-800">
                     <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
@@ -32,7 +32,7 @@
             @endif
 
             <!-- Page Content -->
-            <main class="relative">
+            <main>
                 {{ $slot }}
             </main>
         </div>

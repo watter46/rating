@@ -9,7 +9,7 @@
             <div class="flex justify-end">
                 <p class="text-gray-300 truncate">{{ $score['league']['name'] }}</p>
                 <p class="text-gray-300 truncate">{{ $score['league']['round'] }}</p>
-                <img src="{{ $score['league']['img'] }}" class="hidden w-5 h-5 bg-pink-500 rounded-xl md:block">
+                {{-- <img src="{{ $score['league']['img'] }}" class="hidden w-5 h-5 bg-pink-500 rounded-xl md:block"> --}}
             </div>
         </div>
       
@@ -57,9 +57,7 @@
             </div>
     
             @if ($score['teams']['away'])
-                <div class="flex items-center w-full justify-start
-                    {{-- px-10 --}}
-                    ">
+                <div class="flex items-center justify-start w-full">
                     <div class="flex items-center justify-end h-full ml-1 space-x-1">                        
                         @if ($score['teams']['away']['img'])
                             <img src="{{ $score['teams']['away']['img'] }}"

@@ -1,21 +1,12 @@
-<div class="flex
-    {{-- p-5 --}}
-    ">
-    <div class="w-full h-full p-2
-        {{-- rounded-xl --}}
-        ">
-        <div class="relative flex items-center justify-center w-full h-full
-            {{-- px-5 --}}
-            ">
+<div class="flex w-screen pb-10 ">
+    <div class="w-full h-full p-2">
+        <div class="relative flex items-center justify-center w-full h-full">
             <div class="flex items-center w-full h-16">
                 {{ $this->fixtures->links('components.wire-pagination') }}
             </div>
 
             {{-- SortTournament --}}
-            <div class="absolute flex items-center justify-center px-5
-                w-2/3
-                {{-- w-1/3 --}}
-                ">
+            <div class="absolute flex items-center justify-center w-2/3 px-5">
                 <select id="tournaments" class="border border-gray-300 rounded-lg block h-full w-full p-2.5 bg-gray-700 border-transparent focus:border-transparent focus:ring-0 dark:border-gray-600 dark:placeholder-gray-400 text-gray-300"
                     wire:model.live="sort">
                     @foreach($tournaments as $tournament)
@@ -28,7 +19,7 @@
         </div>
         
         {{-- Score --}}
-        <div class="grid mt-2 gap-y-5">
+        <div class="grid mt-2 gap-y-8">
             @foreach($this->fixtures as $fixture)
                 <livewire:fixtures.score
                     :fixtureId="$fixture->id"
