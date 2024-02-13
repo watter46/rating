@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="flex items-center justify-center w-full h-full sm:px-10">
+    <div class="flex items-center justify-center w-full h-full mx-auto sm:px-10 md:w-2/3 lg:w-1/2">
         <div class="w-full p-5 bg-gray-800 rounded-lg">
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
