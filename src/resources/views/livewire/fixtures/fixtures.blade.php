@@ -24,7 +24,7 @@
                         x-cloak
                         class="absolute left-0 w-full py-2 mt-3 overflow-hidden bg-gray-500 rounded-lg top-full gap-y-1">
                         @foreach($tournaments as $tournament)
-                            <p class="{{ $sort === $tournament['value'] ? 'bg-sky-700' :'' }} px-3 text-md md:text-xl text-gray-300
+                            <p class="{{ $sort === $tournament['value'] ? 'bg-sky-700' : '' }} px-3 text-md md:text-xl text-gray-300
                                 hover:bg-sky-900"
                                 wire:click="$set('sort', '{{ $tournament['value'] }}')">
                                 {{ $tournament['text'] }}
