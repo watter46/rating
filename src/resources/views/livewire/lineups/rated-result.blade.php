@@ -1,7 +1,9 @@
-<div>
+<div class="md:ml-5">
     <div class="flex flex-col justify-center" title="RateAll" wire:click="$toggle('isOpen')">
-        <x-svg.photo-image class="w-8 h-8 cursor-pointer" />
-        <p class="pt-2 text-xs font-black text-center text-gray-400">Result</p>
+        <div class="flex justify-center">
+            <x-svg.photo-image class="w-8 h-8 cursor-pointer md:w-12 md:h-12" />
+        </div>
+        <p class="pt-2 text-xs font-black text-center text-gray-400 md:text-lg">Result</p>
     </div>
 
     @if($isOpen)
@@ -11,7 +13,7 @@
                 <div class="flex justify-end w-full p-2">
                     <div class="border-gray-400 rounded-full cursor-pointer opacity-30 hover:opacity-100 hover:border"
                         wire:click="$toggle('isOpen')">
-                        <x-svg.cross-image class="w-10 h-10 fill-gray-400" />
+                        <x-svg.cross-image class="w-10 h-10 md:w-14 md:h-14 fill-gray-400" />
                     </div>
                 </div>
 
@@ -21,18 +23,18 @@
                         :teams="$teams"
                         :score="$score" />
                 </div>
-
-                {{-- StartingXI --}}
-                <div class="flex items-center justify-center">
-                    <div class="relative w-full">
-                        {{-- Field --}}
-                        <div class="scale-90 -translate-y-5">
+    
+                <!-- StartXI(~767px) -->
+                <div class="flex items-center justify-center md:hidden">
+                    <div class="relative w-[95%]">
+                        <!-- Field -->
+                        <div class="flex justify-center">
                             <x-svg.field-image
                                 id="result-field"
-                                class="initial-state tilted-state" />
+                                class="flex-grow initial-state tilted-state field" />
 
-                            {{-- Players --}}
-                            <div id="box" class="absolute flex items-end justify-center w-full h-full top-5">
+                            <!-- Players -->
+                            <div id="box" class="absolute flex items-end justify-center w-full h-full scale-[0.92] top-5">
                                 <div class="flex flex-col w-full h-full">
                                     @foreach($lineups['startXI'] as $line => $players)
                                         <div id="line-{{ $line + 1 }}"
@@ -42,7 +44,7 @@
                                                     {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
                                                     <livewire:lineups.rated-player
                                                         name="startXI"
-                                                        size="w-[55px] h-[55px]"
+                                                        size="w-[40px] h-[40px]"
                                                         :$fixtureId
                                                         :$player
                                                         :key="$player['id']" />
@@ -56,16 +58,16 @@
                     </div>
                 </div>
 
-                {{-- Substitutes --}}
-                <div class="flex flex-col items-stretch h-full">
-                    <div class="grid w-full grid-cols-6 gap-5 justify-items-center">
+                <!-- Substitutes(~767px) -->
+                <div class="flex flex-col h-full md:hidden scale-[0.92]">
+                    <div class="grid content-end w-full h-full grid-cols-6 gap-1 md:gap-5">
                         @foreach($lineups['substitutes'] as $index => $substitutes)
                             @if($loop->odd)
                                 @foreach($substitutes as $key => $player)
                                     <div class="flex justify-center w-full col-span-2">
                                         <livewire:lineups.rated-player
                                             name="substitutes"
-                                            size="w-[45px] h-[45px]"
+                                            size="w-[40px] h-[40px]"
                                             :$fixtureId
                                             :$player
                                             :key="$player['id']" />
@@ -79,7 +81,7 @@
                                         @if($loop->first) col-start-2 @endif">
                                         <livewire:lineups.rated-player
                                             name="substitutes"
-                                            size="w-[45px] h-[45px]"
+                                            size="w-[40px] h-[40px]"
                                             :$fixtureId
                                             :$player
                                             :key="$player['id']" />
@@ -87,6 +89,56 @@
                                 @endforeach
                             @endif
                         @endforeach
+                    </div>
+                </div>
+
+                <div class="hidden w-full h-full md:flex">
+                    <!-- Substitutes(768px~) -->
+                    <div class="content-center hidden h-full pl-2 md:grid gap-y-8 scale-[0.92]">
+                        @foreach(collect($lineups['substitutes'])->flatten(1) as $player)
+                            <div class="flex justify-center w-full">
+                                <livewire:lineups.rated-player
+                                    name="substitutes"
+                                    size="w-20 h-20"
+                                    :$fixtureId
+                                    :$player
+                                    :key="$player['id']" />
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <!-- StartXI(768px~) -->
+                    <div class="flex items-center justify-center w-full">
+                        <div class="relative w-[85%]">
+                            {{-- Field --}}
+                            <div class="flex justify-center">
+                                <x-svg.field-image
+                                    id="result-field"
+                                    class="flex-grow initial-state tilted-state field" />
+    
+                                {{-- Players --}}
+                                <div id="box" class="absolute flex items-end justify-center w-full h-full scale-[0.92] top-5">
+                                    <div class="flex flex-col w-full h-full">
+                                        @foreach($lineups['startXI'] as $line => $players)
+                                            <div id="line-{{ $line + 1 }}"
+                                                class="flex items-stretch w-full h-full justify-evenly">
+                                                @foreach($players as $player)
+                                                    <div class="flex justify-center items-center
+                                                        {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
+                                                        <livewire:lineups.rated-player
+                                                            name="startXI"
+                                                            size="w-20 h-20"
+                                                            :$fixtureId
+                                                            :$player
+                                                            :key="$player['id']" />
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

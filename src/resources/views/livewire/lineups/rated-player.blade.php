@@ -1,7 +1,7 @@
-<div id="result-{{ $name }}" class="text-center"
+<div id="result-{{ $name }}" class="w-full text-center"
     x-data="{
         rating: @entangle('rating'),
-        machine: @entangle('defaultRating')
+        mom: @entangle('mom')
     }"
     wire:ignore.self>
     
@@ -14,40 +14,38 @@
                 :img="$player['img']" />
 
             {{-- Goals --}}
-            <div class="absolute top-0 left-0 -translate-x-1/3">
-                <x-player.goals :goals="$player['goal']" />
+            <div class="absolute top-0 left-0 -translate-x-[60%]">
+                <x-player.goals class="w-[13px] h-[13px] md:w-6 md:h-6" :goals="$player['goal']" />
             </div>
 
             {{-- Assists --}}
-            <div class="absolute top-0 right-0 translate-x-1/3">
-                <x-player.assists :assists="$player['assists']" />
+            <div class="absolute top-0 right-0 translate-x-[60%]">
+                <x-player.assists class="w-[13px] h-[13px] md:w-6 md:h-6" :assists="$player['assists']" />
             </div>
             
             {{-- Rating --}}
-            <div class="text-sm font-black text-gray-50">
-                <div class="absolute bottom-0 right-0 w-2/3 translate-x-1/2">
-                    @if($mom)
-                        <div class="flex items-center justify-center px-3 py-0.5 gap-x-0.5 rounded-xl" style="background-color: #0E87E0">
-                            <p class="text-xs">★</p>
-                            <p x-text="ratingValue(rating)"></p>
-                        </div>
-                    @endif
+            <div class="absolute bottom-0 right-0 translate-x-[60%]">
+                <div class="absolute bottom-0 right-0 translate-x-[60%]">
+                    <div class="flex items-center justify-center w-8 md:w-12 md:py-1 rounded-xl"
+                        :style=" mom
+                            ? 'background-color: #0E87E0'
+                            : `background-color: ${ratingBgColor(rating)}`
+                        ">
 
-                    @unless($mom)
-                        <div class="flex justify-center px-3 py-0.5 rounded-xl"
-                            :style="`background-color: ${ratingBgColor(rating)}`">
-                            <p x-text="ratingValue(rating)"></p>
-                        </div>
-                    @endunless
+                        @if($mom)
+                            <p class="text-xs font-black text-gray-50 md:text-lg">★</p>
+                        @endif
+                        <p class="text-sm font-black text-gray-50 md:text-xl" x-text="ratingValue(rating)"></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="flex justify-center font-black text-white gap-x-1">
-        <p>{{ $player['number'] }}</p>
+    <div class="flex justify-center gap-x-1 md:gap-x-2">
+        <p class="font-black text-white md:text-2xl">{{ $player['number'] }}</p>
     
-        <p>{{ $this->toLastName() }}</p>
+        <p class="font-black text-white md:text-2xl">{{ $this->toLastName() }}</p>
     </div>
     
     @vite(['resources/css/player.css', 'resources/js/rating.js'])

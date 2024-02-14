@@ -17,13 +17,14 @@
         @livewireStyles
     </head>
     <body class="min-h-screen font-sans antialiased text-gray-900">
-        <div class="flex flex-col h-screen bg-gray-100 sm:justify-center sm:pt-0 dark:bg-gray-900">
+        <div class="flex flex-col h-screen bg-gray-100 md:justify-center md:pt-0 dark:bg-gray-900">
             {{-- Header --}}
             <div class="relative flex items-center p-5 bg-gray-900 gap-x-5">
-                <p class="w-full text-3xl font-black text-gray-400">BluesRate</p>
+                <p class="w-full text-3xl font-black text-gray-400 md:text-3xl">BluesRate</p>
 
                 @if (Route::has('login'))
-                    <div class="flex items-center justify-end w-full h-full sm:hidden"
+                    <!-- Responsive(~768px) -->
+                    <div class="flex items-center justify-end w-full h-full md:hidden"
                         x-data="{ isOpen: false }">
                         <x-svg.setting-image
                             class="w-8 h-8 cursor-pointer fill-gray-400"
@@ -51,16 +52,17 @@
                         </div>
                     </div>
                 
-                    <div class="fixed top-0 right-0 hidden px-6 py-4 sm:block">
+                    <!-- Responsive(768px~) -->
+                    <div class="fixed top-0 right-0 hidden px-6 py-4 md:block">
                         @auth
-                            <a href="{{ url('/fixtures') }}" class="text-lg font-black text-gray-400 dark:text-gray-400">
+                            <a href="{{ url('/fixtures') }}" class="text-xl font-black text-gray-400 xl:text-2xl dark:text-gray-400">
                                 fixtures</a>
                         @else
-                            <a href="{{ route('login') }}" class="text-lg font-black text-gray-400 dark:text-gray-400">
+                            <a href="{{ route('login') }}" class="text-xl font-black text-gray-400 xl:text-2xl dark:text-gray-400">
                                 Login</a>
 
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="ml-4 text-lg font-black text-gray-400 dark:text-gray-400">Register</a>
+                                <a href="{{ route('register') }}" class="ml-4 text-xl font-black text-gray-400 xl:text-2xl dark:text-gray-400">Register</a>
                             @endif
                         @endauth
                     </div>

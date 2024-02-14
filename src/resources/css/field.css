@@ -10,5 +10,5 @@
 }
 
 .tilted-state {
-    transform: perspective(1000px) rotateX(10deg);
+    transform: perspective(1200px) rotateX(10deg);
 }
