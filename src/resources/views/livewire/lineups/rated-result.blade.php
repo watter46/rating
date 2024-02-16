@@ -1,9 +1,9 @@
 <div class="md:ml-5">
     <div class="flex flex-col justify-center" title="RateAll" wire:click="$toggle('isOpen')">
         <div class="flex justify-center">
-            <x-svg.photo-image class="w-8 h-8 cursor-pointer md:w-12 md:h-12" />
+            <x-svg.photo-image class="w-8 h-8 cursor-pointer md:w-12 md:h-12 lg:w-8 lg:h-8" />
         </div>
-        <p class="pt-2 text-xs font-black text-center text-gray-400 md:text-lg">Result</p>
+        <p class="text-xs font-black text-center text-gray-400 md:text-lg lg:text-base">Result</p>
     </div>
 
     @if($isOpen)

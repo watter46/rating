@@ -1,6 +1,7 @@
 .field {
     min-width: 300px;
     max-width: 650px;
+    max-height: 90vh;
 }
 
 /* ロード時のフィールドのアニメーション */

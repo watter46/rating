@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const fixtureFieldEl = document.getElementById('fixture-field');
+    const fixtureFieldEls = document.querySelectorAll('#fixture-field');
     const startXIEls = document.querySelectorAll('#startXI');
     const substituteEls = document.querySelectorAll('#substitutes');
 
@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const interval = 50;
     let index = 0;
+
+    [...fixtureFieldEls].forEach((el) => {
+        el.classList.remove('hidden');
+        setTimeout(() => el.classList.add('tilted-state'), interval * 16);
+    })
 
     const showStartXI = () => {
         if (index < startXIEls.length) {
@@ -36,8 +41,4 @@ document.addEventListener('DOMContentLoaded', () => {
     showStartXI();
 
     showSubstitutes();
-
-    setTimeout(() => fixtureFieldEl.classList.add('tilted-state'), interval * 16);
-    
-    fixtureFieldEl.classList.remove('hidden');
 });

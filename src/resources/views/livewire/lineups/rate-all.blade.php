@@ -1,9 +1,9 @@
 <div class="md:mr-5">
     <div class="flex flex-col justify-center w-full" title="RateAll" wire:click="$toggle('isOpen')">
         <div class="flex justify-center">
-            <x-svg.rate-image class="w-10 h-10 cursor-pointer md:w-12 md:h-12" />
+            <x-svg.rate-image class="w-10 h-10 cursor-pointer md:w-12 md:h-12 lg:w-8 lg:h-8" />
         </div>
-        <p class="text-xs font-black text-center text-gray-400 md:text-lg">RateAll</p>
+        <p class="text-xs font-black text-center text-gray-400 md:text-lg lg:text-base">RateAll</p>
     </div>
 
     @if($isOpen)
