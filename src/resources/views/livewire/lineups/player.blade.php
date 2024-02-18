@@ -1,10 +1,12 @@
 <x-util.modal-button>
     <x-slot:img>
-        <div id="{{ $name }}" class="invisible h-full {{ $size }}"
+        <div id="{{ $name }}" class="h-full {{ $size }}"
+            :class=" componentName === 'startXI' ? 'invisible' : ''"
             x-data="{
                 rating: @entangle('rating'),
                 mom: @entangle('mom').live,
-                machine: @entangle('defaultRating')
+                machine: @entangle('defaultRating'),
+                componentName: @entangle('name')
             }"
             wire:ignore.self>
             

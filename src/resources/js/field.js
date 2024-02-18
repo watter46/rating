@@ -32,25 +32,7 @@ const showPlayers = (interval, animation) => {
         }
     }
 
-    let substitutesIndex = 0;
-
-    const showSubstitutes = () => {
-        const playerEls = document.querySelectorAll('#substitutes');
-
-        const reversedPlayers = [...playerEls].reverse();
-
-        if (substitutesIndex < playerEls.length) {
-            reversedPlayers[substitutesIndex].classList.remove('invisible');
-            reversedPlayers[substitutesIndex].classList.add(`${animation}`);
-
-            substitutesIndex++;
-            
-            setTimeout(showSubstitutes, interval);
-        }
-    }
-
     showStartXI();
-    showSubstitutes();
 }
 
 const getAnimation = () => {
