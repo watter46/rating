@@ -1,9 +1,9 @@
 <div class="flex items-center justify-center w-full h-full md:justify-evenly">
-    <div class="relative flex flex-col justify-center items-center w-full min-w-[300px] max-w-[400px]">
+    <div class="relative flex justify-center items-center w-full min-w-[300px] max-w-[400px]">
         <!-- Field -->
         <x-svg.field-image
             id="fixture-field"
-            class="w-[90%] invisible initial-state" />
+            class="w-[90%] initial-state" />
         
         <!-- StartXI -->
         <div class="w-[90%] absolute aspect-[74/111]">
@@ -31,11 +31,11 @@
         </div>
 
         <!-- Substitutes -->
-        <div class="absolute w-fit top-full md:right-full">
+        <div class="absolute hidden h-full w-fit right-full md:block">
             {{ $substitutes }}
         </div>
 
-        <div class="">
+        <div class="absolute hidden w-full mt-3 top-full md:block">
             {{ $slot }}
         </div>
     </div>
