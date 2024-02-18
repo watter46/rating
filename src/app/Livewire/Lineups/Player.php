@@ -2,12 +2,11 @@
 
 namespace App\Livewire\Lineups;
 
-use App\Livewire\MessageType;
 use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Illuminate\Support\Str;
 
+use App\Livewire\MessageType;
 use App\UseCases\Player\FetchPlayerUseCase;
 
 
@@ -33,7 +32,7 @@ class Player extends Component
 
     public function mount()
     {
-        $this->fetchPlayer($this->fixtureId, $this->player['id']);
+        $this->fetch();
 
         $this->defaultRating = $this->player['defaultRating'];
     }
@@ -43,55 +42,24 @@ class Player extends Component
         return view('livewire.lineups.player');
     }
 
-    public function toDetail()
-    {
-        $this->dispatch('player-selected', $this->player['id']);
-    }
-
-    #[On('player-rated')]
-    public function refetch(string $playerId): void
-    {
-        if ($playerId !== $this->player['id']) return;
-
-        $this->fetchPlayer($this->fixtureId, $playerId);
-    }
-    
-    #[On('player-mom-decided')]
-    public function refetchAll(): void
-    {
-        $this->fetchPlayer($this->fixtureId, $this->player['id']);
-    }
-
     #[On('user-machine-toggled')]
     public function toggle(bool $isUser)
     {
         $this->isUser = $isUser;
     }
-    
-    /**
-     * ラストネームに変換する
-     *
-     * @return string
-     */
-    public function toLastName(): string
-    {
-        $shortName = Str::afterLast($this->player['name'], ' ');
 
-        return $shortName;
-    }
-    
     /**
      * 対象のプレイヤーを取得する
      *
-     * @param  ?string $playerId
      * @return void
      */
-    private function fetchPlayer(string $fixtureId, string $playerId): void
+    #[On('player-rated.{player.id}')]
+    #[On('mom-decided.{player.id}')]
+    #[On('mom-undecided.{player.id}')]
+    public function fetch(): void
     {
         try {
-            if (!$playerId) return;
-
-            $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+            $player = $this->fetchPlayer->execute($this->fixtureId, $this->player['id']);
                         
             $this->rating = $player->rating;
             $this->mom    = $player->mom;

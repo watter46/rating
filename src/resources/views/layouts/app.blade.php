@@ -17,7 +17,7 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased dark:bg-gray-900">
-        <div class="flex flex-col items-center w-full h-screen min-h-screen min-w-screen">
+        <div class="flex flex-col items-center w-full h-full min-h-screen min-w-screen">
             @include('layouts.navigation')
 
             <livewire:message />

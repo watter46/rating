@@ -9,7 +9,7 @@
 
     <div class="px-10 py-2">
         <div class="flex flex-col h-full">
-            <p class="mb-3 text-2xl font-bold text-center text-gray-100 md:text-3xl whitespace-nowrap">
+            <p class="mb-3 text-2xl font-bold text-center text-gray-100 whitespace-nowrap">
                 Your Rating
             </p>
 
@@ -19,7 +19,7 @@
                 <div class="flex justify-center mt-3">
                     <div class="flex items-center justify-center w-1/2 border-2 border-gray-200 rounded-lg"
                         :style="`background-color: ${ratingBgColor(ratingInput)}`">
-                        <p class="py-1 text-xl font-black text-gray-200 md:text-3xl" x-text="ratingValue(ratingInput)"></p>
+                        <p class="py-1 text-xl font-black text-gray-200" x-text="ratingValue(ratingInput)"></p>
                     </div>
                 </div>
             </div>
@@ -27,13 +27,13 @@
     </div>
 
     <div class="flex justify-end mt-8 gap-x-5">
-        <button class="px-8 py-1 border-2 border-gray-200 rounded-lg md:px-10 bg-amber-400"
+        <button class="px-8 py-1 border-2 border-gray-200 rounded-lg bg-amber-400"
             :class="mom || !canRate ? 'pointer-events-none opacity-30' : ''"
             wire:click="decideMOM">
-            <p class="font-bold text-gray-200 md:text-lg">★ MOM</p>
+            <p class="font-bold text-gray-200">★ MOM</p>
         </button>
         
-        <button class="px-8 py-1 border-2 border-gray-200 rounded-lg pointer-events-none md:px-10 opacity-30 bg-sky-600"
+        <button class="px-8 py-1 border-2 border-gray-200 rounded-lg pointer-events-none opacity-30 bg-sky-600"
             :class="!canRate ? 'pointer-events-none opacity-30' : ''"
             x-init="$watch('ratingInput', () => {
                 if (!canRate) return;
@@ -41,7 +41,7 @@
                 $el.classList.remove('pointer-events-none', 'opacity-30');
             })"
             wire:click="rate(ratingInput)">
-            <p class="font-bold text-gray-200 md:text-lg">Rate</p>
+            <p class="font-bold text-gray-200">Rate</p>
         </button>
     </div>
 
