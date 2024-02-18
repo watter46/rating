@@ -1,6 +1,6 @@
 <x-util.modal-button>
     <x-slot:img>
-        <div id="{{ $name }}" class="hidden {{ $size }}"
+        <div id="{{ $name }}" class="invisible h-full {{ $size }}"
             x-data="{
                 rating: @entangle('rating'),
                 mom: @entangle('mom').live,
@@ -42,20 +42,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="flex items-center justify-center pointer-events-none gap-x-2">
+                <p class="hidden text-sm font-black text-white md:block md:text-base">
+                    {{ $player['number'] }}
+                </p>
+            
+                <p class="text-sm font-black text-white md:text-base">
+                    {{ $player['name'] }}
+                </p>
+            </div>
         </div>
     </x-slot:img>
 
-    <x-slot:name>
-        <div id="{{ $name }}-name" class="flex items-center justify-center invisible gap-x-2">
-            <p class="hidden text-sm font-black text-white md:block md:text-base">
-                {{ $player['number'] }}
-            </p>
-        
-            <p class="text-sm font-black text-white md:text-base">
-                {{ $player['name'] }}
-            </p>
-        </div>
-    </x-slot:name>
+    <x-slot:name></x-slot:name>
     
     <x-fixture.player-detail
         :$player 

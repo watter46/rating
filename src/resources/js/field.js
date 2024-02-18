@@ -9,7 +9,7 @@ const showField = (interval) => {
     const fixtureFieldEls = document.querySelectorAll('#fixture-field');
 
     [...fixtureFieldEls].forEach((el) => {
-        el.classList.remove('hidden');
+        el.classList.remove('invisible');
         setTimeout(() => el.classList.add('tilted-state'), interval * 16);
     });
 }
@@ -19,17 +19,12 @@ const showPlayers = (interval, animation) => {
 
     const showStartXI = () => {
         const playerEls = document.querySelectorAll('#startXI');
-        const nameEls   = document.querySelectorAll('#startXI-name');
 
         const reversedPlayers = [...playerEls].reverse();
-        const reversedNames   = [...nameEls].reverse();
         
         if (startXIIndex < playerEls.length) {
-            reversedPlayers[startXIIndex].classList.remove('hidden');
+            reversedPlayers[startXIIndex].classList.remove('invisible');
             reversedPlayers[startXIIndex].classList.add(`${animation}`);
-
-            reversedNames[startXIIndex].classList.remove('invisible');
-            reversedNames[startXIIndex].classList.add(`${animation}`);
 
             startXIIndex++;
             
@@ -41,17 +36,12 @@ const showPlayers = (interval, animation) => {
 
     const showSubstitutes = () => {
         const playerEls = document.querySelectorAll('#substitutes');
-        const nameEls = document.querySelectorAll('#substitutes-name');
 
         const reversedPlayers = [...playerEls].reverse();
-        const reversedNames   = [...nameEls].reverse();
 
         if (substitutesIndex < playerEls.length) {
-            reversedPlayers[substitutesIndex].classList.remove('hidden');
+            reversedPlayers[substitutesIndex].classList.remove('invisible');
             reversedPlayers[substitutesIndex].classList.add(`${animation}`);
-
-            reversedNames[substitutesIndex].classList.remove('invisible');
-            reversedNames[substitutesIndex].classList.add(`${animation}`);
 
             substitutesIndex++;
             
