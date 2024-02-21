@@ -20,31 +20,35 @@
 
     <!-- Icon -->
     <div class="flex flex-col justify-center">
-        <div class="flex justify-center" @click="open">
-            {{ $img }}
+        <!-- Clickable Icon -->
+        <div class="grid place-items-center" @click="open, $dispatch(`modal-opened-${@js($dispatchName)}`)">
+            {{ $icon }} 
         </div>
         
-        <p class="text-xs font-black text-center text-gray-400 md:text-lg lg:text-base">
-            {{ $name }}
-        </p>
+        <!-- NonClickable Icon -->
+        <div class="grid place-items-center">
+            {{ $disabledIcon }} 
+        </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Component -->
     <div x-show="isOpen"
-        class="fixed top-0 left-0 w-full h-full z-[99] overflow-y-auto"
+        class="fixed top-0 left-0 w-full h-full z-[99] p-2 overflow-y-auto grid"
         style="background: rgba(31, 41, 55, 1);"
         @click.outside="close">
-        <!-- CloseButton -->
-        <div class="relative top-0 flex justify-end w-full">
-            <div class="rounded-full cursor-pointer hover:bg-gray-600"
-                @click="close">
-                <x-svg.cross-image class="w-14 h-14 fill-gray-400" />
+        <div {{ $attributes->merge(['class' => 'rounded-lg justify-self-center self-center bg-sky-950 flex flex-col w-full']) }}>
+            <!-- CloseButton -->
+            <div class="flex justify-end w-full">
+                <div class="rounded-full cursor-pointer hover:bg-gray-600"
+                    @click="close">
+                    <x-svg.cross-image class="w-10 h-10 fill-gray-400" />
+                </div>
             </div>
-        </div>
-        
-        <!-- Component -->
-        <div class="flex items-center justify-center">
-            {{ $slot }}
+            
+            <!-- Component -->
+            <div class="flex-1">
+                {{ $slot }}
+            </div>
         </div>
     </div>
 </div>

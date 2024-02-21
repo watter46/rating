@@ -1,4 +1,4 @@
-<x-util.modal-button dispatchName="rate-all">
+<x-util.modal-button dispatchName="rate-all" class="w-full md:w-3/4 lg:w-2/3">
     <x-slot:icon>
         <x-svg.rate-image class="w-8 h-8 cursor-pointer" />
 

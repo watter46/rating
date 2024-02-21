@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\View\Components\Util;
 
@@ -7,11 +7,11 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class ModalButton extends Component
-{
+{   
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(public ?string $dispatchName = null)
     {
         //
     }
