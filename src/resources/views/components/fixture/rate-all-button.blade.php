@@ -1,11 +1,15 @@
-<x-util.modal-button>
-    <x-slot:img>
-        <x-svg.rate-image class="w-10 h-10 cursor-pointer" />
-    </x-slot:img>
+<x-util.modal-button dispatchName="rate-all">
+    <x-slot:icon>
+        <x-svg.rate-image class="w-8 h-8 cursor-pointer" />
 
-    <x-slot:name>RateAll</x-slot:name>
+        <p class="text-xs font-black text-center text-gray-400">
+            RateAll
+        </p>
+    </x-slot:icon>
+
+    <x-slot:disabled-icon></x-slot:disabled-icon>
     
-    <livewire:lineups.rate-all-players
+    <livewire:rate-all.rate-all
         :$lineups
         :$fixtureId />
 </x-util.modal-button>

@@ -95,6 +95,7 @@ class RateAll extends Component
 
             $this->rateAllPlayers->execute($this->fixtureId, collect($players));
 
+            $this->dispatch('all-player-rated');
             $this->dispatch('notify', message: MessageType::Success->toArray(self::RATED_MESSAGE));
             $this->dispatch('close');
 

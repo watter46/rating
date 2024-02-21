@@ -1,9 +1,9 @@
 <x-util.modal-button>
-    <x-slot:img>
+    <x-slot:icon>
         <div id="{{ $name }}" class="h-full {{ $size }}"
             :class=" componentName === 'startXI' ? 'invisible' : ''"
             x-data="{
-                rating: @entangle('rating'),
+                rating: @entangle('rating').live,
                 mom: @entangle('mom').live,
                 machine: @entangle('defaultRating'),
                 componentName: @entangle('name')
@@ -32,14 +32,35 @@
                             :assists="$player['assists']" />
                     </div>
                     
-                    {{-- Rating --}}
+                    <!-- Rating -->
                     <div class="absolute bottom-0 right-0 translate-x-[60%]">
+                        <!-- UserRating -->
                         @if ($isUser)
-                            <x-player.rating :rating="$rating" :mom="$mom" :key="'user-rating'" />
+                            <div class="flex items-center justify-center w-8 md:w-10 rounded-xl"
+                                :style=" mom
+                                    ? 'background-color: #0E87E0'
+                                    : `background-color: ${ratingBgColor(rating)}`
+                                ">
+
+                                <template x-if="mom">
+                                    <p class="text-xs font-black text-gray-50 md:text-base">★</p>
+                                </template>
+                                
+                                <p class="text-sm font-black text-gray-50 md:text-base"
+                                    x-text="ratingValue(rating)">
+                                </p>
+                            </div>
                         @endif
 
+                        <!-- MachineRating -->
                         @unless($isUser)
-                            <x-player.rating :rating="$defaultRating" :key="'machine-rating'" />
+                            <div class="flex items-center justify-center w-8 md:w-10 rounded-xl"
+                                :style="`background-color: ${ratingBgColor(machine)}`">
+                                
+                                <p class="text-sm font-black text-gray-50 md:text-base"
+                                    x-text="ratingValue(machine)">
+                                </p>
+                            </div>
                         @endunless
                     </div>
                 </div>
@@ -55,13 +76,13 @@
                 </p>
             </div>
         </div>
-    </x-slot:img>
 
-    <x-slot:name></x-slot:name>
-    
+        @vite(['resources/css/player.css'])
+    </x-slot:icon>
+
+    <x-slot:disabled-icon></x-slot:disabled-icon>
+
     <x-fixture.player-detail
         :$player 
         :$fixtureId />
-
-    @vite(['resources/css/player.css', 'resources/js/rating.js'])
 </x-util.modal-button>
