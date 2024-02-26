@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Http\Controllers\Util\FixtureFile;
 use Illuminate\Database\Seeder;
-use Database\Mocks\Fixture\MockRegisterFixtureUseCase;
+use Database\Stubs\Fixture\StubRegisterFixtureUseCase;
 
 
 class FixtureSeeder extends Seeder
@@ -16,8 +16,8 @@ class FixtureSeeder extends Seeder
     {   
         $list = (new FixtureFile)->getIdList();
 
-        /** @var MockRegisterFixtureUseCase $registerFixture */
-        $registerFixture = app(MockRegisterFixtureUseCase::class);
+        /** @var StubRegisterFixtureUseCase $registerFixture */
+        $registerFixture = app(StubRegisterFixtureUseCase::class);
         
         $list->each(function ($id) use ($registerFixture) {
             $registerFixture->execute($id);

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixture;
+namespace App\UseCases\Admin\Fixture;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -16,7 +16,7 @@ use App\UseCases\Fixture\Format\Fixture\Score;
 use App\UseCases\Fixture\Format\Fixture\Teams;
 
 
-final readonly class RegisterFixtureBuilder
+final readonly class FixtureDataBuilder
 {
     public function __construct(
         private TeamImageFile $teamImage,
@@ -40,6 +40,10 @@ final readonly class RegisterFixtureBuilder
      */
     public function build($fetched): Collection
     {
+        if (!$this->fixture->isFinished($fetched->get('fixture'))) {
+            return collect();
+        }
+
         $data = $fetched
             ->except(['events', 'goals', 'statistics'])
             ->map(function ($data, $key) {

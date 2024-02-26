@@ -1,5 +1,5 @@
 <div class="w-full rounded-2xl bg-sky-950 {{ $fixture->dataExists ? 'border-2 border-orange-600' : '' }}"
-    x-data="{isOpen: false}"
+    x-data="{ isOpen: false }"
     x-cloak
     @close-fixture-modal.window="isOpen = false">
     <template x-if="isOpen">
@@ -127,20 +127,28 @@
                                 </div>
                             </div>
                         @endif
-                
-                        <div class="flex justify-center text-2xl font-black text-gray-300 rounded-xl
-                            {{ $fixture->winner ? 'bg-green-500' : (
-                               $fixture->winner === false
-                                    ? 'bg-red-600'
-                                    : 'bg-gray-500'
-                            ) }}">
-                            <div class="flex px-2 rounded-lg w-fit">
-                                <p class="px-1">{{ $fixture->fixture['score']['fulltime']['home'] }}</p>
-                                <p class="px-1">-</p>
-                                <p class="px-1">{{ $fixture->fixture['score']['fulltime']['away'] }}</p>
-                            </div>
+
+                        <div class="w-44">
+                            @if($fixture->fixture)
+                                <div class="flex justify-center text-2xl font-black text-gray-300 rounded-xl
+                                    {{ $fixture->winner ? 'bg-green-500' : (
+                                    $fixture->winner === false
+                                            ? 'bg-red-600'
+                                            : 'bg-gray-500'
+                                    ) }}">
+                                    <div class="flex px-2 rounded-lg w-fit">
+                                        <p class="px-1">{{ $fixture->fixture['score']['fulltime']['home'] }}</p>
+                                        <p class="px-1">-</p>
+                                        <p class="px-1">{{ $fixture->fixture['score']['fulltime']['away'] }}</p>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @unless($fixture->fixture)
+                                <div class="text-2xl font-black text-center text-gray-300">vs</div>
+                            @endunless
                         </div>
-                
+                        
                         @if ($fixture->score['teams']['away'])
                             <div class="flex items-center w-full px-10">
                                 @if ($fixture->score['teams']['away']['img'])

@@ -9,7 +9,7 @@ use Livewire\Component;
 
 use App\Livewire\MessageType;
 use App\Models\Fixture as EqFixture;
-use App\UseCases\Fixture\RegisterFixtureUseCase;
+use App\UseCases\Admin\Fixture\RegisterFixtureUseCase;
 
 
 class Fixture extends Component

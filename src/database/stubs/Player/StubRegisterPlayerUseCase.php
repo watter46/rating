@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Database\Mocks\Player;
+namespace Database\Stubs\Player;
 
 use Illuminate\Support\Collection;
 
@@ -9,7 +9,7 @@ use App\UseCases\Util\Season;
 use App\Http\Controllers\Util\PlayerFile;
 
 
-class MockRegisterPlayerUseCase
+class StubRegisterPlayerUseCase
 {
     public function __construct(private PlayerFile $player)
     {

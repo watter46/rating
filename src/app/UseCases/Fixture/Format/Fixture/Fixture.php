@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Fixture\Format\Fixture;
 
+use Exception;
 use Illuminate\Support\Collection;
 
 
@@ -30,6 +31,11 @@ readonly class Fixture
     //         +"elapsed": 90
     //     }
     // }
+    public function isFinished($data): bool
+    {
+        return $data->status->long === self::END_STATUS;
+    }
+    
     public function build($data): Collection
     {
         return collect([
