@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\Lineups;
+namespace App\Livewire\Result;
 
 use Livewire\Component;
 
-class RatedResult extends Component
+class Result extends Component
 {
     public array $fixture;
     public array $teams;
@@ -15,6 +15,6 @@ class RatedResult extends Component
 
     public function render()
     {
-        return view('livewire.lineups.rated-result');
+        return view('livewire.result.result');
     }
 }

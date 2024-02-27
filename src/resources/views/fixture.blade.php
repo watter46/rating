@@ -96,8 +96,8 @@
                 <!-- Options -->
                 <div class="flex justify-center w-full md:absolute md:mt-3 md:top-full">        
                     <div class="flex items-center w-[90%] md:w-full h-full mt-5 justify-evenly gap-x-3">
-                        <!-- RatedResult -->
-                        <x-fixture.result-button
+                        <!-- Result -->
+                        <x-result.result-button
                             :$fixture
                             :$teams
                             :$league

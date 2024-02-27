@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\View\Components\Fixture;
+namespace App\View\Components\Result;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -27,6 +27,6 @@ class ResultButton extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.fixture.result-button');
+        return view('components.result.result-button');
     }
 }

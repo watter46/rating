@@ -10,7 +10,7 @@
     <x-slot:disabled-icon></x-slot:disabled-icon>
     
     <!-- Component -->
-    <livewire:lineups.rated-result
+    <livewire:result.result
         :$fixture
         :$teams
         :$league
