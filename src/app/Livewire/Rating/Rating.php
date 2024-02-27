@@ -10,7 +10,7 @@ use App\Models\Player;
 use App\UseCases\Player\DecideManOfTheMatchUseCase;
 use App\UseCases\Player\RatePlayerUseCase;
 use App\UseCases\Player\FetchPlayerUseCase;
-
+use Livewire\Attributes\On;
 
 class Rating extends Component
 {
@@ -61,8 +61,9 @@ class Rating extends Component
             
             $this->setProperty($player);
 
-            $this->dispatch('player-rated', $this->playerId);
+            $this->dispatch("player-rated.$this->playerId");
             $this->dispatch('notify', message: MessageType::Success->toArray(self::RATED_MESSAGE));
+            $this->dispatch('close');
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
@@ -74,15 +75,16 @@ class Rating extends Component
      *
      * @return void
      */
-    public function decideMOM()
+    public function decideMOM(): void
     {
         try {
-            $player = $this->decideMOM->execute($this->fixtureId, $this->playerId);
+            $players = $this->decideMOM->execute($this->fixtureId, $this->playerId);
 
-            $this->setProperty($player);
+            $this->dispatch('mom-decided.'.$players['newMomId']);
+            $this->dispatch('mom-undecided.'.$players['oldMomId']);
 
-            $this->dispatch('player-mom-decided');
             $this->dispatch('notify', message: MessageType::Success->toArray(self::Decided_MOM_MESSAGE));
+            $this->dispatch('close');
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
@@ -94,7 +96,9 @@ class Rating extends Component
      *
      * @return void
      */
-    private function fetchPlayer(): void
+    #[On('mom-decided.{playerId}')]
+    #[On('mom-undecided.{playerId}')]
+    public function fetchPlayer(): void
     {
         try {
             $player = $this->fetchPlayer->execute($this->fixtureId, $this->playerId);

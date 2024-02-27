@@ -26,11 +26,11 @@
             <div class="flex flex-col items-center w-1/3 p-2">
                 @if ($teams['home']['img'])
                     <img src="{{ $teams['home']['img'] }}"
-                        class="w-12 h-12 md:w-24 md:h-24">
+                        class="w-12 h-12 md:w-24 md:h-24 lg:w-16 lg:h-16">
                 @endif
 
                 @unless($teams['home']['img'])
-                    <div class="w-12 h-12 bg-gray-400 md:w-24 md:h-24"></div>
+                    <div class="w-12 h-12 bg-gray-400 md:w-24 md:h-24 lg:w-16 lg:h-16"></div>
                 @endunless
 
                 <p class="p-2 text-sm font-black text-center text-gray-300 md:text-2xl">{{ $teams['home']['name'] }}</p>
@@ -51,11 +51,11 @@
             <div class="flex flex-col items-center w-1/3 p-2">
                 @if ($teams['away']['img'])
                     <img src="{{ $teams['away']['img'] }}"
-                        class="w-12 h-12 md:w-24 md:h-24">
+                        class="w-12 h-12 md:w-24 md:h-24 lg:w-16 lg:h-16">
                 @endif
 
                 @unless($teams['away']['img'])
-                    <div class="w-12 h-12 bg-gray-400 md:w-24 md:h-24">
+                    <div class="w-12 h-12 bg-gray-400 md:w-24 md:h-24 lg:w-16 lg:h-16">
                     </div>
                 @endunless
 

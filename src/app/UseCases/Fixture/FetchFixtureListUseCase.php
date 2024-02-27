@@ -10,30 +10,18 @@ use App\Http\Controllers\TournamentType;
 
 
 final readonly class FetchFixtureListUseCase
-{    
-    public function __construct(private RegisterFixtureUseCase $registerFixture)
-    {
-        //
-    }
-    
+{   
     public function execute(TournamentType $tournament): Paginator
     {
         try {
             /** @var Paginator $fixture */
             $fixture = Fixture::query()
                 ->with('players:fixture_id')
+                ->finished()
                 ->past()
                 ->inSeason()
                 ->tournament($tournament)
                 ->simplePaginate(20);
-                
-            if ($fixture->whereNull('fixture')->isNotEmpty()) {
-                foreach($fixture->whereNull('fixture') as $fixture) {
-                    $this->registerFixture->execute($fixture->id);
-                }
-
-                $this->execute($tournament);
-            }
             
             $fixture->getCollection()
                 ->transform(function (Fixture $model) {
@@ -45,7 +33,7 @@ final readonly class FetchFixtureListUseCase
 
                     return $model;
                 });
-
+                
             return $fixture;
         
         } catch (Exception $e) {

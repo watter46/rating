@@ -13,8 +13,6 @@ class RatedResult extends Component
     public array $lineups;
     public string $fixtureId;
 
-    public bool $isOpen = false;
-
     public function render()
     {
         return view('livewire.lineups.rated-result');

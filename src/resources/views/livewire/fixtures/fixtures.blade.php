@@ -1,5 +1,5 @@
-<div class="flex w-screen pb-10 ">
-    <div class="w-full h-full p-2 md:px-8">
+<div class="flex w-full pb-10">
+    <div class="w-full h-full p-2 md:px-8 lg:px-20">
         <div class="relative flex items-center justify-center w-full h-full">
             <div class="flex items-center w-full h-16">
                 {{ $this->fixtures->links('components.wire-pagination') }}
@@ -36,7 +36,7 @@
         </div>
         
         {{-- Score --}}
-        <div class="grid mt-2 gap-y-8">
+        <div class="w-full mt-2 gap-y-8">
             @foreach($this->fixtures as $fixture)
                 <livewire:fixtures.score
                     :fixtureId="$fixture->id"

@@ -39,6 +39,8 @@ class Fixture extends Model
     private const RATE_PERIOD_DAY = 5;
     public  const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
 
+    private const FINISHED_MATCH_STATUS = 'Match Finished';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -50,7 +52,8 @@ class Fixture extends Model
         'season',
         'score',
         'date',
-        'fixture'
+        'fixture',
+        'status'
     ];
 
     protected $casts = [
@@ -120,6 +123,17 @@ class Fixture extends Model
                 TournamentType::FA_CUP->toId(),
                 TournamentType::LEAGUE_CUP->toId()
             ]);
+    }
+    
+    /**
+     * 終了している試合のみ取得する
+     *
+     * @param  Builder<Fixture> $query
+     * @return void
+     */
+    public function scopeFinished(Builder $query): void
+    {
+        $query->where('status', self::FINISHED_MATCH_STATUS);
     }
 
     /**

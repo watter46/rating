@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixture;
+namespace App\UseCases\Admin\Fixture;
 
 use Illuminate\Support\Collection;
 
@@ -8,7 +8,7 @@ use App\Models\Fixture;
 use App\UseCases\Fixture\Format\FixtureList\Score;
 
 
-final readonly class RegisterFixtureListBuilder
+final readonly class FixturesDataBuilder
 {    
     const END_STATUS = 'Match Finished';
 
@@ -33,7 +33,8 @@ final readonly class RegisterFixtureListBuilder
                     'external_league_id'  => $fixture->league->id,
                     'score'               => $this->score->build($fixture),
                     'season'              => $fixture->league->season,
-                    'date'                => date('Y-m-d H:i', $fixture->fixture->timestamp)
+                    'date'                => date('Y-m-d H:i', $fixture->fixture->timestamp),
+                    'status'              => $fixture->fixture->status->long
                 ];
             });
 

@@ -12,8 +12,8 @@ use Livewire\Attributes\Validate;
 use App\Http\Controllers\FixturesResource;
 use App\Http\Controllers\TournamentType;
 use App\Livewire\MessageType;
-use App\UseCases\Fixture\FetchFixtureListUseCase;
-use App\UseCases\Fixture\RegisterFixtureListUseCase;
+use App\UseCases\Fixture\FetchFixturesUseCase;
+use App\UseCases\Admin\Fixture\RegisterFixturesUseCase;
 
 
 class Fixtures extends Component
@@ -23,20 +23,20 @@ class Fixtures extends Component
     #[Validate('required')]
     public string $refreshKey;
 
-    private FetchFixtureListUseCase $fetchFixtureList;
-    private RegisterFixtureListUseCase $registerFixtureList;
+    private FetchFixturesUseCase $fetchFixtures;
+    private RegisterFixturesUseCase $registerFixtures;
     private FixturesResource $resource;
 
     private const SUCCESS_MESSAGE = 'Please Reload!!';
     private const ERROR_MESSAGE = 'Incorrect key';
 
     public function boot(
-        FetchFixtureListUseCase $fetchFixtureList,
-        RegisterFixtureListUseCase $registerFixtureList,
+        FetchFixturesUseCase $fetchFixtures,
+        RegisterFixturesUseCase $registerFixtures,
         FixturesResource $resource)
     {
-        $this->fetchFixtureList = $fetchFixtureList;
-        $this->registerFixtureList = $registerFixtureList;
+        $this->fetchFixtures = $fetchFixtures;
+        $this->registerFixtures = $registerFixtures;
         $this->resource = $resource;
     }
 
@@ -68,7 +68,7 @@ class Fixtures extends Component
         try {
             $tournament = TournamentType::ALL;
 
-            $fixtures = $this->fetchFixtureList->execute($tournament);
+            $fixtures = $this->fetchFixtures->execute($tournament);
             
             return $this->resource->format($fixtures);
 
@@ -90,7 +90,7 @@ class Fixtures extends Component
                 throw new Exception(self::ERROR_MESSAGE);
             }
             
-            $this->registerFixtureList->execute();
+            $this->registerFixtures->execute();
             
             $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close-fixtures-modal');

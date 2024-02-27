@@ -5,6 +5,7 @@ namespace App\UseCases\Player;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 use App\Models\Fixture;
 use App\Models\Player;
@@ -16,8 +17,15 @@ final readonly class DecideManOfTheMatchUseCase
     {
         //
     }
-
-    public function execute(string $fixtureId, string $playerInfoId): Player
+    
+    /**
+     * execute
+     *
+     * @param  string $fixtureId
+     * @param  string $playerInfoId
+     * @return Collection<int, string>
+     */
+    public function execute(string $fixtureId, string $playerInfoId): Collection
     {
         try {            
             if (!$this->fixture->canRate($fixtureId)) {
@@ -54,7 +62,10 @@ final readonly class DecideManOfTheMatchUseCase
                 $oldMomPlayer->save();
             });
 
-            return $newMomPlayer->refresh()->rated();
+            return collect([
+                'newMomId' => $newMomPlayer->player_info_id,
+                'oldMomId' => $oldMomPlayer->player_info_id,
+            ]);
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('date');
             $table->json('score');
             $table->json('fixture')->nullable();
+            $table->tinyText('status');
             $table->timestamps();
         });
     }

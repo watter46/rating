@@ -45,13 +45,19 @@ readonly class FixturesData
         }
     }
 
-    public function fetchOrGetFile(): Collection
+    public function getFile(): Collection
     {
         try {            
-            if ($this->file->exists()) {
-                return $this->file->get();
-            }
+            return $this->file->get();
 
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function fetchAndUpdateFile(): Collection
+    {
+        try {
             $fixturesData = $this->fetch();
 
             $this->file->write($fixturesData);

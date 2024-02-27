@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Database\Mocks\Player;
+namespace Database\Stubs\Player;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +12,7 @@ use App\Http\Controllers\Util\SquadsFile;
 use App\UseCases\Player\RegisterPlayerOfTeamBuilder;
 
 
-class MockRegisterPlayerOfTeamUseCase
+class StubRegisterPlayerOfTeamUseCase
 {
     public function __construct(
         private RegisterPlayerOfTeamBuilder $builder,
