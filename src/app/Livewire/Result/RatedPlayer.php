@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\Lineups;
+namespace App\Livewire\Result;
 
 use App\Livewire\MessageType;
 use Exception;
@@ -39,47 +39,21 @@ class RatedPlayer extends Component
 
     public function render()
     {
-        return view('livewire.lineups.rated-player');
-    }
-
-    #[On('player-rated')]
-    public function refetch(string $playerId): void
-    {        
-        if ($playerId !== $this->player['id']) return;
-
-        $this->fetchPlayer($this->fixtureId, $playerId);
-    }
-    
-    #[On('player-mom-decided')]
-    public function refetchAll(): void
-    {
-        $this->fetchPlayer($this->fixtureId, $this->player['id']);
-    }
-    
-    /**
-     * ラストネームに変換する
-     *
-     * @return string
-     */
-    public function toLastName(): string
-    {
-        $shortName = Str::afterLast($this->player['name'], ' ');
-
-        return $shortName;
+        return view('livewire.result.rated-player');
     }
     
     /**
      * 対象のプレイヤーを取得する
      *
-     * @param  ?string $playerId
      * @return void
      */
-    private function fetchPlayer(string $fixtureId, string $playerId): void
+    #[On('player-rated.{player.id}')]
+    #[On('mom-decided.{player.id}')]
+    #[On('mom-undecided.{player.id}')]
+    public function fetchPlayer(): void
     {
         try {
-            if (!$playerId) return;
-
-            $player = $this->fetchPlayer->execute($fixtureId, $playerId);
+            $player = $this->fetchPlayer->execute($this->fixtureId, $this->player['id']);
                         
             $this->rating = $player->rating;
             $this->mom    = $player->mom;
