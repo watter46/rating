@@ -40,7 +40,7 @@
 
             <!-- Substitutes Responsive(~767px) -->
             <div class="w-[90%] top-full right-full mt-5 md:hidden">
-                <div class="grid w-full grid-cols-6 gap-10 justify-items-center">
+                <div class="grid w-full grid-cols-6 gap-x-10 gap-y-2 justify-items-center">
                     @foreach($lineups['substitutes'] as $index => $substitutes)
                         @if($loop->odd)
                             @foreach($substitutes as $key => $player)

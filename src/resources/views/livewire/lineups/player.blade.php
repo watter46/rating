@@ -1,4 +1,4 @@
-<x-util.modal-button>
+<x-util.modal-button class="w-full md:w-8/12">
     <x-slot:icon>
         <div id="{{ $name }}" class="h-full {{ $size }}"
             :class=" componentName === 'startXI' ? 'invisible' : ''"

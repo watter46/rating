@@ -1,5 +1,5 @@
 <div x-data="{
-        isOpen: false,
+        isOpen: true,
         open() {
             this.isOpen = true;
             this.disabledScroll();
@@ -33,10 +33,10 @@
 
     <!-- Component -->
     <div x-show="isOpen"
-        class="fixed top-0 left-0 w-full h-full z-[99] p-2 overflow-y-auto grid"
+        class="fixed top-0 left-0 w-screen h-full z-[99] p-2 overflow-y-auto grid"
         style="background: rgba(31, 41, 55, 1);"
         @click.outside="close">
-        <div {{ $attributes->merge(['class' => 'rounded-lg justify-self-center self-center bg-sky-950 flex flex-col w-full']) }}>
+        <div {{ $attributes->merge(['class' => 'rounded-lg justify-self-center self-center bg-sky-950 flex flex-col']) }}>
             <!-- CloseButton -->
             <div class="flex justify-end w-full">
                 <div class="rounded-full cursor-pointer hover:bg-gray-600"
