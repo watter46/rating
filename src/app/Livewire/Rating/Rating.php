@@ -2,15 +2,14 @@
 
 namespace App\Livewire\Rating;
 
-use App\Livewire\MessageType;
 use Exception;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
-use App\Models\Player;
+use App\Livewire\MessageType;
 use App\UseCases\Player\DecideManOfTheMatchUseCase;
 use App\UseCases\Player\RatePlayerUseCase;
-use App\UseCases\Player\FetchPlayerUseCase;
-use Livewire\Attributes\On;
+
 
 class Rating extends Component
 {
@@ -24,23 +23,20 @@ class Rating extends Component
     public bool $mom;
     public bool $canRate;
 
-    private readonly FetchPlayerUseCase $fetchPlayer;
     private readonly RatePlayerUseCase $ratePlayer;
     private readonly DecideManOfTheMatchUseCase $decideMOM;
 
     public function boot(
-        FetchPlayerUseCase $fetchPlayer,
         RatePlayerUseCase $ratePlayer,
         DecideManOfTheMatchUseCase $decideMOM)
     {
-        $this->fetchPlayer = $fetchPlayer;
         $this->ratePlayer = $ratePlayer;
         $this->decideMOM = $decideMOM;
     }
 
     public function mount()
     {        
-        $this->fetchPlayer();
+        $this->dispatchFetchPlayer($this->playerId);
     }
 
     public function render()
@@ -57,11 +53,9 @@ class Rating extends Component
     public function rate(float $rating): void
     {
         try {
-            $player = $this->ratePlayer->execute($this->fixtureId, $this->playerId, $rating);
+            $this->ratePlayer->execute($this->fixtureId, $this->playerId, $rating);
             
-            $this->setProperty($player);
-
-            $this->dispatch("player-rated.$this->playerId");
+            $this->dispatch("fetch-player.$this->playerId");
             $this->dispatch('notify', message: MessageType::Success->toArray(self::RATED_MESSAGE));
             $this->dispatch('close');
 
@@ -80,8 +74,8 @@ class Rating extends Component
         try {
             $players = $this->decideMOM->execute($this->fixtureId, $this->playerId);
 
-            $this->dispatch('mom-decided.'.$players['newMomId']);
-            $this->dispatch('mom-undecided.'.$players['oldMomId']);
+            $this->dispatchFetchPlayer($players['newMomId']);
+            $this->dispatchFetchPlayer($players['oldMomId']);
 
             $this->dispatch('notify', message: MessageType::Success->toArray(self::Decided_MOM_MESSAGE));
             $this->dispatch('close');
@@ -92,34 +86,26 @@ class Rating extends Component
     }
 
     /**
-     * 対象のプレイヤーを取得する
+     * Playerを取得するイベントを発行する
      *
      * @return void
      */
-    #[On('mom-decided.{playerId}')]
-    #[On('mom-undecided.{playerId}')]
-    public function fetchPlayer(): void
+    private function dispatchFetchPlayer(string $playerId): void
     {
-        try {
-            $player = $this->fetchPlayer->execute($this->fixtureId, $this->playerId);
-            
-            $this->setProperty($player);
-
-        } catch (Exception $e) {
-            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
-        }
+        $this->dispatch("fetch-player.$playerId");
     }
-    
+
     /**
-     * Propertyを設定する
+     * Playerイベントから値をセットする
      *
-     * @param  ?Player $player
+     * @param  array $player
      * @return void
      */
-    private function setProperty(?Player $player): void
+    #[On('player-fetched.{playerId}')]
+    public function handlePlayerEvent(array $player)
     {
-        $this->rating = $player->rating;
-        $this->mom    = $player->mom;
-        $this->canRate = $player->canRate;
+        $this->rating  = $player['rating'];
+        $this->mom     = $player['mom'];
+        $this->canRate = $player['canRate'];
     }
 }

@@ -1,5 +1,5 @@
 <div x-data="{
-        isOpen: true,
+        isOpen: false,
         open() {
             this.isOpen = true;
             this.disabledScroll();

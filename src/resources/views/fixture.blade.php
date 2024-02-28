@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="w-full h-full pb-10 lg:pb-28">
-        {{-- Score --}}
+        <!-- Score -->
         <div class="flex justify-center w-full">
             <div class="w-full md:w-3/4 md:px-10">
                 <x-score.score
@@ -105,12 +105,12 @@
                             :$lineups
                             :$fixtureId />
         
-                        {{-- @if($canRate)
+                        @if($canRate)
                             <!-- RateAllPlayers -->
                             <x-fixture.rate-all-button
                                 :$lineups
                                 :$fixtureId />
-                        @endif --}}
+                        @endif
         
                         <!-- RatedCount -->
                         <livewire:lineups.rated-count :$fixtureId :$playerCount />

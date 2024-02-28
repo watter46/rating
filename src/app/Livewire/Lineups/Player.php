@@ -32,7 +32,7 @@ class Player extends Component
 
     public function mount()
     {
-        $this->fetch();
+        $this->handleFetchPlayerEvent();
 
         $this->defaultRating = $this->player['defaultRating'];
     }
@@ -49,23 +49,32 @@ class Player extends Component
     }
 
     /**
-     * 対象のプレイヤーを取得する
+     * Playerを取得後にPlayerFetchedイベントを発行する
      *
      * @return void
      */
-    #[On('player-rated.{player.id}')]
-    #[On('mom-decided.{player.id}')]
-    #[On('mom-undecided.{player.id}')]
-    public function fetch(): void
+    #[On('fetch-player.{player.id}')]    
+    public function handleFetchPlayerEvent(): void
     {
         try {
             $player = $this->fetchPlayer->execute($this->fixtureId, $this->player['id']);
-                        
-            $this->rating = $player->rating;
-            $this->mom    = $player->mom;
+
+            $this->dispatch('player-fetched.'.$this->player['id'], $player);
+
+            $this->rating = $player['rating'];
+            $this->mom    = $player['mom'];
             
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
+    }
+
+    #[On('fetch-all-player')]
+    public function handleFetchAllPlayerEvent(array $playerIds)
+    {
+        collect($playerIds)
+            ->each(function (string $id) {
+                $this->dispatch("fetch-player.$id")->self();
+            });
     }
 }

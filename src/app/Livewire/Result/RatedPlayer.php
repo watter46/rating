@@ -2,13 +2,8 @@
 
 namespace App\Livewire\Result;
 
-use App\Livewire\MessageType;
-use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Illuminate\Support\Str;
-
-use App\UseCases\Player\FetchPlayerUseCase;
 
 
 class RatedPlayer extends Component
@@ -22,17 +17,10 @@ class RatedPlayer extends Component
     public bool $isRated;
     public string $size;
 
-    private readonly FetchPlayerUseCase $fetchPlayer;
-    
-    
-    public function boot(FetchPlayerUseCase $fetchPlayer)
-    {
-        $this->fetchPlayer = $fetchPlayer;
-    }
 
     public function mount()
     {
-        $this->fetchPlayer($this->fixtureId, $this->player['id']);
+        $this->dispatchFetchPlayer();
 
         $this->defaultRating = (float) $this->player['defaultRating'];
     }
@@ -43,23 +31,25 @@ class RatedPlayer extends Component
     }
     
     /**
-     * 対象のプレイヤーを取得する
+     * Playerを取得するイベントを発行する
      *
      * @return void
      */
-    #[On('player-rated.{player.id}')]
-    #[On('mom-decided.{player.id}')]
-    #[On('mom-undecided.{player.id}')]
-    public function fetchPlayer(): void
+    private function dispatchFetchPlayer(): void
     {
-        try {
-            $player = $this->fetchPlayer->execute($this->fixtureId, $this->player['id']);
-                        
-            $this->rating = $player->rating;
-            $this->mom    = $player->mom;
-            
-        } catch (Exception $e) {
-            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
-        }
+        $this->dispatch('fetch-player.'.$this->player['id']);
+    }
+
+    /**
+     * Playerイベントから値をセットする
+     *
+     * @param  array $player
+     * @return void
+     */
+    #[On('player-fetched.{player.id}')]    
+    public function handlePlayerEvent(array $player): void
+    {
+        $this->rating  = $player['rating'];
+        $this->mom     = $player['mom'];
     }
 }
