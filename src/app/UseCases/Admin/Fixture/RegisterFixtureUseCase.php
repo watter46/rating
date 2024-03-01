@@ -27,7 +27,7 @@ final readonly class RegisterFixtureUseCase
             $model = Fixture::findOrFail($fixtureId);
 
             $fixtureData = $this->fetcher->fetchOrGetFile($model->external_fixture_id);
-            
+
             $data = $this->fixtureData->build($fixtureData);
                         
             $fixture = $model->updateFixture($data);
@@ -42,6 +42,7 @@ final readonly class RegisterFixtureUseCase
             throw new ModelNotFoundException('Fixture Not Exists.');
  
         } catch (Exception $e) {
+            dd($e);
             throw $e;
         }
     }

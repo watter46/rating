@@ -2,13 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\FixtureRegistered;
+use App\Events\FixturesRegistered;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\UseCases\Api\ApiFootball\TeamImageFetcher;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
-class CheckOrRegisterTeamImages
+
+class RegisterTeamImages
 {
     /**
      * Create the event listener.
@@ -21,18 +20,16 @@ class CheckOrRegisterTeamImages
     /**
      * Handle the event.
      */
-    public function handle(FixtureRegistered $event): void
+    public function handle(FixturesRegistered $event): void
     {
-        $fixture = $event->model;
+        $invalidTeamIds = $event->processor->getInvalidTeamIds();
 
-        $teamIds = $fixture->fixture['teams']->keyBy('id')->keys();
-
-        foreach($teamIds as $teamId) {
+        foreach($invalidTeamIds as $teamId) {
             if ($this->file->exists($teamId)) {
                 continue;
             }
 
-            $teamImage = $this->teamImage->register($teamId);
+            $teamImage = $this->teamImage->fetch($teamId);
 
             $this->file->write($teamId, $teamImage);
         }

@@ -7,13 +7,19 @@ use Illuminate\Pagination\Paginator;
 
 use App\Models\Fixture;
 use App\Http\Controllers\TournamentType;
-
+use App\UseCases\Admin\Fixture\RegisterFixturesUseCase;
 
 final readonly class FetchFixturesUseCase
 {
+    public function __construct(private RegisterFixturesUseCase $f)
+    {
+        
+    }
     public function execute(TournamentType $tournament): Paginator
     {
         try {
+            $this->f->execute();
+            
             /** @var Paginator $fixtures */
             $fixtures = Fixture::query()
                 ->with('players:fixture_id')

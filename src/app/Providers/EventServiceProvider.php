@@ -3,9 +3,12 @@
 namespace App\Providers;
 
 use App\Events\FixtureRegistered;
+use App\Events\FixturesRegistered;
 use App\Listeners\CheckOrRegisterLeagueImage;
 use App\Listeners\CheckOrRegisterPlayerInfos;
 use App\Listeners\CheckOrRegisterTeamImages;
+use App\Listeners\RegisterLeagueImage;
+use App\Listeners\RegisterTeamImages;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -21,6 +24,11 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+
+        FixturesRegistered::class => [
+            RegisterTeamImages::class,
+            RegisterLeagueImage::class
         ],
 
         FixtureRegistered::class => [

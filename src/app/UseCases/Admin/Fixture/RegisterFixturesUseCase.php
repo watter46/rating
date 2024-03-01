@@ -7,15 +7,16 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Fixture;
-use App\UseCases\Api\ApiFootball\FixturesData;
+use App\UseCases\Api\ApiFootball\FixturesFetcher;
 use App\UseCases\Admin\Fixture\FixturesDataBuilder;
-
+use App\UseCases\Fixtures\Fixtures;
 
 final readonly class RegisterFixturesUseCase
 {    
     public function __construct(
         private FixturesDataBuilder $builder,
-        private FixturesData $fixturesData)
+        private FixturesFetcher $fixturesFetcher,
+        private Fixtures $fixtures)
     {
         //
     }
@@ -23,7 +24,7 @@ final readonly class RegisterFixturesUseCase
     public function execute()
     {
         try {            
-            $fixturesData = $this->fixturesData->fetchAndUpdateFile();
+            $fixturesData = $this->fixturesFetcher->getFile();
             
             /** @var Collection<int, Fixture> */
             $fixtureList = Fixture::query()
@@ -39,6 +40,8 @@ final readonly class RegisterFixturesUseCase
 
                 Fixture::upsert($data, $unique, $updateColumns);
             });
+
+            $this->fixtures->registered($fixturesData);
 
         } catch (Exception $e) {
             throw $e;

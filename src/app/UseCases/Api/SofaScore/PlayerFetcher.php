@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use Exception;
 
 
-readonly class FindPlayer
+readonly class PlayerFetcher
 {
     public function __construct()
     {

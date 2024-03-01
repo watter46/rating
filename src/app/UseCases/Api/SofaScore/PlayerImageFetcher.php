@@ -9,7 +9,7 @@ use Exception;
 use App\Http\Controllers\Util\PlayerImageFile;
 
 
-readonly class PlayerImage
+readonly class PlayerImageFetcher
 {
     public function __construct(private PlayerImageFile $file)
     {
