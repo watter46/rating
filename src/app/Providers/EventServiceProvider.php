@@ -1,13 +1,12 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Providers;
 
 use App\Events\FixtureRegistered;
 use App\Events\FixturesRegistered;
-use App\Listeners\CheckOrRegisterLeagueImage;
-use App\Listeners\CheckOrRegisterPlayerInfos;
-use App\Listeners\CheckOrRegisterTeamImages;
 use App\Listeners\RegisterLeagueImage;
+use App\Listeners\RegisterPlayerImage;
+use App\Listeners\RegisterPlayerInfos;
 use App\Listeners\RegisterTeamImages;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -32,10 +31,11 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         FixtureRegistered::class => [
-            CheckOrRegisterPlayerInfos::class,
-            CheckOrRegisterLeagueImage::class,
-            CheckOrRegisterTeamImages::class
-        ],
+            RegisterTeamImages::class,
+            RegisterLeagueImage::class,
+            RegisterPlayerInfos::class,
+            RegisterPlayerImage::class
+        ]
     ];
 
     /**

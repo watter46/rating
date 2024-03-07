@@ -2,24 +2,22 @@
 
 namespace App\Events;
 
-use App\Models\Fixture;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+
+use App\UseCases\Fixture\FixtureDataProcessor;
+
 
 class FixtureRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * 試合に必要なデータがあるか判定する
-     * データが欠けていればAPIを取得して保存する
+     * @param FixtureDataProcessor $processor
      */
-    public function __construct(public Fixture $model)
+    public function __construct(public FixtureDataProcessor $processor)
     {
         //
     }

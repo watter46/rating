@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\FixtureRegistered;
 use App\Events\FixturesRegistered;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\UseCases\Api\ApiFootball\LeagueImageFetcher;
@@ -20,9 +21,11 @@ class RegisterLeagueImage
     /**
      * Handle the event.
      */
-    public function handle(FixturesRegistered $event): void
+    public function handle(FixturesRegistered|FixtureRegistered $event): void
     {
         $invalidLeagueIds = $event->processor->getInvalidLeagueIds();
+
+        if ($invalidLeagueIds->isEmpty()) return;
 
         foreach($invalidLeagueIds as $leagueId) {
             if ($this->file->exists($leagueId)) {

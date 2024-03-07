@@ -2,8 +2,8 @@
 
 namespace App\UseCases\Api\SofaScore;
 
-use Illuminate\Support\Collection;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Exception;
 
 use App\Http\Controllers\Util\PlayerImageFile;
@@ -34,25 +34,26 @@ readonly class PlayerImageFetcher
 
             return $response->getBody()->getContents();
 
-          } catch (Exception $e) {
+        } catch (ClientException $e) {
+            throw $e;
+        } catch (Exception $e) {
             throw $e;
         }
     }
 
     public function fetchOrGetFile(int $playerId): string
     {
-        try {            
+        try {
             if ($this->file->exists($playerId)) {
                 return $this->file->get($playerId);
             }
             
-            $playerImage = $this->fetch($playerId);
+            return $this->fetch($playerId);
 
-            $this->file->write($playerId, $playerImage);
+        } catch (ClientException $e) {
+            throw $e;
 
-            return $playerImage;
-
-          } catch (Exception $e) {
+        }catch (Exception $e) {
             throw $e;
         }
     }

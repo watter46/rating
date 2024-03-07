@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\File;
 
 use App\Models\PlayerInfo;
 use App\UseCases\Util\Season;
-use App\UseCases\Api\SofaScore\PlayerImage;
+use App\UseCases\Api\SofaScore\PlayerImageFetcher;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
 
 final readonly class PlayerImageFile
@@ -89,19 +90,15 @@ final readonly class PlayerImageFile
      */
     public function registerAll(Collection $playerInfos): void
     {
-        $missingPlayerIdList = $playerInfos
-            ->filter(function (PlayerInfo $player) {
-                return !$this->exists($player->foot_player_id);
-            });
-            
-        if ($missingPlayerIdList->isEmpty()) return;
-
-        foreach($missingPlayerIdList as $player) {
+        foreach($playerInfos as $player) {
             try {
-                $playerImage = (new PlayerImage($this))->fetchOrGetFile($player->sofa_player_id);
+                $playerImage = (new PlayerImageFetcher($this))->fetch($player->sofa_player_id);
 
                 $this->write($player->foot_player_id, $playerImage);
 
+            } catch(ClientException $e) {
+                continue;
+                
             } catch (Exception $e) {
                 Log::alert($e->getMessage());
                 
