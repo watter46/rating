@@ -1,4 +1,4 @@
-<x-util.modal-button class="w-full md:w-11/12 lg:w-2/3">
+<x-util.modal-button class="w-full md:w-11/12 lg:w-10/12">
     <x-slot:icon>
         <x-svg.photo-image class="w-8 h-8 cursor-pointer" />
 
@@ -10,7 +10,7 @@
     <x-slot:disabled-icon></x-slot:disabled-icon>
     
     <!-- Component -->
-    <livewire:lineups.rated-result
+    <x-result.result
         :$fixture
         :$teams
         :$league

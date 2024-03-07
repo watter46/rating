@@ -4,7 +4,7 @@
         mom: @entangle('mom'),
         canRate: @entangle('canRate')
     }"
-    x-init="ratingInput = rating"
+    x-init="ratingInput = rating, $watch('rating', (rating) => ratingInput = rating)"
     class="w-full">
 
     <div class="px-10 py-2">

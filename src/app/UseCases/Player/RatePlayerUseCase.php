@@ -17,7 +17,7 @@ final readonly class RatePlayerUseCase
         //
     }
 
-    public function execute(string $fixtureId, string $playerInfoId, float $rating): Player
+    public function execute(string $fixtureId, string $playerInfoId, float $rating): void
     {
         try {
             if (!$this->fixture->canRate($fixtureId)) {
@@ -36,9 +36,6 @@ final readonly class RatePlayerUseCase
             DB::transaction(function () use ($player) {
                 $player->save();
             });
-            
-            // Attributeにするか検討する
-            return $player->refresh()->rated();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');

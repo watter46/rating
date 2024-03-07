@@ -1,8 +1,8 @@
 <x-app-layout>
-    <div class="w-full h-full">
-        {{-- Score --}}
+    <div class="w-full h-full pb-10 lg:pb-28">
+        <!-- Score -->
         <div class="flex justify-center w-full">
-            <div class="w-full md:px-10">
+            <div class="w-full md:w-3/4 md:px-10">
                 <x-score.score
                     :fixture="$fixture"
                     :teams="$teams"
@@ -45,7 +45,7 @@
 
                 <!-- Substitutes Responsive(~767px) -->
                 <div class="w-[90%] top-full right-full mt-5 md:hidden">
-                    <div class="grid w-full grid-cols-6 gap-10 justify-items-center">
+                    <div class="grid w-full grid-cols-6 gap-x-10 gap-y-2 justify-items-center">
                         @foreach($lineups['substitutes'] as $index => $substitutes)
                             @if($loop->odd)
                                 @foreach($substitutes as $key => $player)
@@ -96,8 +96,8 @@
                 <!-- Options -->
                 <div class="flex justify-center w-full md:absolute md:mt-3 md:top-full">        
                     <div class="flex items-center w-[90%] md:w-full h-full mt-5 justify-evenly gap-x-3">
-                        <!-- RatedResult -->
-                        <x-fixture.result-button
+                        <!-- Result -->
+                        <x-result.result-button
                             :$fixture
                             :$teams
                             :$league

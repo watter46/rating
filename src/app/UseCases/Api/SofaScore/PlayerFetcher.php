@@ -2,14 +2,15 @@
 
 namespace App\UseCases\Api\SofaScore;
 
+use App\Http\Controllers\Util\PlayerFile;
 use Illuminate\Support\Collection;
 use GuzzleHttp\Client;
 use Exception;
 
 
-readonly class FindPlayer
+readonly class PlayerFetcher
 {
-    public function __construct()
+    public function __construct(private PlayerFile $file)
     {
         //
     }
@@ -34,6 +35,34 @@ readonly class FindPlayer
             $json = $response->getBody()->getContents();
 
             return $this->parse($json);
+
+          } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function fetchOrGetFile(array $player): Collection
+    {
+        try {            
+            if ($this->file->exists($player['id'])) {
+                return $this->getFile($player);
+            }
+
+            $playerData = $this->fetch($player['name']);
+            
+            $this->file->write($player['id'], $playerData);
+
+            return $playerData;
+
+          } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getFile(array $player): Collection
+    {
+        try {            
+            return $this->file->get($player['id']);
 
           } catch (Exception $e) {
             throw $e;

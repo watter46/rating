@@ -22,7 +22,7 @@ final readonly class PlayerFile
         $this->ensureDirExists();
     }
     
-    public function get(int $playerId): string
+    public function get(int $playerId): Collection
     {
         if (!$this->exists($playerId)) {
             throw new Exception('PlayerFileが存在しません。');
@@ -30,7 +30,7 @@ final readonly class PlayerFile
         
         $path = $this->generatePath($playerId);
 
-        return File::get($path);
+        return collect(json_decode(File::get($path)));
     }
 
     public function getAll(): Collection
@@ -42,9 +42,9 @@ final readonly class PlayerFile
         });
     }
 
-    public function write(int $playerId, string $json)
+    public function write(int $playerId, Collection $player)
     {
-        File::put($this->generatePath($playerId), $json);
+        File::put($this->generatePath($playerId), $player->toJson());
     }
 
     public function exists(int $playerId): bool

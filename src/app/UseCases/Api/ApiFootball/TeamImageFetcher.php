@@ -8,14 +8,14 @@ use GuzzleHttp\Client;
 use App\Http\Controllers\Util\TeamImageFile;
 
 
-readonly class TeamImage
+readonly class TeamImageFetcher
 {
     public function __construct(private TeamImageFile $file)
     {
         //
     }
 
-    public function register(int $teamId): string
+    public function fetch(int $teamId): string
     {
         try {            
             $client = new Client();

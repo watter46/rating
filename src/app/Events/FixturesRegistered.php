@@ -2,22 +2,25 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\UseCases\Fixture\FixtureDataProcessor;
+use App\UseCases\Fixtures\FixturesDataProcessor;
 
 
-class FixtureRegistered
+class FixturesRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * @param FixtureDataProcessor $processor
+     * @param FixturesDataProcessor $processor 
      */
-    public function __construct(public FixtureDataProcessor $processor)
+    public function __construct(public FixturesDataProcessor $processor)
     {
         //
     }

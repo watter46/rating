@@ -10,7 +10,7 @@ use App\UseCases\Util\Season;
 use App\Http\Controllers\Util\FixturesFile;
 
 
-readonly class FixturesData
+readonly class FixturesFetcher
 {
     private const CHELSEA_TEAM_ID = 49;
 

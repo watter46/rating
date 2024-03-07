@@ -18,9 +18,3 @@
 .player:hover {
     @apply duration-100 transform scale-125;
 }
-
-@media (max-width: 1024px) {
-    .players {
-        display: none;
-    }
-}

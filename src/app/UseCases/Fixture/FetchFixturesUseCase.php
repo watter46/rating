@@ -13,16 +13,17 @@ final readonly class FetchFixturesUseCase
 {
     public function execute(TournamentType $tournament): Paginator
     {
-        try {
+        try {            
             /** @var Paginator $fixtures */
             $fixtures = Fixture::query()
                 ->with('players:fixture_id')
+                ->whereNotNull('fixture')
                 ->finished()
                 ->past()
                 ->inSeason()
                 ->tournament($tournament)
                 ->simplePaginate(20);
-            
+
             $fixtures->getCollection()
                 ->transform(function (Fixture $model) {
                     $model->dataExists = !is_null($model->fixture);

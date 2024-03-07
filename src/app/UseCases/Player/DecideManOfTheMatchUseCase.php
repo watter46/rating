@@ -37,10 +37,6 @@ final readonly class DecideManOfTheMatchUseCase
                 ->fixture($fixtureId)
                 ->playerInfo($playerInfoId)
                 ->first();
-                        
-            if ($player?->mom) {
-                return $player;
-            }
 
             $newMomPlayer = $player 
                 ? $player->decideMOM()
@@ -64,7 +60,7 @@ final readonly class DecideManOfTheMatchUseCase
 
             return collect([
                 'newMomId' => $newMomPlayer->player_info_id,
-                'oldMomId' => $oldMomPlayer->player_info_id,
+                'oldMomId' => $oldMomPlayer?->player_info_id,
             ]);
 
         } catch (ModelNotFoundException $e) {

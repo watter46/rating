@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace App\View\Components\Fixture;
+namespace App\View\Components\Result;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ResultButton extends Component
+class Result extends Component
 {
     /**
      * Create a new component instance.
@@ -17,8 +17,8 @@ class ResultButton extends Component
         public array $league,
         public array $score,
         public array $lineups,
-        public string $fixtureId
-    ) {
+        public string $fixtureId)
+    {
         //
     }
 
@@ -27,6 +27,6 @@ class ResultButton extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.fixture.result-button');
+        return view('components.result.result');
     }
 }

@@ -5,61 +5,68 @@ namespace App\UseCases\Player;
 use Illuminate\Support\Collection;
 
 use App\Models\Player;
-use App\UseCases\Api\SofaScore\FindPlayer;
+use App\Models\PlayerInfo;
+use App\UseCases\Api\SofaScore\PlayerFetcher;
 use App\UseCases\Util\Season;
-
+use Exception;
 
 final readonly class RegisterPlayerBuilder
 {
-    public function __construct(private FindPlayer $findPlayer)
+    public function __construct(private PlayerFetcher $playerFetcher)
     {
-        
+        //
     }
     
     /**
      * build
      *
-     * @property Collection<int, Player> $players
+     * @property Collection<int> $invalidPlayers
      * @return array
      */
-    public function build(Collection $players)
+    public function build(Collection $invalidPlayers)
     {
-        $data = $players
-            ->map(function (Collection $player) {
-                $playerData = $this->findPlayer->fetch($player['player']['name']);
-                
-                $filtered = $playerData
-                    ->filter(function ($player) {
-                        return $player->team->shortName === 'Chelsea'
-                            || $player->team->nameCode === 'CFC';
-                    });
+        try {
+            $invalidPlayerInfoIds = $this->findInvalidPlayerInfoIds($invalidPlayers);
 
-                if ($filtered->isEmpty()) {
-                    return collect([
-                        'name' => $player['player']['name'],
-                        'season' => Season::current(),
-                        'number' => $player['player']['number'],
-                        'foot_player_id' => $player['player']['id'],
-                        'sofa_player_id' => null
-                    ]);
-                }
+            $result = $this->fetchInvalidPlayers($invalidPlayers)
+                ->map(function ($player) use ($invalidPlayerInfoIds) {
+                    $playerInfo = $invalidPlayerInfoIds->keyBy('foot_player_id')->get($player['foot_player_id']);
 
-                $newPlayer = json_decode($filtered->toJson())[0];
-                                    
-                $data = collect([
-                        'name' => $newPlayer->shortName,
-                        'season' => Season::current(),
-                        'number' => $newPlayer->jerseyNumber,
-                        'foot_player_id' => $player['player']['id'],
-                        'sofa_player_id' => $newPlayer->id
-                    ]);
-                
-                return $player->get('model')->isEmpty()
-                    ? $data
-                    : $data->merge(['id' => $player['model']->first()->id]);
-            })
-            ->toArray();
+                    if (!$playerInfo->id) {
+                        return $player;
+                    }
+                    
+                    $player['id'] = $playerInfo->id;
 
-        return $data;
+                    return $player;
+                })
+                ->toArray();
+
+            return $result;
+
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function findInvalidPlayerInfoIds(Collection $invalidPlayers): Collection
+    {
+        $invalidPlayerIds = $invalidPlayers->map(fn($player) => $player['id'])->toArray();
+
+        return PlayerInfo::query()
+            ->select(['id','foot_player_id'])
+            ->whereIn('foot_player_id', $invalidPlayerIds)
+            ->currentSeason()
+            ->get();
+    }
+
+    public function fetchInvalidPlayers(Collection $invalidPlayers): Collection
+    {
+        return $invalidPlayers
+            ->map(function (array $player) {
+                $data = $this->playerFetcher->fetchOrGetFile($player);
+
+                return ValidatePlayerData::validate($data)->createData($player);
+            });
     }
 }

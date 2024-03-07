@@ -8,14 +8,14 @@ use GuzzleHttp\Client;
 use App\Http\Controllers\Util\LeagueImageFile;
 
 
-readonly class LeagueImage
+readonly class LeagueImageFetcher
 {
     public function __construct(private LeagueImageFile $file)
     {
         //
     }
 
-    public function register(int $leagueId): void
+    public function fetch(int $leagueId): string
     {
         try {
             $client = new Client();
@@ -28,9 +28,7 @@ readonly class LeagueImage
                 ]
             ]);
 
-            $leagueImage = $response->getBody()->getContents();
-
-            $this->file->write($leagueId, $leagueImage);
+            return $response->getBody()->getContents();
 
         } catch (Exception $e) {
             throw $e;
