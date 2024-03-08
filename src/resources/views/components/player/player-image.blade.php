@@ -7,7 +7,7 @@
         <img src="{{ $img['data'] }}" class="rounded-full">
             
         <div class="absolute flex items-center justify-center">
-            <p class="text-3xl font-black text-white">{{ $number }}</p>
+            <p class="text-xl font-black text-white">{{ $number }}</p>
         </div>
     @endif
 </div>

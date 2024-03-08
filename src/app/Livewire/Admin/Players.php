@@ -6,9 +6,10 @@ use Exception;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Collection;
 
 use App\Livewire\MessageType;
-use App\UseCases\Player\FetchPlayerInfoListUseCase;
+use App\UseCases\Admin\Player\FetchPlayerInfosUseCase;
 use App\UseCases\Player\RegisterPlayerOfTeamUseCase;
 
 
@@ -17,14 +18,14 @@ class Players extends Component
     #[Validate('required')]
     public string $refreshKey;
     
-    private readonly FetchPlayerInfoListUseCase $fetchPlayerInfoList;
+    private readonly FetchPlayerInfosUseCase $fetchPlayerInfos;
 
     private const SUCCESS_MESSAGE = 'Please Reload!!';
     private const ERROR_MESSAGE   = 'Incorrect key';
     
-    public function boot(FetchPlayerInfoListUseCase $fetchPlayerInfoList)
+    public function boot(FetchPlayerInfosUseCase $fetchPlayerInfos)
     {
-        $this->fetchPlayerInfoList = $fetchPlayerInfoList;
+        $this->fetchPlayerInfos = $fetchPlayerInfos;
     }
     
     public function render()
@@ -33,10 +34,10 @@ class Players extends Component
     }
 
     #[Computed()]
-    public function players()
+    public function players(): Collection
     {
         try {
-            return $this->fetchPlayerInfoList->execute();
+            return $this->fetchPlayerInfos->execute();
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
