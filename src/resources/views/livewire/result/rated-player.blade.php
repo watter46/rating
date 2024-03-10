@@ -7,20 +7,20 @@
     
     <div class="flex justify-center">
         <div class="relative flex justify-center w-fit">
-            {{-- PlayerImage --}}
+            <!-- PlayerImage -->
             <x-player.player-image
                 class="{{ $size }} cursor-default"
                 :number="$player['number']"
                 :img="$player['img']" />
 
-            {{-- Goals --}}
+            <!-- Goals -->
             <div class="absolute top-0 left-0 -translate-x-[60%]">
                 <x-player.goals
                     class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
                     :goals="$player['goal']" />
             </div>
 
-            {{-- Assists --}}
+            <!-- Assists -->
             <div class="absolute top-0 right-0 translate-x-[60%]">
                 <x-player.assists
                     class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"

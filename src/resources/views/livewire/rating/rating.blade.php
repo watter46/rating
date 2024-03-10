@@ -1,5 +1,5 @@
 <div x-data="{
-        rating: @entangle('rating').live,
+        rating: @entangle('rating'),
         ratingInput: null,
         mom: @entangle('mom'),
         canRate: @entangle('canRate')

@@ -2,10 +2,13 @@
 
 namespace App\Livewire\Lineups;
 
-use App\UseCases\Player\CountRatedPlayerUseCase;
 use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
+
+use App\Livewire\MessageType;
+use App\UseCases\Player\CountRatedPlayerUseCase;
+
 
 class RatedCount extends Component
 {   
@@ -33,7 +36,7 @@ class RatedCount extends Component
     }
 
     #[On('player-rated')]
-    public function fetch()
+    public function fetch(): void
     {
         try {
             $this->ratedCount = $this->countRatedPlayer->execute($this->fixtureId);

@@ -2,54 +2,21 @@
 
 namespace App\Livewire\Result;
 
-use Livewire\Attributes\On;
+use App\Livewire\Lineups\PlayerTrait;
 use Livewire\Component;
 
 
 class RatedPlayer extends Component
 {
     public string $name;
-    public string $fixtureId;
-    public ?float $rating;
-    public ?float $defaultRating;
-    public array $player;
-    public bool $mom;
-    public bool $isRated;
     public string $size;
+    public string $fixtureId;
+    public array $player;
 
-
-    public function mount()
-    {
-        $this->dispatchFetchPlayer();
-
-        $this->defaultRating = (float) $this->player['defaultRating'];
-    }
+    use PlayerTrait;
 
     public function render()
     {
         return view('livewire.result.rated-player');
-    }
-    
-    /**
-     * Playerを取得するイベントを発行する
-     *
-     * @return void
-     */
-    private function dispatchFetchPlayer(): void
-    {
-        $this->dispatch('fetch-player.'.$this->player['id']);
-    }
-
-    /**
-     * Playerイベントから値をセットする
-     *
-     * @param  array $player
-     * @return void
-     */
-    #[On('player-fetched.{player.id}')]    
-    public function handlePlayerEvent(array $player): void
-    {
-        $this->rating  = $player['rating'];
-        $this->mom     = $player['mom'];
     }
 }
