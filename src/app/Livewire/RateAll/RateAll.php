@@ -11,7 +11,7 @@ use App\Livewire\MessageType;
 use App\Livewire\RateAll\RateAllResource;
 use App\UseCases\Player\FetchPlayersUseCase;
 use App\UseCases\Player\RateAllPlayersUseCase;
-
+use Illuminate\Support\Facades\Log;
 
 class RateAll extends Component
 {
@@ -20,6 +20,7 @@ class RateAll extends Component
 
     public Collection $profiles;
     public Collection $players;
+    public Collection $data;
 
     private readonly RateAllPlayersUseCase $rateAllPlayers;
     private readonly FetchPlayersUseCase $fetchPlayers;
@@ -56,6 +57,7 @@ class RateAll extends Component
     private function fetch(): void
     {
         try {
+            Log::info('rateAll');
             $playerInfoIds = $this->resource
                 ->lineupsToPlayers($this->lineups)
                 ->pluck('id');
@@ -66,6 +68,7 @@ class RateAll extends Component
             
             $this->profiles = $playersData->get('profiles');
             $this->players  = $playersData->get('players');
+            $this->data     = $this->players;
             
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
@@ -95,12 +98,31 @@ class RateAll extends Component
 
             $this->rateAllPlayers->execute($this->fixtureId, collect($players));
 
-            $this->dispatch('fetch-all-player', collect($players)->pluck('id'));
+            $this->dispatch('fetch-all-player', $this->changedRatingPlayerIds($players));
             $this->dispatch('notify', message: MessageType::Success->toArray(self::RATED_MESSAGE));
             $this->dispatch('close');
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
+    }
+    
+    /**
+     * 値が変更されたPlayerIdのみ取得する
+     *
+     * @param  array $players
+     * @return array
+     */
+    private function changedRatingPlayerIds(array $players): array
+    {
+        $players = collect($players);
+
+        return $players->filter(function ($player) {
+            $beforePlayer = $this->data->keyBy('id')->get($player['id']);
+
+            return collect($player)->diffAssoc($beforePlayer)->isNotEmpty();
+        })
+        ->pluck('id')
+        ->toArray();
     }
 }

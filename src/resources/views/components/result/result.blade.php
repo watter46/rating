@@ -15,9 +15,8 @@
             
             <!-- StartXI -->
             <div class="w-[90%] absolute top-0 aspect-[74/111]">
-                <div id="box"
-                    class="flex items-end justify-center w-full h-full">
-                    <div class="flex flex-col w-full h-[95%]">
+                <div id="box" class="flex items-end justify-center w-full h-full">
+                    <div class="flex flex-col w-full h-[90%]">
                         @foreach($lineups['startXI'] as $line => $players)
                             <div id="line-{{ $line + 1 }}"
                                 class="flex items-stretch w-full h-full justify-evenly">
@@ -89,4 +88,6 @@
             </div>
         </div>
     </div>
+
+    @vite(['resources/css/field.css', 'resources/js/field.js'])
 </div>

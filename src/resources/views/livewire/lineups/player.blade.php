@@ -3,8 +3,8 @@
         <div id="{{ $name }}" class="h-full {{ $size }}"
             :class=" componentName === 'startXI' ? 'invisible' : ''"
             x-data="{
-                rating: @entangle('rating').live,
-                mom: @entangle('mom').live,
+                rating: @entangle('rating'),
+                mom: @entangle('mom'),
                 machine: @entangle('defaultRating'),
                 componentName: @entangle('name')
             }"
@@ -12,20 +12,20 @@
             
             <div class="flex justify-center player">
                 <div class="relative flex justify-center w-fit">
-                    {{-- PlayerImage --}}
+                    <!-- PlayerImage -->
                     <x-player.player-image
                         class="{{ $size }} cursor-default"
                         :number="$player['number']"
                         :img="$player['img']" />
 
-                    {{-- Goals --}}
+                    <!-- Goals -->
                     <div class="absolute top-0 left-0 -translate-x-[60%]">
                         <x-player.goals
                             class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
                             :goals="$player['goal']" />
                     </div>
 
-                    {{-- Assists --}}
+                    <!-- Assists -->
                     <div class="absolute top-0 right-0 translate-x-[60%]">
                         <x-player.assists
                             class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
@@ -33,45 +33,44 @@
                     </div>
                     
                     <!-- Rating -->
-                    <div class="absolute bottom-0 right-0 translate-x-[60%]">
+                    <div class="absolute bottom-0 right-0 translate-x-[45%]"
+                        x-data="{ isUser: true }"
+                        @user-machine-toggled.window="isUser = !isUser">
+                        
                         <!-- UserRating -->
-                        @if ($isUser)
-                            <div class="flex items-center justify-center w-8 md:w-10 rounded-xl"
+                        <template x-if="isUser">
+                            <div class="flex items-center justify-center w-8 rounded-xl"
                                 :style=" mom
                                     ? 'background-color: #0E87E0'
                                     : `background-color: ${ratingBgColor(rating)}`
                                 ">
 
                                 <template x-if="mom">
-                                    <p class="text-xs font-black text-gray-50 md:text-base">★</p>
+                                    <p class="text-xs font-black text-gray-50">★</p>
                                 </template>
                                 
-                                <p class="text-sm font-black text-gray-50 md:text-base"
+                                <p class="text-xs font-black md:text-sm text-gray-50"
                                     x-text="ratingValue(rating)">
                                 </p>
                             </div>
-                        @endif
+                        </template>
 
                         <!-- MachineRating -->
-                        @unless($isUser)
-                            <div class="flex items-center justify-center w-8 md:w-10 rounded-xl"
+                        <template x-if="!isUser">
+                            <div class="flex items-center justify-center w-8 rounded-xl"
                                 :style="`background-color: ${ratingBgColor(machine)}`">
                                 
-                                <p class="text-sm font-black text-gray-50 md:text-base"
+                                <p class="text-xs font-black md:text-sm text-gray-50"
                                     x-text="ratingValue(machine)">
                                 </p>
                             </div>
-                        @endunless
+                        </template>
                     </div>
                 </div>
             </div>
 
-            <div class="flex items-center justify-center pointer-events-none gap-x-2">
-                <p class="hidden text-sm font-black text-white md:block md:text-base">
-                    {{ $player['number'] }}
-                </p>
-            
-                <p class="text-sm font-black text-white md:text-base">
+            <div class="flex items-center justify-center pointer-events-none gap-x-2">            
+                <p class="text-xs font-black text-white md:text-sm">
                     {{ $player['name'] }}
                 </p>
             </div>

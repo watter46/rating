@@ -24,7 +24,7 @@ final readonly class RegisterFixturesUseCase
     public function execute()
     {
         try {            
-            $fixturesData = $this->fixturesFetcher->getFile();
+            $fixturesData = $this->fixturesFetcher->fetchAndUpdateFile();
             
             /** @var Collection<int, Fixture> */
             $fixtureList = Fixture::query()

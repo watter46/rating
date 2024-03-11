@@ -20,11 +20,11 @@ class FixtureController extends Controller
     {
         try {
             $fixture = $fetchFixture->execute($fixtureId);
-            
+
             return view('fixture', $resource->format($fixture));
 
         } catch (Exception $e) {
-            dd($e);
+            throw $e;
         }
     }
 
@@ -36,7 +36,7 @@ class FixtureController extends Controller
             return view('fixture', $resource->format($fixture));
 
         } catch (Exception $e) {
-            dd($e);
+            throw $e;
         }
     }
 }

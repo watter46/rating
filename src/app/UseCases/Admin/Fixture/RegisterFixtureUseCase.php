@@ -6,8 +6,9 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use App\Models\Fixture;
+use App\Models\Fixture as EqFixture;
 use App\UseCases\Api\ApiFootball\FixtureFetcher;
+use App\UseCases\Fixture\Fixture;
 use App\UseCases\Util\FixtureData;
 
 
@@ -15,16 +16,17 @@ final readonly class RegisterFixtureUseCase
 {
     public function __construct(
         private FixtureFetcher $fetcher,
-        private FixtureData $fixtureData)
+        private FixtureData $fixtureData,
+        private Fixture $fixture)
     {
         //
     }
 
-    public function execute(string $fixtureId)
+    public function execute(string $fixtureId): void
     {
         try {
-            /** @var Fixture $model */
-            $model = Fixture::findOrFail($fixtureId);
+            /** @var EqFixture $model */
+            $model = EqFixture::findOrFail($fixtureId);
 
             $fixtureData = $this->fetcher->fetchOrGetFile($model->external_fixture_id);
 
@@ -36,13 +38,12 @@ final readonly class RegisterFixtureUseCase
                 $fixture->save();
             });
             
-            $fixture->registered();
+            $this->fixture->registered($fixtureData);
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Fixture Not Exists.');
  
         } catch (Exception $e) {
-            dd($e);
             throw $e;
         }
     }

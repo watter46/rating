@@ -11,11 +11,6 @@ use App\UseCases\Fixtures\FixturesDataProcessor;
 
 readonly class Fixtures
 {
-    public function __construct(private TeamImageFile $teamImageFile)
-    {
-        //
-    }
-
     public function registered(Collection $fixturesData)
     {
         $validate = FixturesDataProcessor::validate($fixturesData);
