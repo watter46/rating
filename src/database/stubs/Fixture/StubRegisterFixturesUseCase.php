@@ -4,7 +4,7 @@ namespace Database\Stubs\Fixture;
 
 use App\Models\Fixture;
 use App\UseCases\Admin\Fixture\FixturesDataBuilder;
-use App\UseCases\Api\ApiFootball\FixturesData;
+use App\UseCases\Api\ApiFootball\FixturesFetcher;
 use Illuminate\Database\Eloquent\Collection;
 
 
@@ -12,14 +12,14 @@ class StubRegisterFixturesUseCase
 {
     public function __construct(
         private FixturesDataBuilder $builder,
-        private FixturesData $fixturesData)
+        private FixturesFetcher $fetcher)
     {
         //
     }
 
     public function execute()
     {
-        $fixturesData = $this->fixturesData->getFile();
+        $fixturesData = $this->fetcher->getFile();
         
         /** @var Collection<int, Fixture> */
         $fixtureList = Fixture::query()

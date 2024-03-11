@@ -44,29 +44,10 @@ class StubRegisterPlayerOfTeamUseCase
                 $updateColumns = ['name', 'number', 'season', 'foot_player_id', 'sofa_player_id'];
                 
                 PlayerInfo::upsert($data, $unique, $updateColumns);
-
-                $this->registerImage();
             });
             
         } catch (Exception $e) {
             throw $e;
         }
-    }
-    
-    /**
-     * プレイヤーの画像を保存する
-     *
-     * @return void
-     */
-    private function registerImage()
-    {
-        $playerInfos = PlayerInfo::query()
-            ->select(['foot_player_id', 'sofa_player_id'])
-            ->currentSeason()
-            ->get()
-            ->filter(fn (PlayerInfo $player) => $player->sofa_player_id)
-            ->values();
-            
-        $this->playerImage->registerAll($playerInfos);
     }
 }

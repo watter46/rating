@@ -16,25 +16,25 @@
     </div>
 
     <div class="grid w-full grid-cols-3 mt-3 mb-3 text-center gap-x-0.5 gap-y-1">
-        {{-- Position --}}
+        <!-- Position -->
         <div class="p-0.5">
             <p class="text-xs font-black text-gray-500 md:text-base">Position</p>
             <p class="text-base font-black text-gray-300 md:text-lg">{{ $player['position'] }}</p>
         </div>
 
-        {{-- ShirtNumber --}}
+        <!-- ShirtNumber -->
         <div class="p-0.5">
             <p class="text-xs font-black text-gray-500 md:text-base">ShirtNumber</p>
             <p class="text-base font-black text-gray-300 md:text-lg">{{ $player['number'] }}</p>
         </div>
 
-        {{-- machineRating --}}
+        <!-- machineRating -->
         <div class="p-0.5">
             <p class="text-xs font-black text-gray-500 md:text-base">MachineRating</p>
             <p class="text-base font-black text-gray-300 md:text-lg">{{ $player['defaultRating'] }}</p>
         </div>
         
-        {{-- Goals --}}
+        <!-- Goals -->
         <div class="flex flex-col items-center p-0.5">
             <p class="text-xs font-black text-gray-500 md:text-base">Goals</p>
             <div class="flex items-center justify-center w-full h-full">
@@ -44,7 +44,7 @@
             </div>
         </div>
         
-        {{-- Assists --}}
+        <!-- Assists -->
         <div class="flex flex-col items-center p-0.5">
             <p class="text-xs font-black text-gray-500 md:text-base">Assists</p>
             <div class="flex items-center justify-center w-full h-full">
@@ -55,11 +55,11 @@
         </div>
     </div>
 
-    {{-- Rating --}}
+    <!-- Rating -->
     <div class="flex items-center justify-center w-full h-full border-t-2 border-gray-700">
         <livewire:rating.rating
             :$fixtureId
-            :playerId="$player['id']"
+            :$player
             :defaultRating="$player['defaultRating']"
             :key="$player['id']" />
     </div>

@@ -1,4 +1,4 @@
-<div id="result-{{ $name }}" class="h-full {{ $size }}"
+<div id="result-{{ $name }}" class="w-full {{ $size }}"
     x-data="{
         rating: @entangle('rating'),
         mom: @entangle('mom')
@@ -28,19 +28,19 @@
             </div>
             
             <!-- Rating -->
-            <div class="absolute bottom-0 right-0 translate-x-[60%]">
+            <div class="absolute bottom-0 right-0 translate-x-[45%]">
                 <!-- UserRating -->
-                <div class="flex items-center justify-center w-8 md:w-10 rounded-xl"
+                <div class="flex items-center justify-center w-8 rounded-xl"
                     :style=" mom
                         ? 'background-color: #0E87E0'
                         : `background-color: ${ratingBgColor(rating)}`
                     ">
 
                     <template x-if="mom">
-                        <p class="text-xs font-black text-gray-50 md:text-base">★</p>
+                        <p class="text-xs font-black text-gray-50">★</p>
                     </template>
                     
-                    <p class="text-sm font-black text-gray-50 md:text-base"
+                    <p class="text-xs font-black text-gray-50 md:text-sm"
                         x-text="ratingValue(rating)">
                     </p>
                 </div>
@@ -48,12 +48,8 @@
         </div>
     </div>
 
-    <div class="flex items-center justify-center pointer-events-none gap-x-2">
-        <p class="hidden text-sm font-black text-white md:block md:text-base">
-            {{ $player['number'] }}
-        </p>
-    
-        <p class="text-sm font-black text-white md:text-base">
+    <div class="flex items-center justify-center pointer-events-none gap-x-2">    
+        <p class="text-xs font-black text-white md:text-sm">
             {{ $player['name'] }}
         </p>
     </div>

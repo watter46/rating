@@ -33,13 +33,13 @@
                     </div>
                     
                     <!-- Rating -->
-                    <div class="absolute bottom-0 right-0 translate-x-[60%]"
+                    <div class="absolute bottom-0 right-0 translate-x-[45%]"
                         x-data="{ isUser: true }"
                         @user-machine-toggled.window="isUser = !isUser">
                         
                         <!-- UserRating -->
                         <template x-if="isUser">
-                            <div class="flex items-center justify-center w-7 md:w-8 rounded-xl"
+                            <div class="flex items-center justify-center w-8 rounded-xl"
                                 :style=" mom
                                     ? 'background-color: #0E87E0'
                                     : `background-color: ${ratingBgColor(rating)}`
@@ -57,7 +57,7 @@
 
                         <!-- MachineRating -->
                         <template x-if="!isUser">
-                            <div class="flex items-center justify-center w-7 md:w-8 rounded-xl"
+                            <div class="flex items-center justify-center w-8 rounded-xl"
                                 :style="`background-color: ${ratingBgColor(machine)}`">
                                 
                                 <p class="text-xs font-black md:text-sm text-gray-50"

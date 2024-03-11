@@ -12,7 +12,7 @@ use Livewire\Attributes\Validate;
 use App\Http\Controllers\FixturesResource;
 use App\Http\Controllers\TournamentType;
 use App\Livewire\MessageType;
-use App\UseCases\Fixture\FetchFixturesUseCase;
+use App\UseCases\Admin\Fixture\FetchFixturesUseCase;
 use App\UseCases\Admin\Fixture\RegisterFixturesUseCase;
 
 

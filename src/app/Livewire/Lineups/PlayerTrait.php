@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Lineups;
 
+use Exception;
+use Livewire\Attributes\On;
+
 use App\Livewire\MessageType;
 use App\UseCases\Player\DecideManOfTheMatchUseCase;
 use App\UseCases\Player\FetchPlayerUseCase;
 use App\UseCases\Player\RatePlayerUseCase;
-use Exception;
-use Livewire\Attributes\On;
+
 
 trait PlayerTrait
 {
@@ -48,7 +50,6 @@ trait PlayerTrait
         $this->rating  = $player->rating;
         $this->mom     = $player->mom;
         $this->canRate = $player->canRate;
-        $this->canRate = true;
     }
 
     /**

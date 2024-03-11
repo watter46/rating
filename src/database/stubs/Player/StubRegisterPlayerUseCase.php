@@ -31,14 +31,14 @@ class StubRegisterPlayerUseCase
                 return collect([
                     'footPlayerId' => $footPlayerId,
                     'model' => $playerInfos->keyBy('foot_player_id')->get($footPlayerId),
-                    'player' => json_decode($this->player->get($footPlayerId))->data[0]
+                    'player' => $this->player->get($footPlayerId)
                 ]);
             })
             ->map(function (Collection $data) {
-                $newPlayer = $data->get('player');
+                $newPlayer = $data->get('player')[0];
 
                 $player = collect([
-                        'name' => $newPlayer->shortName,
+                        'name' => $newPlayer->name,
                         'season' => Season::current(),
                         'number' => $newPlayer->jerseyNumber,
                         'foot_player_id' => $data->get('footPlayerId'),
