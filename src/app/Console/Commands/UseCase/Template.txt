@@ -1,0 +1,31 @@
+<?php declare(strict_types=1);
+
+namespace App\UseCases\{$nameSpace};
+
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+
+final readonly class {$className}
+{
+    public function __construct()
+    {
+        //
+    }
+
+    public function execute()
+    {
+        try {
+            DB::transaction(function () use () {
+                
+            });
+
+        } catch (ModelNotFoundException $e) {
+            throw new ModelNotFoundException('プロジェクトが見つかりませんでした。');
+
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+}

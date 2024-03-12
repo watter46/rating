@@ -39,7 +39,6 @@ final readonly class UpdatePlayerInfosUseCase
                 
                 PlayerInfo::upsert($data, $unique, $updateColumns);
             });
-            
 
         } catch (Exception $e) {
             throw $e;
