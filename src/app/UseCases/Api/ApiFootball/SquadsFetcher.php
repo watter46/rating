@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Api\SofaScore;
+namespace App\UseCases\Api\ApiFootball;
 
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
 
-use App\Http\Controllers\Util\PlayerOfTeamFile;
+use App\Http\Controllers\Util\SquadsFile;
 
 
-class PlayersOfTeamData
+readonly class SquadsFetcher
 {
-    private const CHELSEA_ID = 38;
+    private const CHELSEA_TEAM_ID = 49;
 
-    public function __construct(private PlayerOfTeamFile $file)
+    public function __construct(private SquadsFile $file)
     {
         //
     }
@@ -23,14 +23,14 @@ class PlayersOfTeamData
         try {            
             $client = new Client();
 
-            $response = $client->request('GET', 'https://sofascores.p.rapidapi.com/v1/teams/players', [
+            $response = $client->request('GET', 'https://api-football-v1.p.rapidapi.com/v3/players/squads', [
                 'query' => [
-                    'team_id' => (string) self::CHELSEA_ID
+                    'team' => self::CHELSEA_TEAM_ID
                 ],
                 'delay' => 500,
                 'headers' => [
-                    'X-RapidAPI-Host' => config('sofa-score.api-host'),
-                    'X-RapidAPI-Key'  => config('sofa-score.api-key')
+                    'X-RapidAPI-Host' => config('api-football.api-host'),
+                    'X-RapidAPI-Key'  => config('api-football.api-key')
                 ]
             ]);
 
@@ -38,9 +38,14 @@ class PlayersOfTeamData
 
             return $this->parse($json);
 
-          } catch (Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    public function getFile(): Collection
+    {
+        return $this->file->get();
     }
 
     public function fetchOrGetFile(): Collection
@@ -50,21 +55,21 @@ class PlayersOfTeamData
                 return $this->file->get();
             }
 
-            $playersOfTeamData = $this->fetch();
+            $squadsData = $this->fetch();
 
-            $this->file->write($playersOfTeamData);
+            $this->file->write($squadsData);
             
-            return $playersOfTeamData;
+            return $squadsData;
 
         } catch (Exception $e) {
             throw $e;
         }
     }
-
+    
     private function parse(string $json): Collection
     {
-        $decoded = json_decode($json)->data;
+        $decoded = json_decode($json)->response;
 
-        return collect($decoded);
+        return collect($decoded[0]);
     }
 }
