@@ -13,9 +13,7 @@ use Illuminate\Support\Collection;
 
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\TournamentType;
-use App\Models\Exceptions\FixtureNotFoundException;
 use App\UseCases\Util\Season;
-use Exception;
 
 /**
  * FixtureModel
@@ -134,6 +132,20 @@ class Fixture extends Model
     public function scopeFinished(Builder $query): void
     {
         $query->where('status', self::FINISHED_MATCH_STATUS);
+    }
+    
+    /**
+     * 次の試合を取得する
+     *
+     * @param  Builder<Stub> $query
+     * @return void
+     */
+    public function scopeNext(Builder $query)
+    {
+        $query
+            ->whereDate('date', '=', now('UTC'))
+            ->orderBy('date')
+            ->whereNull('fixture');
     }
 
     /**

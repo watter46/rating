@@ -6,19 +6,19 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\PlayerInfo;
-use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\PlayerOfTeamFile;
 use App\Http\Controllers\Util\SquadsFile;
-use App\UseCases\Player\RegisterPlayerOfTeamBuilder;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\PlayersOfTeamData;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\SquadsData;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdatePlayerInfosDataBuilder;
 
 
-class StubRegisterPlayerOfTeamUseCase
+class StubUpdatePlayerInfosUseCase
 {
     public function __construct(
-        private RegisterPlayerOfTeamBuilder $builder,
+        private UpdatePlayerInfosDataBuilder $builder,
         private PlayerOfTeamFile $playerOfTeam,
-        private SquadsFile $squads,
-        private PlayerImageFile $playerImage)
+        private SquadsFile $squads)
     {
         //
     }
@@ -26,17 +26,13 @@ class StubRegisterPlayerOfTeamUseCase
     public function execute()
     {
         try {
-            $SOFA_fetched = $this->playerOfTeam->get();
-            $FOOT_fetched = $this->squads->get();
-
-            $playerList = PlayerInfo::query()
-                ->currentSeason()
-                ->get();
+            $squadsData = $this->squads->get();
+            $playersOfTeamData = $this->playerOfTeam->get();
 
             $data = $this->builder->build(
-                $SOFA_fetched,
-                $FOOT_fetched,
-                $playerList
+                SquadsData::build($squadsData),
+                PlayersOfTeamData::build($playersOfTeamData),
+                PlayerInfo::currentSeason()->get()
             );
  
             DB::transaction(function () use ($data) {
