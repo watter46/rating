@@ -13,11 +13,7 @@ use App\UseCases\Admin\Player\Player;
 
 final readonly class RegisterPlayerUseCase
 {
-    public function __construct(
-        private PlayerFile $playerFile,
-        private PlayerImageFile $playerImage,
-        private RegisterPlayerBuilder $builder,
-        private Player $player)
+    public function __construct(private RegisterPlayerBuilder $builder)
     {
         //
     }

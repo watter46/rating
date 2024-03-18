@@ -24,11 +24,10 @@
                                     <button type="button" @click="isOpen = false" class="px-5 py-1 bg-gray-600 border-2 border-gray-200 rounded-lg">
                                         <p class="font-black text-white">Cancel</p>
                                     </button>
-                
-                                    <button class="px-5 py-1 border-2 border-gray-200 rounded-lg bg-sky-600"
-                                        wire:click="refreshFixture">
-                                        <p class="font-black text-white">Refresh</p>
-                                    </button>
+
+                                    <x-admin.register-button wire:click="refreshFixtures">
+                                        Refresh
+                                    </x-admin.register-button>
                                 </div>
                             </div>
                         </div>

@@ -83,7 +83,7 @@ class Fixtures extends Component
      *
      * @return void
      */
-    public function refreshFixture(): void
+    public function refreshFixtures(): void
     {
         try {
             if ($this->refreshKey !== config('refreshKey.key')) {
