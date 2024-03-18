@@ -76,14 +76,10 @@
                         <button type="button" @click="isOpen = false" class="px-5 py-1 bg-gray-600 border-2 border-gray-200 rounded-lg">
                             <p class="font-black text-white">Cancel</p>
                         </button>
-    
-                        <button type="submit" class="px-5 py-1 bg-green-600 border-2 border-gray-200 rounded-lg "
-                            wire:click="refresh"
-                            wire:loading.class="opacity-50"
-                            wire:loading.attr="disabled">
-                            <p class="font-black text-white" wire:loading.class.add="hidden">Update</p>
-                            <p class="hidden font-black text-white" wire:loading.class.remove="hidden">Saving...</p>
-                        </button>
+
+                        <x-admin.register-button wire:click="refresh">
+                            Update
+                        </x-admin.register-button>
                     </div>
                 </div>
             </div>
