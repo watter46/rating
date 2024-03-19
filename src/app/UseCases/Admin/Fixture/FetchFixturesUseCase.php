@@ -17,7 +17,6 @@ final readonly class FetchFixturesUseCase
             /** @var Paginator $fixtures */
             $fixtures = Fixture::query()
                 ->with('players:fixture_id')
-                ->finished()
                 ->past()
                 ->inSeason()
                 ->tournament($tournament)

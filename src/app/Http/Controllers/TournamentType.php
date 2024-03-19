@@ -13,6 +13,9 @@ enum TournamentType: string
     case LEAGUE_CUP = 'league_cup';
 
     private const ERROR_MESSAGE = ': Tournament is invalid';
+    private const PREMIER_LEAGUE_ID = 39;
+    private const FA_CUP_ID = 45;
+    private const LEAGUE_CUP_ID = 48;
         
     /**
      * Tournamentをバリデーションする
@@ -31,28 +34,32 @@ enum TournamentType: string
     }
     
     /**
-     * リーグIDに変換する
+     * シーズンのTournamentのみ取得する
      *
-     * @return int
+     * @return array<int>
      */
-    public function toId(): ?int
+    private function inSeasonTournament(): array
     {
-        return match($this) {
-            self::ALL => null,
-            self::PREMIER_LEAGUE => 39,
-            self::FA_CUP => 45,
-            self::LEAGUE_CUP => 48
-        };
+        return [
+            self::PREMIER_LEAGUE_ID,
+            self::FA_CUP_ID,
+            self::LEAGUE_CUP_ID
+        ];
     }
     
     /**
-     * すべてのツアーを取得するか判定する
+     * リーグIDに変換する
      *
-     * @return bool
+     * @return array<int>
      */
-    public function isAll(): bool
+    public function toIds(): array
     {
-        return $this === self::ALL;
+        return match($this) {
+            self::ALL => $this->inSeasonTournament(),
+            self::PREMIER_LEAGUE => [self::PREMIER_LEAGUE_ID],
+            self::FA_CUP => [self::FA_CUP_ID],
+            self::LEAGUE_CUP => [self::LEAGUE_CUP_ID]
+        };
     }
 
     public static function toText(): Collection

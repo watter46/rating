@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\TournamentType;
 use App\UseCases\Util\Season;
+use App\Models\FixtureQueryBuilder;
 
 /**
  * FixtureModel
@@ -36,8 +37,6 @@ class Fixture extends Model
 
     private const RATE_PERIOD_DAY = 5;
     public  const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
-
-    private const FINISHED_MATCH_STATUS = 'Match Finished';
 
     /**
      * The attributes that are mass assignable.
@@ -93,85 +92,14 @@ class Fixture extends Model
         return $specifiedDate->diffInDays(now('UTC')) <= self::RATE_PERIOD_DAY;
     }
 
-    /**
-     * ツアーでソートする
-     *
-     * @param  Builder<Fixture> $query
-     * @param  TournamentType $tournament
-     * @return void
-     */
-    public function scopeTournament(Builder $query, TournamentType $tournament): void
-    {        
-        if ($tournament->isAll()) return;
-
-        $query->where('external_league_id', $tournament->toId());
+    public static function query(): FixtureQueryBuilder
+    {
+        return parent::query();
     }
 
-    /**
-     * シーズン中の試合のみ取得する
-     *
-     * @param  Builder<Fixture> $query
-     * @return void
-     */
-    public function scopeInSeason(Builder $query): void
+    public function newEloquentBuilder($query): FixtureQueryBuilder
     {
-        $query
-            ->whereIn('external_league_id', [
-                TournamentType::PREMIER_LEAGUE->toId(),
-                TournamentType::FA_CUP->toId(),
-                TournamentType::LEAGUE_CUP->toId()
-            ]);
-    }
-    
-    /**
-     * 終了している試合のみ取得する
-     *
-     * @param  Builder<Fixture> $query
-     * @return void
-     */
-    public function scopeFinished(Builder $query): void
-    {
-        $query->where('status', self::FINISHED_MATCH_STATUS);
-    }
-    
-    /**
-     * 次の試合を取得する
-     *
-     * @param  Builder<Stub> $query
-     * @return void
-     */
-    public function scopeNext(Builder $query)
-    {
-        $query
-            ->whereDate('date', '=', now('UTC'))
-            ->orderBy('date')
-            ->whereNull('fixture');
-    }
-
-    /**
-     * 今日までの試合のみ取得する
-     *
-     * @param  Builder<Fixture> $query
-     * @return void
-     */
-    public function scopePast(Builder $query): void
-    {
-        $query
-            ->select(['id', 'score', 'date', 'external_fixture_id', 'fixture'])
-            ->currentSeason()
-            ->where('date', '<=', now('UTC'))
-            ->orderBy('date', 'desc');
-    }
-
-    /**
-     * 今シーズンのみ取得する
-     *
-     * @param  Builder<Fixture> $query
-     * @return void
-     */
-    public function scopeCurrentSeason(Builder $query): void
-    {
-        $query->where('season', Season::current());
+        return new FixtureQueryBuilder($query);
     }
     
     /**
