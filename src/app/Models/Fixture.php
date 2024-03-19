@@ -15,6 +15,7 @@ use App\Events\FixtureRegistered;
 use App\Http\Controllers\TournamentType;
 use App\UseCases\Util\Season;
 use App\Models\FixtureQueryBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * FixtureModel
@@ -37,7 +38,7 @@ class Fixture extends Model
 
     private const RATE_PERIOD_DAY = 5;
     public  const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
-
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -55,8 +56,15 @@ class Fixture extends Model
 
     protected $casts = [
         'score' => AsCollection::class,
-        'fixture' => AsCollection::class,
+        'fixture' => AsCollection::class
     ];
+
+    protected function date(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($date) => Carbon::parse($date)
+        );
+    }
     
     /**
      * rate

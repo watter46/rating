@@ -2,16 +2,20 @@
 
 namespace App\Console;
 
-use App\Models\Fixture;
 use Carbon\Carbon;
 use DateTimeZone;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Cache;
 
+use App\Models\Fixture;
+
 
 class Kernel extends ConsoleKernel
-{    
+{
+    // Tournamentごとに処理を実行する時間を決める
+    private const FIXTURE_START_DELAY_MINUTES = 130;
+    
     /**
      * Define the application's command schedule.
      */
@@ -19,7 +23,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('fixtures:update')->withoutOverlapping()->runInBackground()->dailyAt('00:00');
         $schedule->command('players:update')->withoutOverlapping()->runInBackground()->dailyAt('00:00');
-
+        
         $schedule
             ->command('fixture:fetch')
             ->when(fn () => $this->shouldHandle())
@@ -40,10 +44,12 @@ class Kernel extends ConsoleKernel
             return false;
         }
 
-        $nextDate = Carbon::parse(Carbon::parse($this->cacheNextFixture()->date)->__toString(), 'UTC');
-        $now = Carbon::parse(now('UTC')->__toString());
-                 
-        return $nextDate->equalTo($now);
+        $nextDate = $this->cacheNextFixture()->date->addMinutes(self::FIXTURE_START_DELAY_MINUTES);
+        $handleTime = now('UTC');
+
+        $parsed = fn ($date) => Carbon::parse($date->__toString());
+
+        return $parsed($nextDate)->equalTo($parsed($handleTime));
     }
     
     /**

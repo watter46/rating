@@ -80,7 +80,7 @@ class FixtureQueryBuilder extends Builder
     public function next(): Builder
     {
         return $this
-            ->whereDate('date', '=', now('UTC'))
+            ->whereDate('date', '>=', now('UTC'))
             ->orderBy('date')
             ->whereNull('fixture');
     }

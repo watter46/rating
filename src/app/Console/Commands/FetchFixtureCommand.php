@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Fixture;
-use App\UseCases\Admin\Fixture\RegisterFixtureUseCase;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+
+use App\Models\Fixture;
+use App\UseCases\Admin\Fixture\RegisterFixtureUseCase;
+
 
 class FetchFixtureCommand extends Command
 {

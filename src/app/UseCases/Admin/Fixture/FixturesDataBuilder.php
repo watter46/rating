@@ -3,6 +3,7 @@
 namespace App\UseCases\Admin\Fixture;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 
 use App\Models\Fixture;
 use App\UseCases\Fixture\Format\FixtureList\Score;
@@ -33,7 +34,7 @@ final readonly class FixturesDataBuilder
                     'external_league_id'  => $fixture->league->id,
                     'score'               => $this->score->build($fixture),
                     'season'              => $fixture->league->season,
-                    'date'                => date('Y-m-d H:i', $fixture->fixture->timestamp),
+                    'date'                => Carbon::parse($fixture->fixture->timestamp),
                     'status'              => $fixture->fixture->status->long
                 ];
             });
