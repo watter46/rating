@@ -2,15 +2,12 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\TournamentType;
+use App\Models\TournamentType;
 use App\UseCases\Util\Season;
 use Illuminate\Database\Eloquent\Builder;
 
 class FixtureQueryBuilder extends Builder
 {
-    private const NOT_STARTED_MATCH_STATUS = 'Not Started';
-    private const FINISHED_MATCH_STATUS = 'Match Finished';
-
     /**
      * ツアーでソートする
      *
@@ -44,7 +41,7 @@ class FixtureQueryBuilder extends Builder
      */
     public function notStarted(): Builder
     {
-        return $this->where('status', self::NOT_STARTED_MATCH_STATUS);
+        return $this->where('status', FixtureStatusType::NotStarted->value);
     }
     
     /**
@@ -56,7 +53,7 @@ class FixtureQueryBuilder extends Builder
     {
         return $this
             ->select(['id', 'score', 'date', 'external_fixture_id', 'fixture'])
-            ->whereIn('status', [self::FINISHED_MATCH_STATUS, self::NOT_STARTED_MATCH_STATUS])
+            ->whereIn('status', [FixtureStatusType::MatchFinished->value, FixtureStatusType::NotStarted->value])
             ->currentSeason()
             ->where('date', '<=', now('UTC'))
             ->orderBy('date', 'desc');
@@ -69,7 +66,7 @@ class FixtureQueryBuilder extends Builder
      */
     public function finished(): Builder
     {
-        return $this->where('status', self::FINISHED_MATCH_STATUS);
+        return $this->where('status', FixtureStatusType::MatchFinished->value);
     }
     
     /**

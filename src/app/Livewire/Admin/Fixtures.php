@@ -10,7 +10,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Validate;
 
 use App\Http\Controllers\FixturesResource;
-use App\Http\Controllers\TournamentType;
+use App\Http\Controllers\TournamentStringType;
 use App\Livewire\MessageType;
 use App\UseCases\Admin\Fixture\FetchFixturesUseCase;
 use App\UseCases\Admin\Fixture\RegisterFixturesUseCase;
@@ -63,12 +63,10 @@ class Fixtures extends Component
      *
      * @return Paginator
      */
-    private function fetch()
+    private function fetch(): Paginator
     {
         try {
-            $tournament = TournamentType::ALL;
-
-            $fixtures = $this->fetchFixtures->execute($tournament);
+            $fixtures = $this->fetchFixtures->execute();
             
             return $this->resource->format($fixtures);
 

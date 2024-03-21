@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 use App\Events\FixtureRegistered;
-use App\Http\Controllers\TournamentType;
+use App\Models\TournamentType;
 use App\UseCases\Util\Season;
 use App\Models\FixtureQueryBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -98,6 +98,11 @@ class Fixture extends Model
         $specifiedDate = Carbon::parse($this->date);
 
         return $specifiedDate->diffInDays(now('UTC')) <= self::RATE_PERIOD_DAY;
+    }
+
+    public function fixtureStartDelayMinutes()
+    {
+        // dd(TournamentType::from($this->external_league_id));
     }
 
     public static function query(): FixtureQueryBuilder

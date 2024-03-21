@@ -43,7 +43,8 @@ class Kernel extends ConsoleKernel
         if (!$this->cacheNextFixture()) {
             return false;
         }
-
+        $this->cacheNextFixture()->fixtureStartDelayMinutes();
+        
         $nextDate = $this->cacheNextFixture()->date->addMinutes(self::FIXTURE_START_DELAY_MINUTES);
         $handleTime = now('UTC');
 
@@ -60,7 +61,7 @@ class Kernel extends ConsoleKernel
     private function cacheNextFixture(): ?Fixture
     {
         return Cache::rememberForever('nextFixture', function () {
-            return Fixture::select(['id', 'fixture', 'date'])->next()->first();
+            return Fixture::select(['id', 'external_league_id', 'fixture', 'date'])->next()->first();
         });
     }
 

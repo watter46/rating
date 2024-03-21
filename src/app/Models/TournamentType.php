@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
 use Exception;
 use Illuminate\Support\Collection;
+
 
 enum TournamentType: string
 {
@@ -13,9 +14,6 @@ enum TournamentType: string
     case LEAGUE_CUP = 'league_cup';
 
     private const ERROR_MESSAGE = ': Tournament is invalid';
-    private const PREMIER_LEAGUE_ID = 39;
-    private const FA_CUP_ID = 45;
-    private const LEAGUE_CUP_ID = 48;
         
     /**
      * Tournamentをバリデーションする
@@ -34,34 +32,25 @@ enum TournamentType: string
     }
     
     /**
-     * シーズンのTournamentのみ取得する
-     *
-     * @return array<int>
-     */
-    private function inSeasonTournament(): array
-    {
-        return [
-            self::PREMIER_LEAGUE_ID,
-            self::FA_CUP_ID,
-            self::LEAGUE_CUP_ID
-        ];
-    }
-    
-    /**
      * リーグIDに変換する
      *
      * @return array<int>
-     */
+     */ 
     public function toIds(): array
     {
         return match($this) {
-            self::ALL => $this->inSeasonTournament(),
-            self::PREMIER_LEAGUE => [self::PREMIER_LEAGUE_ID],
-            self::FA_CUP => [self::FA_CUP_ID],
-            self::LEAGUE_CUP => [self::LEAGUE_CUP_ID]
+            self::ALL            => TournamentIdType::inSeasonTournaments(),
+            self::PREMIER_LEAGUE => [TournamentIdType::PREMIER_LEAGUE_ID->value],
+            self::FA_CUP         => [TournamentIdType::FA_CUP_ID->value],
+            self::LEAGUE_CUP     => [TournamentIdType::LEAGUE_CUP_ID->value]
         };
     }
-
+    
+    /**
+     * 表示用に変換する
+     *
+     * @return Collection
+     */
     public static function toText(): Collection
     {
         return collect(self::cases())
