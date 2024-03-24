@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\FetchFixture;
 use Carbon\Carbon;
 use DateTimeZone;
 use Illuminate\Console\Scheduling\Schedule;
@@ -9,7 +10,8 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Cache;
 
 use App\Models\Fixture;
-
+use App\Models\Stub;
+use Illuminate\Support\Facades\Redis;
 
 class Kernel extends ConsoleKernel
 {
@@ -21,16 +23,20 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('fixtures:update')->withoutOverlapping()->runInBackground()->dailyAt('00:00');
-        $schedule->command('players:update')->withoutOverlapping()->runInBackground()->dailyAt('00:00');
-        
+        $schedule->command('fixtures:update')
+            ->withoutOverlapping()
+            ->runInBackground()
+            ->dailyAt('00:00');
+
+        $schedule->command('players:update')
+            ->withoutOverlapping()
+            ->runInBackground()
+            ->dailyAt('00:00');
+
         $schedule
-            ->command('fixture:fetch')
+            ->job(new FetchFixture)
             ->when(fn () => $this->shouldHandle())
-            ->everyMinute()
-            ->after(function () {
-                Cache::forget('nextFixture');
-            }); 
+            ->everyMinute();
     }
     
     /**
@@ -40,12 +46,13 @@ class Kernel extends ConsoleKernel
      */
     private function shouldHandle(): bool
     {
-        if (!$this->cacheNextFixture()) {
+        $cache = $this->cacheNextFixture();
+        
+        if (!$cache) {
             return false;
         }
-        $this->cacheNextFixture()->fixtureStartDelayMinutes();
         
-        $nextDate = $this->cacheNextFixture()->date->addMinutes(self::FIXTURE_START_DELAY_MINUTES);
+        $nextDate = $cache->date->addMinutes(self::FIXTURE_START_DELAY_MINUTES);
         $handleTime = now('UTC');
 
         $parsed = fn ($date) => Carbon::parse($date->__toString());
@@ -60,9 +67,13 @@ class Kernel extends ConsoleKernel
      */
     private function cacheNextFixture(): ?Fixture
     {
-        return Cache::rememberForever('nextFixture', function () {
-            return Fixture::select(['id', 'external_league_id', 'fixture', 'date'])->next()->first();
-        });
+        return Cache::store('redis')
+            ->rememberForever('nextFixture', function () {
+                return Fixture::query()
+                    ->select(['id', 'date'])
+                    ->next()
+                    ->first();
+            });
     }
 
     /**

@@ -22,7 +22,7 @@ final readonly class RegisterFixtureUseCase
         //
     }
 
-    public function execute(string $fixtureId): void
+    public function execute(string $fixtureId): EqFixture
     {
         try {
             /** @var EqFixture $model */
@@ -40,11 +40,12 @@ final readonly class RegisterFixtureUseCase
             
             $this->fixture->registered($fixtureData);
 
+            return $fixture;
+
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Fixture Not Exists.');
  
         } catch (Exception $e) {
-            dd($e);
             throw $e;
         }
     }

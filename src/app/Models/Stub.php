@@ -28,10 +28,19 @@ class Stub extends Model
         );
     }
 
+    public function isValid()
+    {
+        return !is_null($this->fixture);
+    }
+
     public function scopeNext($query)
     {
         $query
-            ->whereDate('date', '>=', now('UTC'))
+            ->whereBetween('date', [
+                now('UTC')->yesterday()->toDateString(),
+                now('UTC')->tomorrow()->toDateString()
+            ])
+            // ->whereDate('date', '>=', now('UTC'))
             ->orderBy('date')
             ->whereNull('fixture');
     }

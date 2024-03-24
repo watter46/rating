@@ -6,6 +6,7 @@ use App\Models\Stub;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class StubSeeder extends Seeder
 {
@@ -14,11 +15,12 @@ class StubSeeder extends Seeder
      */
     public function run(): void
     {
-        Cache::forget('nextFixture');
+        Redis::flushdb();
+        Cache::flush();
 
         foreach(range(1,5) as $i) {
             Stub::create([
-                'date' => now('UTC')->subMinutes(130)->addMinutes($i)->second(0),
+                'date' => now('UTC')->subMinutes(130)->addMinutes($i)->addMinute()->second(0),
                 'fixture' => null
             ]);
         }

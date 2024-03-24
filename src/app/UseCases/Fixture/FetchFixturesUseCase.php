@@ -13,7 +13,7 @@ final readonly class FetchFixturesUseCase
 {
     public function execute(TournamentType $tournament): Paginator
     {
-        try {            
+        try {
             /** @var Paginator $fixtures */
             $fixtures = Fixture::query()
                 ->with('players:fixture_id')
