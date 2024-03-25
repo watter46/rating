@@ -18,12 +18,14 @@ RUN apt-get update \
     libjpeg62-turbo-dev \
     libpng-dev \
   && apt-get clean \
+  && pecl install redis \
+  && docker-php-ext-enable redis \
   && docker-php-ext-install \
     intl \
     pdo_mysql \
     zip bcmath \
+    -j$(nproc) gd \
   && docker-php-ext-configure gd --with-freetype --with-jpeg \
-  && docker-php-ext-install -j$(nproc) gd \
   && rm -rf /var/lib/apt/lists/*
 
 

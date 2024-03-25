@@ -10,7 +10,7 @@ use Livewire\Attributes\Url;
 use Illuminate\Pagination\Paginator;
 
 use App\Http\Controllers\FixturesResource;
-use App\Http\Controllers\TournamentType;
+use App\Models\TournamentType;
 use App\Livewire\MessageType;
 use App\UseCases\Fixture\FetchFixturesUseCase;
 
@@ -58,7 +58,7 @@ class Fixtures extends Component
      *
      * @return Paginator
      */
-    private function fetch()
+    private function fetch(): Paginator
     {
         $tournament = TournamentType::fromOrFail($this->sort);
 

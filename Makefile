@@ -48,6 +48,8 @@ log-app-watch:
 	docker compose logs --follow app
 log-db:
 	docker compose logs db
+log-redis:
+	docker compose logs redis
 log-db-watch:
 	docker compose logs --follow db
 web:
@@ -91,6 +93,8 @@ db:
 	docker compose exec db bash
 db-test:
 	docker compose exec db-testing bash
+redis:
+	docker compose exec redis ash
 sql:
 	docker compose exec db bash -c 'mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE'
 sql-test:
@@ -99,5 +103,11 @@ watch:
 	docker compose exec app npm run watch
 dev:
 	docker compose exec app npm run dev
+work:
+	docker compose exec app php artisan schedule:work
+run:
+	docker compose exec app php artisan schedule:run
+queue:
+	docker compose exec app php artisan queue:listen
 stan:
 	docker compose exec app ./vendor/bin/phpstan analyse

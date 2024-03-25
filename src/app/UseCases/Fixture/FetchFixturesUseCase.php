@@ -6,14 +6,14 @@ use Exception;
 use Illuminate\Pagination\Paginator;
 
 use App\Models\Fixture;
-use App\Http\Controllers\TournamentType;
+use App\Models\TournamentType;
 
 
 final readonly class FetchFixturesUseCase
 {
     public function execute(TournamentType $tournament): Paginator
     {
-        try {            
+        try {
             /** @var Paginator $fixtures */
             $fixtures = Fixture::query()
                 ->with('players:fixture_id')

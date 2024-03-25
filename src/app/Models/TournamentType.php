@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
 use Exception;
 use Illuminate\Support\Collection;
+
 
 enum TournamentType: string
 {
@@ -33,28 +34,23 @@ enum TournamentType: string
     /**
      * リーグIDに変換する
      *
-     * @return int
-     */
-    public function toId(): ?int
+     * @return array<int>
+     */ 
+    public function toIds(): array
     {
         return match($this) {
-            self::ALL => null,
-            self::PREMIER_LEAGUE => 39,
-            self::FA_CUP => 45,
-            self::LEAGUE_CUP => 48
+            self::ALL            => TournamentIdType::inSeasonTournaments(),
+            self::PREMIER_LEAGUE => [TournamentIdType::PREMIER_LEAGUE_ID->value],
+            self::FA_CUP         => [TournamentIdType::FA_CUP_ID->value],
+            self::LEAGUE_CUP     => [TournamentIdType::LEAGUE_CUP_ID->value]
         };
     }
     
     /**
-     * すべてのツアーを取得するか判定する
+     * 表示用に変換する
      *
-     * @return bool
+     * @return Collection
      */
-    public function isAll(): bool
-    {
-        return $this === self::ALL;
-    }
-
     public static function toText(): Collection
     {
         return collect(self::cases())
