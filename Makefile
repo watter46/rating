@@ -80,6 +80,11 @@ optimize:
 	docker compose exec app php artisan optimize
 optimize-clear:
 	docker compose exec app php artisan optimize:clear
+clear:
+	docker compose exec app php artisan cache:clear
+	docker compose exec app php artisan config:clear
+	docker compose exec app php artisan route:clear
+	docker compose exec app php artisan view:cache
 cache:
 	docker compose exec app composer dump-autoload -o
 	@make optimize
