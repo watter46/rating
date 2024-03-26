@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Fixture;
 use App\UseCases\Api\ApiFootball\FixturesFetcher;
 use App\UseCases\Admin\Fixture\FixturesDataBuilder;
-use App\UseCases\Fixtures\Fixtures;
+use App\UseCases\Admin\Fixture\FixturesData\Fixtures;
+
 
 final readonly class RegisterFixturesUseCase
 {    
@@ -21,7 +22,7 @@ final readonly class RegisterFixturesUseCase
         //
     }
 
-    public function execute()
+    public function execute(): void
     {
         try {
             $fixturesData = $this->fixturesFetcher->fetchAndUpdateFile();

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixture;
+namespace App\UseCases\Admin\Fixture\FixtureData;
 
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\UseCases\Fixture\Register\FilterInvalidPlayerIds;
+use App\UseCases\Admin\Fixture\FixtureData\FilterInvalidPlayerIds;
 use Illuminate\Support\Collection;
 
 

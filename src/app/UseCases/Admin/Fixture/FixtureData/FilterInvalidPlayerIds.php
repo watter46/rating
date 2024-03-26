@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixture\Register;
+namespace App\UseCases\Admin\Fixture\FixtureData;
 
 use Illuminate\Support\Collection;
 
