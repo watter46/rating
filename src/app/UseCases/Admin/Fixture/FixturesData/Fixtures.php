@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixtures;
+namespace App\UseCases\Admin\Fixture\FixturesData;
 
 use Illuminate\Support\Collection;
 
 use App\Events\FixturesRegistered;
-use App\Http\Controllers\Util\TeamImageFile;
-use App\UseCases\Fixtures\FixturesDataProcessor;
+use App\UseCases\Admin\Fixture\FixturesData\FixturesDataProcessor;
 
 
 readonly class Fixtures
