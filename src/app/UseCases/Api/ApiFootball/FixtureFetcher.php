@@ -2,9 +2,9 @@
 
 namespace App\UseCases\Api\ApiFootball;
 
-use Illuminate\Support\Collection;
-use GuzzleHttp\Client;
 use Exception;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 
 use App\UseCases\Util\FixtureData;
 
@@ -24,24 +24,19 @@ readonly class FixtureFetcher
      */
     public function fetch(int $fixtureId): Collection
     {
-        try {            
-            $client = new Client();
-
-            $response = $client->request('GET', 'https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-                'query' => [
-                    'id' => $fixtureId
-                ],
-                'delay' => 500,
-                'headers' => [
-                    'X-RapidAPI-Host' => config('api-football.api-host'),
-                    'X-RapidAPI-Key'  => config('api-football.api-key')
-                ]
+        try {
+            $response = Http::withHeaders([
+                'X-RapidAPI-Host' => config('api-football.api-host'),
+                'X-RapidAPI-Key'  => config('api-football.api-key')
+            ])
+            ->retry(1, 500)
+            ->get('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
+                'id' => $fixtureId 
             ]);
 
-            $json = $response->getBody()->getContents();
+            return $this->parse($response->throw()->body());
 
-            return $this->parse($json);
-
+            
           } catch (Exception $e) {
             throw $e;
         }

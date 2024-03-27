@@ -7,12 +7,10 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
 
 use App\Http\Controllers\Util\PlayerOfTeamFile;
-
+use Illuminate\Support\Facades\Http;
 
 class PlayersOfTeamFetcher
 {
-    private const CHELSEA_ID = 38;
-
     public function __construct(private PlayerOfTeamFile $file)
     {
         //
@@ -20,23 +18,17 @@ class PlayersOfTeamFetcher
 
     public function fetch(): Collection
     {
-        try {            
-            $client = new Client();
-
-            $response = $client->request('GET', 'https://sofascores.p.rapidapi.com/v1/teams/players', [
-                'query' => [
-                    'team_id' => (string) self::CHELSEA_ID
-                ],
-                'delay' => 500,
-                'headers' => [
-                    'X-RapidAPI-Host' => config('sofa-score.api-host'),
-                    'X-RapidAPI-Key'  => config('sofa-score.api-key')
-                ]
+        try {           
+            $response = Http::withHeaders([
+                'X-RapidAPI-Host' => config('sofa-score.api-host'),
+                'X-RapidAPI-Key'  => config('sofa-score.api-key')
+            ])
+            ->retry(1, 500)
+            ->get('https://sofascores.p.rapidapi.com/v1/teams/players', [
+                'team_id' => (string) config('sofa-score.chelsea-id')
             ]);
 
-            $json = $response->getBody()->getContents();
-
-            return $this->parse($json);
+            return $this->parse($response->throw()->body());
 
           } catch (Exception $e) {
             throw $e;

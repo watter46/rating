@@ -2,12 +2,11 @@
 
 namespace App\UseCases\Api\SofaScore;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Exception;
 
 use App\Http\Controllers\Util\PlayerImageFile;
-
+use Illuminate\Support\Facades\Http;
 
 readonly class PlayerImageFetcher
 {
@@ -19,20 +18,16 @@ readonly class PlayerImageFetcher
     public function fetch(int $playerId): string
     {
         try {            
-            $client = new Client();
-
-            $response = $client->request('GET', 'https://sofascores.p.rapidapi.com/v1/players/photo', [
-                'query' => [
-                    'player_id' => (string) $playerId
-                ],
-                'delay' => 500,
-                'headers' => [
-                    'X-RapidAPI-Host' => config('sofa-score.api-host'),
-                    'X-RapidAPI-Key'  => config('sofa-score.api-key')
-                ]
+            $response = Http::withHeaders([
+                'X-RapidAPI-Host' => config('sofa-score.api-host'),
+                'X-RapidAPI-Key'  => config('sofa-score.api-key')
+            ])
+            ->retry(1, 500)
+            ->get('https://sofascores.p.rapidapi.com/v1/players/photo', [
+                'player_id' => (string) $playerId
             ]);
 
-            return $response->getBody()->getContents();
+            return $response->throw()->body();
 
         } catch (ClientException $e) {
             throw $e;

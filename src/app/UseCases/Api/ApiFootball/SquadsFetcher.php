@@ -3,16 +3,14 @@
 namespace App\UseCases\Api\ApiFootball;
 
 use Exception;
-use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\Util\SquadsFile;
 
 
 readonly class SquadsFetcher
 {
-    private const CHELSEA_TEAM_ID = 49;
-
     public function __construct(private SquadsFile $file)
     {
         //
@@ -20,23 +18,17 @@ readonly class SquadsFetcher
 
     public function fetch(): Collection
     {
-        try {            
-            $client = new Client();
-
-            $response = $client->request('GET', 'https://api-football-v1.p.rapidapi.com/v3/players/squads', [
-                'query' => [
-                    'team' => self::CHELSEA_TEAM_ID
-                ],
-                'delay' => 500,
-                'headers' => [
-                    'X-RapidAPI-Host' => config('api-football.api-host'),
-                    'X-RapidAPI-Key'  => config('api-football.api-key')
-                ]
+        try {
+            $response = Http::withHeaders([
+                'X-RapidAPI-Host' => config('api-football.api-host'),
+                'X-RapidAPI-Key'  => config('api-football.api-key')
+            ])
+            ->retry(1, 500)
+            ->get('https://api-football-v1.p.rapidapi.com/v3/players/squads', [
+                'team' => config('api-football.chelsea-id')
             ]);
 
-            $json = $response->getBody()->getContents();
-
-            return $this->parse($json);
+            return $this->parse($response->throw()->body());
 
         } catch (Exception $e) {
             throw $e;
