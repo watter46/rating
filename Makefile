@@ -74,8 +74,9 @@ rollback-test:
 tinker:
 	docker compose exec app php artisan tinker
 test:
-	docker compose exec app php artisan config:clear
-	docker compose exec app php artisan test tests/Feature/Livewire/Utils
+	docker compose exec app php artisan test tests/Feature
+unit:
+	docker compose exec app php artisan test tests/Unit
 optimize:
 	docker compose exec app php artisan optimize
 optimize-clear:

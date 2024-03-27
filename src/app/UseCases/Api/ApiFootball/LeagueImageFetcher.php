@@ -3,7 +3,7 @@
 namespace App\UseCases\Api\ApiFootball;
 
 use Exception;
-use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\Util\LeagueImageFile;
 
@@ -18,17 +18,14 @@ readonly class LeagueImageFetcher
     public function fetch(int $leagueId): string
     {
         try {
-            $client = new Client();
+            $response = Http::withHeaders([
+                'X-RapidAPI-Host' => config('api-football.api-host'),
+                'X-RapidAPI-Key'  => config('api-football.api-key')
+            ])
+            ->retry(1, 500)
+            ->get("https://media-4.api-sports.io/football/leagues/$leagueId.png");
 
-            $response = $client->request('GET', "https://media-4.api-sports.io/football/leagues/$leagueId.png", [
-                'delay' => 500,
-                'headers' => [
-                    'X-RapidAPI-Host' => config('api-football.api-host'),
-                    'X-RapidAPI-Key'  => config('api-football.api-key')
-                ]
-            ]);
-
-            return $response->getBody()->getContents();
+            return $response->throw()->body();
 
         } catch (Exception $e) {
             throw $e;

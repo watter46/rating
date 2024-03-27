@@ -2,10 +2,11 @@
 
 namespace App\UseCases\Api\SofaScore;
 
-use App\Http\Controllers\Util\PlayerFile;
-use Illuminate\Support\Collection;
-use GuzzleHttp\Client;
 use Exception;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
+
+use App\Http\Controllers\Util\PlayerFile;
 
 
 readonly class PlayerFetcher
@@ -15,26 +16,20 @@ readonly class PlayerFetcher
         //
     }
 
-    public function fetch(string $name): Collection
+    public function fetch(string $playerName): Collection
     {
-        try {            
-            $client = new Client();
-
-            $response = $client->request('GET', 'https://sofascores.p.rapidapi.com/v1/search/multi', [
-                'query' => [
-                    'query' => $name,
-                    'group' => 'players'
-                ],
-                'delay' => 500,
-                'headers' => [
-                    'X-RapidAPI-Host' => config('sofa-score.api-host'),
-                    'X-RapidAPI-Key'  => config('sofa-score.api-key')
-                ]
+        try {
+            $response = Http::withHeaders([
+                'X-RapidAPI-Host' => config('sofa-score.api-host'),
+                'X-RapidAPI-Key'  => config('sofa-score.api-key')
+            ])
+            ->retry(1, 500)
+            ->get('https://sofascores.p.rapidapi.com/v1/search/multi', [
+                'query' => $playerName,
+                'group' => 'players'
             ]);
 
-            $json = $response->getBody()->getContents();
-
-            return $this->parse($json);
+            return $this->parse($response->throw()->body());
 
           } catch (Exception $e) {
             throw $e;
