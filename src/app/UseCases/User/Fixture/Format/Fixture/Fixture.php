@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixture\Format\Fixture;
+namespace App\UseCases\User\Fixture\Format\Fixture;
 
-use Exception;
 use Illuminate\Support\Collection;
 
 

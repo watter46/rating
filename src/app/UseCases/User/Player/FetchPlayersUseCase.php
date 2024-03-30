@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player;
+namespace App\UseCases\User\Player;
 
 use Exception;
 use Illuminate\Support\Collection;

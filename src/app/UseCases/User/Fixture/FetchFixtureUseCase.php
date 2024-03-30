@@ -1,29 +1,25 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Fixture;
+namespace App\UseCases\User\Fixture;
 
 use Exception;
 
 use App\Models\Fixture;
 use App\Models\PlayerInfo;
-use App\UseCases\Player\DecideManOfTheMatchUseCase;
 
 
-final readonly class FetchLatestUseCase
+final readonly class FetchFixtureUseCase
 {
-    public function __construct(private DecideManOfTheMatchUseCase $decideManOfTheMatch)
+    public function __construct()
     {
         //
     }
-
-    public function execute()
+    
+    public function execute(string $fixtureId): Fixture
     {
         try {
-            /** @var Fixture $fixture */  
-            $fixture = Fixture::query()
-                ->past()
-                ->latest()
-                ->first();
+            /** @var Fixture $fixture */
+            $fixture = Fixture::find($fixtureId);
             
             /** @var PlayerInfo $playerInfos */  
             $playerInfos = PlayerInfo::query()
@@ -34,7 +30,7 @@ final readonly class FetchLatestUseCase
             $fixture['playerInfos'] = $playerInfos;
             
             return $fixture;
-
+                                    
         } catch (Exception $e) {
             throw $e;
         }

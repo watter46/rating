@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Player;
+namespace App\UseCases\User\Player;
 
 use Exception;
 use Illuminate\Support\Collection;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Fixture;
 use App\Models\Player;
-use App\UseCases\Player\RateAllPlayerBuilder;
+use App\UseCases\User\Player\RateAllPlayerBuilder;
 
 
 final readonly class RateAllPlayersUseCase
