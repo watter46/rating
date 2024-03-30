@@ -20,4 +20,9 @@ readonly class Fixtures
         
         FixturesRegistered::dispatch($validate);
     }
+
+    public function builder()
+    {
+        
+    }
 }

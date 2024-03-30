@@ -3,21 +3,18 @@
 namespace App\UseCases\Admin\Fixture;
 
 use Exception;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Fixture;
-use App\UseCases\Api\ApiFootball\FixturesFetcher;
-use App\UseCases\Admin\Fixture\FixturesDataBuilder;
+use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\Fixture\FixturesData\Fixtures;
 
 
 final readonly class RegisterFixturesUseCase
 {    
     public function __construct(
-        private FixturesDataBuilder $builder,
-        private FixturesFetcher $fixturesFetcher,
-        private Fixtures $fixtures)
+        private Fixtures $fixtures,
+        private ApiFootballRepositoryInterface $apiFootballRepository)
     {
         //
     }
@@ -25,24 +22,16 @@ final readonly class RegisterFixturesUseCase
     public function execute(): void
     {
         try {
-            $fixturesData = $this->fixturesFetcher->fetchAndUpdateFile();
-            
-            /** @var Collection<int, Fixture> */
-            $fixtureList = Fixture::query()
-                ->select(['id', 'external_fixture_id'])
-                ->currentSeason()
-                ->get();
-
-            $data = $this->builder->build($fixturesData, $fixtureList);
+            $data = $this->apiFootballRepository->fetchFixtures();
             
             DB::transaction(function () use ($data) {
                 $unique = ['id'];
                 $updateColumns = ['date', 'status', 'score'];
 
-                Fixture::upsert($data, $unique, $updateColumns);
+                Fixture::upsert($data->get('formatted'), $unique, $updateColumns);
             });
 
-            $this->fixtures->registered($fixturesData);
+            $this->fixtures->registered($data->get('original'));
 
         } catch (Exception $e) {
             throw $e;

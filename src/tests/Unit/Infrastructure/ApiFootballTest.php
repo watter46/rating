@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Api\ApiFootball;
+namespace Tests\Unit\Infrastructure;
 
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
+
 
 class ApiFootballTest extends TestCase
 {
