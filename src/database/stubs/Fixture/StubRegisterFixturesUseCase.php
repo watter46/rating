@@ -3,35 +3,35 @@
 namespace Database\Stubs\Fixture;
 
 use App\Models\Fixture;
+use App\UseCases\Admin\ApiFootballRepositoryInterface;
+use App\UseCases\Admin\Fixture\FixturesData\Fixtures;
 use App\UseCases\Admin\Fixture\FixturesDataBuilder;
 use App\UseCases\Api\ApiFootball\FixturesFetcher;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
 
 class StubRegisterFixturesUseCase
 {
     public function __construct(
-        private FixturesDataBuilder $builder,
-        private FixturesFetcher $fetcher)
+        private Fixtures $fixtures,
+        private ApiFootballRepositoryInterface $apiFootballRepository)
     {
         //
     }
 
-    public function execute()
+    public function execute(): void
     {
-        $fixturesData = $this->fetcher->getFile();
-        
-        /** @var Collection<int, Fixture> */
-        $fixtureList = Fixture::query()
-            ->select(['id', 'external_fixture_id'])
-            ->currentSeason()
-            ->get();
+        try {
+            $data = $this->apiFootballRepository->fetchFixtures();
+            
+            $unique = ['id'];
+            $updateColumns = ['date', 'status', 'score'];
 
-        $data = $this->builder->build($fixturesData, $fixtureList);
-        
-        $unique = ['id'];
-        $updateColumns = ['date', 'status', 'score'];
+            Fixture::upsert($data->get('formatted'), $unique, $updateColumns);
 
-        Fixture::upsert($data, $unique, $updateColumns);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }

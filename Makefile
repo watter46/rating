@@ -77,6 +77,9 @@ test:
 	docker compose exec app php artisan test tests/Feature
 unit:
 	docker compose exec app php artisan test tests/Unit
+test-clear:
+	docker compose exec app php artisan config:clear
+	docker compose exec app php artisan key:generate --env=testing
 optimize:
 	docker compose exec app php artisan optimize
 optimize-clear:

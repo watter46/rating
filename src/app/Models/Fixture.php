@@ -77,20 +77,6 @@ class Fixture extends Model
     }
     
     /**
-     * 試合で使用するデータを保存するイベントを発行する
-     *
-     */
-    public function registered()
-    {
-        FixtureRegistered::dispatch($this);
-    }
-
-    public function isValidTest()
-    {
-        return false;
-    }
-    
-    /**
      * Fixtureのデータが有効かどうか
      *
      * @return bool
@@ -123,7 +109,7 @@ class Fixture extends Model
     }
     
     /**
-     * players
+     * 試合に出場した選手を紐づける
      *
      * @return HasMany
      */
