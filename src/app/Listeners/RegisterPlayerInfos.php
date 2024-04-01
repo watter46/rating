@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\FixtureRegistered;
-use App\UseCases\Player\RegisterPlayerUseCase;
+use App\UseCases\User\Player\RegisterPlayerUseCase;
 
 
 class RegisterPlayerInfos
@@ -21,7 +21,7 @@ class RegisterPlayerInfos
      */
     public function handle(FixtureRegistered $event): void
     {
-        $invalidPlayerIds = $event->processor->getInvalidPlayers();
+        $invalidPlayerIds = $event->fixtureData->validated()->getInvalidPlayers();
         
         if ($invalidPlayerIds->isEmpty()) return;
 

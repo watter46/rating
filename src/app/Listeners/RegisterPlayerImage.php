@@ -2,18 +2,20 @@
 
 namespace App\Listeners;
 
+use GuzzleHttp\Exception\ClientException;
+
 use App\Events\FixtureRegistered;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Models\PlayerInfo;
-use App\UseCases\Api\SofaScore\PlayerImageFetcher;
-use GuzzleHttp\Exception\ClientException;
+use App\UseCases\Admin\SofaScoreRepositoryInterface;
+
 
 class RegisterPlayerImage
 {
     /**
      * Create the event listener.
      */
-    public function __construct(private PlayerImageFile $file, private PlayerImageFetcher $fetcher)
+    public function __construct(private PlayerImageFile $file, private SofaScoreRepositoryInterface $repository)
     {
         //
     }
@@ -23,7 +25,7 @@ class RegisterPlayerImage
      */
     public function handle(FixtureRegistered $event): void
     {
-        $invalidPlayerImageIds = $event->processor->getInvalidPlayerImageIds();
+        $invalidPlayerImageIds = $event->fixtureData->validated()->getInvalidPlayerImageIds();
         
         if ($invalidPlayerImageIds->isEmpty()) return;
 
@@ -38,7 +40,7 @@ class RegisterPlayerImage
                     continue;
                 }
     
-                $playerImage = $this->fetcher->fetch($player->sofa_player_id);
+                $playerImage = $this->repository->fetchPlayerImage($player->sofa_player_id);
     
                 $this->file->write($player->foot_player_id, $playerImage);
 

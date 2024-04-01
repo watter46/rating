@@ -4,6 +4,7 @@ namespace App\Infrastructure\ApiFootball;
 
 use App\Models\Fixture;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
+use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
 use App\UseCases\Admin\Fixture\FixturesData\Formatter\FixtureDataFormatter;
 use App\UseCases\Admin\Fixture\FixturesData\FixturesDataBuilder;
 use App\UseCases\Util\Season;
@@ -14,7 +15,7 @@ class ApiFootballRepository implements ApiFootballRepositoryInterface
 {
     public function __construct(private FixturesDataBuilder $fixturesDataBuilder)
     {
-        
+        //
     }
 
     private function httpClient(string $url, ?array $queryParams = null): string
@@ -38,16 +39,17 @@ class ApiFootballRepository implements ApiFootballRepositoryInterface
 
         $data = collect(json_decode($json)->response);
 
-        return $this->fixturesDataBuilder->build(new FixtureDataFormatter($data));
+        // return $this->fixturesDataBuilder->build(new FixtureDataFormatter($data));
     }
 
-    public function fetchFixture(int $fixtureId): Collection
+    public function fetchFixture(int $fixtureId): FixtureData
     {
+        dd($fixtureId);
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
             'id' => $fixtureId
         ]);
 
-        return collect(json_decode($json)->response[0]);
+        return FixtureData::create(collect(json_decode($json)->response[0]));
     }
 
     public function fetchSquads(): Collection

@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\FixtureRegistered;
 use App\Events\FixturesRegistered;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\UseCases\Api\ApiFootball\TeamImageFetcher;
+use App\UseCases\Admin\ApiFootballRepositoryInterface;
 
 
 class RegisterTeamImages
@@ -13,7 +13,7 @@ class RegisterTeamImages
     /**
      * Create the event listener.
      */
-    public function __construct(private TeamImageFile $file, private TeamImageFetcher $teamImage)
+    public function __construct(private TeamImageFile $file, private ApiFootballRepositoryInterface $repository)
     {
         //
     }
@@ -23,7 +23,7 @@ class RegisterTeamImages
      */
     public function handle(FixturesRegistered|FixtureRegistered $event): void
     {
-        $invalidTeamIds = $event->processor->getInvalidTeamIds();
+        $invalidTeamIds = $event->fixtureData->validated()->getInvalidTeamIds();
 
         if ($invalidTeamIds->isEmpty()) return;
         
@@ -32,7 +32,7 @@ class RegisterTeamImages
                 continue;
             }
 
-            $teamImage = $this->teamImage->fetch($teamId);
+            $teamImage = $this->repository->fetchTeamImage($teamId);
 
             $this->file->write($teamId, $teamImage);
         }

@@ -6,39 +6,32 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use App\Models\Fixture as EqFixture;
-use App\UseCases\Api\ApiFootball\FixtureFetcher;
-use App\UseCases\Admin\Fixture\FixtureData\Fixture;
-use App\UseCases\Util\FixtureData;
+use App\Models\Fixture;
+use App\UseCases\Admin\ApiFootballRepositoryInterface;
 
 
 final readonly class RegisterFixtureUseCase
 {
-    public function __construct(
-        private FixtureFetcher $fetcher,
-        private FixtureData $fixtureData,
-        private Fixture $fixture)
+    public function __construct(private ApiFootballRepositoryInterface $apiFootballRepository)
     {
         //
     }
 
-    public function execute(string $fixtureId): EqFixture
+    public function execute(string $fixtureId): Fixture
     {
         try {
-            /** @var EqFixture $model */
-            $model = EqFixture::findOrFail($fixtureId);
+            /** @var Fixture $fixture */
+            $fixture = Fixture::findOrFail($fixtureId);
 
-            $fixtureData = $this->fetcher->fetch($model->external_fixture_id);
+            $data = $this->apiFootballRepository->fetchFixture($fixture->external_fixture_id);
 
-            $data = $this->fixtureData->build($fixtureData);
-                        
-            $fixture = $model->updateFixture($data);
+            $fixture->updateFixture($data);
             
             DB::transaction(function () use ($fixture) {
                 $fixture->save();
             });
             
-            $this->fixture->registered($fixtureData);
+            $fixture->registered($data);
 
             return $fixture;
 
