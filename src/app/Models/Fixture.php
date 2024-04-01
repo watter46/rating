@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\FixtureRegistered;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,8 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
-use App\Events\FixtureRegistered;
 use App\Models\FixtureQueryBuilder;
+use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
+use App\UseCases\Admin\Fixture\FixtureData\FixtureDataProcessor;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
@@ -64,14 +66,30 @@ class Fixture extends Model
     }
     
     /**
-     * rate
+     * Fixtureで使用するデータがすべて存在するか確認して
+     * 存在しない場合、不足しているデータを取得するイベントを発行する
      *
-     * @param  Collection $fixture
+     * @param  FixtureData $fixtureData
+     * @return void
+     */
+    public function registered(FixtureData $fixtureData): void
+    {
+        if ($fixtureData->checkRequiredData()) {
+            return;
+        }
+        
+        FixtureRegistered::dispatch($fixtureData);
+    }
+    
+    /**
+     * Fixtureを更新する
+     *
+     * @param  FixtureData $fixtureData
      * @return self
      */
-    public function updateFixture(Collection $fixture): self
+    public function updateFixture(FixtureData $fixtureData): self
     {
-        $this->fixture = $fixture;
+        $this->fixture = $fixtureData->build();
 
         return $this;
     }

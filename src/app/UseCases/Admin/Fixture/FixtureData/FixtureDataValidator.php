@@ -2,14 +2,15 @@
 
 namespace App\UseCases\Admin\Fixture\FixtureData;
 
+use Illuminate\Support\Collection;
+
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\UseCases\Admin\Fixture\FixtureData\FilterInvalidPlayerIds;
-use Illuminate\Support\Collection;
 
 
-readonly class FixtureDataProcessor
+readonly class FixtureDataValidator
 {
     private Collection $invalidTeamIds;
     private Collection $invalidLeagueIds;
@@ -111,12 +112,12 @@ readonly class FixtureDataProcessor
      *
      * @return bool
      */
-    public function shouldRegister(): bool
+    public function checkRequiredData(): bool
     {
-        return $this->getInvalidTeamIds()->isNotEmpty()
-            || $this->getInvalidLeagueIds()->isNotEmpty()
-            || $this->getPlayedPlayers()->isNotEmpty()
-            || $this->getInvalidPlayerImageIds()->isNotEmpty();
+        return $this->getInvalidTeamIds()->empty()
+            || $this->getInvalidLeagueIds()->empty()
+            || $this->getPlayedPlayers()->empty()
+            || $this->getInvalidPlayerImageIds()->empty();
     }
     
     /**
@@ -131,7 +132,7 @@ readonly class FixtureDataProcessor
     }
     
     /**
-     * プレーした選手のみ取得する
+     * 出場した選手のみ取得する
      *
      * @return Collection<int>
      */
