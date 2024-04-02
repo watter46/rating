@@ -7,13 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Fixture;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
-use App\UseCases\Admin\Fixture\FixturesData\Fixtures;
 
 
 final readonly class RegisterFixturesUseCase
 {    
     public function __construct(
-        private Fixtures $fixtures,
+        private Fixture $fixture,
         private ApiFootballRepositoryInterface $apiFootballRepository)
     {
         //
@@ -22,16 +21,16 @@ final readonly class RegisterFixturesUseCase
     public function execute(): void
     {
         try {
-            $data = $this->apiFootballRepository->fetchFixtures();
-            
-            DB::transaction(function () use ($data) {
+            $fixturesData = $this->apiFootballRepository->fetchFixtures();
+
+            DB::transaction(function () use ($fixturesData) {
                 $unique = ['id'];
                 $updateColumns = ['date', 'status', 'score'];
 
-                Fixture::upsert($data->get('formatted'), $unique, $updateColumns);
+                Fixture::upsert($fixturesData->build()->toArray(), $unique, $updateColumns);
             });
 
-            $this->fixtures->registered($data->get('original'));
+            $this->fixture->fixturesRegistered($fixturesData);
 
         } catch (Exception $e) {
             throw $e;

@@ -3,31 +3,24 @@
 namespace Database\Stubs\Fixture;
 
 use App\Models\Fixture;
-use App\Http\Controllers\Util\FixtureFile;
-use App\UseCases\Util\FixtureData;
+use Database\Stubs\Infrastructure\ApiFootball\MockApiFootballRepository;
 
 
 class StubRegisterFixtureUseCase
 {
-    public function __construct(
-        private FixtureFile $fixture,
-        private FixtureData $fixtureData
-       )
-    {
-        //
-    }
-
     public function execute(int $id)
     {
+        /** @var Fixture $fixture */
+        $fixture = Fixture::where('external_fixture_id', $id)->first();
 
-        /** @var Fixture $model */
-        $model = Fixture::where('external_fixture_id', $id)->first();
+        /** @var MockApiFootballRepository $repository */
+        $repository = app(MockApiFootballRepository::class);
 
-        $fetched = $this->fixture->get($id);
-
-        $data = $this->fixtureData->build($fetched);
-
-        $fixture = $model->updateFixture($data);
+        $data = $repository->fetchFixture($id);
+        
+        if (!$data->isFinished()) return;
+        
+        $fixture->updateFixture($data);
         
         $fixture->save();
     }

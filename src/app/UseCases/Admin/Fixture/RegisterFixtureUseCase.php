@@ -31,7 +31,7 @@ final readonly class RegisterFixtureUseCase
                 $fixture->save();
             });
             
-            $fixture->registered($data);
+            $fixture->fixtureRegistered($data);
 
             return $fixture;
 
