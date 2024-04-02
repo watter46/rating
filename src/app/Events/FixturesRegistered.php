@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\UseCases\Fixtures\FixturesDataProcessor;
+use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
 
 
 class FixturesRegistered
@@ -18,9 +18,9 @@ class FixturesRegistered
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * @param FixturesDataProcessor $processor 
+     * @param FixturesData $data 
      */
-    public function __construct(public FixturesDataProcessor $processor)
+    public function __construct(public FixturesData $data)
     {
         //
     }

@@ -15,9 +15,9 @@ class FixtureRegistered
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * @param FixtureData $fixtureData
+     * @param FixtureData $data
      */
-    public function __construct(public FixtureData $fixtureData)
+    public function __construct(public FixtureData $data)
     {
         //
     }

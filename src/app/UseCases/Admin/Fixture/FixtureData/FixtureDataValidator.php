@@ -8,9 +8,9 @@ use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\UseCases\Admin\Fixture\FixtureData\FilterInvalidPlayerIds;
+use App\UseCases\Admin\Fixture\ValidatorInterface;
 
-
-readonly class FixtureDataValidator
+readonly class FixtureDataValidator implements ValidatorInterface
 {
     private Collection $invalidTeamIds;
     private Collection $invalidLeagueIds;
@@ -108,7 +108,7 @@ readonly class FixtureDataValidator
     }
     
     /**
-     * 保存するべきか判定する
+     * データがすべて存在しているか判定する
      *
      * @return bool
      */

@@ -11,9 +11,10 @@ use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\Models\FixtureStatusType;
+use App\UseCases\Admin\Fixture\DataInterface;
 
 
-readonly class FixtureData
+readonly class FixtureData implements DataInterface
 {
     private TeamImageFile $teamImage;
     private PlayerImageFile $playerImage;
@@ -139,7 +140,7 @@ readonly class FixtureData
     public function filterChelsea(Collection $teams): Collection
     {
         $chelsea = $teams->sole(fn ($teams) => $teams->team->id === self::CHELSEA_TEAM_ID);
-        
+
         return collect($chelsea);
     }
 

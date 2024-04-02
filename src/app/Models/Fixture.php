@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\FixtureRegistered;
+use App\Events\FixturesRegistered;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ use Illuminate\Support\Collection;
 use App\Models\FixtureQueryBuilder;
 use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
 use App\UseCases\Admin\Fixture\FixtureData\FixtureDataProcessor;
+use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
@@ -54,31 +56,40 @@ class Fixture extends Model
     ];
 
     protected $casts = [
-        'score' => AsCollection::class,
+        'score'   => AsCollection::class,
         'fixture' => AsCollection::class
     ];
-
-    protected function date(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($date) => Carbon::parse($date)
-        );
-    }
     
     /**
-     * Fixtureで使用するデータがすべて存在するか確認して
+     * 試合で使用するデータがすべて存在するか確認して
      * 存在しない場合、不足しているデータを取得するイベントを発行する
      *
      * @param  FixtureData $fixtureData
      * @return void
      */
-    public function registered(FixtureData $fixtureData): void
+    public function fixtureRegistered(FixtureData $fixtureData): void
     {
         if ($fixtureData->checkRequiredData()) {
             return;
         }
         
         FixtureRegistered::dispatch($fixtureData);
+    }
+    
+    /**
+     * 試合の一覧で使用するデータがすべて存在するか確認して
+     * 存在しない場合、不足しているデータを取得するイベントを発行する
+     *
+     * @param  FixturesData $fixturesData
+     * @return void
+     */
+    public function fixturesRegistered(FixturesData $fixturesData): void
+    {
+        if ($fixturesData->checkRequiredData()) {
+            return;
+        }
+        
+        FixturesRegistered::dispatch($fixturesData);
     }
     
     /**

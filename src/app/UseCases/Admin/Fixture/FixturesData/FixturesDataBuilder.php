@@ -5,7 +5,6 @@ namespace App\UseCases\Admin\Fixture\FixturesData;
 use Illuminate\Support\Collection;
 
 use App\Models\Fixture;
-use App\UseCases\Admin\Fixture\FixturesData\FixtureDataFormatter;
 
 
 final readonly class FixturesDataBuilder
@@ -18,51 +17,32 @@ final readonly class FixturesDataBuilder
     /**
      * build
      *
-     * @param  Collection $fixturesData
+     * @param  FixturesData $fixturesData
      * @return Collection
      */
-    public function build(Collection $fixturesData): Collection
+    public function build(FixturesData $fixturesData): Collection
     {
-        $data = $fixturesData
-            ->map(function ($fixtureData) {
-                $fixtureData = new FixtureData($fixtureData);
-                $formatter = new FixtureDataFormatter($fixtureData);
-                
-                return collect([
-                    'external_fixture_id' => $fixtureData->getFixtureId(),
-                    'external_league_id'  => $fixtureData->getLeagueId(),
-                    'score'               => $formatter->formatScore()->toJson(),
-                    'season'              => $fixtureData->getSeason(),
-                    'date'                => $fixtureData->getDate(),
-                    'status'              => $fixtureData->getStatus()
-                ]);
-            });
-
         /** @var Collection<int, Fixture> */
         $fixtures = Fixture::query()
             ->select(['id', 'external_fixture_id'])
             ->currentSeason()
             ->get();
 
-        $result = $fixtures
-            ? $data
-                ->map(function ($fixture) use ($fixtures) {
-                    $fixtureModel = $fixtures
+        $result = $fixtures->isNotEmpty()
+            ? $fixturesData->getData()
+                ->map(function (FixturesDetailData $fixtureDetailData) use ($fixtures) {
+                    $fixture = $fixtures
                         ->keyBy('external_fixture_id')
-                        ->get($fixture['external_fixture_id']);
-                    
-                    if (!$fixtureModel) {
-                        return $fixture;
+                        ->get($fixtureDetailData->getFixtureId());
+
+                    if (!$fixture) {
+                        return $fixtureDetailData->build();
                     }
                     
-                    return array_merge($fixture, $fixtureModel->toArray());
+                    return $fixtureDetailData->build()->merge($fixture);
                 })
-                ->toArray()
-            : $data->toArray();
-            
-        return collect([
-            'original' => $fixturesData,
-            'formatted' => $result
-        ]);
+            : $fixturesData->format();
+
+        return $result;
     }
 }
