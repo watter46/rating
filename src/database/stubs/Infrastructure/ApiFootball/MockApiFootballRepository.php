@@ -1,27 +1,30 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Database\Stubs\Infrastructure\ApiFootball;
 
+use Illuminate\Support\Collection;
+
 use App\Http\Controllers\Util\FixtureFile;
 use App\Http\Controllers\Util\FixturesFile;
+use App\Http\Controllers\Util\SquadsFile;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
-use App\UseCases\Admin\Fixture\FixturesData\Formatter\FixtureDataFormatter;
-use App\UseCases\Admin\Fixture\FixturesData\FixturesDataBuilder;
-use App\UseCases\Util\Season;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
+use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
+use App\UseCases\Admin\Player\SquadsData\SquadsData;
 
 class MockApiFootballRepository implements ApiFootballRepositoryInterface
 {
-    public function __construct(private FixtureFile $fixtureFile)
-    {
-        
+    public function __construct(
+        private FixturesFile $fixturesFile,
+        private FixtureFile $fixtureFile,
+        private SquadsFile $squadsFile
+    ) {
+        //
     }
 
-    public function fetchFixtures(): Collection
+    public function fetchFixtures(): FixturesData
     {
-        return $this->fixturesDataBuilder->build($this->fixturesFile->get());
+        return FixturesData::create($this->fixturesFile->get());
     }
 
     public function fetchFixture(int $fixtureId): FixtureData
@@ -29,13 +32,9 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         return FixtureData::create($this->fixtureFile->get($fixtureId));
     }
 
-    public function fetchSquads(): Collection
+    public function fetchSquads(): SquadsData
     {
-        $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/players/squads', [
-            'team' => config('api-football.chelsea-id')
-        ]);
-
-        return collect(json_decode($json)->response[0]);
+        return SquadsData::create($this->squadsFile->get());
     }
 
     public function fetchLeagueImage(int $leagueId): string
