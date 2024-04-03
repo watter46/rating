@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Infrastructure\ApiFootball\ApiFootballRepository;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
+use App\UseCases\Admin\SofaScoreRepositoryInterface;
+use Database\Stubs\Infrastructure\ApiFootball\MockApiFootballRepository;
+use Database\Stubs\Infrastructure\SofaScore\MockSofaScoreRepository;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -15,7 +19,9 @@ class AppServiceProvider extends ServiceProvider
      * @var array
      */
     public $bindings = [
-        ApiFootballRepositoryInterface::class => ApiFootballRepository::class,
+        // ApiFootballRepositoryInterface::class => ApiFootballRepository::class,
+        ApiFootballRepositoryInterface::class => MockApiFootballRepository::class,
+        SofaScoreRepositoryInterface::class => MockSofaScoreRepository::class
     ];
 
     /**
