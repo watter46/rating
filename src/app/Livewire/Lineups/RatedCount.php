@@ -7,15 +7,16 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 use App\Livewire\MessageType;
-use App\UseCases\Player\CountRatedPlayerUseCase;
+use App\Livewire\User\Data\FixtureDataPresenter;
+use App\UseCases\User\Player\CountRatedPlayerUseCase;
 
 
 class RatedCount extends Component
 {   
     public string $fixtureId;
 
-    public int $ratedCount;
-    public int $playerCount;
+    public int  $ratedCount;
+    public int  $playerCount;
     public bool $allRated;
 
     private readonly CountRatedPlayerUseCase $countRatedPlayer;
@@ -39,8 +40,15 @@ class RatedCount extends Component
     public function fetch(): void
     {
         try {
-            $this->ratedCount = $this->countRatedPlayer->execute($this->fixtureId);
-            $this->allRated   = $this->playerCount === $this->ratedCount;
+            $fixture = $this->countRatedPlayer->execute($this->fixtureId);
+
+            $fixtureData = FixtureDataPresenter::create($fixture)
+                ->playerCount()
+                ->get();
+            
+            $this->ratedCount  = $fixture->ratedCount;
+            $this->playerCount = $fixtureData->get('playerCount');
+            $this->allRated    = $this->playerCount === $this->ratedCount;
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));

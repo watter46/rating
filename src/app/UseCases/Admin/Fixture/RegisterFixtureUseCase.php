@@ -24,7 +24,7 @@ final readonly class RegisterFixtureUseCase
             $fixture = Fixture::findOrFail($fixtureId);
 
             $data = $this->apiFootballRepository->fetchFixture($fixture->external_fixture_id);
-
+            
             $fixture->updateFixture($data);
             
             DB::transaction(function () use ($fixture) {

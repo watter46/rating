@@ -164,18 +164,6 @@ readonly class FixtureData implements DataInterface
                             ]);
                     })
                     ->whereIn('id', $players->map(fn($player) => $player['id']));
-            })
-            ->map(function ($lineup, $key) {
-                if ($key === 'startXI') {
-                    return $lineup
-                        ->reverse()
-                        ->groupBy(function ($player) {
-                            return Str::before($player['grid'], ':');
-                        })
-                        ->values();
-                }
-
-                return $this->substitutes(chunkSize: 3, items: $lineup);
             });
     }
 
@@ -196,27 +184,5 @@ readonly class FixtureData implements DataInterface
                     'defaultRating' => (float) $players->statistics[0]->games->rating,
                 ];
             });
-    }
-
-    private function substitutes(int $chunkSize, Collection $items): Collection
-    {
-        return $this->chunk($chunkSize, true, $items, collect());
-    }
-
-    private function chunk(int $chunkSize, bool $isBig, Collection $items, Collection $result): Collection
-    {
-        if ($items->isEmpty()) {
-            return $result;
-        }
-
-        $takeItem = $items->take($isBig ? $chunkSize : $chunkSize - 1);
-        $newItems = $items->diff($takeItem);
-
-        return $this->chunk(
-            chunkSize: $chunkSize,
-            isBig: !$isBig,
-            items: $newItems,
-            result: $result->push($takeItem)
-        );
     }
 }

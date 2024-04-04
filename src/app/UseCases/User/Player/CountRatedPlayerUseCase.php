@@ -5,6 +5,7 @@ namespace App\UseCases\User\Player;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use App\Models\Fixture;
 use App\Models\Player;
 
 
@@ -15,13 +16,12 @@ final readonly class CountRatedPlayerUseCase
         //
     }
 
-    public function execute(string $fixtureId): int
+    public function execute(string $fixtureId)
     {
         try {
-            return Player::query()
-                ->fixture($fixtureId)
-                ->whereNotNull('rating')
-                ->count();
+            return Fixture::query()
+                ->withCount('ratedPlayers as ratedCount')
+                ->findOrFail($fixtureId);
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');

@@ -37,6 +37,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Collection::macro('dataGet', function ($key, $default = null) {
+            $data = $this->toArray();
+
+            return collect(data_get($data, $key, $default));
+        });
+
+        Collection::macro('dataSet', function ($key, $value) {
+            $data = $this->toArray();
+            
+            return collect(data_set($data, $key, $value));
+        });
     }
 }

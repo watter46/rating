@@ -24,7 +24,12 @@ readonly class FixtureDataPresenter
     {
         return $this->fixtureData;
     }
-    
+        
+    /**
+     * 出場した選手数をカウントする
+     *
+     * @return self
+     */
     public function playerCount(): self
     {
         $count = $this->fixtureData
@@ -36,7 +41,12 @@ readonly class FixtureDataPresenter
 
         return new self($formatted);
     }
-
+    
+    /**
+     * 先発出場した選手を表示用に成形する
+     *
+     * @return self
+     */
     public function formatFormation(): self
     {        
         $startXI = collect($this->fixtureData->dataGet('lineups.startXI'))
@@ -50,7 +60,12 @@ readonly class FixtureDataPresenter
 
         return new self($formatted);
     }
-
+    
+    /**
+     * 控えの選手を表示用に成形する
+     *
+     * @return self
+     */
     public function formatSubstitutes(): self
     {
         $substitutesData = collect($this->fixtureData->dataGet('lineups.substitutes'));
