@@ -12,7 +12,7 @@ use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\Models\FixtureStatusType;
 use App\UseCases\Admin\Fixture\DataInterface;
-
+use Exception;
 
 readonly class FixtureData implements DataInterface
 {
@@ -140,7 +140,7 @@ readonly class FixtureData implements DataInterface
     public function filterChelsea(Collection $teams): Collection
     {
         $chelsea = $teams->sole(fn ($teams) => $teams->team->id === self::CHELSEA_TEAM_ID);
-
+        
         return collect($chelsea);
     }
 
@@ -168,9 +168,9 @@ readonly class FixtureData implements DataInterface
     }
 
     private function playedPlayers(): Collection
-    {        
+    {
         $chelsea = $this->filterChelsea(collect($this->fixtureData->get('players')));
-
+        
         return collect($chelsea->get('players'))
             ->reject(function ($players) {
                 return !$players->statistics[0]->games->minutes;
