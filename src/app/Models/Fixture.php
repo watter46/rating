@@ -16,6 +16,7 @@ use App\Models\FixtureQueryBuilder;
 use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
 use App\UseCases\Admin\Fixture\FixtureData\FixtureDataProcessor;
 use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
+use App\UseCases\User\Fixture\UserFixtureData;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
@@ -127,6 +128,11 @@ class Fixture extends Model
         return $specifiedDate->diffInDays(now('UTC')) <= self::RATE_PERIOD_DAY;
     }
 
+    public function toFixtureData(): UserFixtureData
+    {
+        return UserFixtureData::create($this->fixture);
+    }
+
     public static function query(): FixtureQueryBuilder
     {
         return parent::query();
@@ -145,5 +151,15 @@ class Fixture extends Model
     public function players(): HasMany
     {
         return $this->hasMany(Player::class);
+    }
+    
+    /**
+     * 評価した選手のみ取得する
+     *
+     * @return HasMany
+     */
+    public function ratedPlayers(): HasMany
+    {
+        return $this->hasMany(Player::class)->whereNotNull('rating');
     }
 }

@@ -67,53 +67,6 @@ class Player extends Model
 
         return $this;
     }
-
-    public function addCanRate(): self
-    {
-        $this->canRate = $this->fixture()
-            ->select('date')
-            ->firstOrFail()
-            ->canRate();
-        
-        return $this;
-    }
-
-    public function init(string $playerInfoId): self
-    {
-        $this->player_info_id = $playerInfoId;
-        $this->rating = null;
-        $this->mom = false;
-        $this->isRate = false;
-
-        return $this;
-    }
-
-    public function rated()
-    {
-        try {
-            $this->isRated = true;
-            
-            return $this->addCanRate();
-            
-        } catch (ModelNotFoundException $e) {
-            throw new Exception('Fixture Not Found');
-        }
-    }
-
-    public function unrated(string $fixtureId): self
-    {
-        try {
-            $this->fixture_id = $fixtureId;
-            $this->rating = null;
-            $this->mom = false;
-            $this->isRated = false;
-            
-            return $this->addCanRate();
-            
-        } catch (ModelNotFoundException $e) {
-            throw new Exception('Fixture Not Found');
-        }
-    }
     
     /**
      * ManOfTheMatchの選手を取得する

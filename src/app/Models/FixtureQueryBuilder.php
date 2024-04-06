@@ -24,7 +24,7 @@ class FixtureQueryBuilder extends Builder
      *
      * @return Builder
      */
-    public function inSeason(): Builder
+    public function inSeasonTournament(): Builder
     {
         return $this
             ->whereIn('external_league_id', [
@@ -42,21 +42,6 @@ class FixtureQueryBuilder extends Builder
     public function notStarted(): Builder
     {
         return $this->where('status', FixtureStatusType::NotStarted->value);
-    }
-    
-    /**
-     * 現在時間までの試合を取得する
-     *
-     * @return Builder
-     */
-    public function past(): Builder
-    {
-        return $this
-            ->select(['id', 'score', 'date', 'external_fixture_id', 'fixture'])
-            ->whereIn('status', [FixtureStatusType::MatchFinished->value, FixtureStatusType::NotStarted->value])
-            ->currentSeason()
-            ->where('date', '<=', now('UTC'))
-            ->orderBy('date', 'desc');
     }
     
     /**

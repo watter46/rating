@@ -9,10 +9,10 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Illuminate\Pagination\Paginator;
 
-use App\Http\Controllers\FixturesResource;
 use App\Models\TournamentType;
 use App\Livewire\MessageType;
-use App\UseCases\Fixture\FetchFixturesUseCase;
+use App\Http\Controllers\FixturesPresenter;
+use App\UseCases\User\Fixture\FetchFixturesUseCase;
 
 
 class Fixtures extends Component
@@ -23,12 +23,19 @@ class Fixtures extends Component
     public string $sort = '';
 
     private FetchFixturesUseCase $fetchFixtures;
-    private FixturesResource $resource;
+    private FixturesPresenter $presenter;
 
-    public function boot(FetchFixturesUseCase $fetchFixtures, FixturesResource $resource)
+    public function boot(FetchFixturesUseCase $fetchFixtures, FixturesPresenter $presenter)
     {
         $this->fetchFixtures = $fetchFixtures;
-        $this->resource = $resource;
+        $this->presenter = $presenter;
+    }
+    
+    public function render()
+    {
+        return view('livewire.fixtures.fixtures', [
+            'tournaments' => TournamentType::toText()
+        ]);
     }
 
     #[Computed]
@@ -46,11 +53,14 @@ class Fixtures extends Component
         }
     }
     
-    public function render()
+    /**
+     * 選択した試合に移動する
+     *
+     * @return void
+     */
+    public function toFixture(string $fixtureId): void
     {
-        return view('livewire.fixtures.fixtures', [
-            'tournaments' => TournamentType::toText()
-        ]);
+        $this->redirect("/fixtures/$fixtureId");
     }
     
     /**
@@ -64,7 +74,7 @@ class Fixtures extends Component
 
         $fixtures = $this->fetchFixtures->execute($tournament);
 
-        return $this->resource->format($fixtures);
+        return $this->presenter->format($fixtures);
     }
     
     /**

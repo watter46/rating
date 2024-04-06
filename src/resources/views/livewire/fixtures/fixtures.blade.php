@@ -38,13 +38,17 @@
         {{-- Score --}}
         <div class="w-full mt-2 gap-y-8">
             @foreach($this->fixtures as $fixture)
-                <livewire:fixtures.score
-                    :fixtureId="$fixture->id"
-                    :fixture="$fixture->fixture"
-                    :score="$fixture->score"
-                    :winner="$fixture->winner"
-                    :isRate="$fixture->isRate"
-                    :key="$fixture->id" />
+                <div class="w-full p-1 overflow-hidden border-b border-gray-500">
+                    <div class="w-full h-full cursor-pointer"
+                        wire:click="toFixture('{{ $fixture->id }}')">
+                        <x-fixture.score
+                            :fixture="$fixture->fixture['fixture']"
+                            :teams="$fixture->fixture['teams']"
+                            :league="$fixture->fixture['league']"
+                            :score="$fixture->fixture['score']"
+                            :isRate="$fixture->isRate" />
+                    </div>
+                </div>
             @endforeach
         </div>
     </div>

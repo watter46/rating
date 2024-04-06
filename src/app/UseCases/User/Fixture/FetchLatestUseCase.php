@@ -5,8 +5,8 @@ namespace App\UseCases\User\Fixture;
 use Exception;
 
 use App\Models\Fixture;
-use App\Models\PlayerInfo;
-use App\UseCases\Player\DecideManOfTheMatchUseCase;
+use App\UseCases\User\PlayerInFixture;
+use App\UseCases\User\Player\DecideManOfTheMatchUseCase;
 
 
 final readonly class FetchLatestUseCase
@@ -16,22 +16,20 @@ final readonly class FetchLatestUseCase
         //
     }
 
-    public function execute()
+    public function execute(): Fixture
     {
         try {
-            /** @var Fixture $fixture */  
-            $fixture = Fixture::query()
+            /** @var Fixture $latestFixture */  
+            $latestFixture = Fixture::query()
                 ->past()
                 ->latest()
                 ->first();
+                
+            if (!$latestFixture) {
+                throw new Exception('Fixture Not Fount');
+            }
             
-            /** @var PlayerInfo $playerInfos */  
-            $playerInfos = PlayerInfo::query()
-                ->currentSeason()
-                ->lineups($fixture)
-                ->get();
-
-            $fixture['playerInfos'] = $playerInfos;
+            $fixture = PlayerInFixture::playedPlayersInFixture($latestFixture)->fetch();
             
             return $fixture;
 

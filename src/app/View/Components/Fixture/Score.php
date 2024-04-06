@@ -4,16 +4,21 @@ namespace App\View\Components\Fixture;
 
 use Closure;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
 use Illuminate\View\Component;
+
 
 class Score extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct(public string $fixtureId, public Collection $score)
-    {
+    public function __construct(
+        public array $fixture,
+        public array $teams,
+        public array $league,
+        public array $score,
+        public bool $isRate
+    ) {
         //
     }
 
@@ -23,10 +28,5 @@ class Score extends Component
     public function render(): View|Closure|string
     {
         return view('components.fixture.score');
-    }
-
-    public function click()
-    {
-        dd('click'.$this->fixtureId);
     }
 }
