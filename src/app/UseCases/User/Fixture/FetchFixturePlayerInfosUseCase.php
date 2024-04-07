@@ -7,27 +7,23 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Fixture;
 use App\UseCases\User\PlayerInFixture;
+use App\UseCases\User\PlayerInFixtureRequest;
 
 
-final readonly class FetchFixtureUseCase
+final readonly class FetchFixturePlayerInfosUseCase
 {
-    public function __construct()
+    public function __construct(private PlayerInFixture $playerInFixture)
     {
         //
     }
     
-    public function execute(string $fixtureId): Fixture
+    public function execute(PlayerInFixtureRequest $request): Fixture
     {
         try {            
-            $fixture = PlayerInFixture::playedPlayersInFixture(
-                Fixture::query()
-                    ->currentSeason()
-                    ->inSeasonTournament()
-                    ->finished()
-                    ->findOrFail($fixtureId)
-            )->fetch();
-            
-            return $fixture;
+            return $this->playerInFixture
+                ->request($request)
+                ->addPlayerInfosColumn()
+                ->getFixture();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Fixture Not Found.');

@@ -14,10 +14,8 @@ use Illuminate\Support\Collection;
 
 use App\Models\FixtureQueryBuilder;
 use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
-use App\UseCases\Admin\Fixture\FixtureData\FixtureDataProcessor;
 use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
 use App\UseCases\User\Fixture\UserFixtureData;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * FixtureModel
@@ -38,7 +36,7 @@ class Fixture extends Model
     
     protected $keyType = 'string';
 
-    private const RATE_PERIOD_DAY = 5;
+    private const RATE_PERIOD_DAY = 50;
     public  const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
     
     /**
@@ -47,6 +45,7 @@ class Fixture extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'external_fixture_id',
         'external_league_id',
         'season',
@@ -114,18 +113,6 @@ class Fixture extends Model
     public function isValid(): bool
     {
         return FixtureStatusType::from($this->status)->isFinished();
-    }
-    
-    /**
-     * 指定した試合でプレイヤーを評価できるか判定する
-     * 
-     * @return bool
-     */
-    public function canRate(): bool
-    {
-        $specifiedDate = Carbon::parse($this->date);
-
-        return $specifiedDate->diffInDays(now('UTC')) <= self::RATE_PERIOD_DAY;
     }
 
     public function toFixtureData(): UserFixtureData

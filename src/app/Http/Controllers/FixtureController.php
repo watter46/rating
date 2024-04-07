@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Exception;
 
-use App\UseCases\User\Fixture\FetchFixtureUseCase;
+use App\UseCases\User\Fixture\FetchFixturePlayerInfosUseCase;
 use App\UseCases\User\Fixture\FetchLatestUseCase;
-
+use App\UseCases\User\PlayerInFixtureRequest;
 
 class FixtureController extends Controller
 {
@@ -15,10 +15,10 @@ class FixtureController extends Controller
         return view('fixtures');
     }
 
-    public function find(string $fixtureId, FetchFixtureUseCase $fetchFixture, FixturePresenter $presenter)
+    public function find(string $fixtureId, FetchFixturePlayerInfosUseCase $fetchFixture, FixturePresenter $presenter)
     {
         try {
-            $fixture = $fetchFixture->execute($fixtureId);
+            $fixture = $fetchFixture->execute(PlayerInFixtureRequest::make($fixtureId));
             
             return view('fixture', $presenter->format($fixture));
 

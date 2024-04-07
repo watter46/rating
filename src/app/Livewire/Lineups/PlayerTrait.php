@@ -6,10 +6,10 @@ use Exception;
 use Livewire\Attributes\On;
 
 use App\Livewire\MessageType;
-use App\UseCases\Player\DecideManOfTheMatchUseCase;
-use App\UseCases\Player\FetchPlayerUseCase;
-use App\UseCases\Player\RatePlayerUseCase;
-
+use App\UseCases\User\Player\DecideManOfTheMatchUseCase;
+use App\UseCases\User\Player\FetchPlayerUseCase;
+use App\UseCases\User\Player\RatePlayerUseCase;
+use App\UseCases\User\PlayerInFixtureRequest;
 
 trait PlayerTrait
 {
@@ -38,14 +38,22 @@ trait PlayerTrait
     public function mountPlayerTrait()
     {
         $this->fetch();
-
-        $this->defaultRating = (float) $this->player['defaultRating'];
+        
+        $this->defaultRating = $this->player['defaultRating'];
     }
 
+    /**
+     * 指定の選手を取得する
+     *
+     * @return void
+     */
     #[On('fetch-player.{player.id}')]
     public function fetch(): void
     {
-        $player = $this->fetchPlayer->execute($this->fixtureId, $this->player['id']);
+        $player = $this->fetchPlayer->execute(PlayerInFixtureRequest::make(
+                fixtureId: $this->fixtureId,
+                playerInfoId: $this->player['id']
+            ));
         
         $this->rating  = $player->rating;
         $this->mom     = $player->mom;

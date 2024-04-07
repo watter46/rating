@@ -68,6 +68,18 @@ class FixtureQueryBuilder extends Builder
     }
 
     /**
+     * 今日までの試合を取得する
+     *
+     * @return Builder
+     */
+    public function untilToday(): Builder
+    {
+        return $this
+            ->where('date', '<=', now('UTC'))
+            ->orderBy('date', 'desc');
+    }
+
+    /**
      * 今シーズンのみ取得する
      *
      * @return Builder
