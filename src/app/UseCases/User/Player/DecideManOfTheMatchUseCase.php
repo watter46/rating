@@ -7,46 +7,33 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
-use App\Models\Fixture;
 use App\Models\Player;
-
+use App\UseCases\User\PlayerInFixture;
+use App\UseCases\User\PlayerInFixtureRequest;
 
 final readonly class DecideManOfTheMatchUseCase
 {
-    public function __construct(private Fixture $fixture, private Player $player)
+    public function __construct(private PlayerInFixture $playerInFixture)
     {
         //
     }
     
-    /**
-     * execute
-     *
-     * @param  string $fixtureId
-     * @param  string $playerInfoId
-     * @return Collection<int, string>
-     */
-    public function execute(string $fixtureId, string $playerInfoId): Collection
+    public function execute(PlayerInFixtureRequest $request)
     {
-        try {            
-            if (!$this->fixture->canRate($fixtureId)) {
-                throw new Exception(Fixture::RATE_PERIOD_EXPIRED_MESSAGE);
-            }
-            
-            /** @var Player $player */
-            $player = Player::query()
-                ->fixture($fixtureId)
-                ->playerInfo($playerInfoId)
-                ->first();
+        try {
+            $fixture = $this->playerInFixture->request($request);
 
-            $newMomPlayer = $player 
-                ? $player->decideMOM()
-                : $this->player
-                    ->associatePlayer($fixtureId, $playerInfoId)
-                    ->decideMOM();
+            if (!$fixture->canRate()) {
+                throw new Exception($fixture::RATE_PERIOD_EXPIRED_MESSAGE);
+            }
+
+            $newMomPlayer = $fixture
+                ->getPlayer()
+                ->decideMOM();
 
             /** @var Player $oldMomPlayer */
             $oldMomPlayer = Player::query()
-                ->mom($fixtureId)
+                ->mom($request->getFixtureId())
                 ?->first()
                 ?->unDecideMOM();
 
@@ -59,8 +46,8 @@ final readonly class DecideManOfTheMatchUseCase
             });
 
             return collect([
-                'newMomId' => $newMomPlayer->player_info_id,
-                'oldMomId' => $oldMomPlayer?->player_info_id,
+                'newMomPlayerInfoId' => $newMomPlayer->player_info_id,
+                'oldMomPlayerInfoId' => $oldMomPlayer?->player_info_id,
             ]);
 
         } catch (ModelNotFoundException $e) {

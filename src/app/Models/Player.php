@@ -31,12 +31,50 @@ class Player extends Model
     protected $fillable = [
         'rating',
         'mom',
-        'player_info_id'
+        'player_info_id',
+        'fixture_id'
     ];
-
+    
+    /**
+     * キャスト
+     *
+     * @var array
+     */
     protected $casts = [
         'mom' => 'boolean'
     ];
+
+    /**
+     * デフォルト値
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'rating' => null,
+        'mom' => false,
+    ];
+    
+    /**
+     * 保存されるときにUserIdを紐づける
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::saving(function($player) {
+            $player->user_id = Auth::id();
+        });
+    }
+
+    /**
+     * UserBooted
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CurrentUserScope);
+    }
 
     public function decideMOM(): self
     {
@@ -58,15 +96,6 @@ class Player extends Model
 
         return $this;
     }
-
-    public function associatePlayer(string $fixtureId, string $playerInfoId): self
-    {
-        $this->user_id = Auth::user()->id;
-        $this->fixture_id = $fixtureId;
-        $this->player_info_id = $playerInfoId;
-
-        return $this;
-    }
     
     /**
      * ManOfTheMatchの選手を取得する
@@ -78,7 +107,7 @@ class Player extends Model
     public function scopeMom(Builder $query, string $fixtureId)
     {
         $query
-            ->fixture($fixtureId)
+            ->fixtureId($fixtureId)
             ->where('mom', true);
     }
 
@@ -89,7 +118,7 @@ class Player extends Model
      * @param  string $playerInfoId
      * @return void
      */
-    public function scopePlayerInfo(Builder $query, string $playerInfoId)
+    public function scopePlayerInfoId(Builder $query, string $playerInfoId)
     {
         $query->where('player_info_id', $playerInfoId);
     }
@@ -101,7 +130,7 @@ class Player extends Model
      * @param  string $fixtureId
      * @return void
      */
-    public function scopeFixture(Builder $query, string $fixtureId)
+    public function scopeFixtureId(Builder $query, string $fixtureId)
     {
         $query->where('fixture_id', $fixtureId);
     }
@@ -134,13 +163,5 @@ class Player extends Model
     public function playerInfo(): BelongsTo
     {
         return $this->belongsTo(PlayerInfo::class);
-    }
-
-    /**
-     * UserBooted
-     */
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new CurrentUserScope);
     }
 }

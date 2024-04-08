@@ -20,6 +20,11 @@ readonly class PlayerInFixtureRequest
             );
     }
 
+    public function existsPlayerInfoId(): bool
+    {
+        return !is_null($this->playerInfoId);
+    }
+
     public function getFixtureId(): string
     {
         return $this->fixtureId;

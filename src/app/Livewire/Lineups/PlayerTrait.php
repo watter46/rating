@@ -11,6 +11,7 @@ use App\UseCases\User\Player\FetchPlayerUseCase;
 use App\UseCases\User\Player\RatePlayerUseCase;
 use App\UseCases\User\PlayerInFixtureRequest;
 
+
 trait PlayerTrait
 {
     public ?float $rating;
@@ -68,8 +69,13 @@ trait PlayerTrait
      */
     public function rate(float $rating): void
     {
-        try {
-            $this->ratePlayer->execute($this->fixtureId, $this->player['id'], $rating);
+        try {            
+            $request = PlayerInFixtureRequest::make(
+                    fixtureId: $this->fixtureId,
+                    playerInfoId: $this->player['id']
+                );
+            
+            $this->ratePlayer->execute($request, $rating);
             
             $this->dispatchFetchPlayer($this->player['id']);
             $this->dispatch('player-rated');
@@ -89,10 +95,15 @@ trait PlayerTrait
     public function decideMOM(): void
     {
         try {
-            $players = $this->decideMOM->execute($this->fixtureId, $this->player['id']);
+            $request = PlayerInFixtureRequest::make(
+                    fixtureId: $this->fixtureId,
+                    playerInfoId: $this->player['id']
+                );
 
-            $this->dispatchFetchPlayer($players['newMomId']);
-            $this->dispatchFetchPlayer($players['oldMomId']);
+            $players = $this->decideMOM->execute($request);
+
+            $this->dispatchFetchPlayer($players['newMomPlayerInfoId']);
+            $this->dispatchFetchPlayer($players['oldMomPlayerInfoId']);
             $this->dispatch('notify', message: MessageType::Success->toArray(self::Decided_MOM_MESSAGE));
             $this->dispatch('close');
 

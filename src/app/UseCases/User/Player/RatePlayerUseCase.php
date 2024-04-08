@@ -6,33 +6,30 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use App\Models\Fixture;
-use App\Models\Player;
+use App\UseCases\User\PlayerInFixture;
+use App\UseCases\User\PlayerInFixtureRequest;
 
 
 final readonly class RatePlayerUseCase
 {
-    public function __construct(private Player $player, private Fixture $fixture)
+    public function __construct(private PlayerInFixture $playerInFixture)
     {
         //
     }
 
-    public function execute(string $fixtureId, string $playerInfoId, float $rating): void
+    public function execute(PlayerInFixtureRequest $request, float $rating)
     {
         try {
-            if (!$this->fixture->canRate($fixtureId)) {
-                throw new Exception(Fixture::RATE_PERIOD_EXPIRED_MESSAGE);
+            $fixture = $this->playerInFixture->request($request);
+
+            if (!$fixture->canRate()) {
+                throw new Exception($fixture::RATE_PERIOD_EXPIRED_MESSAGE);
             }
 
-            /** @var Player $player */
-            $player = Player::query()
-                ->fixture($fixtureId)
-                ->playerInfo($playerInfoId)
-                ->first()
-                ?? $this->player->associatePlayer($fixtureId, $playerInfoId);
-
-            $player->rate($rating);
-
+            $player = $fixture
+                ->getPlayer()
+                ->rate($rating);
+                
             DB::transaction(function () use ($player) {
                 $player->save();
             });

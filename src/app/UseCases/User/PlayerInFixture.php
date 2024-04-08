@@ -22,21 +22,26 @@ readonly class PlayerInFixture
     {
         //
     }
-    
-    // 選手が出場しているか
-    public function isPlayed()
-    {
-
-    }
-    
-    private function canRate(): bool
+        
+    /**
+     * 評価可能期間を超えていないか判定する
+     *
+     * @return bool
+     */
+    public function canRate(): bool
     {
         $specifiedDate = Carbon::parse($this->fixture->date);
 
         return $specifiedDate->diffInDays(now('UTC')) <= self::RATE_PERIOD_DAY;
     }
-
-    public function request(PlayerInFixtureRequest $request)
+    
+    /**
+     * Request
+     *
+     * @param  PlayerInFixtureRequest $request
+     * @return self
+     */
+    public function request(PlayerInFixtureRequest $request): self
     {
         $fixture = Fixture::query()
             ->currentSeason()
@@ -44,10 +49,29 @@ readonly class PlayerInFixture
             ->finished()
             ->findOrFail($request->getFixtureId());
 
-        return $this->setAttribute(fixture: $fixture, request: $request);
-    }
+        $player = $request->existsPlayerInfoId()
+            ? Player::query()
+                ->fixtureId($request->getFixtureId())
+                ->playerInfoId($request->getPlayerInfoId())
+                ->firstOrNew([
+                    'fixture_id' => $request->getFixtureId(),
+                    'player_info_id' => $request->getPlayerInfoId()
+                ])
+            : null;
 
-    public function addPlayerInfos(): self
+        return $this->setAttribute(
+                fixture: $fixture,
+                player: $player,
+                request: $request
+            );
+    }
+    
+    /**
+     * FixtureのカラムにFixtureDataから出場した選手のPlayerInfoを設定する
+     *
+     * @return self
+     */
+    public function addPlayerInfosColumn(): self
     {   
         $playedIds = $this->fixture->toFixtureData()->getPlayerIds();
         
@@ -64,7 +88,12 @@ readonly class PlayerInFixture
 
         return $this->setAttribute(fixture: $this->fixture);
     }
-
+    
+    /**
+     * 最新の試合を取得する
+     *
+     * @return self
+     */
     public function latest(): self
     {
         $fixture = Fixture::query()
@@ -76,19 +105,17 @@ readonly class PlayerInFixture
 
         return $this->setAttribute(fixture: $fixture);
     }
+    
+    /**
+     * CanRateカラムをPlayerに追加する
+     *
+     * @return self
+     */
+    public function addCanRateColumn(): self
+    {                
+        $this->player->canRate = $this->canRate();
 
-    public function player(): self
-    {
-        $player = $this->fixture
-            ->players()
-            ->firstOrNew([
-                'fixture_id' => $this->request->getFixtureId(),
-                'player_info_id' => $this->request->getPlayerInfoId()
-            ]);
-                
-        $player->canRate = $this->canRate();
-
-        return $this->setAttribute(player: $player);
+        return $this->setAttribute(player: $this->player);
     }
 
     public function getFixture(): Fixture
