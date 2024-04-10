@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\Lineups;
+namespace App\Livewire\User\Lineups;
 
 use Exception;
 use Livewire\Attributes\On;
@@ -55,7 +55,7 @@ trait PlayerTrait
                 fixtureId: $this->fixtureId,
                 playerInfoId: $this->player['id']
             ));
-        
+            
         $this->rating  = $player->rating;
         $this->mom     = $player->mom;
         $this->canRate = $player->canRate;

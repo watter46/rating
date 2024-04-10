@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\Fixtures;
+namespace App\Livewire\User\Fixtures;
 
 use Exception;
 use Livewire\Component;
@@ -33,7 +33,7 @@ class Fixtures extends Component
     
     public function render()
     {
-        return view('livewire.fixtures.fixtures', [
+        return view('livewire.user.fixtures.fixtures', [
             'tournaments' => TournamentType::toText()
         ]);
     }

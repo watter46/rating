@@ -52,7 +52,7 @@ readonly class PlayerInFixture
             
         $player = $request->existsPlayerInfoId()
             ? Player::query()
-                ->select(['rating', 'mom'])
+                ->select(['rating', 'mom', 'player_info_id'])
                 ->fixtureId($request->getFixtureId())
                 ->playerInfoId($request->getPlayerInfoId())
                 ->firstOrNew([

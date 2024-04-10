@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\Result;
+namespace App\Livewire\User\Result;
 
-use App\Livewire\Lineups\PlayerTrait;
+use App\Livewire\User\Lineups\PlayerTrait;
 use Livewire\Component;
 
 
@@ -17,6 +17,6 @@ class RatedPlayer extends Component
 
     public function render()
     {
-        return view('livewire.result.rated-player');
+        return view('livewire.user.result.rated-player');
     }
 }

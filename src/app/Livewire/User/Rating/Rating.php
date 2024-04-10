@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\Rating;
+namespace App\Livewire\User\Rating;
 
 use Livewire\Component;
 
-use App\Livewire\Lineups\PlayerTrait;
+use App\Livewire\User\Lineups\PlayerTrait;
 
 
 class Rating extends Component
@@ -16,6 +16,6 @@ class Rating extends Component
 
     public function render()
     {
-        return view('livewire.rating.rating');
+        return view('livewire.user.rating.rating');
     }
 }

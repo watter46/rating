@@ -23,7 +23,7 @@
                                 @foreach($players as $player)
                                     <div class="flex justify-center items-center
                                         {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
-                                        <livewire:result.rated-player
+                                        <livewire:user.result.rated-player
                                             name="startXI"
                                             size="w-[40px] h-[40px] md:w-[45px] md:h-[45px]"
                                             :$fixtureId
@@ -44,7 +44,7 @@
                         @if($loop->odd)
                             @foreach($substitutes as $key => $player)
                                 <div class="flex justify-center w-full col-span-2">
-                                    <livewire:result.rated-player
+                                    <livewire:user.result.rated-player
                                         name="substitutes"
                                         size="w-[40px] h-[40px]"
                                         :$fixtureId
@@ -58,7 +58,7 @@
                             @foreach($substitutes as $player)
                                 <div class="col-span-2 flex justify-center w-full
                                     @if($loop->first) col-start-2 @endif">
-                                    <livewire:result.rated-player
+                                    <livewire:user.result.rated-player
                                         name="substitutes"
                                         size="w-[40px] h-[40px]"
                                         :$fixtureId
@@ -76,7 +76,7 @@
                 <div class="grid content-center h-full gap-10">
                     @foreach(collect($lineups['substitutes'])->flatten(1) as $player)
                         <div class="flex justify-center w-full">
-                            <livewire:result.rated-player
+                            <livewire:user.result.rated-player
                                 name="substitutes"
                                 size="w-12 h-12"
                                 :$fixtureId

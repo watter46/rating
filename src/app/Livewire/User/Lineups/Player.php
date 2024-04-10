@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\Lineups;
+namespace App\Livewire\User\Lineups;
 
 use Livewire\Component;
 
@@ -17,6 +17,6 @@ class Player extends Component
     
     public function render()
     {
-        return view('livewire.lineups.player');
+        return view('livewire.user.lineups.player');
     }
 }

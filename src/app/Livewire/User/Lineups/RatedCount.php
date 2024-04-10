@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\Lineups;
+namespace App\Livewire\User\Lineups;
 
 use Exception;
 use Livewire\Attributes\On;
@@ -33,7 +33,7 @@ class RatedCount extends Component
     
     public function render()
     {
-        return view('livewire.lineups.rated-count');
+        return view('livewire.user.lineups.rated-count');
     }
 
     #[On('player-rated')]
