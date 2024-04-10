@@ -44,12 +44,12 @@ class PlayerInfo extends Model
     public function scopeLineups(Builder $query, Fixture $fixture): void
     {
         $lineupIdList = collect($fixture->fixture['lineups'])
-                ->dot()
-                ->filter(function ($p, $key) {
-                    return Str::afterLast($key, '.') === 'id';
-                })
-                ->values()
-                ->toArray();
+            ->dot()
+            ->filter(function ($p, $key) {
+                return Str::afterLast($key, '.') === 'id';
+            })
+            ->values()
+            ->toArray();
                 
         $query->whereIn('foot_player_id', $lineupIdList);
     }

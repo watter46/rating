@@ -1,3 +1,3 @@
 <x-app-layout>
-    <livewire:fixtures.fixtures />
+    <livewire:user.fixtures.fixtures />
 </x-app-layout>

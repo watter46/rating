@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\View\Components\Score;
 
@@ -12,10 +12,10 @@ class Score extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public $fixture,
-        public $teams,
-        public $league,
-        public $score)
+        public array $fixture,
+        public array $teams,
+        public array $league,
+        public array $score)
     {
         //
     }

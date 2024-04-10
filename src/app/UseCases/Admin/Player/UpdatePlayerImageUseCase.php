@@ -4,17 +4,19 @@ namespace App\UseCases\Admin\Player;
 
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Models\PlayerInfo;
+use App\UseCases\Admin\SofaScoreRepositoryInterface;
 use App\UseCases\Api\SofaScore\PlayerImageFetcher;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 final readonly class UpdatePlayerImageUseCase
 {
-    public function __construct(private PlayerImageFetcher $fetcher, private PlayerImageFile $file)
-    {
+    public function __construct(
+        private SofaScoreRepositoryInterface $sofaScoreRepository,
+        private PlayerImageFile $file
+    ) {
         //
     }
 
@@ -25,11 +27,11 @@ final readonly class UpdatePlayerImageUseCase
             $playerInfo = PlayerInfo::find($playerInfoId);
 
             if (!$playerInfo->sofa_player_id) {
-                throw new Exception('SofaId Null');
+                throw new Exception('Invalid SofaId');
             }
-                    
-            $playerImage = $this->fetcher->fetch($playerInfo->sofa_player_id);
 
+            $playerImage = $this->sofaScoreRepository->fetchPlayerImage($playerInfo->sofa_player_id);
+                    
             $this->file->write($playerInfo->foot_player_id, $playerImage);
 
         } catch (ClientException $e) {

@@ -4,10 +4,10 @@
         <div class="flex justify-center w-full">
             <div class="w-full md:w-3/4 md:px-10">
                 <x-score.score
-                    :fixture="$fixture"
-                    :teams="$teams"
-                    :league="$league"
-                    :score="$score" />
+                    :fixture="$fixture['fixture']"
+                    :teams="$fixture['teams']"
+                    :league="$fixture['league']"
+                    :score="$fixture['score']" />
             </div>
         </div>
         
@@ -22,16 +22,16 @@
                 <div class="w-[90%] absolute top-0 aspect-[74/111]">
                     <div id="box" class="flex items-end justify-center w-full h-full">
                         <div class="flex flex-col w-full h-[90%]">
-                            @foreach($lineups['startXI'] as $line => $players)
+                            @foreach($fixture['lineups']['startXI'] as $line => $players)
                                 <div id="line-{{ $line + 1 }}"
                                     class="flex items-stretch w-full h-full justify-evenly">
                                     @foreach($players as $player)
                                         <div class="flex justify-center items-center
                                             {{ count($players) === 1 ? 'w-full' : 'w-1/'.count($players) }}">
-                                            <livewire:lineups.player
+                                            <livewire:user.lineups.player
                                                 name="startXI"
                                                 size="w-[40px] h-[40px] md:w-[45px] md:h-[45px]"
-                                                :$fixtureId
+                                                :fixtureId="$id"
                                                 :$player
                                                 :key="$player['id']" />
                                         </div>
@@ -45,14 +45,14 @@
                 <!-- Substitutes Responsive(~767px) -->
                 <div class="w-[90%] top-full right-full mt-5 md:hidden">
                     <div class="grid w-full grid-cols-6 gap-x-10 gap-y-2 justify-items-center">
-                        @foreach($lineups['substitutes'] as $index => $substitutes)
+                        @foreach($fixture['lineups']['substitutes'] as $index => $substitutes)
                             @if($loop->odd)
                                 @foreach($substitutes as $key => $player)
                                     <div class="flex justify-center w-full col-span-2">
-                                        <livewire:lineups.player
+                                        <livewire:user.lineups.player
                                             name="substitutes"
                                             size="w-[40px] h-[40px]"
-                                            :$fixtureId
+                                            :fixtureId="$id"
                                             :$player
                                             :key="$player['id']" />
                                     </div>
@@ -63,10 +63,10 @@
                                 @foreach($substitutes as $player)
                                     <div class="col-span-2 flex justify-center w-full
                                         @if($loop->first) col-start-2 @endif">
-                                        <livewire:lineups.player
+                                        <livewire:user.lineups.player
                                             name="substitutes"
                                             size="w-[40px] h-[40px]"
-                                            :$fixtureId
+                                            :fixtureId="$id"
                                             :$player
                                             :key="$player['id']" />
                                     </div>
@@ -79,12 +79,12 @@
                 <!-- Substitutes Responsive(768px~) -->
                 <div class="absolute hidden h-full mr-5 right-full md:block">
                     <div class="grid content-center h-full gap-10">
-                        @foreach(collect($lineups['substitutes'])->flatten(1) as $player)
+                        @foreach(collect($fixture['lineups']['substitutes'])->flatten(1) as $player)
                             <div class="flex justify-center w-full">
-                                <livewire:lineups.player
+                                <livewire:user.lineups.player
                                     name="substitutes"
                                     size="w-12 h-12"
-                                    :$fixtureId
+                                    :fixtureId="$id"
                                     :$player
                                     :key="$player['id']" />
                             </div>
@@ -97,25 +97,18 @@
                     <div class="flex items-center w-[90%] md:w-full h-full mt-5 justify-evenly gap-x-3">
                         <!-- Result -->
                         <x-result.result-button
-                            :$fixture
-                            :$teams
-                            :$league
-                            :$score
-                            :$lineups
-                            :$fixtureId />
-                            
-                        @if($canRate)
-                            <!-- RateAllPlayers -->
-                            <x-fixture.rate-all-button
-                                :$lineups
-                                :$fixtureId />
-                        @endif
-        
+                            :fixture="$fixture['fixture']"
+                            :teams="$fixture['teams']"
+                            :league="$fixture['league']"
+                            :score="$fixture['score']"
+                            :lineups="$fixture['lineups']"
+                            :fixtureId="$id" />
+                        
                         <!-- RatedCount -->
-                        <livewire:lineups.rated-count :$fixtureId :$playerCount />
+                        <livewire:user.lineups.rated-count :fixtureId="$id" />
         
                         <!-- ToggleUserMacine -->
-                        <livewire:lineups.toggle-user-machine />
+                        <livewire:user.lineups.toggle-user-machine />
                     </div>
                 </div>
             </div>
