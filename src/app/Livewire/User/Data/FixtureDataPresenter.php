@@ -137,12 +137,12 @@ readonly class FixtureDataPresenter
                         $player['id']     = $playerInfo->id;
                         $player['name']   = $this->toLastName($player['name']);
                         $player['img']    = $this->playerImage->getByPath($player['img']);
-                        $player['rating'] = $playerInfo->rating;
+                        $player['rating'] = $player['defaultRating'];
 
                         return $player;
                     })
             ));
-        
+
         $formatted = $this->fixtureData->dataSet('lineups', $playerData);
 
         return new self($formatted);

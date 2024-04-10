@@ -107,11 +107,23 @@ readonly class PlayerInFixture
     }
     
     /**
+     * CanRateカラムをFixtureに追加する
+     *
+     * @return self
+     */
+    public function addCanRateToFixture(): self
+    {                
+        $this->fixture->canRate = $this->canRate();
+
+        return $this->setAttribute(player: $this->player);
+    }
+
+    /**
      * CanRateカラムをPlayerに追加する
      *
      * @return self
      */
-    public function addCanRateColumn(): self
+    public function addCanRateToPlayer(): self
     {                
         $this->player->canRate = $this->canRate();
 

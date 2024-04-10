@@ -43,7 +43,7 @@
                 </div>
 
                 <!-- Substitutes Responsive(~767px) -->
-                {{-- <div class="w-[90%] top-full right-full mt-5 md:hidden">
+                <div class="w-[90%] top-full right-full mt-5 md:hidden">
                     <div class="grid w-full grid-cols-6 gap-x-10 gap-y-2 justify-items-center">
                         @foreach($fixture['lineups']['substitutes'] as $index => $substitutes)
                             @if($loop->odd)
@@ -66,7 +66,7 @@
                                         <livewire:lineups.player
                                             name="substitutes"
                                             size="w-[40px] h-[40px]"
-                                            :$fixtureId
+                                            :fixtureId="$id"
                                             :$player
                                             :key="$player['id']" />
                                     </div>
@@ -79,37 +79,30 @@
                 <!-- Substitutes Responsive(768px~) -->
                 <div class="absolute hidden h-full mr-5 right-full md:block">
                     <div class="grid content-center h-full gap-10">
-                        @foreach(collect($lineups['substitutes'])->flatten(1) as $player)
+                        @foreach(collect($fixture['lineups']['substitutes'])->flatten(1) as $player)
                             <div class="flex justify-center w-full">
                                 <livewire:lineups.player
                                     name="substitutes"
                                     size="w-12 h-12"
-                                    :$fixtureId
+                                    :fixtureId="$id"
                                     :$player
                                     :key="$player['id']" />
                             </div>
                         @endforeach
                     </div>
-                </div> --}}
+                </div>
 
                 <!-- Options -->
                 <div class="flex justify-center w-full md:absolute md:mt-3 md:top-full">        
                     <div class="flex items-center w-[90%] md:w-full h-full mt-5 justify-evenly gap-x-3">
                         <!-- Result -->
-                        {{-- <x-result.result-button
-                            :$fixture
-                            :$teams
-                            :$league
-                            :$score
-                            :$lineups
-                            :$fixtureId /> --}}
-                            
-                        {{-- @if($canRate)
-                            <!-- RateAllPlayers -->
-                            <x-fixture.rate-all-button
-                                :$lineups
-                                :$fixtureId />
-                        @endif --}}
+                        <x-result.result-button
+                            :fixture="$fixture['fixture']"
+                            :teams="$fixture['teams']"
+                            :league="$fixture['league']"
+                            :score="$fixture['score']"
+                            :lineups="$fixture['lineups']"
+                            :fixtureId="$id" />
                         
                         <!-- RatedCount -->
                         <livewire:lineups.rated-count :fixtureId="$id" />
