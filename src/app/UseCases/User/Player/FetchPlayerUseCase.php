@@ -21,7 +21,7 @@ final readonly class FetchPlayerUseCase
         try {
             return $this->playerInFixture
                 ->request($request)
-                ->addCanRateColumn()
+                ->addCanRateToPlayer()
                 ->getPlayer();
 
         } catch (Exception $e) {

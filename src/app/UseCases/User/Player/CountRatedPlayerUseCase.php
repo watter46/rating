@@ -20,6 +20,7 @@ final readonly class CountRatedPlayerUseCase
     {
         try {
             return Fixture::query()
+                ->select(['fixture'])
                 ->withCount('ratedPlayers as ratedCount')
                 ->findOrFail($fixtureId);
 

@@ -41,7 +41,7 @@ class RatedCount extends Component
     {
         try {
             $fixture = $this->countRatedPlayer->execute($this->fixtureId);
-
+            
             $fixtureData = FixtureDataPresenter::create($fixture)
                 ->playerCount()
                 ->get();

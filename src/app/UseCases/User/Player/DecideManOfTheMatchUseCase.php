@@ -33,6 +33,7 @@ final readonly class DecideManOfTheMatchUseCase
 
             /** @var Player $oldMomPlayer */
             $oldMomPlayer = Player::query()
+                ->select(['rating', 'mom'])
                 ->mom($request->getFixtureId())
                 ?->first()
                 ?->unDecideMOM();

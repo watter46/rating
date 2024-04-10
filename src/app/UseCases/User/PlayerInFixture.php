@@ -44,13 +44,15 @@ readonly class PlayerInFixture
     public function request(PlayerInFixtureRequest $request): self
     {
         $fixture = Fixture::query()
+            ->select(['id', 'fixture'])
             ->currentSeason()
             ->inSeasonTournament()
             ->finished()
             ->findOrFail($request->getFixtureId());
-
+            
         $player = $request->existsPlayerInfoId()
             ? Player::query()
+                ->select(['rating', 'mom'])
                 ->fixtureId($request->getFixtureId())
                 ->playerInfoId($request->getPlayerInfoId())
                 ->firstOrNew([
@@ -97,6 +99,7 @@ readonly class PlayerInFixture
     public function latest(): self
     {
         $fixture = Fixture::query()
+            ->select(['id', 'fixture'])
             ->currentSeason()
             ->inSeasonTournament()
             ->finished()

@@ -44,6 +44,10 @@ class Player extends Model
         'mom' => 'boolean'
     ];
 
+    protected $hidden = [
+        'user_id'
+    ];
+
     /**
      * デフォルト値
      *
