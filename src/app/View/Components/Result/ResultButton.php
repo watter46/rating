@@ -12,11 +12,11 @@ class ResultButton extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public array $fixture,
-        public array $teams,
-        public array $league,
-        public array $score,
-        public array $lineups,
+        public array $fixtureData,
+        public array $teamsData,
+        public array $leagueData,
+        public array $scoreData,
+        public array $lineupsData,
         public string $fixtureId
     ) {
         //

@@ -11,10 +11,10 @@
     
     <!-- Component -->
     <x-result.result
-        :$fixture
-        :$teams
-        :$league
-        :$score
-        :$lineups
+        :$fixtureData
+        :$teamsData
+        :$leagueData
+        :$scoreData
+        :$lineupsData
         :$fixtureId />
 </x-util.modal-button>
