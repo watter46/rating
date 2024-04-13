@@ -13,7 +13,7 @@ final readonly class FetchPlayerUseCase
 {
     public function __construct(private PlayerInFixture $playerInFixture)
     {
-        
+        //
     }
     
     public function execute(PlayerInFixtureRequest $request): Player

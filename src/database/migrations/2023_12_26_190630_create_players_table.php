@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->unsignedFloat('rating', 3, 1)->nullable();
             $table->boolean('mom')->default(false);
+            $table->unsignedTinyInteger('rate_count');
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignUlid('fixture_id')->constrained()->onDelete('cascade');
