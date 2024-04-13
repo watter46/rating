@@ -147,4 +147,20 @@ readonly class FixtureDataPresenter
 
         return new self($formatted);
     }
+
+    /**
+     * 先発する選手の数をカラムに追加する
+     *
+     * @return self
+     */
+    public function addPlayerCountColumn()
+    {
+        $count = collect($this->fixtureData->dataGet('lineups.startXI'))
+            ->flatten(1)
+            ->count();
+
+        $formatted = $this->fixtureData->dataSet('lineups.playerCount', $count);
+
+        return new self($formatted);
+    }
 }

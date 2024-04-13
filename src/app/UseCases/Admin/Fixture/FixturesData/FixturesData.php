@@ -50,7 +50,8 @@ readonly class FixturesData implements DataInterface
                     'score'               => $fixturesDetailData->getScore()->toJson(),
                     'season'              => $fixturesDetailData->getSeason(),
                     'date'                => $fixturesDetailData->getDate(),
-                    'status'              => $fixturesDetailData->getStatus()
+                    'status'              => $fixturesDetailData->getStatus(),
+                    'mom_count'           => 0
                 ]);
             });
     }
