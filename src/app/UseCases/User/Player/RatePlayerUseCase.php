@@ -22,7 +22,7 @@ final readonly class RatePlayerUseCase
         try {
             $fixture = $this->playerInFixture->request($request);
 
-            if ($fixture->exceedRatePeriodDay()) {
+            if ($fixture->exceedPeriodDay()) {
                 throw new Exception($fixture::RATE_PERIOD_EXPIRED_MESSAGE);
             }
 

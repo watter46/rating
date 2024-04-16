@@ -30,7 +30,7 @@
 
     <div class="flex justify-end mt-8 gap-x-5">
         <div class="w-fit">
-            <div class="w-full rounded-lg bg-gray-800 grid-flow-col grid gap-1 grid-cols-{{ $momLimit }}">
+            <div class="w-full mb-1 rounded-lg bg-gray-800 grid-flow-col grid gap-1 grid-cols-{{ $momLimit }}">
                 @foreach($remainingMomCountRange as $count)
                     <x-svg.remaining-count-image class="fill-amber-300" />
                 @endforeach
@@ -48,7 +48,7 @@
         </div>
 
         <div class="w-fit">
-            <div class="w-full bg-gray-800 rounded-lg grid-flow-col grid gap-1 grid-cols-{{ $rateLimit }}">
+            <div class="w-full mb-1 bg-gray-800 rounded-lg grid-flow-col grid gap-1 grid-cols-{{ $rateLimit }}">
                 @foreach($remainingRateCountRange as $count)
                     <x-svg.remaining-count-image class="fill-sky-500" />
                 @endforeach

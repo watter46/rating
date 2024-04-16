@@ -23,12 +23,8 @@ final readonly class DecideManOfTheMatchUseCase
         try {
             $playerInFixture = $this->playerInFixture->request($request);
 
-            if ($playerInFixture->exceedRatePeriodDay()) {
+            if ($playerInFixture->exceedPeriodDay()) {
                 throw new Exception($playerInFixture::RATE_PERIOD_EXPIRED_MESSAGE);
-            }
-
-            if ($playerInFixture->exceedRateLimit()) {
-                throw new Exception($playerInFixture::RATE_LIMIT_EXCEEDED_MESSAGE);
             }
 
             if ($playerInFixture->exceedMomLimit()) {

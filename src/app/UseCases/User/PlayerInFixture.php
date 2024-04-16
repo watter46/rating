@@ -18,7 +18,7 @@ readonly class PlayerInFixture
     private const MAX_RATE_COUNT = 3;
     public const RATE_LIMIT_EXCEEDED_MESSAGE = 'Rate limit exceeded.';
 
-    private const MAX_MOM_COUNT = 3;
+    private const MAX_MOM_COUNT = 5;
     public const MOM_LIMIT_EXCEEDED_MESSAGE = 'MOM limit exceeded.';
 
     public function __construct(
@@ -44,7 +44,7 @@ readonly class PlayerInFixture
      *
      * @return bool
      */
-    public function exceedMomLimit()
+    public function exceedMomLimit(): bool
     {
         return $this->fixture->mom_count >= self::MAX_MOM_COUNT;
     }
@@ -54,7 +54,7 @@ readonly class PlayerInFixture
      *
      * @return bool
      */
-    public function exceedRatePeriodDay(): bool
+    public function exceedPeriodDay(): bool
     {
         $specifiedDate = Carbon::parse($this->fixture->date);
         
@@ -68,7 +68,7 @@ readonly class PlayerInFixture
      */
     public function canRate(): bool
     {
-        return !$this->exceedRatePeriodDay() && !$this->exceedRateLimit();
+        return !$this->exceedPeriodDay() && !$this->exceedRateLimit();
     }
     
     /**
@@ -78,7 +78,9 @@ readonly class PlayerInFixture
      */
     public function canMom(): bool
     {
-        return !$this->exceedMomLimit() && !$this->player->mom;
+        return !$this->exceedPeriodDay()
+            && !$this->exceedMomLimit()
+            && !$this->player->mom;
     }
     
     /**
