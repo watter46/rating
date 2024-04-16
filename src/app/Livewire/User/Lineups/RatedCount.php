@@ -17,7 +17,9 @@ class RatedCount extends Component
 
     public int  $ratedCount;
     public int  $playerCount;
+    public int $ratedPercentage;
     public bool $allRated;
+    public bool $isZero;
 
     private readonly CountRatedPlayerUseCase $countRatedPlayer;
     
@@ -46,12 +48,24 @@ class RatedCount extends Component
                 ->playerCount()
                 ->get();
             
-            $this->ratedCount  = $fixture->ratedCount;
-            $this->playerCount = $fixtureData->get('playerCount');
-            $this->allRated    = $this->playerCount === $this->ratedCount;
+            $this->ratedPercentage = $this->calculateRatedPercentage(
+                    $fixture->ratedCount,
+                    $fixtureData->get('playerCount')
+                );
+            
+            $this->isZero = $this->ratedPercentage === 0;
+                
+            // $this->ratedCount  = $fixture->ratedCount;
+            // $this->playerCount = $fixtureData->get('playerCount');
+            // $this->allRated    = $this->playerCount === $this->ratedCount;
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
+    }
+
+    private function calculateRatedPercentage(int $ratedPlayerCount, int $totalPlayerCount): int
+    {
+        return (int) floor(($ratedPlayerCount / $totalPlayerCount) * 100);
     }
 }

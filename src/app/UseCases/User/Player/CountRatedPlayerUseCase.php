@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Fixture;
-use App\Models\Player;
 
 
 final readonly class CountRatedPlayerUseCase
@@ -16,7 +15,7 @@ final readonly class CountRatedPlayerUseCase
         //
     }
 
-    public function execute(string $fixtureId)
+    public function execute(string $fixtureId): Fixture
     {
         try {
             return Fixture::query()
