@@ -12,10 +12,10 @@ class Score extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public array $fixture,
-        public array $teams,
-        public array $league,
-        public array $score)
+        public array $fixtureData,
+        public array $teamsData,
+        public array $leagueData,
+        public array $scoreData)
     {
         //
     }

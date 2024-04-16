@@ -1,8 +1,15 @@
-<div class="px-2 md:px-4 font-black text-center text-gray-300 rounded-xl
-    {{ $allRated ? 'bg-amber-600' : 'bg-gray-700' }}"
-    x-cloak>
-    <div class="flex items-center gap-x-2">
-        <p class="text-xs md:text-base">Rated:</p>
-        <p class="text-sm md:text-lg">{{ $ratedCount }} / {{ $playerCount }}</p>
+<div class="w-full px-3"
+    x-cloak
+    x-data="{ isZero: @entangle('isZero') }">
+    <label class="text-sm font-black text-gray-400">Rated</label>
+    <div class="flex items-center w-full gap-x-3">
+        <div class="items-center w-full bg-gray-200 rounded-sm transform skew-x-[-30deg] border border-[rgba(37,255,33,0.42)] dark:bg-gray-700">
+            <div class="w-full p-1"
+                :class="isZero ? 'bg-gray-700' : 'bg-[#26FF21]'"
+                style="width: {{ $ratedPercentage }}%">
+            </div>
+        </div>
+
+        <label class="text-sm font-black text-gray-400">{{ $ratedPercentage }}%</label>
     </div>
 </div>

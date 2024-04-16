@@ -7,13 +7,13 @@
 
             <div class="flex self-end justify-center h-full col-span-3 sm:col-span-4 gap-x-2">
                 <div class="grid items-center w-fit">
-                    @if ($teams['home'])
-                        @if ($teams['home']['img'])
-                            <img src="{{ $teams['home']['img'] }}"
+                    @if ($teamsData['home'])
+                        @if ($teamsData['home']['img'])
+                            <img src="{{ $teamsData['home']['img'] }}"
                                 class="w-7 h-7 md:w-10 md:h-10">
                         @endif
     
-                        @unless($teams['home']['img'])
+                        @unless($teamsData['home']['img'])
                             <div class="bg-gray-400 w-7 h-7 md:w-10 md:h-10">
                             </div>
                         @endunless
@@ -22,20 +22,20 @@
 
                 <div class="items-center hidden sm:grid">
                     <div class="flex items-start justify-center">
-                        <p class="p-1 text-xl font-black text-gray-300 md:text-3xl">{{ $score['fulltime']['home'] }}</p>
+                        <p class="p-1 text-xl font-black text-gray-300 md:text-3xl">{{ $scoreData['fulltime']['home'] }}</p>
                         <p class="p-1 text-xl font-black text-gray-300 md:text-3xl">-</p>
-                        <p class="p-1 text-xl font-black text-gray-300 md:text-3xl">{{ $score['fulltime']['away'] }}</p>
+                        <p class="p-1 text-xl font-black text-gray-300 md:text-3xl">{{ $scoreData['fulltime']['away'] }}</p>
                     </div>
                 </div>
 
                 <div class="grid items-center w-fit">
-                    @if ($teams['away'])
-                        @if ($teams['away']['img'])
-                            <img src="{{ $teams['away']['img'] }}"
+                    @if ($teamsData['away'])
+                        @if ($teamsData['away']['img'])
+                            <img src="{{ $teamsData['away']['img'] }}"
                                 class="w-7 h-7 md:w-10 md:h-10">
                         @endif
     
-                        @unless($teams['away']['img'])
+                        @unless($teamsData['away']['img'])
                             <div class="bg-gray-400 w-7 h-7 md:w-10 md:h-10">
                             </div>
                         @endunless

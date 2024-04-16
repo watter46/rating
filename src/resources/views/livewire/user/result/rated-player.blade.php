@@ -10,21 +10,21 @@
             <!-- PlayerImage -->
             <x-player.player-image
                 class="{{ $size }} cursor-default"
-                :number="$player['number']"
-                :img="$player['img']" />
+                :number="$playerData['number']"
+                :img="$playerData['img']" />
 
             <!-- Goals -->
             <div class="absolute top-0 left-0 -translate-x-[60%]">
                 <x-player.goals
                     class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
-                    :goals="$player['goal']" />
+                    :goals="$playerData['goal']" />
             </div>
 
             <!-- Assists -->
             <div class="absolute top-0 right-0 translate-x-[60%]">
                 <x-player.assists
                     class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
-                    :assists="$player['assists']" />
+                    :assists="$playerData['assists']" />
             </div>
             
             <!-- Rating -->
@@ -50,7 +50,7 @@
 
     <div class="flex items-center justify-center pointer-events-none gap-x-2">    
         <p class="text-xs font-black text-white md:text-sm">
-            {{ $player['name'] }}
+            {{ $playerData['name'] }}
         </p>
     </div>
 

@@ -21,13 +21,17 @@ final readonly class DecideManOfTheMatchUseCase
     public function execute(PlayerInFixtureRequest $request)
     {
         try {
-            $fixture = $this->playerInFixture->request($request);
+            $playerInFixture = $this->playerInFixture->request($request);
 
-            if (!$fixture->canRate()) {
-                throw new Exception($fixture::RATE_PERIOD_EXPIRED_MESSAGE);
+            if ($playerInFixture->exceedPeriodDay()) {
+                throw new Exception($playerInFixture::RATE_PERIOD_EXPIRED_MESSAGE);
             }
 
-            $newMomPlayer = $fixture
+            if ($playerInFixture->exceedMomLimit()) {
+                throw new Exception($playerInFixture::MOM_LIMIT_EXCEEDED_MESSAGE);
+            }
+
+            $newMomPlayer = $playerInFixture
                 ->getPlayer()
                 ->decideMOM();
 
@@ -37,7 +41,13 @@ final readonly class DecideManOfTheMatchUseCase
                 ?->first()
                 ?->unDecideMOM();
 
-            DB::transaction(function () use ($newMomPlayer, $oldMomPlayer) {
+            $fixture = $playerInFixture
+                ->getFixture()
+                ->incrementMomCount();
+
+            DB::transaction(function () use ($newMomPlayer, $oldMomPlayer, $fixture) {
+                $fixture->save();
+                
                 $newMomPlayer->save();
 
                 if (!$oldMomPlayer) return;

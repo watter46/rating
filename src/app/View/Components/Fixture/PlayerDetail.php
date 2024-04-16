@@ -5,7 +5,6 @@ namespace App\View\Components\Fixture;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Illuminate\Support\Str;
 
 
 class PlayerDetail extends Component
@@ -13,7 +12,7 @@ class PlayerDetail extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public string $fixtureId, public array $player)
+    public function __construct(public string $fixtureId, public array $playerData)
     {
         //
     }

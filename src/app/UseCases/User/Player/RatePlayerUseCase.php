@@ -22,8 +22,12 @@ final readonly class RatePlayerUseCase
         try {
             $fixture = $this->playerInFixture->request($request);
 
-            if (!$fixture->canRate()) {
+            if ($fixture->exceedPeriodDay()) {
                 throw new Exception($fixture::RATE_PERIOD_EXPIRED_MESSAGE);
+            }
+
+            if ($fixture->exceedRateLimit()) {
+                throw new Exception($fixture::RATE_LIMIT_EXCEEDED_MESSAGE);
             }
 
             $player = $fixture

@@ -35,9 +35,6 @@ class Fixture extends Model
     public $incrementing = false;
     
     protected $keyType = 'string';
-
-    private const RATE_PERIOD_DAY = 50;
-    public  const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
     
     /**
      * The attributes that are mass assignable.
@@ -48,6 +45,7 @@ class Fixture extends Model
         'id',
         'external_fixture_id',
         'external_league_id',
+        'mom_count',
         'season',
         'score',
         'date',
@@ -58,6 +56,15 @@ class Fixture extends Model
     protected $casts = [
         'score'   => AsCollection::class,
         'fixture' => AsCollection::class
+    ];
+
+    /**
+     * デフォルト値
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'mom_count' => 0
     ];
     
     /**
@@ -102,6 +109,18 @@ class Fixture extends Model
     {
         $this->fixture = $fixtureData->build();
 
+        return $this;
+    }
+    
+    /**
+     * MomCountを1増やす
+     *
+     * @return self
+     */
+    public function incrementMomCount(): self
+    {
+        $this->mom_count++;
+        
         return $this;
     }
     

@@ -8,7 +8,7 @@ use Livewire\Component;
 class Player extends Component
 {
     public string $fixtureId;
-    public array $player;
+    public array $playerData;
 
     public string $name;
     public string $size;

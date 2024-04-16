@@ -31,6 +31,7 @@ class Player extends Model
     protected $fillable = [
         'rating',
         'mom',
+        'rate_count',
         'player_info_id',
         'fixture_id'
     ];
@@ -56,6 +57,7 @@ class Player extends Model
     protected $attributes = [
         'rating' => null,
         'mom' => false,
+        'rate_count' => 0
     ];
     
     /**
@@ -97,7 +99,9 @@ class Player extends Model
     public function rate(float $rating): self
     {
         $this->rating = $rating;
-
+        
+        $this->rate_count++;
+        
         return $this;
     }
     

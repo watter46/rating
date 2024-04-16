@@ -11,7 +11,7 @@ class RatedPlayer extends Component
     public string $name;
     public string $size;
     public string $fixtureId;
-    public array $player;
+    public array $playerData;
 
     use PlayerTrait;
 
