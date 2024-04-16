@@ -5,38 +5,36 @@ namespace App\Livewire\User\Rating;
 
 class RatingPresenter
 {
-    private array $player;
+    private int $rateCount;
+    private int $rateLimit;
     private int $momCount;
     private int $momLimit;
 
-    public function create(array $player, int $momLimit, int $momCount): self
+    public function create(int $rateCount, int $rateLimit, int $momLimit, int $momCount): self
     {
-        $this->player = $player;
-        $this->momLimit = $momLimit;
+        $this->rateCount = $rateCount;
+        $this->rateLimit = $rateLimit;
         $this->momCount = $momCount;
+        $this->momLimit = $momLimit;
 
         return $this;
     }
 
     public function getRemainingRateCountRange(): array
     {
-        $rateCount = $this->player['rate_count'];
-
-        $remainingCount = $this->getRateLimit() - $rateCount;
+        $remainingCount = $this->getRateLimit() - $this->rateCount;
 
         return $remainingCount ? range(1, $remainingCount) : [];
     }
 
     public function getRateCountRange(): array
     {
-        $rateCount = $this->player['rate_count'];
-
-        return $rateCount ? range(1, $rateCount) : [];
+        return $this->rateCount ? range(1, $this->rateCount) : [];
     }
 
     public function getRateLimit(): int
     {
-        return $this->player['rateLimit'];
+        return $this->rateLimit;
     }
 
     public function getRemainingMomCountRange(): array

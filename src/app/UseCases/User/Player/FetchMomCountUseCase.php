@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture;
+namespace App\UseCases\User\Player;
 
 use App\UseCases\User\PlayerInFixture;
 use App\UseCases\User\PlayerInFixtureRequest;

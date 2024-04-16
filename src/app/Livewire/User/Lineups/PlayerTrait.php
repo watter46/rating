@@ -2,22 +2,23 @@
 
 namespace App\Livewire\User\Lineups;
 
-use App\Livewire\User\Rating\Rating;
+use Exception;
 use Livewire\Attributes\On;
 
+use App\Livewire\MessageType;
 use App\UseCases\User\Player\FetchPlayerUseCase;
 use App\UseCases\User\PlayerInFixtureRequest;
-use Exception;
+
 
 trait PlayerTrait
 {
     public ?float $rating;
     public ?float $defaultRating;
+    public int $rateCount;
+    public int $rateLimit;
     public bool $mom;
     public bool $canRate;
-    public int $momCount;
-
-    public array $player;
+    public bool $canMom;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
     
@@ -29,8 +30,6 @@ trait PlayerTrait
     public function mountPlayerTrait()
     {
         $this->fetch();
-        
-        $this->defaultRating = $this->playerData['defaultRating'];
     }
 
     /**
@@ -43,16 +42,20 @@ trait PlayerTrait
     {
         try {
             $player = $this->fetchPlayer->execute(PlayerInFixtureRequest::make(
-                fixtureId: $this->fixtureId,
-                playerInfoId: $this->playerData['id']
-            ));
+                    fixtureId: $this->fixtureId,
+                    playerInfoId: $this->playerData['id']
+                ));
 
-            $this->player  = $player->toArray();
-            $this->rating  = $player->rating;
-            $this->mom     = $player->mom;
+            $this->rateCount = $player->rate_count;
+            $this->rateLimit = $player->rateLimit;
+            $this->rating = $player->rating;
+            $this->defaultRating = $player->defaultRating;
+            $this->mom = $player->mom;
             $this->canRate = $player->canRate;
+            $this->canMom = $player->canMom;
+            
         } catch (Exception $e) {
-            dd($e);
+            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }
 }

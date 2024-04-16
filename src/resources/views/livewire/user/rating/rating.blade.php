@@ -2,10 +2,12 @@
         rating: @entangle('rating'),
         ratingInput: null,
         mom: @entangle('mom'),
-        canRate: @entangle('canRate')
+        canRate: @entangle('canRate'),
+        canMom: @entangle('canMom'),
     }"
     x-init="ratingInput = rating, $watch('rating', (rating) => ratingInput = rating)"
-    class="w-full">
+    class="w-full"
+    @mom-button-disabled.window="canMom = false">
     
     <div class="px-10 py-2">
         <div class="flex flex-col h-full">
@@ -39,7 +41,7 @@
             </div>
 
             <button class="px-8 py-1 border-2 border-gray-200 rounded-lg bg-amber-400"
-                :class="mom || !canRate ? 'pointer-events-none opacity-30' : ''"
+                :class="!canMom ? 'pointer-events-none opacity-30' : ''"
                 wire:click="decideMOM">
                 <p class="font-bold text-gray-200">★ MOM</p>
             </button>

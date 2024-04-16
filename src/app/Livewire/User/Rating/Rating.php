@@ -3,10 +3,10 @@
 namespace App\Livewire\User\Rating;
 
 use Exception;
-use App\Livewire\MessageType;
-use App\Livewire\User\Lineups\MomCountTrait;
 use Livewire\Component;
 
+use App\Livewire\MessageType;
+use App\Livewire\User\Lineups\MomCountTrait;
 use App\Livewire\User\Lineups\PlayerTrait;
 use App\UseCases\User\Player\DecideManOfTheMatchUseCase;
 use App\UseCases\User\Player\RatePlayerUseCase;
@@ -40,13 +40,16 @@ class Rating extends Component
     
     public function render()
     {
-        $presenter = $this->presenter->create($this->player, $this->momLimit, $this->momCount);
+        $presenter = $this->presenter->create(
+                $this->rateCount,
+                $this->rateLimit,
+                $this->momLimit,
+                $this->momCount
+            );
 
         return view('livewire.user.rating.rating', [
-            'rateLimit' => $presenter->getRateLimit(),
             'rateCountRange' => $presenter->getRateCountRange(),
             'remainingRateCountRange' => $presenter->getRemainingRateCountRange(),
-            // 'momLimit' => $presenter->getMomLimit(),
             'momCountRange' => $presenter->getMomCountRange(),
             'remainingMomCountRange' => $presenter->getRemainingMomCountRange()
         ]);

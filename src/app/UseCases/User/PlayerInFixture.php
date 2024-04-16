@@ -18,7 +18,7 @@ readonly class PlayerInFixture
     private const MAX_RATE_COUNT = 3;
     public const RATE_LIMIT_EXCEEDED_MESSAGE = 'Rate limit exceeded.';
 
-    private const MAX_MOM_COUNT = 5;
+    private const MAX_MOM_COUNT = 3;
     public const MOM_LIMIT_EXCEEDED_MESSAGE = 'MOM limit exceeded.';
 
     public function __construct(
@@ -69,6 +69,16 @@ readonly class PlayerInFixture
     public function canRate(): bool
     {
         return !$this->exceedRatePeriodDay() && !$this->exceedRateLimit();
+    }
+    
+    /**
+     * MOMを選択可能か判定する
+     *
+     * @return bool
+     */
+    public function canMom(): bool
+    {
+        return !$this->exceedMomLimit() && !$this->player->mom;
     }
     
     /**
@@ -164,8 +174,9 @@ readonly class PlayerInFixture
      */
     public function addCanRateToPlayer(): self
     {
-        $this->player->canRate   = $this->canRate();
+        $this->player->canRate = $this->canRate();
         $this->player->rateLimit = self::MAX_RATE_COUNT;
+        $this->player->canMom = $this->canMom();
 
         return $this->setAttribute(player: $this->player);
     }
@@ -183,13 +194,14 @@ readonly class PlayerInFixture
     /**
      * Momの現在のカウントと上限値を返す
      *
-     * @return array{momLimit: int, mom_count: int}
+     * @return array{momLimit: int, mom_count: int, exceedMomCount: bool}
      */
     public function getMomCountAndLimit(): array
     {
         $this->fixture->momLimit = self::MAX_MOM_COUNT;
+        $this->fixture->exceedMomLimit = $this->exceedMomLimit();
 
-        return $this->fixture->only(['momLimit', 'mom_count']);
+        return $this->fixture->only(['momLimit', 'mom_count', 'exceedMomLimit']);
     }
 
     private function setAttribute(
