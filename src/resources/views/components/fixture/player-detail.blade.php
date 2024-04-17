@@ -57,7 +57,7 @@
 
     <!-- Rating -->
     <div class="flex items-center justify-center w-full h-full border-t-2 border-gray-700">
-        <livewire:user.rating.rating
+        <livewire:user.fixture.rating
             :$fixtureId
             :$playerData
             :key="$playerData['id']" />

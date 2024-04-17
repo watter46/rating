@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\User\Lineups;
+namespace App\Livewire\User\Fixture;
 
 use Exception;
 use Livewire\Attributes\On;
@@ -13,12 +13,11 @@ use App\UseCases\User\PlayerInFixtureRequest;
 trait PlayerTrait
 {
     public ?float $rating;
-    public ?float $defaultRating;
-    public int $rateCount;
-    public int $rateLimit;
     public bool $mom;
     public bool $canRate;
     public bool $canMom;
+    public int $rateCount;
+    public int $rateLimit;
 
     private readonly FetchPlayerUseCase $fetchPlayer;
     
@@ -46,13 +45,12 @@ trait PlayerTrait
                     playerInfoId: $this->playerData['id']
                 ));
 
+            $this->rating = $player->rating;
+            $this->mom    = $player->mom;
+            $this->canRate = $player->canRate;
+            $this->canMom  = $player->canMom;
             $this->rateCount = $player->rate_count;
             $this->rateLimit = $player->rateLimit;
-            $this->rating = $player->rating;
-            $this->defaultRating = $player->defaultRating;
-            $this->mom = $player->mom;
-            $this->canRate = $player->canRate;
-            $this->canMom = $player->canMom;
             
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));

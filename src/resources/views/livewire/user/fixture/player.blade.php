@@ -80,7 +80,9 @@
     </x-slot:icon>
 
     <x-slot:disabled-icon></x-slot:disabled-icon>
-
+    {{-- @php
+        dd($playerData)
+    @endphp --}}
     <x-fixture.player-detail
         :$playerData 
         :$fixtureId />

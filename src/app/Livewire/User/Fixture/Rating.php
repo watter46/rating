@@ -1,13 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\User\Rating;
+namespace App\Livewire\User\Fixture;
 
 use Exception;
 use Livewire\Component;
 
 use App\Livewire\MessageType;
-use App\Livewire\User\Lineups\MomCountTrait;
-use App\Livewire\User\Lineups\PlayerTrait;
+use App\Livewire\User\Fixture\MomCountTrait;
+use App\Livewire\User\Fixture\PlayerTrait;
+use App\Livewire\User\Fixture\RatingPresenter;
 use App\UseCases\User\Player\DecideManOfTheMatchUseCase;
 use App\UseCases\User\Player\RatePlayerUseCase;
 use App\UseCases\User\PlayerInFixtureRequest;
@@ -47,7 +48,7 @@ class Rating extends Component
                 $this->momCount
             );
 
-        return view('livewire.user.rating.rating', [
+        return view('livewire.user.fixture.rating', [
             'rateCountRange' => $presenter->getRateCountRange(),
             'remainingRateCountRange' => $presenter->getRemainingRateCountRange(),
             'momCountRange' => $presenter->getMomCountRange(),

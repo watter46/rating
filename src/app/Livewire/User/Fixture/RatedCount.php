@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\User\Lineups;
+namespace App\Livewire\User\Fixture;
 
 use Exception;
 use Livewire\Attributes\On;
@@ -15,10 +15,7 @@ class RatedCount extends Component
 {   
     public string $fixtureId;
 
-    public int  $ratedCount;
-    public int  $playerCount;
     public int $ratedPercentage;
-    public bool $allRated;
     public bool $isZero;
 
     private readonly CountRatedPlayerUseCase $countRatedPlayer;
@@ -35,7 +32,7 @@ class RatedCount extends Component
     
     public function render()
     {
-        return view('livewire.user.lineups.rated-count');
+        return view('livewire.user.fixture.rated-count');
     }
 
     #[On('player-rated')]
@@ -54,10 +51,6 @@ class RatedCount extends Component
                 );
             
             $this->isZero = $this->ratedPercentage === 0;
-                
-            // $this->ratedCount  = $fixture->ratedCount;
-            // $this->playerCount = $fixtureData->get('playerCount');
-            // $this->allRated    = $this->playerCount === $this->ratedCount;
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\User\Lineups;
+namespace App\Livewire\User\Fixture;
 
 use Livewire\Component;
 
@@ -10,7 +10,7 @@ class ToggleUserMachine extends Component
     
     public function render()
     {
-        return view('livewire.user.lineups.toggle-user-machine');
+        return view('livewire.user.fixture.toggle-user-machine');
     }
 
     public function updatedIsUser()
