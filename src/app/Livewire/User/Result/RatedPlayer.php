@@ -2,7 +2,7 @@
 
 namespace App\Livewire\User\Result;
 
-use App\Livewire\User\Lineups\PlayerTrait;
+use App\Livewire\User\Fixture\PlayerTrait;
 use Livewire\Component;
 
 

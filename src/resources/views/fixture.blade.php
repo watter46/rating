@@ -28,7 +28,7 @@
                                     @foreach($playersData as $playerData)
                                         <div class="flex justify-center items-cente
                                             {{ $lineupsData['playerGridCss'] }}">
-                                            <livewire:user.lineups.player
+                                            <livewire:user.fixture.player
                                                 name="startXI"
                                                 size="w-[40px] h-[40px] md:w-[45px] md:h-[45px]"
                                                 :$fixtureId
@@ -49,7 +49,7 @@
                             @if($loop->odd)
                                 @foreach($substitutesData as $playerData)
                                     <div class="flex justify-center w-full col-span-2">
-                                        <livewire:user.lineups.player
+                                        <livewire:user.fixture.player
                                             name="substitutes"
                                             size="w-[40px] h-[40px]"
                                             :$fixtureId
@@ -63,7 +63,7 @@
                                 @foreach($substitutesData as $playerData)
                                     <div class="col-span-2 flex justify-center w-full
                                         @if($loop->first) col-start-2 @endif">
-                                        <livewire:user.lineups.player
+                                        <livewire:user.fixture.player
                                             name="substitutes"
                                             size="w-[40px] h-[40px]"
                                             :$fixtureId
@@ -82,7 +82,7 @@
                         
                         @foreach(collect($lineupsData['substitutes'])->flatten(1) as $playerData)
                             <div class="flex justify-center w-full">
-                                <livewire:user.lineups.player
+                                <livewire:user.fixture.player
                                     name="substitutes"
                                     size="w-12 h-12"
                                     :$fixtureId
@@ -97,7 +97,7 @@
                 <div class="flex flex-col justify-center w-full md:absolute md:mt-3 md:top-full">        
                     <div class="flex items-center w-full h-full mt-5 justify-evenly gap-x-3">
                         <!-- RatedCount -->
-                        <livewire:user.lineups.rated-count :$fixtureId />
+                        <livewire:user.fixture.rated-count :$fixtureId />
                     </div>
                     
                     <div class="flex items-center justify-around w-full h-full mt-5 gap-x-3">
@@ -111,7 +111,7 @@
                             :$fixtureId />
         
                         <!-- ToggleUserMacine -->
-                        <livewire:user.lineups.toggle-user-machine />
+                        <livewire:user.fixture.toggle-user-machine />
                     </div>
                 </div>
             </div>

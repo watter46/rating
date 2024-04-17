@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\User\Lineups;
+namespace App\Livewire\User\Fixture;
 
 use Livewire\Attributes\On;
 

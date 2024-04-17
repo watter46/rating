@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Livewire\User\Rating;
+namespace App\Livewire\User\Fixture;
 
 
 class RatingPresenter
