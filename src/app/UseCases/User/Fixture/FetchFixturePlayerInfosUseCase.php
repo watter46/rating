@@ -23,7 +23,6 @@ final readonly class FetchFixturePlayerInfosUseCase
             return $this->playerInFixture
                 ->request($request)
                 ->addCanRateToFixture()
-                ->addCanRateToPlayer()
                 ->addPlayerColumn()
                 ->getFixture();
 

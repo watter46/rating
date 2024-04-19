@@ -20,7 +20,9 @@ final readonly class FetchLatestUseCase
         try {
             return $this->playerInFixture
                 ->latest()
-                ->addPlayerInfosColumn()
+                ->addCanRateToFixture()
+                ->addCanRateToPlayer()
+                ->addPlayerColumn()
                 ->getFixture();
 
         } catch (Exception $e) {
