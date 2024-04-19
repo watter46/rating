@@ -138,6 +138,44 @@ readonly class PlayerInFixture
 
         return $this->setAttribute(fixture: $this->fixture);
     }
+
+    public function addPlayerColumn()
+    {
+        $playedIds = $this->fixture->toFixtureData()->getPlayerIds();
+        
+        $playerInfos = PlayerInfo::query()
+            ->with(['players' => fn($query) => $query
+                ->fixtureId($this->request->getFixtureId())
+            ])
+            ->select(['id', 'foot_player_id'])
+            ->currentSeason()
+            ->whereIn('foot_player_id', $playedIds->toArray())
+            ->get();
+
+        if ($playerInfos->count() !== $playedIds->count()) {
+            throw new Exception('PlayerInfo Not Found.');
+        } 
+
+        $this->fixture->playerInfos = $playerInfos;
+
+        $players = $playerInfos->map(function (PlayerInfo $info) {
+            $player = $info->players->first()
+                ?? new Player([
+                    'fixture_id' => $this->request->getFixtureId(),
+                    'player_info_id' => $info->id
+                ]);
+            
+            $player->canRate = $this->canRate();
+            $player->rateLimit = self::MAX_RATE_COUNT;
+            $player->canMom = $this->canMom();
+
+            return $player;
+        });
+
+        $this->fixture->players = $players;
+        
+        return $this->setAttribute(fixture: $this->fixture);
+    }
     
     /**
      * 最新の試合を取得する
@@ -165,7 +203,9 @@ readonly class PlayerInFixture
     public function addCanRateToFixture(): self
     {                
         $this->fixture->canRate = $this->canRate();
-
+        $this->fixture->momLimit = self::MAX_MOM_COUNT;
+        $this->fixture->exceedMomLimit = $this->exceedMomLimit();
+        
         return $this->setAttribute(player: $this->player);
     }
 

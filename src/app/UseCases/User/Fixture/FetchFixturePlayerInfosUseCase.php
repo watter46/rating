@@ -23,7 +23,8 @@ final readonly class FetchFixturePlayerInfosUseCase
             return $this->playerInFixture
                 ->request($request)
                 ->addCanRateToFixture()
-                ->addPlayerInfosColumn()
+                ->addCanRateToPlayer()
+                ->addPlayerColumn()
                 ->getFixture();
 
         } catch (ModelNotFoundException $e) {

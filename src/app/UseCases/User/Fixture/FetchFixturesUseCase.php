@@ -16,6 +16,7 @@ final readonly class FetchFixturesUseCase
         try {            
             /** @var Paginator $fixtures */
             $fixtures = Fixture::query()
+                ->with('players:id')
                 ->select(['id', 'fixture'])
                 ->whereNotNull('fixture')
                 ->currentSeason()
@@ -27,7 +28,7 @@ final readonly class FetchFixturesUseCase
 
             $fixtures->getCollection()
                 ->transform(function (Fixture $fixture) {
-                    $fixture->isRate = $fixture->players()->exists();
+                    $fixture->isRate = $fixture->players->isNotEmpty();
                     
                     return $fixture;
                 });

@@ -26,19 +26,48 @@ final readonly class FixturePresenter
         $fixtureData = $fixture
             ->fixture
             ->mapWithKeys(function ($fixture, $key) {
+                if ($key === "lineups") {
+                    return [$key => $this->addPlayerGridCss($fixture)];
+                }
+                
                 return [$key.'Data' => $fixture];
             })
-            ->map(function ($data, $key) {
-                if ($key === 'lineupsData') {
-                    return $this->addPlayerGridCss($data);
+            ->map(function ($data, $key) use ($fixture) {
+                if ($key === "lineups") {
+                    $players = $fixture->players->keyBy('player_info_id');
+                    
+                    $data['startXI'] = collect($data['startXI'])
+                        ->map(function (array $startXIData) use ($players) {
+                            return collect($startXIData)
+                                ->map(function (array $playerData) use ($players) {
+                                    return [
+                                        'playerData' => $playerData,
+                                        'player' => $players->get($playerData['id'])
+                                    ];
+                                });
+                        });
+
+                    $data['substitutes'] = collect($data['substitutes'])
+                        ->map(function (array $substitutesData) use ($players) {
+                            return collect($substitutesData)
+                                ->map(function (array $playerData) use ($players) {
+                                    return [
+                                        'playerData' => $playerData,
+                                        'player' => $players->get($playerData['id'])
+                                    ];
+                                });
+                        });
+                        
+                    return $data;
                 }
 
                 return $data;
             });
-        
+
         return collect([
             'fixtureId' => $fixture->id,
-            'date' => $fixture->date,
+            'momCount' => $fixture->mom_count,
+            'momLimit' => $fixture->momLimit,
             ...$fixtureData
         ]);
     }

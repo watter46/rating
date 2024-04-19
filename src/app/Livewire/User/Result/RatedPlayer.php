@@ -3,6 +3,7 @@
 namespace App\Livewire\User\Result;
 
 use App\Livewire\User\Fixture\PlayerTrait;
+use App\Models\Player;
 use Livewire\Component;
 
 
@@ -12,6 +13,7 @@ class RatedPlayer extends Component
     public string $size;
     public string $fixtureId;
     public array $playerData;
+    public Player $player;
 
     use PlayerTrait;
 
