@@ -76,11 +76,11 @@ readonly class PlayerInFixture
      *
      * @return bool
      */
-    public function canMom(): bool
+    public function canMom(Player $player): bool
     {
         return !$this->exceedPeriodDay()
             && !$this->exceedMomLimit()
-            && !$this->player->mom;
+            && !$player->mom;
     }
     
     /**
@@ -115,16 +115,14 @@ readonly class PlayerInFixture
             );
     }
 
-    /**
-     * FixtureのカラムにFixtureDataから出場した選手のPlayerInfoを設定する
-     *
-     * @return self
-     */
-    public function addPlayerInfosColumn(): self
-    {   
+    public function addPlayerColumn()
+    {
         $playedIds = $this->fixture->toFixtureData()->getPlayerIds();
         
         $playerInfos = PlayerInfo::query()
+            ->with(['players' => fn($query) => $query
+                ->fixtureId($this->fixture->id)
+            ])
             ->select(['id', 'foot_player_id'])
             ->currentSeason()
             ->whereIn('foot_player_id', $playedIds->toArray())
@@ -132,10 +130,26 @@ readonly class PlayerInFixture
 
         if ($playerInfos->count() !== $playedIds->count()) {
             throw new Exception('PlayerInfo Not Found.');
-        }
+        } 
 
         $this->fixture->playerInfos = $playerInfos;
 
+        $players = $playerInfos->map(function (PlayerInfo $info) {
+            $player = $info->players->first()
+                ?? new Player([
+                    'fixture_id' => $this->fixture->id,
+                    'player_info_id' => $info->id
+                ]);
+            
+            $player->canRate = $this->canRate();
+            $player->rateLimit = self::MAX_RATE_COUNT;
+            $player->canMom = $this->canMom($player);
+
+            return $player;
+        });
+
+        $this->fixture->players = $players;
+        
         return $this->setAttribute(fixture: $this->fixture);
     }
     
@@ -147,7 +161,7 @@ readonly class PlayerInFixture
     public function latest(): self
     {
         $fixture = Fixture::query()
-            ->select(['id', 'fixture'])
+            ->select(['id', 'date', 'fixture', 'mom_count'])
             ->currentSeason()
             ->inSeasonTournament()
             ->finished()
@@ -165,7 +179,9 @@ readonly class PlayerInFixture
     public function addCanRateToFixture(): self
     {                
         $this->fixture->canRate = $this->canRate();
-
+        $this->fixture->momLimit = self::MAX_MOM_COUNT;
+        $this->fixture->exceedMomLimit = $this->exceedMomLimit();
+        
         return $this->setAttribute(player: $this->player);
     }
 
@@ -178,7 +194,7 @@ readonly class PlayerInFixture
     {
         $this->player->canRate = $this->canRate();
         $this->player->rateLimit = self::MAX_RATE_COUNT;
-        $this->player->canMom = $this->canMom();
+        $this->player->canMom = $this->canMom($this->player);
 
         return $this->setAttribute(player: $this->player);
     }
