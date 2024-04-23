@@ -110,14 +110,14 @@ class FixtureInfo extends Model
             });
     }
 
-    public static function query(): FixtureQueryBuilder
+    public static function query(): FixtureInfoQueryBuilder
     {
         return parent::query();
     }
 
-    public function newEloquentBuilder($query): FixtureQueryBuilder
+    public function newEloquentBuilder($query): FixtureInfoQueryBuilder
     {
-        return new FixtureQueryBuilder($query);
+        return new FixtureInfoQueryBuilder($query);
     }
 
     public function lineup(): BelongsTo

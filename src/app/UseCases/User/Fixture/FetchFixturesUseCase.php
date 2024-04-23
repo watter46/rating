@@ -5,7 +5,7 @@ namespace App\UseCases\User\Fixture;
 use Exception;
 use Illuminate\Pagination\Paginator;
 
-use App\Models\Fixture;
+use App\Models\FixtureInfo;
 use App\Models\TournamentType;
 
 
@@ -13,27 +13,26 @@ final readonly class FetchFixturesUseCase
 {
     public function execute(TournamentType $tournament): Paginator
     {
-        try {            
-            /** @var Paginator $fixtures */
-            $fixtures = Fixture::query()
-                ->with('players:id')
-                ->select(['id', 'fixture'])
-                ->whereNotNull('fixture')
-                ->currentSeason()
+        try {
+            /** @var Paginator $fixtureInfos */
+            $fixtureInfos = FixtureInfo::query()
+                ->with('lineup.players')
+                ->whereNotNull('lineups')
                 ->tournament($tournament)
+                ->inSeasonTournament()
+                ->currentSeason()
                 ->finished()
-                ->where('date', '<=', now('UTC'))
-                ->orderBy('date', 'desc')
-                ->simplePaginate(20);
+                ->untilToday()
+                ->simplePaginate();
 
-            $fixtures->getCollection()
-                ->transform(function (Fixture $fixture) {
-                    $fixture->isRate = $fixture->players->isNotEmpty();
+            $fixtureInfos->getCollection()
+                ->transform(function (FixtureInfo $fixtureInfo) {
+                    $fixtureInfo->isRate = !is_null($fixtureInfo?->lineup?->players);
                     
-                    return $fixture;
+                    return $fixtureInfo;
                 });
-                
-            return $fixtures;
+                                
+            return $fixtureInfos;
 
         } catch (Exception $e) {
             throw $e;

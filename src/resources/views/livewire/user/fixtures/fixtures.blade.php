@@ -42,10 +42,10 @@
                     <div class="w-full h-full cursor-pointer"
                         wire:click="toFixture('{{ $fixture->id }}')">
                         <x-fixture.score
-                            :fixture="$fixture->fixture['fixture']"
-                            :teams="$fixture->fixture['teams']"
-                            :league="$fixture->fixture['league']"
-                            :score="$fixture->fixture['score']"
+                            :fixture="$fixture->fixture"
+                            :teams="$fixture->teams"
+                            :league="$fixture->league"
+                            :score="$fixture->score"
                             :isRate="$fixture->isRate" />
                     </div>
                 </div>

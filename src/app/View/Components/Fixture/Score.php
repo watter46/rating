@@ -4,6 +4,7 @@ namespace App\View\Components\Fixture;
 
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
 
@@ -13,10 +14,10 @@ class Score extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public array $fixture,
-        public array $teams,
-        public array $league,
-        public array $score,
+        public Collection $fixture,
+        public Collection $teams,
+        public Collection $league,
+        public Collection $score,
         public bool $isRate
     ) {
         //
