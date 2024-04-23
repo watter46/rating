@@ -9,7 +9,8 @@ use App\Http\Controllers\Util\FixturesFile;
 use App\Http\Controllers\Util\SquadsFile;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
-use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
+use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
+use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 use App\UseCases\Admin\Player\SquadsData\SquadsData;
 
 class MockApiFootballRepository implements ApiFootballRepositoryInterface
@@ -22,14 +23,14 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         //
     }
 
-    public function fetchFixtures(): FixturesData
+    public function fetchFixtures(): FixtureInfosData
     {
-        return FixturesData::create($this->fixturesFile->get());
+        return FixtureInfosData::create($this->fixturesFile->get());
     }
 
-    public function fetchFixture(int $fixtureId): FixtureData
+    public function fetchFixture(int $fixtureId): FixtureInfoData
     {
-        return FixtureData::create($this->fixtureFile->get($fixtureId));
+        return FixtureInfoData::create($this->fixtureFile->get($fixtureId));
     }
 
     public function fetchSquads(): SquadsData

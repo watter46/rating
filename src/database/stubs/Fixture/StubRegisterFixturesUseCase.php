@@ -4,7 +4,7 @@ namespace Database\Stubs\Fixture;
 
 use Exception;
 
-use App\Models\Fixture;
+use App\Models\FixtureInfo;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use Database\Stubs\Infrastructure\ApiFootball\MockApiFootballRepository;
 
@@ -23,12 +23,20 @@ class StubRegisterFixturesUseCase
             /** @var MockApiFootballRepository $repository */
             $repository = app(MockApiFootballRepository::class);
 
-            $data = $repository->fetchFixtures();
+            $fixtureInfosData = $repository->fetchFixtures();
             
             $unique = ['id'];
-            $updateColumns = ['date', 'status', 'score'];
+            $updateColumns = [
+                'season',
+                'date',
+                'status',
+                'score',
+                'teams',
+                'league',
+                'fixture'
+            ];
 
-            Fixture::upsert($data->build()->toArray(), $unique, $updateColumns);
+            FixtureInfo::upsert($fixtureInfosData->build()->toArray(), $unique, $updateColumns);
 
         } catch (Exception $e) {
             throw $e;
