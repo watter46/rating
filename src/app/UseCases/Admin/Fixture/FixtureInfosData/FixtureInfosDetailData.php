@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture\FixturesData;
+namespace App\UseCases\Admin\Fixture\FixtureInfosData;
 
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 
-readonly class FixturesDetailData
+readonly class FixtureInfosDetailData
 {
     private TeamImageFile $teamImage;
     private LeagueImageFile $leagueImage;
@@ -35,10 +35,13 @@ readonly class FixturesDetailData
         return collect([
             'external_fixture_id' => $this->getFixtureId(),
             'external_league_id'  => $this->getLeagueId(),
-            'score'               => $this->getScore()->toJson(),
             'season'              => $this->getSeason(),
             'date'                => $this->getDate(),
-            'status'              => $this->getStatus()
+            'status'              => $this->getStatus(),
+            'score'               => $this->getScore()->toJson(),
+            'teams'               => $this->getTeams()->toJson(),
+            'league'              => $this->getLeague()->toJson(),
+            'fixture'             => $this->getScore()->toJson()
         ]);
     }
 
@@ -77,6 +80,8 @@ readonly class FixturesDetailData
     public function getFixture(): Collection
     {
         return collect([
+            'id' => $this->getFixtureId(),
+            // 'first_half_at' => 
             'date'   => $this->getDate(),
             'status' => $this->getStatus()
         ]);

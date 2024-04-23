@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -13,14 +14,14 @@ use Illuminate\Queue\SerializesModels;
 use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
 
 
-class FixturesRegistered
+class FixtureInfosRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * @param FixturesData $data 
      */
-    public function __construct(public FixturesData $data)
+    public function __construct(public FixtureInfosData $data)
     {
         //
     }
