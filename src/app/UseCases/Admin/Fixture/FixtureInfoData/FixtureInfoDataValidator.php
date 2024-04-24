@@ -8,7 +8,6 @@ use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\UseCases\Admin\Fixture\Data\FixtureData;
-use App\UseCases\Admin\Fixture\FixtureData\FilterInvalidPlayerIds;
 use App\UseCases\Admin\Fixture\ValidatorInterface;
 
 

@@ -16,7 +16,7 @@ final readonly class FetchFixturesUseCase
         try {
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
-                ->with('lineup.players')
+                ->with('fixture.players')
                 ->whereNotNull('lineups')
                 ->tournament($tournament)
                 ->inSeasonTournament()

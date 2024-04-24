@@ -46,18 +46,24 @@ class LineupsData
                 return collect($lineups)
                     ->map(function ($lineup) use ($players) {
                         $player = collect($lineup['player']);
-
+                        
                         $data = $player->merge($players->get($player->get('id')));
 
                         return collect([
-                                'id'       => $data['id'],
-                                'name'     => $data['name'],
-                                'number'   => $data['number'],
-                                'position' => PositionType::from($data['pos'])->name,
-                                'grid'     => $data['grid'],
-                                'img'      => $this->playerImage->generatePath($data['id'])
+                                'id'            => $data['id'],
+                                'name'          => $data['name'],
+                                'number'        => $data['number'],
+                                'position'      => PositionType::from($data['pos'])->name,
+                                'grid'          => $data['grid'],
+                                'img'           => $this->playerImage->generatePath($data['id']),
+                                'goal'          => $data['goal'], 
+                                'assists'       => $data['assists'], 
+                                'defaultRating' => $data['defaultRating'],
+                                'minutes'       => $data['minutes']
                             ]);
-                    });
+                    })
+                    ->filter(fn(Collection $player) => !is_null($player['minutes']))
+                    ->map(fn(Collection $player) => $player->except('minutes'));
             });
     }
 
@@ -65,9 +71,6 @@ class LineupsData
     {
         return $this->filterChelsea($this->lineupsData->dataGet('players'))
             ->dataGet('players')
-            ->reject(function ($players) {
-                return !collect($players)->dataGet('statistics.0.games.minutes', false);
-            })
             ->map(function ($players) {
                 $data = collect($players);
 
@@ -76,7 +79,8 @@ class LineupsData
                     'name' => $data->dataGet('player.name', false),
                     'goal' => $data->dataGet('statistics.0.goals.total', false), 
                     'assists' => $data->dataGet('statistics.0.goals.assists', false), 
-                    'defaultRating' => $data->dataGet('statistics.0.games.rating', false)
+                    'defaultRating' => $data->dataGet('statistics.0.games.rating', false),
+                    'minutes' => $data->dataGet('statistics.0.games.minutes', false)
                 ];
             });
     }

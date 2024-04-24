@@ -18,16 +18,16 @@ final readonly class RegisterFixtureInfo
         //
     }
 
-    public function execute(string $fixtureId): FixtureInfo
+    public function execute(string $fixtureInfoId): FixtureInfo
     {
         try {
             /** @var FixtureInfo $fixtureInfo */
-            $fixtureInfo = FixtureInfo::findOrFail($fixtureId);
+            $fixtureInfo = FixtureInfo::findOrFail($fixtureInfoId);
 
             $fixtureInfoData = $this->apiFootballRepository->fetchFixture($fixtureInfo->external_fixture_id);
             
             $fixtureInfo->updateLineups($fixtureInfoData);
-
+            
             DB::transaction(function () use ($fixtureInfo) {
                 $fixtureInfo->save();
             });
