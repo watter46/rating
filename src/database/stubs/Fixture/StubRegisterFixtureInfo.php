@@ -3,6 +3,7 @@
 namespace Database\Stubs\Fixture;
 
 use App\Models\FixtureInfo;
+use App\Models\PlayerInfo;
 use Database\Stubs\Infrastructure\ApiFootball\MockApiFootballRepository;
 
 
@@ -23,5 +24,11 @@ class StubRegisterFixtureInfo
         $fixtureInfo->updateLineups($data);
         
         $fixtureInfo->save();
+        
+        $footPlayerIds = $fixtureInfo->lineups->flatten(1)->pluck('id');
+
+        $playerInfoIds = PlayerInfo::whereIn('foot_player_id', $footPlayerIds)->pluck('id');
+        
+        $fixtureInfo->playerInfos()->sync($playerInfoIds);
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('mom')->default(false);
             $table->unsignedTinyInteger('rate_count');
 
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignUlid('fixture_id')->constrained()->onDelete('cascade');
             $table->foreignUlid('player_info_id')->constrained()->onDelete('cascade');
         });

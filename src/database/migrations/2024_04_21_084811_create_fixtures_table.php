@@ -13,15 +13,11 @@ return new class extends Migration
     {
         Schema::create('fixtures', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->unsignedMediumInteger('external_fixture_id');
-            $table->unsignedMediumInteger('external_league_id');
-            $table->unsignedSmallInteger('season')->length(4);
             $table->unsignedTinyInteger('mom_count');
-            $table->timestamp('date');
-            $table->json('score');
-            $table->json('fixture')->nullable();
-            $table->tinyText('status');
             $table->timestamps();
+
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUlid('fixture_info_id')->constrained();
         });
     }
 
