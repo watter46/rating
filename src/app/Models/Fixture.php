@@ -13,20 +13,16 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 use App\Models\FixtureQueryBuilder;
+use App\Models\Scopes\CurrentUserScope;
 use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
+use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
 use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
 use App\UseCases\User\Fixture\UserFixtureData;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Auth;
 
-/**
- * FixtureModel
- * 
- * @property int $external_fixture_id
- * @property int $external_league_id
- * @property int $season
- * @property Collection $score
- * @property date $date
- * @property Collection $fixture
- */
 class Fixture extends Model
 {
     use HasFactory;
@@ -35,28 +31,6 @@ class Fixture extends Model
     public $incrementing = false;
     
     protected $keyType = 'string';
-    
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'id',
-        'external_fixture_id',
-        'external_league_id',
-        'mom_count',
-        'season',
-        'score',
-        'date',
-        'fixture',
-        'status'
-    ];
-
-    protected $casts = [
-        'score'   => AsCollection::class,
-        'fixture' => AsCollection::class
-    ];
 
     /**
      * デフォルト値
@@ -66,91 +40,75 @@ class Fixture extends Model
     protected $attributes = [
         'mom_count' => 0
     ];
-    
-    /**
-     * 試合で使用するデータがすべて存在するか確認して
-     * 存在しない場合、不足しているデータを取得するイベントを発行する
-     *
-     * @param  FixtureData $fixtureData
-     * @return void
-     */
-    public function fixtureRegistered(FixtureData $fixtureData): void
-    {
-        if ($fixtureData->checkRequiredData()) {
-            return;
-        }
-        
-        FixtureRegistered::dispatch($fixtureData);
-    }
-    
-    /**
-     * 試合の一覧で使用するデータがすべて存在するか確認して
-     * 存在しない場合、不足しているデータを取得するイベントを発行する
-     *
-     * @param  FixturesData $fixturesData
-     * @return void
-     */
-    public function fixturesRegistered(FixturesData $fixturesData): void
-    {
-        if ($fixturesData->checkRequiredData()) {
-            return;
-        }
-        
-        FixturesRegistered::dispatch($fixturesData);
-    }
-    
-    /**
-     * Fixtureを更新する
-     *
-     * @param  FixtureData $fixtureData
-     * @return self
-     */
-    public function updateFixture(FixtureData $fixtureData): self
-    {
-        $this->fixture = $fixtureData->build();
 
-        return $this;
-    }
-    
     /**
-     * MomCountを1増やす
+     * The attributes that are mass assignable.
      *
-     * @return self
+     * @var array<int, string>
      */
+    protected $fillable = [
+        'mom_count',
+        'fixture_info_id'
+    ];
+
+    public function onlyFillable(): self
+    {
+        return new self(collect($this->toArray())->only($this->fillable)->toArray());
+    }
+
     public function incrementMomCount(): self
     {
-        $this->mom_count++;
-        
+        $this->mom_count += 1;
+
         return $this;
     }
-    
+
+    public function scopeFixtureInfoId(Builder $query, string $fixtureInfoId)
+    {
+        $query->where('fixture_info_id', $fixtureInfoId);
+    }
+
     /**
-     * Fixtureのデータが有効かどうか
+     * 保存されるときにUserIdを紐づける
      *
-     * @return bool
+     * @return void
      */
-    public function isValid(): bool
+    protected static function boot()
     {
-        return FixtureStatusType::from($this->status)->isFinished();
-    }
+        parent::boot();
 
-    public function toFixtureData(): UserFixtureData
-    {
-        return UserFixtureData::create($this->fixture);
-    }
-
-    public static function query(): FixtureQueryBuilder
-    {
-        return parent::query();
-    }
-
-    public function newEloquentBuilder($query): FixtureQueryBuilder
-    {
-        return new FixtureQueryBuilder($query);
+        self::saving(function($player) {
+            $player->user_id = Auth::id();
+        });
     }
     
     /**
-     * 試合に出場した選手を紐づける
+     * fixture
+     *
+     * @return BelongsTo
+     */
+    public function fixtureInfo(): BelongsTo
+    {
+        return $this->belongsTo(FixtureInfo::class);
+    }
+
+    /**
+     * player
+     *
+     * @return HasMany
+     */
+    public function ratedPlayers(): HasMany
+    {
+        return $this->hasMany(Player::class)->whereNotNull('rating');
+    }
+
+    public function playerInfos()
+    {
+        return $this->hasManyThrough(PlayerInfo::class, FixtureInfo::class);
+    }
+
+    /**
+     * player
      *
      * @return HasMany
      */
@@ -158,14 +116,14 @@ class Fixture extends Model
     {
         return $this->hasMany(Player::class);
     }
-    
+
     /**
-     * 評価した選手のみ取得する
+     * user
      *
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function ratedPlayers(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(Player::class)->whereNotNull('rating');
+        return $this->belongsTo(User::class);
     }
 }

@@ -11,8 +11,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
 class FixtureInfo extends Model
 {
@@ -71,13 +73,13 @@ class FixtureInfo extends Model
      * @param  FixtureInfoData $fixtureInfoData
      * @return void
      */
-    public static function fixtureRegistered(FixtureInfoData $fixtureInfoData): void
+    public function fixtureRegistered(FixtureInfoData $fixtureInfoData): void
     {
-        if ($fixtureInfoData->checkRequiredData()) {
+        if ($fixtureInfoData->equalLineupCount($this->lineupCount) && $fixtureInfoData->checkRequiredData()) {
             return;
         }
         
-        FixtureInfoRegistered::dispatch($fixtureInfoData);
+        FixtureInfoRegistered::dispatch($fixtureInfoData, $this);
     }
 
     /**
@@ -120,13 +122,13 @@ class FixtureInfo extends Model
         return new FixtureInfoQueryBuilder($query);
     }
 
-    public function lineup(): BelongsTo
+    public function fixture(): HasOne
     {
-        return $this->belongsTo(Lineup::class);
+        return $this->hasOne(Fixture::class);
     }
 
-    public function playerInfos(): HasMany
+    public function playerInfos(): BelongsToMany
     {
-        return $this->hasMany(PlayerInfo::class);
+        return $this->belongsToMany(PlayerInfo::class);
     }
 }

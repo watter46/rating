@@ -89,4 +89,14 @@ class FixtureInfoQueryBuilder extends Builder
     {
         return $this->where('season', Season::current());
     }
+
+    /**
+     * 今シーズンのみ取得する
+     *
+     * @return Builder
+     */
+    public function selectData(): Builder
+    {
+        return $this->select('id');
+    }
 }
