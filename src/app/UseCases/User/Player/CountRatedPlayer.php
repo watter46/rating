@@ -5,23 +5,23 @@ namespace App\UseCases\User\Player;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use App\Models\Fixture;
+use App\UseCases\User\FixtureRequest;
 
 
-final readonly class CountRatedPlayerUseCase
+final readonly class CountRatedPlayer
 {
     public function __construct()
     {
         //
     }
 
-    public function execute(string $fixtureId): Fixture
+    public function execute(FixtureRequest $request)
     {
         try {
-            return Fixture::query()
-                ->select(['fixture'])
-                ->withCount('ratedPlayers as ratedCount')
-                ->findOrFail($fixtureId);
+            return $request
+                ->buildFixture()
+                ->loadAllIdInFixture()
+                ->getRatedCount();
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');
