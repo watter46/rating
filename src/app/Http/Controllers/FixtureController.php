@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\UseCases\User\Fixture\fetchLatestFixture;
 use Exception;
 
-use App\UseCases\User\Fixture\FetchFixturePlayerInfosUseCase;
-use App\UseCases\User\Fixture\FetchLatestUseCase;
-use App\UseCases\User\PlayerInFixtureRequest;
+use App\UseCases\User\Fixture\FindFixture;
+use App\UseCases\User\FixtureRequest;
+
 
 class FixtureController extends Controller
 {
@@ -15,10 +16,10 @@ class FixtureController extends Controller
         return view('fixtures');
     }
 
-    public function find(string $fixtureId, FetchFixturePlayerInfosUseCase $fetchFixture, FixturePresenter $presenter)
+    public function find(string $fixtureInfoId, FindFixture $findFixture, FixturePresenter $presenter)
     {
         try {
-            $fixture = $fetchFixture->execute(PlayerInFixtureRequest::make($fixtureId));
+            $fixture = $findFixture->execute(FixtureRequest::make($fixtureInfoId));
             
             return view('fixture', $presenter->format($fixture));
 
@@ -27,10 +28,10 @@ class FixtureController extends Controller
         }
     }
 
-    public function latest(FetchLatestUseCase $fetchLatest, FixturePresenter $presenter)
+    public function latest(fetchLatestFixture $fetchLatestFixture, FixturePresenter $presenter)
     {
         try {
-            $fixture = $fetchLatest->execute();
+            $fixture = $fetchLatestFixture->execute();
                         
             return view('fixture', $presenter->format($fixture));
 

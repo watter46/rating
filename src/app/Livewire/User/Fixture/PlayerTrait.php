@@ -2,13 +2,9 @@
 
 namespace App\Livewire\User\Fixture;
 
-use Exception;
 use Livewire\Attributes\On;
 
-use App\Livewire\MessageType;
-use App\Models\Player;
-use App\UseCases\User\Player\FetchPlayerUseCase;
-use App\UseCases\User\PlayerInFixtureRequest;
+use App\UseCases\User\Player\FindPlayer;
 
 
 trait PlayerTrait
@@ -20,46 +16,26 @@ trait PlayerTrait
     public int $rateCount;
     public int $rateLimit;
 
-    private readonly FetchPlayerUseCase $fetchPlayer;
+    private readonly FindPlayer $findPlayer;
     
-    public function bootPlayerTrait(FetchPlayerUseCase $fetchPlayer)
+    public function bootPlayerTrait(FindPlayer $findPlayer)
     {
-        $this->fetchPlayer = $fetchPlayer;
+        $this->findPlayer = $findPlayer;
     }
 
     public function mountPlayerTrait()
     {
-        $this->replace($this->player);
+        $this->update($this->player->toArray());
     }
 
-    /**
-     * 指定の選手を取得する
-     *
-     * @return void
-     */
-    #[On('fetch-player.{playerData.id}')]
-    public function fetch(): void
+    #[On('update-player.{playerData.id}')]
+    public function update(array $player)
     {
-        try {
-            $player = $this->fetchPlayer->execute(PlayerInFixtureRequest::make(
-                    fixtureId: $this->fixtureId,
-                    playerInfoId: $this->playerData['id']
-                ));
-                
-            $this->replace($player);
-            
-        } catch (Exception $e) {
-            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
-        }
-    }
-
-    private function replace(Player $player): void
-    {
-        $this->rating = $player->rating;
-        $this->mom    = $player->mom;
-        $this->canRate = $player->canRate;
-        $this->canMom  = $player->canMom;
-        $this->rateCount = $player->rate_count;
-        $this->rateLimit = $player->rateLimit;
+        $this->rating = $player['rating'];
+        $this->mom    = $player['mom'];
+        $this->canRate = $player['canRate'];
+        $this->canMom  = $player['canMom'];
+        $this->rateCount = $player['rate_count'];
+        $this->rateLimit = $player['rateLimit'];
     }
 }

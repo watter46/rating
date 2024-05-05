@@ -15,6 +15,6 @@
         :$teamsData
         :$leagueData
         :$scoreData
-        :$lineups
-        :$fixtureId />
+        :$lineupsData
+        :$fixtureInfoId />
 </x-util.modal-button>

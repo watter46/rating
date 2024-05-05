@@ -2,10 +2,10 @@
 
 namespace App\Livewire\User\Fixture;
 
+use App\UseCases\User\FixtureRequest;
 use Livewire\Attributes\On;
 
-use App\UseCases\User\Player\FetchMomCountUseCase;
-use App\UseCases\User\PlayerInFixtureRequest;
+use App\UseCases\User\Player\FetchMomCount;
 
 
 trait MomCountTrait
@@ -13,9 +13,9 @@ trait MomCountTrait
     public int $momLimit;
     public int $momCount;
 
-    private readonly FetchMomCountUseCase $fetchMomCount;
+    private readonly FetchMomCount $fetchMomCount;
 
-    public function bootMomCountTrait(FetchMomCountUseCase $fetchMomCount)
+    public function bootMomCountTrait(FetchMomCount $fetchMomCount)
     {
         $this->fetchMomCount = $fetchMomCount;
     }
@@ -43,7 +43,7 @@ trait MomCountTrait
 
     public function fetchMomCount()
     {
-        $request = PlayerInFixtureRequest::make(fixtureId: $this->fixtureId);
+        $request = FixtureRequest::make(fixtureInfoId: $this->fixtureInfoId);
 
         return $this->fetchMomCount->execute($request);
     }

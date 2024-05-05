@@ -131,7 +131,7 @@
             
                         <button class="px-8 py-1 border-2 border-gray-200 rounded-lg bg-amber-400"
                             :class="!canMom ? 'pointer-events-none opacity-30' : ''"
-                            wire:click="decideMOM">
+                            wire:click="decideMom">
                             <p class="font-bold text-gray-200">★ MOM</p>
                         </button>
                     </div>
