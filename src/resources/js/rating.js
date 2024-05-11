@@ -13,7 +13,7 @@ window.ratingValue = (rating) => {
         return 'ー';
     }
     
-    if (Number.isInteger(Number(rating))) {
+    if (Number.isInteger(Number(rating))) {        
         return `${rating}.0`;
     }
 

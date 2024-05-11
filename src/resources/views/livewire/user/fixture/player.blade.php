@@ -19,27 +19,27 @@
                         :img="$playerData['img']" />
 
                     <!-- Goals -->
-                    <div class="absolute top-0 left-0 -translate-x-[60%]">
+                    <div class="absolute top-[-10%] right-[77%]">
                         <x-player.goals
                             class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
                             :goals="$playerData['goal']" />
                     </div>
 
                     <!-- Assists -->
-                    <div class="absolute top-0 right-0 translate-x-[60%]">
+                    <div class="absolute top-[-10%] left-[77%]">
                         <x-player.assists
                             class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
                             :assists="$playerData['assists']" />
                     </div>
                     
                     <!-- Rating -->
-                    <div class="absolute bottom-0 right-0 translate-x-[45%]"
+                    <div class="absolute bottom-[-10%] left-[65%] min-w-[40px]"
                         x-data="{ isUser: true }"
                         @user-machine-toggled.window="isUser = !isUser">
                         
                         <!-- UserRating -->
                         <template x-if="isUser">
-                            <div class="flex items-center justify-center w-8 rounded-xl"
+                            <div class="flex items-center justify-center px-1 rounded-xl"
                                 :style=" mom
                                     ? 'background-color: #0E87E0'
                                     : `background-color: ${ratingBgColor(rating)}`
@@ -57,7 +57,7 @@
 
                         <!-- MachineRating -->
                         <template x-if="!isUser">
-                            <div class="flex items-center justify-center w-8 rounded-xl"
+                            <div class="flex items-center justify-center rounded-xl"
                                 :style="`background-color: ${ratingBgColor(machine)}`">
                                 
                                 <p class="text-xs font-black md:text-sm text-gray-50"
