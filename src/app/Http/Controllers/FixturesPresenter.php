@@ -27,7 +27,7 @@ final readonly class FixturesPresenter
                     ->formatFixtureData()
                     ->get();
             });
-            
+        
         return $fixtures;
     }
 }

@@ -73,14 +73,8 @@ class FixturesDataPresenter
      */
     public function formatFixtureData(): self
     {
-        $winner = $this->fixtureInfo->teams
-            ->sole(function ($team) {
-                return $team['id'] === config('api-football.chelsea-id');
-            })['winner'];
-
         $start_at = $this->fixtureInfo->fixture->get('first_half_at');
         
-        $this->fixtureInfo->fixture['winner'] = $winner;
         $this->fixtureInfo->fixture['first_half_at'] = Carbon::parse($start_at)->__toString();
             
         return new self($this->fixtureInfo);

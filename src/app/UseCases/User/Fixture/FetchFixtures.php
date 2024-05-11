@@ -7,9 +7,9 @@ use Illuminate\Pagination\Paginator;
 
 use App\Models\FixtureInfo;
 use App\Models\TournamentType;
-use App\UseCases\Admin\Fixture\RegisterFixtureInfo;
 
-final readonly class FetchFixturesUseCase
+
+final readonly class FetchFixtures
 {
     public function execute(TournamentType $tournament): Paginator
     {

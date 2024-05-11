@@ -64,21 +64,23 @@
                                     </div>
                                 @endforeach
                             @endif
-
+                            
                             @if($loop->even)
-                                @foreach($substitutesData as $playerData)
-                                    <div class="col-span-2 flex justify-center w-full
-                                        @if($loop->first) col-start-2 @endif">
-                                        <livewire:user.fixture.player
-                                            name="substitutes"
-                                            size="w-[40px] h-[40px]"
-                                            :$fixtureInfoId
-                                            :playerData="$player['playerData']"
-                                            :player="$player['player']"
-                                            :$momCount
-                                            :$momLimit
-                                            :key="$player['playerData']['id']" />
-                                    </div>
+                                @foreach($lineupsData['substitutes'] as $substitutes)
+                                    @foreach($substitutes as $player)
+                                        <div class="col-span-2 flex justify-center w-full
+                                            @if($loop->first) col-start-2 @endif">
+                                            <livewire:user.fixture.player
+                                                name="substitutes"
+                                                size="w-[40px] h-[40px]"
+                                                :$fixtureInfoId
+                                                :playerData="$player['playerData']"
+                                                :player="$player['player']"
+                                                :$momCount
+                                                :$momLimit
+                                                :key="$player['playerData']['id']" />
+                                        </div>
+                                    @endforeach
                                 @endforeach
                             @endif
                         @endforeach
