@@ -5,18 +5,11 @@ namespace Database\Stubs\Fixture;
 use Exception;
 
 use App\Models\FixtureInfo;
-use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use Database\Stubs\Infrastructure\ApiFootball\MockApiFootballRepository;
 
 
 class StubRegisterFixtureInfos
 {
-    public function __construct(
-        private ApiFootballRepositoryInterface $apiFootballRepository)
-    {
-        //
-    }
-
     public function execute(): void
     {
         try {

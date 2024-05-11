@@ -73,7 +73,7 @@ class ResultData
 
     public function getDate(): Carbon
     {
-        return Carbon::parse($this->resultData->dataGet('fixture.periods.first', false), 'UTC');
+        return Carbon::parse($this->resultData->dataGet('fixture.date', false), 'UTC');
     }
 
     public function getFixture(): Collection
@@ -82,8 +82,17 @@ class ResultData
             'id'             => $this->getFixtureId(),
             'first_half_at'  => $this->getDate(),
             'second_half_at' => Carbon::parse($this->resultData->dataGet('fixture.periods.second', false), 'UTC'),
-            'is_end'         => $this->isFinished()
+            'is_end'         => $this->isFinished(),
+            'winner'         => $this->getWinner()
         ]);
+    }
+
+    private function getWinner(): ?bool
+    {
+        return $this->getTeams()
+            ->sole(function (Collection $team) {
+                return $team['id'] === config('api-football.chelsea-id');
+            })['winner'];
     }
 
     public function getTeamIds(): Collection

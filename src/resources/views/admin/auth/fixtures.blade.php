@@ -4,6 +4,6 @@
             Fixtures
         </h2>
     </x-slot>
-
+    
     <livewire:admin.fixtures />
 </x-admin.app-layout>

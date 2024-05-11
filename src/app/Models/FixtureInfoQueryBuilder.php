@@ -91,12 +91,24 @@ class FixtureInfoQueryBuilder extends Builder
     }
 
     /**
-     * 今シーズンのみ取得する
+     * Timestamps以外のカラムを取得する
      *
      * @return Builder
      */
-    public function selectData(): Builder
+    public function selectWithoutTimestamps(): Builder
     {
-        return $this->select('id');
+        return $this->select([
+            'id',
+            'external_fixture_id',
+            'external_league_id',
+            'season',
+            'date',
+            'status',
+            'score',
+            'teams',
+            'league',
+            'fixture',
+            'lineups'
+        ]);
     }
 }

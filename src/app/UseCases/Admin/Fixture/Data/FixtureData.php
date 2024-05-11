@@ -32,7 +32,7 @@ class FixtureData
      */
     public static function create(Collection $fixtureData)
     {
-        $resultData  = ResultData::create($fixtureData->fromStd()->only(self::RESULT_DATA_KEYS));
+        $resultData = ResultData::create($fixtureData->fromStd()->only(self::RESULT_DATA_KEYS));
 
         $lineupsData = $fixtureData->fromStd()->only(self::LINEUPS_DATA_KEYS)->isNotEmpty()
             ? LineupsData::create($fixtureData->fromStd()->only(self::LINEUPS_DATA_KEYS))

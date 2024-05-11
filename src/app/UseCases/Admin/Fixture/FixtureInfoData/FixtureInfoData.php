@@ -5,7 +5,6 @@ namespace App\UseCases\Admin\Fixture\FixtureInfoData;
 use Illuminate\Support\Collection;
 
 use App\UseCases\Admin\Fixture\Data\FixtureData;
-use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
 use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoDataValidator;
 
 
@@ -29,6 +28,17 @@ readonly class FixtureInfoData
     public function build(): Collection
     {
         return $this->fixtureData->build();
+    }
+    
+    /**
+     * Lineupsの数がLineupsDataの数と一致しているか
+     *
+     * @param  int $lineupCount
+     * @return bool
+     */
+    public function equalLineupCount(int $lineupCount): bool
+    {
+        return $this->fixtureData->getPlayedPlayers()->count() === $lineupCount;
     }
 
     /**

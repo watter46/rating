@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use App\Events\FixtureInfoRegistered;
-use App\Events\FixtureInfosRegistered;
-use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
-use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Collection;
+
+use App\Events\FixtureInfoRegistered;
+use App\Events\FixtureInfosRegistered;
+use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
+use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
+
 
 class FixtureInfo extends Model
 {

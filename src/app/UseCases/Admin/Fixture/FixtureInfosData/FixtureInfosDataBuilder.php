@@ -23,18 +23,7 @@ final readonly class FixtureInfosDataBuilder
     {
         /** @var Collection */
         $fixtureInfos = FixtureInfo::query()
-            ->select([
-                'external_fixture_id',
-                'external_league_id',
-                'season',
-                'date',
-                'status',
-                'score',
-                'teams',
-                'league',
-                'fixture',
-                'lineups'
-            ])
+            ->selectWithoutTimestamps()
             ->currentSeason()
             ->get()
             ->map(function (FixtureInfo $fixtureInfo) {
@@ -51,6 +40,6 @@ final readonly class FixtureInfosDataBuilder
                     return $fixtureInfo
                         ->merge($fixtureData->build());
                 })
-            : $fixtureInfosData->format();
+            : $fixtureInfosData->defaultFormat();
     }
 }

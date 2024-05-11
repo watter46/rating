@@ -2,14 +2,13 @@
 
 namespace App\UseCases\Admin\Fixture\FixtureInfosData;
 
-use App\UseCases\Admin\Fixture\Data\FixtureData;
-use App\UseCases\Admin\Fixture\DataInterface;
 use Illuminate\Support\Collection;
 
+use App\UseCases\Admin\Fixture\Data\FixtureData;
+use App\UseCases\Admin\Fixture\DataInterface;
 use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosDataBuilder;
-use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosDetailData;
 use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosDataValidator;
-use Exception;
+
 
 readonly class FixtureInfosData implements DataInterface
 {
@@ -43,27 +42,11 @@ readonly class FixtureInfosData implements DataInterface
         return $this->fixturesData;
     }
 
-    public function format(): Collection
+    public function defaultFormat(): Collection
     {
         return $this->fixturesData->map(function (FixtureData $fixtureData) {
             return $fixtureData->build();
         });
-        
-        // return $this->fixturesData
-        //     ->map(function (FixtureData $fixtureData) {
-        //         dd($fixtureData->)
-        //         return collect([
-        //             'external_fixture_id' => $fixtureData->getFixtureId(),
-        //             'external_league_id'  => $fixtureData->getLeagueId(),
-        //             'season'              => $fixtureData->getSeason(),
-        //             'date'                => $fixtureData->getDate(),
-        //             'status'              => $fixtureData->getStatus(),
-        //             'score'               => $fixtureData->getScore()->toJson(),
-        //             'teams'               => $fixtureData->getTeams()->toJson(),
-        //             'league'              => $fixtureData->getLeague()->toJson(),
-        //             'fixture'             => $fixtureData->getFixture()->toJson()
-        //         ]);
-        //     });
     }
 
     public function build(): Collection

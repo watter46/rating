@@ -9,11 +9,10 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Validate;
 
-use App\Http\Controllers\FixturesResource;
-use App\Http\Controllers\TournamentStringType;
 use App\Livewire\MessageType;
-use App\UseCases\Admin\Fixture\FetchFixturesUseCase;
-use App\UseCases\Admin\Fixture\RegisterFixturesUseCase;
+use App\Http\Controllers\FixturesPresenter;
+use App\UseCases\Admin\Fixture\FetchFixtureInfos;
+use App\UseCases\Admin\Fixture\RegisterFixtureInfos;
 
 
 class Fixtures extends Component
@@ -23,21 +22,21 @@ class Fixtures extends Component
     #[Validate('required')]
     public string $refreshKey;
 
-    private FetchFixturesUseCase $fetchFixtures;
-    private RegisterFixturesUseCase $registerFixtures;
-    private FixturesResource $resource;
+    private FetchFixtureInfos $fetchFixtureInfos;
+    private RegisterFixtureInfos $registerFixtureInfos;
+    private FixturesPresenter $presenter;
 
     private const SUCCESS_MESSAGE = 'Please Reload!!';
     private const ERROR_MESSAGE = 'Incorrect key';
 
     public function boot(
-        FetchFixturesUseCase $fetchFixtures,
-        RegisterFixturesUseCase $registerFixtures,
-        FixturesResource $resource)
+        FetchFixtureInfos $fetchFixtureInfos,
+        RegisterFixtureInfos $registerFixtureInfos,
+        FixturesPresenter $presenter)
     {
-        $this->fetchFixtures = $fetchFixtures;
-        $this->registerFixtures = $registerFixtures;
-        $this->resource = $resource;
+        $this->fetchFixtureInfos = $fetchFixtureInfos;
+        $this->registerFixtureInfos = $registerFixtureInfos;
+        $this->presenter = $presenter;
     }
 
     public function render()
@@ -46,10 +45,10 @@ class Fixtures extends Component
     }
 
     #[Computed()]
-    public function fixtures(): Paginator
+    public function fixtureInfos(): Paginator
     {
         try {
-            return $this->fetch();
+            return $this->fetchFixtureInfos();
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
@@ -63,12 +62,12 @@ class Fixtures extends Component
      *
      * @return Paginator
      */
-    private function fetch(): Paginator
+    private function fetchFixtureInfos(): Paginator
     {
         try {
-            $fixtures = $this->fetchFixtures->execute();
-            
-            return $this->resource->format($fixtures);
+            $fixtures = $this->fetchFixtureInfos->execute();
+
+            return $this->presenter->format($fixtures);
 
         } catch (Exception $e) {            
 
@@ -88,7 +87,7 @@ class Fixtures extends Component
                 throw new Exception(self::ERROR_MESSAGE);
             }
             
-            $this->registerFixtures->execute();
+            $this->registerFixtureInfos->execute();
             
             $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close-fixtures-modal');

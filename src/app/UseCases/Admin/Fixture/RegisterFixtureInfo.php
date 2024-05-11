@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use App\Models\Fixture;
 use App\Models\FixtureInfo;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 
@@ -22,8 +21,10 @@ final readonly class RegisterFixtureInfo
     {
         try {
             /** @var FixtureInfo $fixtureInfo */
-            $fixtureInfo = FixtureInfo::findOrFail($fixtureInfoId);
-
+            $fixtureInfo = FixtureInfo::query()
+                ->withCount('playerInfos as lineupCount')
+                ->findOrFail($fixtureInfoId);
+            
             $fixtureInfoData = $this->apiFootballRepository->fetchFixture($fixtureInfo->external_fixture_id);
             
             $fixtureInfo->updateLineups($fixtureInfoData);
@@ -31,7 +32,7 @@ final readonly class RegisterFixtureInfo
             DB::transaction(function () use ($fixtureInfo) {
                 $fixtureInfo->save();
             });
-            
+
             $fixtureInfo->fixtureRegistered($fixtureInfoData);
 
             return $fixtureInfo;

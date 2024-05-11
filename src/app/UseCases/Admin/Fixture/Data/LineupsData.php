@@ -42,13 +42,15 @@ class LineupsData
 
         return $this->filterChelsea($this->lineupsData->dataGet('lineups'))
             ->only(['startXI', 'substitutes'])
+            ->map(fn (array $lineups) => collect($lineups)->flatten(1))
+            ->map(function (Collection $lineups) use ($players) {
+                return $lineups->filter(fn (array $player) => $players->get($player['id']));
+            })
             ->map(function ($lineups) use ($players) {
                 return collect($lineups)
-                    ->map(function ($lineup) use ($players) {
-                        $player = collect($lineup['player']);
-                        
-                        $data = $player->merge($players->get($player->get('id')));
-
+                    ->map(function (array $player) use ($players) {
+                        $data = collect($player)->merge($players->get($player['id']));
+        
                         return collect([
                                 'id'            => $data['id'],
                                 'name'          => $data['name'],
@@ -62,7 +64,6 @@ class LineupsData
                                 'minutes'       => $data['minutes']
                             ]);
                     })
-                    ->filter(fn(Collection $player) => !is_null($player['minutes']))
                     ->map(fn(Collection $player) => $player->except('minutes'));
             });
     }
@@ -82,6 +83,7 @@ class LineupsData
                     'defaultRating' => $data->dataGet('statistics.0.games.rating', false),
                     'minutes' => $data->dataGet('statistics.0.games.minutes', false)
                 ];
-            });
+            })
+            ->filter(fn(array $player) => !is_null($player['minutes']));
     }
 }

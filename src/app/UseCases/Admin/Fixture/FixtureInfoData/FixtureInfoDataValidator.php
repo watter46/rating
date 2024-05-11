@@ -9,20 +9,22 @@ use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\UseCases\Admin\Fixture\Data\FixtureData;
 use App\UseCases\Admin\Fixture\ValidatorInterface;
+use App\UseCases\Admin\Fixture\FixtureInfoData\FilterInvalidFootPlayerIds;
 
 
 readonly class FixtureInfoDataValidator implements ValidatorInterface
 {
+    /** @var Collection<array{ id: int, name: string }> $invalidPlayers */
+    private Collection $invalidPlayers;
     private Collection $invalidTeamIds;
     private Collection $invalidLeagueIds;
-    private Collection $invalidPlayerIds;
     private Collection $invalidPlayerImageIds;
     
     private function __construct(private FixtureData $fixtureData)
     {
         $this->validateTeamIds();
         $this->validateLeagueIds();
-        $this->validatePlayerIds();
+        $this->validatePlayers();
         $this->validatePlayerImage();
     }
 
@@ -35,7 +37,7 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
     {
         return $this->getInvalidTeamIds()->isEmpty()
             && $this->getInvalidLeagueIds()->isEmpty()
-            && $this->getInvalidPlayerIds()->isEmpty()
+            && $this->getInvalidPlayers()->isEmpty()
             && $this->getInvalidPlayerImageIds()->isEmpty();
     }
     
@@ -75,9 +77,9 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
      *
      * @return Collection
      */
-    public function getInvalidPlayerIds(): Collection
+    public function getInvalidPlayers(): Collection
     {
-        return $this->invalidPlayerIds;
+        return $this->invalidPlayers;
     }
     
     /**
@@ -111,13 +113,17 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
             : collect($leagueId);
     }
     
-    public function validatePlayerIds(): void
+    public function validatePlayers(): void
     {
         $players = $this->fixtureData->getPlayedPlayers();
 
-        $playerIds = $players->pluck('id');
+        $invalidFootPlayerIds = (new FilterInvalidFootPlayerIds)->execute($players->pluck('id'));
 
-        $this->invalidPlayerIds = (new FilterInvalidPlayerIds)->execute($playerIds);
+        $this->invalidPlayers = $players
+            ->whereIn('id', $invalidFootPlayerIds->toArray())
+            ->map(fn(array $player) =>
+                collect($player)->only(['id', 'name'])->toArray()
+            );
     }
     
     public function validatePlayerImage(): void
