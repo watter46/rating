@@ -2,11 +2,10 @@
 
 namespace App\Listeners;
 
-use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\Client\RequestException;
 
 use App\Events\FixtureInfoRegistered;
 use App\Http\Controllers\Util\PlayerImageFile;
-use App\Models\PlayerInfo;
 use App\UseCases\Admin\SofaScoreRepositoryInterface;
 
 
@@ -26,13 +25,13 @@ class RegisterPlayerImage
     public function handle(FixtureInfoRegistered $event): void
     {
         $invalidPlayerImageIds = $event->data->validated()->getInvalidPlayerImageIds();
-        
+
         if ($invalidPlayerImageIds->isEmpty()) return;
 
-        $players = PlayerInfo::query()
-            ->select(['foot_player_id', 'sofa_player_id'])
-            ->whereIn('foot_player_id', $invalidPlayerImageIds->toArray())
-            ->get();
+        $players = $event
+            ->fixtureInfo
+            ->playerInfos
+            ->whereIn('foot_player_id', $invalidPlayerImageIds->toArray());
 
         foreach($players as $player) {
             try {
@@ -44,7 +43,7 @@ class RegisterPlayerImage
     
                 $this->file->write($player->foot_player_id, $playerImage);
 
-            } catch (ClientException $e) {
+            } catch (RequestException $e) {
                 continue;
             }
         }

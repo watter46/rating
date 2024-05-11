@@ -24,7 +24,7 @@ class RegisterTeamImages
     public function handle(FixtureInfosRegistered|FixtureInfoRegistered $event): void
     {
         $invalidTeamIds = $event->data->validated()->getInvalidTeamIds();
-
+        
         if ($invalidTeamIds->isEmpty()) return;
         
         foreach($invalidTeamIds as $teamId) {

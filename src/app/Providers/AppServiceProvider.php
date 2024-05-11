@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Infrastructure\ApiFootball\ApiFootballRepository;
+use App\Infrastructure\SofaScore\SofaScoreRepository;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\SofaScoreRepositoryInterface;
 use Database\Stubs\Infrastructure\ApiFootball\MockApiFootballRepository;
@@ -21,7 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public $bindings = [
         // ApiFootballRepositoryInterface::class => ApiFootballRepository::class,
         ApiFootballRepositoryInterface::class => MockApiFootballRepository::class,
-        SofaScoreRepositoryInterface::class => MockSofaScoreRepository::class
+        SofaScoreRepositoryInterface::class => SofaScoreRepository::class
+        // SofaScoreRepositoryInterface::class => MockSofaScoreRepository::class
     ];
 
     /**

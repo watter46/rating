@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\FixtureInfoRegistered;
-use App\UseCases\User\Player\RegisterPlayerUseCase;
+use App\UseCases\Admin\Player\RegisterPlayerInfos as RegisterPlayerInfosUseCase;
 
 
 class RegisterPlayerInfos
@@ -11,7 +11,7 @@ class RegisterPlayerInfos
     /**
      * Create the event listener.
      */
-    public function __construct(private RegisterPlayerUseCase $registerPlayer)
+    public function __construct(private RegisterPlayerInfosUseCase $registerPlayerInfos)
     {
         //
     }
@@ -21,10 +21,10 @@ class RegisterPlayerInfos
      */
     public function handle(FixtureInfoRegistered $event): void
     {
-        $invalidPlayerIds = $event->data->validated()->getInvalidPlayers();
+        $invalidPlayers = $event->data->validated()->getInvalidPlayers();
         
-        if ($invalidPlayerIds->isEmpty()) return;
-
-        $this->registerPlayer->execute($invalidPlayerIds);
+        if ($invalidPlayers->isEmpty()) return;
+        
+        $this->registerPlayerInfos->execute($invalidPlayers, $event->fixtureInfo->playerInfos);
     }
 }
