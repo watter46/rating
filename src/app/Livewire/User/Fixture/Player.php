@@ -4,10 +4,11 @@ namespace App\Livewire\User\Fixture;
 
 use App\Livewire\MessageType;
 use App\Models\Player as EqPlayer;
-use App\UseCases\User\Player\DecideManOfTheMatchUseCase;
-use App\UseCases\User\Player\FetchMomCountUseCase;
-use App\UseCases\User\Player\RatePlayerUseCase;
-use App\UseCases\User\PlayerInFixtureRequest;
+use App\UseCases\User\Player\DecideManOfTheMatch;
+use App\UseCases\User\Player\FetchMomCount;
+use App\UseCases\User\Player\RatePlayer;
+use App\UseCases\User\FixtureRequest;
+use App\UseCases\User\Player\FindPlayer;
 use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -15,43 +16,49 @@ use Livewire\Component;
 
 class Player extends Component
 {
-    public string $fixtureId;
+    public string $fixtureInfoId;
     public array $playerData;
 
     public string $name;
     public string $size;
 
-    public EqPlayer $player;
+    public ?EqPlayer $player;
+    public ?float $rating;
+    public bool $mom;
+    public bool $canRate;
+    public bool $canMom;
+    public int $rateCount;
+    public int $rateLimit;
+    
     public int $momCount;
     public int $momLimit;
 
     public ?float $defaultRating;
 
-    private readonly RatePlayerUseCase $ratePlayer;
+    private readonly FindPlayer $findPlayer;
+    private readonly RatePlayer $ratePlayer;
     private readonly RatingPresenter $presenter;
-    private readonly DecideManOfTheMatchUseCase $decideMOM;
-    private readonly FetchMomCountUseCase $fetchMomCount;
+    private readonly DecideManOfTheMatch $decideMom;
 
     private const RATED_MESSAGE = 'Rated!!';
     private const Decided_MOM_MESSAGE = 'Decided MOM!!';
 
     use PlayerTrait;
+    use MomCountTrait;
 
     public function boot(
-        RatePlayerUseCase $ratePlayer,
-        DecideManOfTheMatchUseCase $decideMOM,
-        FetchMomCountUseCase $fetchMomCount,
+        RatePlayer $ratePlayer,
+        DecideManOfTheMatch $decideMom,
         RatingPresenter $presenter)
     {
-        $this->decideMOM  = $decideMOM;
+        $this->decideMom  = $decideMom;
         $this->ratePlayer = $ratePlayer;
-        $this->fetchMomCount = $fetchMomCount;
         $this->presenter  = $presenter;
     }
 
     public function mount()
     {
-        $this->defaultRating = $this->playerData['defaultRating'];
+        $this->defaultRating = (float) $this->playerData['defaultRating'];
     }
     
     public function render()
@@ -80,14 +87,14 @@ class Player extends Component
     public function rate(float $rating): void
     {
         try {
-            $request = PlayerInFixtureRequest::make(
-                    fixtureId: $this->fixtureId,
+            $request = FixtureRequest::make(
+                    fixtureInfoId: $this->fixtureInfoId,
                     playerInfoId: $this->playerData['id']
                 );
             
-            $this->ratePlayer->execute($request, $rating);
+            $player = $this->ratePlayer->execute($request, $rating);
             
-            $this->dispatchPlayerFetched($this->playerData['id']);
+            $this->dispatchPlayerUpdated($player);
             $this->dispatch('player-rated');
             $this->dispatch('notify', message: MessageType::Success->toArray(self::RATED_MESSAGE));
             $this->dispatch('close');
@@ -102,19 +109,19 @@ class Player extends Component
      *
      * @return void
      */
-    public function decideMOM(): void
+    public function decideMom(): void
     {
         try {
-            $request = PlayerInFixtureRequest::make(
-                    fixtureId: $this->fixtureId,
+            $request = FixtureRequest::make(
+                    fixtureInfoId: $this->fixtureInfoId,
                     playerInfoId: $this->playerData['id']
                 );
 
-            $players = $this->decideMOM->execute($request);
+            $players = $this->decideMom->execute($request);
 
             $this->dispatch('mom-count-updated');
-            $this->dispatchPlayerFetched($players['newMomPlayerInfoId']);
-            $this->dispatchPlayerFetched($players['oldMomPlayerInfoId']);
+            $this->dispatchPlayerUpdated($players['newMomPlayer']);
+            $this->dispatchPlayerUpdated($players['oldMomPlayer']);
             $this->dispatch('notify', message: MessageType::Success->toArray(self::Decided_MOM_MESSAGE));
             $this->dispatch('close');
 
@@ -123,27 +130,10 @@ class Player extends Component
         }
     }
 
-    #[On('mom-count-updated')]
-    public function updateMomCount(): void
+    private function dispatchPlayerUpdated(?EqPlayer $player)
     {
-        $request = PlayerInFixtureRequest::make(fixtureId: $this->fixtureId);
+        if (!$player) return;
 
-        ['momLimit' => $this->momLimit, 'mom_count' => $this->momCount, 'exceedMomLimit' => $exceedMomLimit]
-            = $this->fetchMomCount->execute($request);
-
-        if ($exceedMomLimit) {
-            $this->dispatch('mom-button-disabled');
-        }
-    }
-    
-    /**
-     * 指定の選手を取得するイベントを発行する
-     *
-     * @param  string $playerInfoId
-     * @return void
-     */
-    private function dispatchPlayerFetched(string $playerInfoId): void
-    {
-        $this->dispatch('fetch-player.'.$playerInfoId);
+        $this->dispatch('update-player.'.$player->player_info_id, $player);
     }
 }

@@ -2,15 +2,15 @@
 
 namespace App\UseCases\Admin;
 
-use App\UseCases\Admin\Fixture\FixtureData\FixtureData;
-use App\UseCases\Admin\Fixture\FixturesData\FixturesData;
+use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
+use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 use App\UseCases\Admin\Player\SquadsData\SquadsData;
 
 
 interface ApiFootballRepositoryInterface
 {
-    public function fetchFixtures(): FixturesData;
-    public function fetchFixture(int $fixtureId): FixtureData;
+    public function fetchFixtures(): FixtureInfosData;
+    public function fetchFixture(int $fixtureId): FixtureInfoData;
     public function fetchSquads(): SquadsData;
     public function fetchLeagueImage(int $leagueId): string;
     public function fetchTeamImage(int $teamId): string;

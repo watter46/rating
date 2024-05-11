@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Pagination\Paginator;
 
-use App\Models\Fixture;
+use App\Models\FixtureInfo;
 use App\Livewire\User\Data\FixturesDataPresenter;
 
 
@@ -20,16 +20,14 @@ final readonly class FixturesPresenter
     {
         $fixtures
             ->getCollection()
-            ->transform(function (Fixture $fixture) {
-                $fixture->fixture = FixturesDataPresenter::create($fixture)
+            ->transform(function (FixtureInfo $fixtureInfo) {
+                return FixturesDataPresenter::create($fixtureInfo)
                     ->formatPathToLeagueImage()
                     ->formatPathToTeamImages()
                     ->formatFixtureData()
                     ->get();
-                    
-                return $fixture;
             });
-            
+        
         return $fixtures;
     }
 }

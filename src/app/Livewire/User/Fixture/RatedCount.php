@@ -7,20 +7,20 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 use App\Livewire\MessageType;
-use App\Livewire\User\Data\FixtureDataPresenter;
-use App\UseCases\User\Player\CountRatedPlayerUseCase;
+use App\UseCases\User\FixtureRequest;
+use App\UseCases\User\Player\CountRatedPlayer;
 
 
 class RatedCount extends Component
-{   
-    public string $fixtureId;
+{
+    public string $fixtureInfoId;
 
     public int $ratedPercentage;
     public bool $isZero;
 
-    private readonly CountRatedPlayerUseCase $countRatedPlayer;
+    private readonly CountRatedPlayer $countRatedPlayer;
     
-    public function boot(CountRatedPlayerUseCase $countRatedPlayer)
+    public function boot(CountRatedPlayer $countRatedPlayer)
     {
         $this->countRatedPlayer = $countRatedPlayer;
     }
@@ -39,16 +39,11 @@ class RatedCount extends Component
     public function fetch(): void
     {
         try {
-            $fixture = $this->countRatedPlayer->execute($this->fixtureId);
+            $request = FixtureRequest::make($this->fixtureInfoId);
+
+            $fixture = $this->countRatedPlayer->execute($request);
             
-            $fixtureData = FixtureDataPresenter::create($fixture)
-                ->playerCount()
-                ->get();
-            
-            $this->ratedPercentage = $this->calculateRatedPercentage(
-                    $fixture->ratedCount,
-                    $fixtureData->get('playerCount')
-                );
+            $this->ratedPercentage = $this->calculateRatedPercentage(...$fixture);
             
             $this->isZero = $this->ratedPercentage === 0;
 
@@ -57,8 +52,8 @@ class RatedCount extends Component
         }
     }
 
-    private function calculateRatedPercentage(int $ratedPlayerCount, int $totalPlayerCount): int
+    private function calculateRatedPercentage(int $ratedCount, int $playerCount): int
     {
-        return (int) floor(($ratedPlayerCount / $totalPlayerCount) * 100);
+        return (int) floor(($ratedCount / $playerCount) * 100);
     }
 }

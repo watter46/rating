@@ -16,8 +16,8 @@ class Result extends Component
         public array $teamsData,
         public array $leagueData,
         public array $scoreData,
-        public array $lineups,
-        public string $fixtureId)
+        public array $lineupsData,
+        public string $fixtureInfoId)
     {
         //
     }

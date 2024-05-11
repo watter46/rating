@@ -37,13 +37,13 @@
                 <div x-show="!isOpen">
                     <div class="grid w-full h-full gap-3 mt-3">
                         <div class="flex justify-center w-full">
-                            {{ $this->fixtures->links('components.wire-pagination') }}
+                            {{ $this->fixtureInfos->links('components.wire-pagination') }}
                         </div>
                         
-                        @foreach($this->fixtures as $fixture)
+                        @foreach($this->fixtureInfos as $fixtureInfo)
                             <livewire:admin.fixture
-                                :$fixture
-                                :key="$fixture->id" />
+                                :$fixtureInfo
+                                :key="$fixtureInfo->id" />
                         @endforeach
                     </div>
                 </div>

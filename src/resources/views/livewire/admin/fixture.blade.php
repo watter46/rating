@@ -1,4 +1,4 @@
-<div class="w-full rounded-2xl bg-sky-950 {{ $fixture->dataExists ? 'border-2 border-orange-600' : '' }}"
+<div class="w-full rounded-2xl bg-sky-950 {{ $fixtureInfo->lineupsExists ? 'border-2 border-orange-600' : '' }}"
     x-data="{ isOpen: false }"
     x-cloak
     @close-fixture-modal.window="isOpen = false">
@@ -8,57 +8,57 @@
             <div class="flex justify-center w-4/6 p-5 rounded-lg bg-sky-950 h-3/6">
                 <div class="flex flex-col w-1/2 h-full p-3">
                     <div class="flex items-center justify-between px-3 bg-gray-500 rounded-lg"
-                        title="{{ $fixture->score['league']['round'] }}">
+                        title="{{ $fixtureInfo->league['round'] }}">
                         <div class="flex items-center p-2">
-                            <img src="{{ $fixture->score['league']['img'] }}"
+                            <img src="{{ $fixtureInfo->league['img'] }}"
                                 class="cursor-pointer w-14 h-14">
 
                             <div class="flex justify-center p-2">
                                 <p class="text-xl font-black"
                                     style="text-shadow: #b8b8b8 2px 1px 5px; color: #37003C;">
-                                    {{ $fixture->score['league']['name'] }}
+                                    {{ $fixtureInfo->league['name'] }}
                                 </p>
                             </div>
                         </div>
 
                         <div class="flex items-center justify-center w-1/4 h-full px-2 py-1 font-black text-gray-300">
-                            {{ $fixture->score['fixture']['date'] }}
+                            {{ $fixtureInfo->fixture['first_half_at'] }}
                         </div>
                     </div>
                     
                     <div class="flex items-center justify-around w-full h-full">
-                        @if ($fixture->score['teams']['home'])
+                        @if ($fixtureInfo->teams['home'])
                             <div class="flex flex-col items-center w-1/2 pl-2">
-                                @if ($fixture->score['teams']['home']['img'])
-                                    <img src="{{ $fixture->score['teams']['home']['img'] }}"
+                                @if ($fixtureInfo->teams['home']['img'])
+                                    <img src="{{ $fixtureInfo->teams['home']['img'] }}"
                                         class="w-24 h-24 cursor-pointer">
                                 @endif
 
-                                @unless($fixture->score['teams']['home']['img'])
+                                @unless($fixtureInfo->teams['home']['img'])
                                     <div class="w-24 h-24 bg-gray-400 cursor-pointer">
                                     </div>
                                 @endunless
 
                                 <p class="p-2 text-2xl font-black text-gray-300 whitespace-nowrap">
-                                    {{ $fixture->score['teams']['home']['name'] }}
+                                    {{ $fixtureInfo->teams['home']['name'] }}
                                 </p>
                             </div>
                         @endif
 
-                        @if ($fixture->score['teams']['away'])
+                        @if ($fixtureInfo->teams['away'])
                             <div class="flex flex-col items-center w-1/2 pl-2">
-                                @if ($fixture->score['teams']['away']['img'])
-                                    <img src="{{ $fixture->score['teams']['away']['img'] }}"
+                                @if ($fixtureInfo->teams['away']['img'])
+                                    <img src="{{ $fixtureInfo->teams['away']['img'] }}"
                                         class="w-24 h-24 cursor-pointer">
                                 @endif
 
-                                @unless($fixture->score['teams']['away']['img'])
+                                @unless($fixtureInfo->teams['away']['img'])
                                     <div class="w-24 h-24 bg-gray-400 cursor-pointer">
                                     </div>
                                 @endunless
 
                                 <p class="p-2 text-2xl font-black text-gray-300 whitespace-nowrap">
-                                    {{ $fixture->score['teams']['away']['name'] }}
+                                    {{ $fixtureInfo->teams['away']['name'] }}
                                 </p>
                             </div>
                         @endif
@@ -94,29 +94,29 @@
                 <div class="w-full h-full cursor-pointer">
             
                     <div class="flex justify-between w-full px-5">
-                        <p class="text-gray-400">{{ $fixture->score['fixture']['date'] }}</p>
+                        <p class="text-gray-400">{{ $fixtureInfo->fixture['first_half_at'] }}</p>
             
                         <div class="flex justify-end gap-x-2">
-                            <p class="text-sm font-black text-gray-300">{{ $fixture->score['league']['name'] }}</p>
-                            <p class="text-sm font-black text-gray-300">{{ $fixture->score['league']['round'] }}</p>
-                            <img src="{{ $fixture->score['league']['img'] }}" class="w-5 h-5 bg-pink-500 rounded-xl">
+                            <p class="text-sm font-black text-gray-300">{{ $fixtureInfo->league['name'] }}</p>
+                            <p class="text-sm font-black text-gray-300">{{ $fixtureInfo->league['round'] }}</p>
+                            <img src="{{ $fixtureInfo->league['img'] }}" class="w-5 h-5 bg-pink-500 rounded-xl">
                         </div>
                     </div>
                   
                     <div class="flex items-center justify-center w-full">        
-                        @if ($fixture->score['teams']['home'])
+                        @if ($fixtureInfo->teams['home'])
                             <div class="flex items-center justify-end w-full px-10">
                                 <div class="flex items-center justify-end w-2/3 h-full">
                                     <p class="p-2 text-xl font-black text-gray-300 whitespace-nowrap">
-                                        {{ $fixture->score['teams']['home']['name'] }}
+                                        {{ $fixtureInfo->teams['home']['name'] }}
                                     </p>
             
-                                    @if ($fixture->score['teams']['home']['img'])
-                                        <img src="{{ $fixture->score['teams']['home']['img'] }}"
+                                    @if ($fixtureInfo->teams['home']['img'])
+                                        <img src="{{ $fixtureInfo->teams['home']['img'] }}"
                                             class="w-8 h-8">
                                     @endif
             
-                                    @unless($fixture->score['teams']['home']['img'])
+                                    @unless($fixtureInfo->teams['home']['img'])
                                         <div class="w-8 h-8 bg-gray-400">
                                         </div>
                                     @endunless
@@ -125,40 +125,38 @@
                         @endif
 
                         <div class="w-44">
-                            @if($fixture->fixture)
+                            @if($fixtureInfo->fixture)
                                 <div class="flex justify-center text-2xl font-black text-gray-300 rounded-xl
-                                    {{ $fixture->winner ? 'bg-green-500' : (
-                                    $fixture->winner === false
-                                            ? 'bg-red-600'
-                                            : 'bg-gray-500'
-                                    ) }}">
+                                {{ $fixtureInfo->fixture['winner']
+                                ? 'bg-green-500'
+                                : ($fixtureInfo->fixture['winner'] === false ? 'bg-red-600' : 'bg-gray-500') }}">
                                     <div class="flex px-2 rounded-lg w-fit">
-                                        <p class="px-1">{{ $fixture->fixture['score']['fulltime']['home'] }}</p>
+                                        <p class="px-1">{{ $fixtureInfo->score['fulltime']['home'] }}</p>
                                         <p class="px-1">-</p>
-                                        <p class="px-1">{{ $fixture->fixture['score']['fulltime']['away'] }}</p>
+                                        <p class="px-1">{{ $fixtureInfo->score['fulltime']['away'] }}</p>
                                     </div>
                                 </div>
                             @endif
 
-                            @unless($fixture->fixture)
+                            @unless($fixtureInfo->fixture)
                                 <div class="text-2xl font-black text-center text-gray-300">vs</div>
                             @endunless
                         </div>
                         
-                        @if ($fixture->score['teams']['away'])
+                        @if ($fixtureInfo->teams['away'])
                             <div class="flex items-center w-full px-10">
-                                @if ($fixture->score['teams']['away']['img'])
-                                    <img src="{{ $fixture->score['teams']['away']['img'] }}"
+                                @if ($fixtureInfo->teams['away']['img'])
+                                    <img src="{{ $fixtureInfo->teams['away']['img'] }}"
                                         class="w-8 h-8">
                                 @endif
             
-                                @unless($fixture->score['teams']['away']['img'])
+                                @unless($fixtureInfo->teams['away']['img'])
                                     <div class="w-8 h-8 bg-gray-400">
                                     </div>
                                 @endunless
             
                                 <p class="p-2 text-xl font-black text-gray-300 whitespace-nowrap">
-                                    {{ $fixture->score['teams']['away']['name'] }}
+                                    {{ $fixtureInfo->teams['away']['name'] }}
                                 </p>
                             </div>
                         @endif

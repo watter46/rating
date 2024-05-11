@@ -12,7 +12,7 @@ use Illuminate\Pagination\Paginator;
 use App\Models\TournamentType;
 use App\Livewire\MessageType;
 use App\Http\Controllers\FixturesPresenter;
-use App\UseCases\User\Fixture\FetchFixturesUseCase;
+use App\UseCases\User\Fixture\FetchFixtures;
 
 
 class Fixtures extends Component
@@ -22,10 +22,10 @@ class Fixtures extends Component
     #[Url(as: 'q', except: '')]
     public string $sort = '';
 
-    private FetchFixturesUseCase $fetchFixtures;
+    private FetchFixtures $fetchFixtures;
     private FixturesPresenter $presenter;
 
-    public function boot(FetchFixturesUseCase $fetchFixtures, FixturesPresenter $presenter)
+    public function boot(FetchFixtures $fetchFixtures, FixturesPresenter $presenter)
     {
         $this->fetchFixtures = $fetchFixtures;
         $this->presenter = $presenter;

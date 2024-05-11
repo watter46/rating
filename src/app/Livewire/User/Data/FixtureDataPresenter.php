@@ -17,7 +17,7 @@ readonly class FixtureDataPresenter
     private LeagueImageFile $leagueImage;
     private PlayerImageFile $playerImage;
 
-    private function __construct(private Collection $fixtureData)
+    private function __construct(private Fixture $fixture)
     {
         $this->teamImage   = new TeamImageFile;
         $this->leagueImage = new LeagueImageFile;
@@ -26,29 +26,12 @@ readonly class FixtureDataPresenter
     
     public static function create(Fixture $fixture)
     {
-        return new self($fixture->fixture);
+        return new self($fixture);
     }
 
-    public function get(): Collection
+    public function get(): Fixture
     {
-        return $this->fixtureData;
-    }
-        
-    /**
-     * 出場した選手数をカウントする
-     *
-     * @return self
-     */
-    public function playerCount(): self
-    {
-        $count = $this->fixtureData
-            ->dataGet('lineups')
-            ->flatten(1)
-            ->count();
-
-        $formatted = $this->fixtureData->dataSet('playerCount', $count);
-
-        return new self($formatted);
+        return $this->fixture;
     }
     
     /**
@@ -57,17 +40,18 @@ readonly class FixtureDataPresenter
      * @return self
      */
     public function formatFormation(): self
-    {        
-        $startXI = collect($this->fixtureData->dataGet('lineups.startXI'))
+    {
+        $startXI = $this->fixture->fixtureInfo->lineups->dataGet('startXI')
             ->reverse()
             ->groupBy(function ($player) {
                 return Str::before($player['grid'], ':');
             })
-            ->values();
+            ->values()
+            ->toArray();
+        
+        $this->fixture->fixtureInfo->lineups['startXI'] = $startXI;
 
-        $formatted = $this->fixtureData->dataSet('lineups.startXI', $startXI);
-
-        return new self($formatted);
+        return new self($this->fixture);
     }
     
     /**
@@ -77,13 +61,13 @@ readonly class FixtureDataPresenter
      */
     public function formatSubstitutes(): self
     {
-        $substitutesData = collect($this->fixtureData->dataGet('lineups.substitutes'));
+        $substitutesData = $this->fixture->fixtureInfo->lineups->dataGet('substitutes');
 
         $substitutes = SubstitutesSplitter::split($substitutesData)->get();
 
-        $formatted = $this->fixtureData->dataSet('lineups.substitutes', $substitutes);
+        $this->fixture->fixtureInfo->lineups['substitutes'] = $substitutes;
 
-        return new self($formatted);
+        return new self($this->fixture);
     }
     
     /**
@@ -93,13 +77,13 @@ readonly class FixtureDataPresenter
      */
     public function formatPathToLeagueImage(): self
     {
-        $leagueData = $this->fixtureData->dataGet('league');
-        
+        $leagueData = $this->fixture->fixtureInfo->league;
+
         $leagueData->put('img', $this->leagueImage->getByPath($leagueData->get('img')));
 
-        $formatted = $this->fixtureData->dataSet('league', $leagueData);
+        $this->fixture->fixtureInfo->league = $leagueData;
 
-        return new self($formatted);
+        return new self($this->fixture);
     }
 
     /**
@@ -109,16 +93,16 @@ readonly class FixtureDataPresenter
      */
     public function formatPathToTeamImages(): self
     {
-        $teams = $this->fixtureData->dataGet('teams');
+        $teams = $this->fixture->fixtureInfo->teams;
         
         $teamsData = $teams
             ->map(function ($team) {
                 return collect($team)->put('img', $this->teamImage->getByPath($team['img']));
             });
 
-        $formatted = $this->fixtureData->dataSet('teams', $teamsData);
+            $this->fixture->fixtureInfo->teams = $teamsData;
 
-        return new self($formatted);
+        return new self($this->fixture);
     }
 
     private function toLastName(string $dotValue): string
@@ -128,7 +112,7 @@ readonly class FixtureDataPresenter
 
     public function formatPlayerData(Collection $playerInfos)
     {
-        $playerData = $this->fixtureData->dataGet('lineups')
+        $playerData = $this->fixture->fixtureInfo->lineups
             ->map(fn($lineups) => collect($lineups)
                 ->map(fn($players) => collect($players)
                     ->map(function ($player) use ($playerInfos) {
@@ -143,9 +127,9 @@ readonly class FixtureDataPresenter
                     })
             ));
 
-        $formatted = $this->fixtureData->dataSet('lineups', $playerData);
+        $this->fixture->fixtureInfo->lineups = $playerData;
 
-        return new self($formatted);
+        return new self($this->fixture);
     }
 
     /**
@@ -155,12 +139,12 @@ readonly class FixtureDataPresenter
      */
     public function addPlayerCountColumn()
     {
-        $count = collect($this->fixtureData->dataGet('lineups.startXI'))
+        $count = $this->fixture->fixtureInfo->lineups->dataGet('startXI')
             ->flatten(1)
             ->count();
 
-        $formatted = $this->fixtureData->dataSet('lineups.playerCount', $count);
+        $this->fixture->fixtureInfo->lineups['playerCount'] = $count;
 
-        return new self($formatted);
+        return new self($this->fixture);
     }
 }

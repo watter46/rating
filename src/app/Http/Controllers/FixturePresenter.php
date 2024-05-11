@@ -10,69 +10,52 @@ use App\Livewire\User\Data\FixtureDataPresenter;
 
 final readonly class FixturePresenter
 {
+    private const LINEUPS_KEYS = ['startXI', 'substitutes'];
+    
     public function format(Fixture $fixture): Collection
     {
-        $fixture->fixture = FixtureDataPresenter::create($fixture)
+        $newFixture = FixtureDataPresenter::create($fixture)
             ->formatFormation()
             ->formatSubstitutes()
             ->formatPathToLeagueImage()
             ->formatPathToTeamImages()
-            ->formatPlayerData($fixture->playerInfos)
+            ->formatPlayerData($fixture->fixtureInfo->playerInfos)
             ->addPlayerCountColumn()
             ->get();
 
-        unset($fixture->playerInfos);
+        $players = $fixture->newPlayers->keyBy('player_info_id');
 
-        $fixtureData = $fixture
-            ->fixture
-            ->mapWithKeys(function ($fixture, $key) {
-                if ($key === "lineups") {
-                    return [$key => $this->addPlayerGridCss($fixture)];
-                }
-                
-                return [$key.'Data' => $fixture];
-            })
-            ->map(function ($data, $key) use ($fixture) {
-                if ($key === "lineups") {
-                    $players = $fixture->players->keyBy('player_info_id');
-                    
-                    $data['startXI'] = collect($data['startXI'])
-                        ->map(function (array $startXIData) use ($players) {
-                            return collect($startXIData)
-                                ->map(function (array $playerData) use ($players) {
-                                    return [
-                                        'playerData' => $playerData,
-                                        'player' => $players->get($playerData['id'])
-                                    ];
-                                });
-                        });
-
-                    $data['substitutes'] = collect($data['substitutes'])
-                        ->map(function (array $substitutesData) use ($players) {
-                            return collect($substitutesData)
-                                ->map(function (array $playerData) use ($players) {
-                                    return [
-                                        'playerData' => $playerData,
-                                        'player' => $players->get($playerData['id'])
-                                    ];
-                                });
-                        });
-                        
-                    return $data;
+        $lineupsData = $this->addPlayerGridCss($newFixture->fixtureInfo->lineups)
+            ->map(function ($data, $key) use ($players) {
+                if (collect(self::LINEUPS_KEYS)->some($key)) {
+                    return $data->map(function (Collection $playersData) use ($players) {
+                        return $playersData
+                            ->map(function (array $playerData) use ($players) {
+                                return [
+                                    'playerData' => $playerData,
+                                    'player' => $players->get($playerData['id'])
+                                ];
+                            });
+                    });
                 }
 
                 return $data;
             });
-
+            
         return collect([
-            'fixtureId' => $fixture->id,
-            'momCount' => $fixture->mom_count,
-            'momLimit' => $fixture->momLimit,
-            ...$fixtureData
+            'fixtureId'     => $newFixture->id,
+            'fixtureInfoId' => $newFixture->fixtureInfo->id,
+            'momCount'      => $newFixture->mom_count,
+            'momLimit'      => $newFixture->momLimit,
+            'scoreData'     => $newFixture->fixtureInfo->score,
+            'teamsData'     => $newFixture->fixtureInfo->teams,
+            'leagueData'    => $newFixture->fixtureInfo->league,
+            'fixtureData'   => $newFixture->fixtureInfo->fixture,
+            'lineupsData'   => $lineupsData
         ]);
     }
 
-    private function addPlayerGridCss(array $lineupsData): Collection
+    private function addPlayerGridCss(Collection $lineupsData): Collection
     {
         $count = $lineupsData['playerCount'];
 

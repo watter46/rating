@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Infrastructure\ApiFootball\ApiFootballRepository;
+use App\Infrastructure\SofaScore\SofaScoreRepository;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\SofaScoreRepositoryInterface;
 use Database\Stubs\Infrastructure\ApiFootball\MockApiFootballRepository;
@@ -21,7 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public $bindings = [
         // ApiFootballRepositoryInterface::class => ApiFootballRepository::class,
         ApiFootballRepositoryInterface::class => MockApiFootballRepository::class,
-        SofaScoreRepositoryInterface::class => MockSofaScoreRepository::class
+        SofaScoreRepositoryInterface::class => SofaScoreRepository::class
+        // SofaScoreRepositoryInterface::class => MockSofaScoreRepository::class
     ];
 
     /**
@@ -40,16 +42,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Collection::macro('dataGet', function ($key, $default = null) {
+        Collection::macro('dataGet', function ($key, bool $collection = true) {
             $data = $this->toArray();
-
-            return collect(data_get($data, $key, $default));
+            
+            return $collection
+                ? collect(data_get($data, $key))
+                : data_get($data, $key);
         });
 
         Collection::macro('dataSet', function ($key, $value) {
             $data = $this->toArray();
             
             return collect(data_set($data, $key, $value));
+        });
+
+        Collection::macro('fromStd', function () {
+            return collect(json_decode($this, true));
         });
     }
 }

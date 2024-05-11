@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\Events\FixtureRegistered;
-use App\Events\FixturesRegistered;
+use App\Events\FixtureInfoRegistered;
+use App\Events\FixtureInfosRegistered;
 use App\Listeners\RegisterLeagueImage;
+use App\Listeners\RegisterLineups;
 use App\Listeners\RegisterPlayerImage;
 use App\Listeners\RegisterPlayerInfos;
 use App\Listeners\RegisterTeamImages;
@@ -25,12 +26,13 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        FixturesRegistered::class => [
+        FixtureInfosRegistered::class => [
             RegisterTeamImages::class,
             RegisterLeagueImage::class
         ],
 
-        FixtureRegistered::class => [
+        FixtureInfoRegistered::class => [
+            RegisterLineups::class,
             RegisterTeamImages::class,
             RegisterLeagueImage::class,
             RegisterPlayerInfos::class,

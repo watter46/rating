@@ -8,14 +8,15 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 use App\Livewire\MessageType;
-use App\Models\Fixture as EqFixture;
-use App\UseCases\Admin\Fixture\RegisterFixtureUseCase;
+use App\Livewire\User\Data\FixturesDataPresenter;
+use App\Models\FixtureInfo;
+use App\UseCases\Admin\Fixture\RegisterFixtureInfo;
 
 
 class Fixture extends Component
 {
     #[Locked]
-    public EqFixture $fixture;
+    public FixtureInfo $fixtureInfo;
 
     #[Validate('required')]
     public string $refreshKey;
@@ -28,19 +29,20 @@ class Fixture extends Component
         return view('livewire.admin.fixture');
     }
 
-    public function refresh(RegisterFixtureUseCase $registerFixture): void
+    public function refresh(RegisterFixtureInfo $registerFixtureInfo): void
     {
         try {
             if ($this->refreshKey !== config('refreshKey.key')) {
                 throw new Exception(self::ERROR_MESSAGE);
             }
 
-            $registerFixture->execute($this->fixture->id);
+            $registerFixtureInfo->execute($this->fixtureInfo->id);
     
             $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close-fixture-modal');
 
         } catch (Exception $e) {
+            dd($e);
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
         }
     }

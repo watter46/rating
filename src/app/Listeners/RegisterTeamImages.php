@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\FixtureRegistered;
-use App\Events\FixturesRegistered;
+use App\Events\FixtureInfoRegistered;
+use App\Events\FixtureInfosRegistered;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 
@@ -21,10 +21,10 @@ class RegisterTeamImages
     /**
      * Handle the event.
      */
-    public function handle(FixturesRegistered|FixtureRegistered $event): void
+    public function handle(FixtureInfosRegistered|FixtureInfoRegistered $event): void
     {
         $invalidTeamIds = $event->data->validated()->getInvalidTeamIds();
-
+        
         if ($invalidTeamIds->isEmpty()) return;
         
         foreach($invalidTeamIds as $teamId) {

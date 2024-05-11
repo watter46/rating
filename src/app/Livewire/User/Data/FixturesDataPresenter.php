@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use App\Models\Fixture;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
+use App\Models\FixtureInfo;
 use Illuminate\Support\Carbon;
 
 class FixturesDataPresenter
@@ -14,20 +15,20 @@ class FixturesDataPresenter
     private TeamImageFile   $teamImage;
     private LeagueImageFile $leagueImage;
 
-    private function __construct(private Collection $fixtureData)
+    private function __construct(private FixtureInfo $fixtureInfo)
     {
         $this->teamImage   = new TeamImageFile;
         $this->leagueImage = new LeagueImageFile;
     }
     
-    public static function create(Fixture $fixture)
+    public static function create(FixtureInfo $fixtureInfo)
     {
-        return new self($fixture->fixture);
+        return new self($fixtureInfo);
     }
 
-    public function get(): Collection
+    public function get(): FixtureInfo
     {
-        return $this->fixtureData;
+        return $this->fixtureInfo;
     }
 
     /**
@@ -37,13 +38,13 @@ class FixturesDataPresenter
      */
     public function formatPathToLeagueImage(): self
     {
-        $leagueData = $this->fixtureData->dataGet('league');
+        $leagueData = $this->fixtureInfo->league;
         
         $leagueData->put('img', $this->leagueImage->getByPath($leagueData->get('img')));
+        
+        $this->fixtureInfo->league = $leagueData;
 
-        $formatted = $this->fixtureData->dataSet('league', $leagueData);
-
-        return new self($formatted);
+        return new self($this->fixtureInfo);
     }
 
     /**
@@ -53,16 +54,16 @@ class FixturesDataPresenter
      */
     public function formatPathToTeamImages(): self
     {
-        $teams = $this->fixtureData->dataGet('teams');
+        $teams = $this->fixtureInfo->teams;
         
         $teamsData = $teams
             ->map(function ($team) {
                 return collect($team)->put('img', $this->teamImage->getByPath($team['img']));
             });
 
-        $formatted = $this->fixtureData->dataSet('teams', $teamsData);
+        $this->fixtureInfo->teams = $teamsData;
 
-        return new self($formatted);
+        return new self($this->fixtureInfo);
     }
     
     /**
@@ -72,17 +73,10 @@ class FixturesDataPresenter
      */
     public function formatFixtureData(): self
     {
-        $winner = $this->fixtureData->dataGet('teams')
-            ->sole(function ($team) {
-                return $team['id'] === config('api-football.chelsea-id');
-            })['winner'];
-
-        $start_at = $this->fixtureData->dataGet('fixture')->get('first_half_at');
+        $start_at = $this->fixtureInfo->fixture->get('first_half_at');
         
-        $formatted = $this->fixtureData
-            ->dataSet('fixture.winner', $winner)
-            ->dataSet('fixture.first_half_at', Carbon::parse($start_at)->__toString());
-
-        return new self($formatted);
+        $this->fixtureInfo->fixture['first_half_at'] = Carbon::parse($start_at)->__toString();
+            
+        return new self($this->fixtureInfo);
     }
 }

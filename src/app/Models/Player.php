@@ -45,9 +45,9 @@ class Player extends Model
         'mom' => 'boolean'
     ];
 
-    protected $hidden = [
-        'user_id'
-    ];
+    // protected $hidden = [
+    //     'user_id'
+    // ];
 
     /**
      * デフォルト値
@@ -60,27 +60,27 @@ class Player extends Model
         'rate_count' => 0
     ];
     
-    /**
-     * 保存されるときにUserIdを紐づける
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
+    // /**
+    //  * 保存されるときにUserIdを紐づける
+    //  *
+    //  * @return void
+    //  */
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        self::saving(function($player) {
-            $player->user_id = Auth::id();
-        });
-    }
+    //     self::saving(function($player) {
+    //         $player->user_id = Auth::id();
+    //     });
+    // }
 
-    /**
-     * UserBooted
-     */
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new CurrentUserScope);
-    }
+    // /**
+    //  * UserBooted
+    //  */
+    // protected static function booted(): void
+    // {
+    //     static::addGlobalScope(new CurrentUserScope);
+    // }
 
     public function decideMOM(): self
     {
@@ -138,9 +138,9 @@ class Player extends Model
      * @param  string $fixtureId
      * @return void
      */
-    public function scopeFixtureId(Builder $query, string $fixtureId)
+    public function scopeFixtureInfoId(Builder $query, string $fixtureInfoId)
     {
-        $query->where('fixture_id', $fixtureId);
+        $query->where('fixture_info_id', $fixtureInfoId);
     }
     
     /**
@@ -150,7 +150,7 @@ class Player extends Model
      */
     public function fixture(): BelongsTo
     {
-        return $this->belongsTo(Fixture::class);
+        return $this->belongsTo(Fixture::class)->withDefault();
     }
 
     /**

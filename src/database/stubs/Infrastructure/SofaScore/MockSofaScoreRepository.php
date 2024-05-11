@@ -2,26 +2,27 @@
 
 namespace Database\Stubs\Infrastructure\SofaScore;
 
+use App\Http\Controllers\Util\PlayerFile;
+use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\PlayerOfTeamFile;
+use App\UseCases\Admin\Player\PlayerData\PlayerData;
 use App\UseCases\Admin\Player\PlayersOfTeamData\PlayersOfTeamData;
 use App\UseCases\Admin\SofaScoreRepositoryInterface;
-use Illuminate\Support\Collection;
+
 
 class MockSofaScoreRepository implements SofaScoreRepositoryInterface
 {
-    public function __construct(private PlayerOfTeamFile $playerOfTeamFile)
+    public function __construct(
+        private PlayerFile $playerFile,
+        private PlayerOfTeamFile $playerOfTeamFile,
+        private PlayerImageFile $playerImageFile)
     {
         
     }
-    
-    public function fetchPlayerByName(string $playerName): Collection
-    {
-        $json = $this->httpClient('https://sofascores.p.rapidapi.com/v1/search/multi', [
-            'query' => $playerName,
-            'group' => 'players'
-        ]);
 
-        return collect(json_decode($json)->data);
+    public function fetchPlayer(array $player): PlayerData
+    {
+        return PlayerData::create($player['id'], $this->playerFile->get($player['id']));
     }
 
     public function fetchPlayersOfTeam(): PlayersOfTeamData
@@ -31,8 +32,6 @@ class MockSofaScoreRepository implements SofaScoreRepositoryInterface
 
     public function fetchPlayerImage(int $playerId): string
     {
-        return $this->httpClient('https://sofascores.p.rapidapi.com/v1/players/photo', [
-            'player_id' => (string) $playerId
-        ]);
+        return $this->playerImageFile->get($playerId);
     }
 }
