@@ -111,4 +111,22 @@ class FixtureInfoQueryBuilder extends Builder
             'lineups'
         ]);
     }
+    
+    /**
+     * 指定したカラム名以外を取得する
+     *
+     * @param  array $except
+     * @return Builder
+     */
+    public function selectWithout(array $except = []): Builder
+    {
+        return $this->select(
+                collect($this->model->getFillable())
+                    ->flip()
+                    ->except($except)
+                    ->flip()
+                    ->merge(['id'])
+                    ->toArray()
+            );
+    }
 }

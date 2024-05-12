@@ -17,6 +17,7 @@ final readonly class FetchFixtures
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
                 ->with('fixture.players')
+                ->selectWithout(['lineups'])
                 ->whereNotNull('lineups')
                 ->tournament($tournament)
                 ->inSeasonTournament()
@@ -27,7 +28,7 @@ final readonly class FetchFixtures
 
             $fixtureInfos->getCollection()
                 ->transform(function (FixtureInfo $fixtureInfo) {
-                    $fixtureInfo->isRate = !is_null($fixtureInfo?->lineup?->players);
+                    $fixtureInfo->isRate = !is_null($fixtureInfo?->getRelation('fixture')?->players);
                     
                     return $fixtureInfo;
                 });

@@ -100,10 +100,13 @@ class FixtureBuilder
             ->finished()
             ->untilToday()
             ->first();
-        
-        $fixture = new Fixture(['fixture_info_id' => $fixtureInfo->id]);
-        
-        return new self($fixture->refresh(), $this->player);
+            
+        $fixture = Fixture::query()
+            ->selectWithout()
+            ->fixtureInfoId($fixtureInfo->id)
+            ->firstOrNew(['fixture_info_id' => $fixtureInfo->id]);
+            
+        return new self($fixture, $this->player);
     }
 
     public function addMomLimit()
