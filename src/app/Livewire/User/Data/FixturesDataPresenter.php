@@ -2,13 +2,12 @@
 
 namespace App\Livewire\User\Data;
 
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 
-use App\Models\Fixture;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\Models\FixtureInfo;
-use Illuminate\Support\Carbon;
+
 
 class FixturesDataPresenter
 {
@@ -40,7 +39,7 @@ class FixturesDataPresenter
     {
         $start_at = $this->fixtureInfo->fixture->get('first_half_at');
         
-        $this->fixtureInfo->fixture['first_half_at'] = Carbon::parse($start_at)->__toString();
+        $this->fixtureInfo->fixture['first_half_at'] = Carbon::parse($start_at)->format('Y/m/d');
             
         return new self($this->fixtureInfo);
     }

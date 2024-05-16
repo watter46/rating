@@ -9,7 +9,7 @@ use App\Livewire\User\Data\FixturesDataPresenter;
 
 
 final readonly class FixturesPresenter
-{   
+{
     /**
      * チーム、リーグ、プレイヤーのファイルパスの画像を取得する
      *

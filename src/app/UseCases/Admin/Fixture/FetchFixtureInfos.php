@@ -15,6 +15,14 @@ final readonly class FetchFixtureInfos
         try {
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
+                ->selectWithout([
+                    'external_fixture_id',
+                    'external_league_id',
+                    'date',
+                    'status',
+                    'season',
+                    'lineups'
+                ])
                 ->inSeasonTournament()
                 ->currentSeason()
                 ->untilToday()
