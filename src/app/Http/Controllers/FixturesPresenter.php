@@ -22,8 +22,6 @@ final readonly class FixturesPresenter
             ->getCollection()
             ->transform(function (FixtureInfo $fixtureInfo) {
                 return FixturesDataPresenter::create($fixtureInfo)
-                    ->formatPathToLeagueImage()
-                    ->formatPathToTeamImages()
                     ->formatFixtureData()
                     ->get();
             });

@@ -4,6 +4,7 @@ namespace App\Infrastructure\ApiFootball;
 
 use App\Http\Controllers\Util\FixtureFile;
 use App\Http\Controllers\Util\FixturesFile;
+use App\Http\Controllers\Util\SquadsFile;
 use Illuminate\Support\Facades\Http;
 
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
@@ -15,7 +16,7 @@ use App\UseCases\Util\Season;
 
 class ApiFootballRepository implements ApiFootballRepositoryInterface
 {
-    public function __construct(private FixturesFile $fixturesFile, private FixtureFile $fixtureFile)
+    public function __construct(private FixturesFile $fixturesFile, private FixtureFile $fixtureFile, private SquadsFile $squadsFile)
     {
         
     }
@@ -64,7 +65,11 @@ class ApiFootballRepository implements ApiFootballRepositoryInterface
             'team' => config('api-football.chelsea-id')
         ]);
 
-        return SquadsData::create(collect(json_decode($json)->response[0]));
+        $data = collect(json_decode($json)->response[0]);
+
+        $this->squadsFile->write($data);
+
+        return SquadsData::create($data);
     }
 
     public function fetchLeagueImage(int $leagueId): string

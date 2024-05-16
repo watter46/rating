@@ -17,8 +17,6 @@ final readonly class FixturePresenter
         $newFixture = FixtureDataPresenter::create($fixture)
             ->formatFormation()
             ->formatSubstitutes()
-            ->formatPathToLeagueImage()
-            ->formatPathToTeamImages()
             ->formatPlayerData($fixture->fixtureInfo->playerInfos)
             ->addPlayerCountColumn()
             ->get();

@@ -72,7 +72,7 @@ class Fixtures extends Component
     {
         $tournament = TournamentType::fromOrFail($this->sort);
 
-        $fixtures = $this->fetchFixtures->execute($tournament);
+        $fixtures = $this->fetchFixtures->execute($tournament, $this->getPage());
 
         return $this->presenter->format($fixtures);
     }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Events\FixtureInfoRegistered;
 use App\Events\FixtureInfosRegistered;
+use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
 use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
 use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 
@@ -61,6 +62,7 @@ class FixtureInfo extends Model
         $data = $fixtureInfoData->buildLineups();
         
         $this->lineups = $data->get('lineups');
+        $this->status  = FixtureStatusType::MatchFinished->value;
 
         return $this;
     }

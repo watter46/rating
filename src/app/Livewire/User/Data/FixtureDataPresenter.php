@@ -69,41 +69,6 @@ readonly class FixtureDataPresenter
 
         return new self($this->fixture);
     }
-    
-    /**
-     * リーグ画像をパスから取得する
-     *
-     * @return self
-     */
-    public function formatPathToLeagueImage(): self
-    {
-        $leagueData = $this->fixture->fixtureInfo->league;
-
-        $leagueData->put('img', $this->leagueImage->getByPath($leagueData->get('img')));
-
-        $this->fixture->fixtureInfo->league = $leagueData;
-
-        return new self($this->fixture);
-    }
-
-    /**
-     * チーム画像をパスから取得する
-     *
-     * @return self
-     */
-    public function formatPathToTeamImages(): self
-    {
-        $teams = $this->fixture->fixtureInfo->teams;
-        
-        $teamsData = $teams
-            ->map(function ($team) {
-                return collect($team)->put('img', $this->teamImage->getByPath($team['img']));
-            });
-
-            $this->fixture->fixtureInfo->teams = $teamsData;
-
-        return new self($this->fixture);
-    }
 
     private function toLastName(string $dotValue): string
     {
@@ -118,12 +83,16 @@ readonly class FixtureDataPresenter
                     ->map(function ($player) use ($playerInfos) {
                         $playerInfo = $playerInfos->keyBy('foot_player_id')->get($player['id']);
 
-                        $player['id']     = $playerInfo->id;
-                        $player['name']   = $this->toLastName($player['name']);
-                        $player['img']    = $this->playerImage->getByPath($player['img']);
-                        $player['rating'] = $player['defaultRating'];
-
-                        return $player;
+                        return collect($player)
+                            ->merge([
+                                'id' => $playerInfo->id,
+                                'name' => $this->toLastName($player['name']),
+                                'rating' => $player['defaultRating'],
+                                'img' => $this->playerImage->exists($player['id'])
+                                    ? $player['img']
+                                    : $this->playerImage->getDefaultPath(),
+                            ])
+                            ->toArray();
                     })
             ));
 

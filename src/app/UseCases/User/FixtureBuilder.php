@@ -2,12 +2,13 @@
 
 namespace App\UseCases\User;
 
+use Illuminate\Support\Collection;
+
 use App\Models\Fixture;
 use App\Models\FixtureInfo;
 use App\Models\Player;
 use App\Models\PlayerInfo;
-use Exception;
-use Illuminate\Support\Collection;
+
 
 class FixtureBuilder
 {
@@ -42,10 +43,10 @@ class FixtureBuilder
         return new self(
             $this->fixture
                 ->load([
-                    'fixtureInfo' => fn($q) => $q
-                        ->select(['id'])
+                    'fixtureInfo' => fn ($q) => $q
+                        ->select('id')
                         ->withCount('playerInfos as playerCount'),
-                    'ratedPlayers:id,fixture_id'
+                    'ratedPlayers:id'
                 ]),
             $this->player
         );
@@ -119,9 +120,9 @@ class FixtureBuilder
     public function addPlayers(): self
     {
         $newPlayers = $this->fixture->fixtureInfo->playerInfos
-            ->map(fn (PlayerInfo $playerInfo) =>
-                collect(['player_info_id' => $playerInfo->id])
-            );
+            ->map(function (PlayerInfo $playerInfo) {
+                return collect(['player_info_id' => $playerInfo->id]);
+            });
 
         $players = $this->fixture->players->isEmpty()
             ? $newPlayers

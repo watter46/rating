@@ -19,11 +19,6 @@ trait MomCountTrait
     {
         $this->fetchMomCount = $fetchMomCount;
     }
-
-    public function mountMomCountTrait()
-    {
-        $this->updateMomCount();
-    }
     
     #[On('mom-count-updated')]
     public function updateMomCount()
@@ -41,7 +36,7 @@ trait MomCountTrait
         $this->dispatch('mom-count-updated');
     }
 
-    public function fetchMomCount()
+    private function fetchMomCount()
     {
         $request = FixtureRequest::make(fixtureInfoId: $this->fixtureInfoId);
 

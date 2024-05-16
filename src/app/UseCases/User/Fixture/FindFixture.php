@@ -9,7 +9,7 @@ use App\UseCases\User\FixtureRequest;
 
 
 final readonly class FindFixture
-{    
+{
     public function execute(FixtureRequest $request): Fixture
     {
         try {

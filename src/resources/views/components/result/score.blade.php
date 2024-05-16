@@ -9,7 +9,7 @@
                 <div class="grid items-center w-fit">
                     @if ($teamsData['home'])
                         @if ($teamsData['home']['img'])
-                            <img src="{{ $teamsData['home']['img'] }}"
+                            <img src="{{ asset($teamsData['home']['img']) }}"
                                 class="w-7 h-7 md:w-10 md:h-10">
                         @endif
     
@@ -31,7 +31,7 @@
                 <div class="grid items-center w-fit">
                     @if ($teamsData['away'])
                         @if ($teamsData['away']['img'])
-                            <img src="{{ $teamsData['away']['img'] }}"
+                            <img src="{{ asset($teamsData['away']['img']) }}"
                                 class="w-7 h-7 md:w-10 md:h-10">
                         @endif
     

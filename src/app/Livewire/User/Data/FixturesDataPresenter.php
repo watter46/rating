@@ -30,41 +30,6 @@ class FixturesDataPresenter
     {
         return $this->fixtureInfo;
     }
-
-    /**
-     * リーグ画像をパスから取得する
-     *
-     * @return self
-     */
-    public function formatPathToLeagueImage(): self
-    {
-        $leagueData = $this->fixtureInfo->league;
-        
-        $leagueData->put('img', $this->leagueImage->getByPath($leagueData->get('img')));
-        
-        $this->fixtureInfo->league = $leagueData;
-
-        return new self($this->fixtureInfo);
-    }
-
-    /**
-     * チーム画像をパスから取得する
-     *
-     * @return self
-     */
-    public function formatPathToTeamImages(): self
-    {
-        $teams = $this->fixtureInfo->teams;
-        
-        $teamsData = $teams
-            ->map(function ($team) {
-                return collect($team)->put('img', $this->teamImage->getByPath($team['img']));
-            });
-
-        $this->fixtureInfo->teams = $teamsData;
-
-        return new self($this->fixtureInfo);
-    }
     
     /**
      * FixtureのデータをView用に変換する

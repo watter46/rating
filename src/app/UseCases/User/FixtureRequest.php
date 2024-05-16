@@ -3,7 +3,7 @@
 namespace App\UseCases\User;
 
 use App\Models\Fixture;
-
+use Illuminate\Support\Facades\Cache;
 
 class FixtureRequest
 {
@@ -31,7 +31,18 @@ class FixtureRequest
 
     public function buildFixture(): FixtureBuilder
     {
+        // $fixture = Cache::get(
+        //         'fixtureInfo_'.$this->fixtureInfoId,
+        //         Fixture::query()
+        //             ->selectWithout()
+        //             ->fixtureInfoId($this->fixtureInfoId)
+        //             ->firstOrNew(['fixture_info_id' => $this->fixtureInfoId])
+        //     );
+
+        // dd($fixture);
+
         $fixture = Fixture::query()
+            ->selectWithout()
             ->fixtureInfoId($this->fixtureInfoId)
             ->firstOrNew(['fixture_info_id' => $this->fixtureInfoId]);
                     
