@@ -2,13 +2,12 @@
 
 namespace App\Livewire\User\Data;
 
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 
-use App\Models\Fixture;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
 use App\Models\FixtureInfo;
-use Illuminate\Support\Carbon;
+
 
 class FixturesDataPresenter
 {
@@ -30,41 +29,6 @@ class FixturesDataPresenter
     {
         return $this->fixtureInfo;
     }
-
-    /**
-     * リーグ画像をパスから取得する
-     *
-     * @return self
-     */
-    public function formatPathToLeagueImage(): self
-    {
-        $leagueData = $this->fixtureInfo->league;
-        
-        $leagueData->put('img', $this->leagueImage->getByPath($leagueData->get('img')));
-        
-        $this->fixtureInfo->league = $leagueData;
-
-        return new self($this->fixtureInfo);
-    }
-
-    /**
-     * チーム画像をパスから取得する
-     *
-     * @return self
-     */
-    public function formatPathToTeamImages(): self
-    {
-        $teams = $this->fixtureInfo->teams;
-        
-        $teamsData = $teams
-            ->map(function ($team) {
-                return collect($team)->put('img', $this->teamImage->getByPath($team['img']));
-            });
-
-        $this->fixtureInfo->teams = $teamsData;
-
-        return new self($this->fixtureInfo);
-    }
     
     /**
      * FixtureのデータをView用に変換する
@@ -75,7 +39,7 @@ class FixturesDataPresenter
     {
         $start_at = $this->fixtureInfo->fixture->get('first_half_at');
         
-        $this->fixtureInfo->fixture['first_half_at'] = Carbon::parse($start_at)->__toString();
+        $this->fixtureInfo->fixture['first_half_at'] = Carbon::parse($start_at)->format('Y/m/d');
             
         return new self($this->fixtureInfo);
     }

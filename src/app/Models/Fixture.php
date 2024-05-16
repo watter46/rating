@@ -68,6 +68,18 @@ class Fixture extends Model
         $query->where('fixture_info_id', $fixtureInfoId);
     }
 
+    public function scopeSelectWithout(Builder $query, array $except = [])
+    {
+        $query->select(
+            collect($this->fillable )
+                ->flip()
+                ->except($except)
+                ->flip()
+                ->merge(['id'])
+                ->toArray()
+        );
+    }
+
     /**
      * 保存されるときにUserIdを紐づける
      *

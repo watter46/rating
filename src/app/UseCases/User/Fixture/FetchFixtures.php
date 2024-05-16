@@ -11,12 +11,20 @@ use App\Models\TournamentType;
 
 final readonly class FetchFixtures
 {
-    public function execute(TournamentType $tournament): Paginator
+    public function execute(TournamentType $tournament, $page = 1): Paginator
     {
-        try {            
+        try {
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
                 ->with('fixture.players')
+                ->selectWithout([
+                    'external_fixture_id',
+                    'external_league_id',
+                    'date',
+                    'status',
+                    'season',
+                    'lineups'
+                ])
                 ->whereNotNull('lineups')
                 ->tournament($tournament)
                 ->inSeasonTournament()
@@ -24,10 +32,10 @@ final readonly class FetchFixtures
                 ->finished()
                 ->untilToday()
                 ->simplePaginate();
-
+                
             $fixtureInfos->getCollection()
                 ->transform(function (FixtureInfo $fixtureInfo) {
-                    $fixtureInfo->isRate = !is_null($fixtureInfo?->lineup?->players);
+                    $fixtureInfo->isRate = !is_null($fixtureInfo?->getRelation('fixture')?->players);
                     
                     return $fixtureInfo;
                 });

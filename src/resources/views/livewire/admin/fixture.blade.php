@@ -10,8 +10,8 @@
                     <div class="flex items-center justify-between px-3 bg-gray-500 rounded-lg"
                         title="{{ $fixtureInfo->league['round'] }}">
                         <div class="flex items-center p-2">
-                            <img src="{{ $fixtureInfo->league['img'] }}"
-                                class="cursor-pointer w-14 h-14">
+                            <img src="{{ asset($fixtureInfo->league['img']) }}"
+                                class="w-10 h-10 cursor-pointer">
 
                             <div class="flex justify-center p-2">
                                 <p class="text-xl font-black"
@@ -29,15 +29,9 @@
                     <div class="flex items-center justify-around w-full h-full">
                         @if ($fixtureInfo->teams['home'])
                             <div class="flex flex-col items-center w-1/2 pl-2">
-                                @if ($fixtureInfo->teams['home']['img'])
-                                    <img src="{{ $fixtureInfo->teams['home']['img'] }}"
+                                
+                                <img src="{{ asset($fixtureInfo->teams['home']['img']) }}"
                                         class="w-24 h-24 cursor-pointer">
-                                @endif
-
-                                @unless($fixtureInfo->teams['home']['img'])
-                                    <div class="w-24 h-24 bg-gray-400 cursor-pointer">
-                                    </div>
-                                @endunless
 
                                 <p class="p-2 text-2xl font-black text-gray-300 whitespace-nowrap">
                                     {{ $fixtureInfo->teams['home']['name'] }}
@@ -47,15 +41,8 @@
 
                         @if ($fixtureInfo->teams['away'])
                             <div class="flex flex-col items-center w-1/2 pl-2">
-                                @if ($fixtureInfo->teams['away']['img'])
-                                    <img src="{{ $fixtureInfo->teams['away']['img'] }}"
-                                        class="w-24 h-24 cursor-pointer">
-                                @endif
-
-                                @unless($fixtureInfo->teams['away']['img'])
-                                    <div class="w-24 h-24 bg-gray-400 cursor-pointer">
-                                    </div>
-                                @endunless
+                                <img src="{{ asset($fixtureInfo->teams['away']['img']) }}"
+                                    class="w-24 h-24 cursor-pointer">
 
                                 <p class="p-2 text-2xl font-black text-gray-300 whitespace-nowrap">
                                     {{ $fixtureInfo->teams['away']['name'] }}
@@ -99,7 +86,7 @@
                         <div class="flex justify-end gap-x-2">
                             <p class="text-sm font-black text-gray-300">{{ $fixtureInfo->league['name'] }}</p>
                             <p class="text-sm font-black text-gray-300">{{ $fixtureInfo->league['round'] }}</p>
-                            <img src="{{ $fixtureInfo->league['img'] }}" class="w-5 h-5 bg-pink-500 rounded-xl">
+                            <img src="{{ asset($fixtureInfo->league['img']) }}" class="w-5 h-5 bg-pink-500 rounded-xl">
                         </div>
                     </div>
                   
@@ -111,15 +98,8 @@
                                         {{ $fixtureInfo->teams['home']['name'] }}
                                     </p>
             
-                                    @if ($fixtureInfo->teams['home']['img'])
-                                        <img src="{{ $fixtureInfo->teams['home']['img'] }}"
-                                            class="w-8 h-8">
-                                    @endif
-            
-                                    @unless($fixtureInfo->teams['home']['img'])
-                                        <div class="w-8 h-8 bg-gray-400">
-                                        </div>
-                                    @endunless
+                                    <img src="{{ asset($fixtureInfo->teams['home']['img']) }}"
+                                        class="w-8 h-8">
                                 </div>
                             </div>
                         @endif
@@ -145,15 +125,8 @@
                         
                         @if ($fixtureInfo->teams['away'])
                             <div class="flex items-center w-full px-10">
-                                @if ($fixtureInfo->teams['away']['img'])
-                                    <img src="{{ $fixtureInfo->teams['away']['img'] }}"
-                                        class="w-8 h-8">
-                                @endif
-            
-                                @unless($fixtureInfo->teams['away']['img'])
-                                    <div class="w-8 h-8 bg-gray-400">
-                                    </div>
-                                @endunless
+                                <img src="{{ asset($fixtureInfo->teams['away']['img']) }}"
+                                    class="w-8 h-8">
             
                                 <p class="p-2 text-xl font-black text-gray-300 whitespace-nowrap">
                                     {{ $fixtureInfo->teams['away']['name'] }}

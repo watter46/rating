@@ -9,7 +9,7 @@ use App\Livewire\User\Data\FixturesDataPresenter;
 
 
 final readonly class FixturesPresenter
-{   
+{
     /**
      * チーム、リーグ、プレイヤーのファイルパスの画像を取得する
      *
@@ -22,8 +22,6 @@ final readonly class FixturesPresenter
             ->getCollection()
             ->transform(function (FixtureInfo $fixtureInfo) {
                 return FixturesDataPresenter::create($fixtureInfo)
-                    ->formatPathToLeagueImage()
-                    ->formatPathToTeamImages()
                     ->formatFixtureData()
                     ->get();
             });

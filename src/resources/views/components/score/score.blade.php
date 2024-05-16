@@ -3,7 +3,7 @@
         <div class="flex items-center justify-start p-2">
             <div class="flex items-center justify-center gap-x-2">
                 @if ($leagueData['img'])
-                    <img src="{{ $leagueData['img'] }}" class="w-5 h-5 bg-pink-500 rounded-full md:w-7 md:h-7">
+                    <img src="{{ asset($leagueData['img']) }}" class="w-5 h-5 bg-pink-500 rounded-full md:w-7 md:h-7">
                 @endif
 
                 @unless($leagueData['img'])
@@ -25,7 +25,7 @@
         @if ($teamsData['home'])
             <div class="flex flex-col items-center w-1/3 p-2">
                 @if ($teamsData['home']['img'])
-                    <img src="{{ $teamsData['home']['img'] }}"
+                    <img src="{{ asset($teamsData['home']['img']) }}"
                         class="w-12 h-12 md:w-16 md:h-16">
                 @endif
 
@@ -50,7 +50,7 @@
         @if ($teamsData['away'])
             <div class="flex flex-col items-center w-1/3 p-2">
                 @if ($teamsData['away']['img'])
-                    <img src="{{ $teamsData['away']['img'] }}"
+                    <img src="{{ asset($teamsData['away']['img']) }}"
                         class="w-12 h-12 md:w-16 md:h-16">
                 @endif
 

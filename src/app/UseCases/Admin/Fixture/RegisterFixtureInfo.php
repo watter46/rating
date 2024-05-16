@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\FixtureInfo;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
-
+use Illuminate\Support\Facades\Cache;
 
 final readonly class RegisterFixtureInfo
 {
+    /** キャッシュする期間(1週間) */
+    private const CACHE_DURATION = 604800;
+
     public function __construct(private ApiFootballRepositoryInterface $apiFootballRepository)
     {
         //
@@ -24,7 +27,7 @@ final readonly class RegisterFixtureInfo
             $fixtureInfo = FixtureInfo::query()
                 ->withCount('playerInfos as lineupCount')
                 ->findOrFail($fixtureInfoId);
-            
+
             $fixtureInfoData = $this->apiFootballRepository->fetchFixture($fixtureInfo->external_fixture_id);
             
             $fixtureInfo->updateLineups($fixtureInfoData);
@@ -33,7 +36,11 @@ final readonly class RegisterFixtureInfo
                 $fixtureInfo->save();
             });
 
+            // Cache::set('fixtureInfo_'.$fixtureInfoId, $fixtureInfo, self::CACHE_DURATION);
+
             $fixtureInfo->fixtureRegistered($fixtureInfoData);
+
+            // dd(Cache::get('fixtureInfo_'.$fixtureInfoId));
 
             return $fixtureInfo;
 

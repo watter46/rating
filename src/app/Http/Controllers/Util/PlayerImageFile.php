@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers\Util;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Support\Collection;
+
 use Illuminate\Support\Facades\File;
 
-use App\Models\PlayerInfo;
 use App\UseCases\Util\Season;
-use App\UseCases\Api\SofaScore\PlayerImageFetcher;
-use Exception;
-use GuzzleHttp\Exception\ClientException;
-use Illuminate\Support\Facades\Log;
+
 
 final readonly class PlayerImageFile
 {
@@ -23,33 +18,9 @@ final readonly class PlayerImageFile
         $this->ensureDirExists();
     }
 
-    public function get(int $playerId): string
-    {        
-        $path = $this->generatePath($playerId);
-        
-        $image = File::get($path);
-        
-        return $image ? base64_encode($image) : '';
-    }
-
-    public function getByPath(string $path)
+    public function getDefaultPath(): string
     {
-        try {            
-            $image = File::get($path);
-
-            return [
-                'exists' => true,
-                'data'   => 'data:image/png;base64,'.base64_encode($image)
-            ];
-            
-        } catch (FileNotFoundException $e) {
-            $image = File::get(self::DEFAULT_IMAGE_PATH);
-
-            return [
-                'exists' => false,
-                'data'   => 'data:image/png;base64,'.base64_encode($image)
-            ];
-        }
+        return self::DEFAULT_IMAGE_PATH;
     }
 
     public function write(int $playerId, string $playerImage): void
@@ -76,34 +47,7 @@ final readonly class PlayerImageFile
     }
 
     public function generatePath(int $playerId): string
-    {                
-        $fileName = Season::current().'_'.$playerId;
-
-        return public_path(self::DIR_PATH.'/'.$fileName);
-    }
-    
-    /**
-     * registerAll
-     *
-     * @param  Collection<int, PlayerInfo> $playerInfos
-     * @return void
-     */
-    public function registerAll(Collection $playerInfos): void
     {
-        foreach($playerInfos as $player) {
-            try {
-                $playerImage = (new PlayerImageFetcher($this))->fetch($player->sofa_player_id);
-
-                $this->write($player->foot_player_id, $playerImage);
-
-            } catch(ClientException $e) {
-                continue;
-                
-            } catch (Exception $e) {
-                Log::alert($e->getMessage());
-                
-                throw $e;
-            }
-        }
+        return self::DIR_PATH.'/'.Season::current().'_'.$playerId;
     }
 }

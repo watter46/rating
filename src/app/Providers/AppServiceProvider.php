@@ -22,8 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public $bindings = [
         // ApiFootballRepositoryInterface::class => ApiFootballRepository::class,
         ApiFootballRepositoryInterface::class => MockApiFootballRepository::class,
-        SofaScoreRepositoryInterface::class => SofaScoreRepository::class
-        // SofaScoreRepositoryInterface::class => MockSofaScoreRepository::class
+        // SofaScoreRepositoryInterface::class => SofaScoreRepository::class
+        SofaScoreRepositoryInterface::class => MockSofaScoreRepository::class
     ];
 
     /**
