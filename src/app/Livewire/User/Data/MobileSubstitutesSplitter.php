@@ -5,7 +5,7 @@ namespace App\Livewire\User\Data;
 use Illuminate\Support\Collection;
 
 
-readonly class SubstitutesSplitter
+readonly class MobileSubstitutesSplitter
 {    
     private Collection $result;
 

@@ -2,13 +2,14 @@
 
 namespace App\Livewire\User\Data;
 
-use App\Http\Controllers\Util\LeagueImageFile;
-use App\Http\Controllers\Util\PlayerImageFile;
-use App\Http\Controllers\Util\TeamImageFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 use App\Models\Fixture;
+use App\Http\Controllers\Util\LeagueImageFile;
+use App\Http\Controllers\Util\PlayerImageFile;
+use App\Http\Controllers\Util\TeamImageFile;
+use App\Livewire\User\Data\MobileSubstitutesSplitter;
 
 
 readonly class FixtureDataPresenter
@@ -63,38 +64,64 @@ readonly class FixtureDataPresenter
     {
         $substitutesData = $this->fixture->fixtureInfo->lineups->dataGet('substitutes');
 
-        $substitutes = SubstitutesSplitter::split($substitutesData)->get();
+        $mobile_substitutes = MobileSubstitutesSplitter::split($substitutesData)->get();
 
-        $this->fixture->fixtureInfo->lineups['substitutes'] = $substitutes;
-
+        $this->fixture->fixtureInfo->lineups['substitutes'] = $substitutesData;
+        $this->fixture->fixtureInfo->lineups['mobile_substitutes'] = $mobile_substitutes;
+        
         return new self($this->fixture);
     }
-
+    
+    /**
+     * 選手のラストネームのみに変換する
+     *
+     * @param  string $dotValue
+     * @return string
+     */
     private function toLastName(string $dotValue): string
     {
         return Str::afterLast($dotValue, ' ');
     }
-
+    
+    /**
+     * 選手のデータを表示用に変換する
+     *
+     * @param  Collection $playerInfos
+     * @return self
+     */
     public function formatPlayerData(Collection $playerInfos)
     {
-        $playerData = $this->fixture->fixtureInfo->lineups
-            ->map(fn($lineups) => collect($lineups)
-                ->map(fn($players) => collect($players)
-                    ->map(function ($player) use ($playerInfos) {
-                        $playerInfo = $playerInfos->keyBy('foot_player_id')->get($player['id']);
+        $players = $this->fixture->newPlayers->keyBy('player_info_id');
 
-                        return collect($player)
-                            ->merge([
-                                'id' => $playerInfo->id,
-                                'name' => $this->toLastName($player['name']),
-                                'rating' => $player['defaultRating'],
-                                'img' => $this->playerImage->exists($player['id'])
-                                    ? $player['img']
-                                    : $this->playerImage->getDefaultPath(),
-                            ])
-                            ->toArray();
-                    })
-            ));
+        $formatPlayer = function ($player) use ($playerInfos, $players) {
+            $playerInfo = $playerInfos->keyBy('foot_player_id')->get($player['id']);
+
+            $playerData = collect($player) 
+                ->merge([
+                    'id' => $playerInfo->id,
+                    'name' => $this->toLastName($player['name']),
+                    'rating' => $player['defaultRating'],
+                    'img' => $this->playerImage->exists($player['id'])
+                        ? $player['img']
+                        : $this->playerImage->getDefaultPath(),
+                ]);
+
+            return [
+                'playerData' => $playerData->toArray(),
+                'player' => $players->get($playerData['id'])
+            ];
+        };
+
+        $playerData = $this->fixture->fixtureInfo->lineups
+            ->map(function ($lineups, $key) use ($formatPlayer) {
+                if ($key === 'substitutes') {
+                    return collect($lineups)->map(fn ($player) => $formatPlayer($player));
+                }
+
+                return collect($lineups)
+                    ->map(fn($players) => collect($players)
+                    ->map(fn ($player) => $formatPlayer($player)));
+            });
 
         $this->fixture->fixtureInfo->lineups = $playerData;
 

@@ -41,7 +41,7 @@
             <!-- Substitutes Responsive(~767px) -->
             <div class="w-[90%] top-full right-full mt-5 md:hidden">
                 <div class="grid w-full grid-cols-6 gap-x-10 gap-y-2 justify-items-center">
-                    @foreach($lineupsData['substitutes'] as $substitutes)
+                    @foreach($lineupsData['mobile_substitutes'] as $substitutes)
                         @if($loop->odd)
                             @foreach($substitutes as $player)
                                 <div class="flex justify-center w-full col-span-2">
@@ -77,7 +77,7 @@
             <!-- Substitutes Responsive(768px~) -->
             <div class="absolute hidden h-full mr-5 right-full md:block">
                 <div class="grid content-center h-full gap-10">
-                    @foreach(collect($lineupsData['substitutes'])->flatten(1) as $player)
+                    @foreach($lineupsData['substitutes'] as $player)
                         <div class="flex justify-center w-full">
                             <livewire:user.result.rated-player
                                 name="substitutes"
