@@ -57,11 +57,11 @@ class FixtureInfo extends Model
      * @param  FixtureInfoData $fixtureInfoData
      * @return self
      */
-    public function updateLineups(FixtureInfoData $fixtureInfoData): self
-    {
-        $data = $fixtureInfoData->buildLineups();
-        
-        $this->lineups = $data->get('lineups');
+    public function updateFixtureInfoData(FixtureInfoData $fixtureInfoData): self
+    {        
+        $this->lineups = $fixtureInfoData->buildLineups()->get('lineups');
+        $this->score   = $fixtureInfoData->buildScore();
+        $this->fixture = $fixtureInfoData->buildFixture();
         $this->status  = FixtureStatusType::MatchFinished->value;
 
         return $this;
