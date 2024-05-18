@@ -25,6 +25,16 @@ readonly class FixtureInfoData
         return $this->fixtureData->buildLineups();
     }
 
+    public function buildScore(): Collection
+    {
+        return $this->fixtureData->getScore();
+    }
+
+    public function buildFixture(): Collection
+    {
+        return $this->fixtureData->getFixture();
+    }
+
     public function build(): Collection
     {
         return $this->fixtureData->build();
