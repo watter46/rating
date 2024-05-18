@@ -46,7 +46,7 @@ class FixtureBuilder
                     'fixtureInfo' => fn ($q) => $q
                         ->select('id')
                         ->withCount('playerInfos as playerCount'),
-                    'ratedPlayers:id'
+                    'ratedPlayers:id,fixture_id'
                 ]),
             $this->player
         );

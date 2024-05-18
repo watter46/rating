@@ -76,18 +76,20 @@
     
             <!-- Substitutes Responsive(768px~) -->
             <div class="absolute hidden h-full mr-5 right-full md:block">
-                <div class="grid content-center h-full gap-10">
-                    @foreach($lineupsData['substitutes'] as $player)
-                        <div class="flex justify-center w-full">
-                            <livewire:user.result.rated-player
+                <div class="flex items-center h-full">
+                    <div class="grid grid-flow-col grid-rows-4 gap-10">
+                        @foreach($lineupsData['substitutes'] as $player)
+                            <div class="flex justify-center w-full">
+                                <livewire:user.result.rated-player
                                 name="substitutes"
                                 size="w-12 h-12"
                                 :$fixtureInfoId
                                 :playerData="$player['playerData']"
                                 :player="$player['player']"
                                 :key="$player['playerData']['id']" />
-                        </div>
-                    @endforeach
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
