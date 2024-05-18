@@ -48,7 +48,7 @@
                 <!-- Substitutes Responsive(~767px) -->
                 <div class="w-[90%] top-full right-full mt-5 md:hidden">
                     <div class="grid w-full grid-cols-6 gap-x-10 gap-y-2 justify-items-center">
-                        @foreach($lineupsData['substitutes'] as $index => $substitutes)
+                        @foreach($lineupsData['mobile_substitutes'] as $substitutes)
                             @if($loop->odd)
                                 @foreach($substitutes as $player)
                                     <div class="flex justify-center w-full col-span-2">
@@ -66,21 +66,19 @@
                             @endif
                             
                             @if($loop->even)
-                                @foreach($lineupsData['substitutes'] as $substitutes)
-                                    @foreach($substitutes as $player)
-                                        <div class="col-span-2 flex justify-center w-full
-                                            @if($loop->first) col-start-2 @endif">
-                                            <livewire:user.fixture.player
-                                                name="substitutes"
-                                                size="w-[40px] h-[40px]"
-                                                :$fixtureInfoId
-                                                :playerData="$player['playerData']"
-                                                :player="$player['player']"
-                                                :$momCount
-                                                :$momLimit
-                                                :key="$player['playerData']['id']" />
-                                        </div>
-                                    @endforeach
+                                @foreach($substitutes as $player)
+                                    <div class="col-span-2 flex justify-center w-full
+                                        @if($loop->first) col-start-2 @endif">
+                                        <livewire:user.fixture.player
+                                            name="substitutes"
+                                            size="w-[40px] h-[40px]"
+                                            :$fixtureInfoId
+                                            :playerData="$player['playerData']"
+                                            :player="$player['player']"
+                                            :$momCount
+                                            :$momLimit
+                                            :key="$player['playerData']['id']" />
+                                    </div>
                                 @endforeach
                             @endif
                         @endforeach
@@ -89,20 +87,22 @@
         
                 <!-- Substitutes Responsive(768px~) -->
                 <div class="absolute hidden h-full mr-5 right-full md:block">
-                    <div class="grid content-center h-full gap-10">
-                        @foreach(collect($lineupsData['substitutes'])->flatten(1) as $player)
-                            <div class="flex justify-center w-full">
-                                <livewire:user.fixture.player
-                                    name="substitutes"
-                                    size="w-12 h-12"
-                                    :$fixtureInfoId
-                                    :playerData="$player['playerData']"
-                                    :player="$player['player']"
-                                    :$momCount
-                                    :$momLimit
-                                    :key="$player['playerData']['id']" />
-                            </div>
-                        @endforeach
+                    <div class="flex items-center h-full">
+                        <div class="grid grid-flow-col grid-rows-4 gap-10">
+                            @foreach($lineupsData['substitutes'] as $player)
+                                <div class="flex justify-center w-full">
+                                    <livewire:user.fixture.player
+                                        name="substitutes"
+                                        size="w-12 h-12"
+                                        :$fixtureInfoId
+                                        :playerData="$player['playerData']"
+                                        :player="$player['player']"
+                                        :$momCount
+                                        :$momLimit
+                                        :key="$player['playerData']['id']" />
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
