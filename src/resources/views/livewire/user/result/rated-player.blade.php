@@ -28,9 +28,8 @@
             </div>
             
             <!-- Rating -->
-            <div class="absolute bottom-0 right-0 translate-x-[45%]">
-                <!-- UserRating -->
-                <div class="flex items-center justify-center w-8 rounded-xl"
+            <div class="absolute bottom-[-10%] left-[65%] min-w-[40px]">                
+                <div class="flex items-center justify-center px-1 rounded-xl"
                     :style=" mom
                         ? 'background-color: #0E87E0'
                         : `background-color: ${ratingBgColor(rating)}`
@@ -40,7 +39,7 @@
                         <p class="text-xs font-black text-gray-50">★</p>
                     </template>
                     
-                    <p class="text-xs font-black text-gray-50 md:text-sm"
+                    <p class="text-xs font-black md:text-sm text-gray-50"
                         x-text="ratingValue(rating)">
                     </p>
                 </div>

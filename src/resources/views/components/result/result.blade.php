@@ -1,4 +1,4 @@
-<div class="h-full md:ml-5">
+<div class="h-full">
     <div class="w-full">
         <x-result.score
             :$fixtureData

@@ -38,7 +38,7 @@
         @click.outside="close">
         <div {{ $attributes->merge(['class' => 'rounded-lg justify-self-center self-center bg-sky-950 flex flex-col']) }}>
             <!-- CloseButton -->
-            <div class="flex justify-end w-full">
+            <div class="relative flex justify-end w-full">
                 <div class="rounded-full cursor-pointer hover:bg-gray-600"
                     @click="close">
                     <x-svg.cross-image class="w-10 h-10 fill-gray-400" />

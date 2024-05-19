@@ -1,4 +1,4 @@
-<x-util.modal-button class="w-full md:w-11/12 lg:w-10/12">
+<x-util.modal-button class="w-full p-2 md:w-11/12 lg:w-10/12">
     <x-slot:icon>
         <x-svg.photo-image class="w-8 h-8 cursor-pointer" />
 
