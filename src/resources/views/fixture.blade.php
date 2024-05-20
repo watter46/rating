@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="w-full h-full pb-10 lg:pb-28">
+    <div class="w-full h-full pb-5">
         <!-- Score -->
         <div class="flex justify-center w-full">
             <div class="w-full md:w-3/4 md:px-10">
@@ -107,7 +107,7 @@
                 </div>
 
                 <!-- Options -->
-                <div class="flex flex-col justify-center w-full md:absolute md:mt-3 md:top-full">        
+                <div class="flex flex-col justify-center w-full md:absolute md:left-full"> 
                     <div class="flex items-center w-full h-full mt-5 justify-evenly gap-x-3">
                         <!-- RatedCount -->
                         <livewire:user.fixture.rated-count :$fixtureInfoId />

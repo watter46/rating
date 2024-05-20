@@ -36,7 +36,7 @@
         class="fixed top-0 left-0 w-screen h-full z-[99] p-2 overflow-y-auto grid"
         style="background: rgba(31, 41, 55, 1);"
         @click.outside="close">
-        <div {{ $attributes->merge(['class' => 'rounded-lg justify-self-center self-center bg-sky-950 flex flex-col']) }}>
+        <div {{ $attributes->merge(['class' => 'rounded-lg justify-self-center self-center flex flex-col']) }}>
             <!-- CloseButton -->
             <div class="relative flex justify-end w-full">
                 <div class="rounded-full cursor-pointer hover:bg-gray-600"
