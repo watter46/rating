@@ -10,6 +10,7 @@ use App\UseCases\Util\Season;
 final readonly class TeamImageFile
 {
     private const DIR_PATH = 'teams';
+    private const DEFAULT_IMAGE_PATH = 'question.png';
     
     public function __construct()
     {
@@ -19,6 +20,15 @@ final readonly class TeamImageFile
     public function write(int $teamId, string $teamImage)
     {
         File::put($this->generatePath($teamId), $teamImage);
+    }
+
+    public function existsOrDefault(int $teamId): string
+    {
+        if ($this->exists($teamId)) {
+            return $this->generatePath($teamId);
+        }
+
+        return self::DEFAULT_IMAGE_PATH;
     }
 
     public function exists(int $teamId): bool

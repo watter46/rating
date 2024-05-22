@@ -23,6 +23,9 @@ readonly class FixtureDataPresenter
         $this->teamImage   = new TeamImageFile;
         $this->leagueImage = new LeagueImageFile;
         $this->playerImage = new PlayerImageFile;
+
+        $this->formatTeamsImage();
+        $this->formatLeagueImage();
     }
     
     public static function create(Fixture $fixture)
@@ -33,6 +36,23 @@ readonly class FixtureDataPresenter
     public function get(): Fixture
     {
         return $this->fixture;
+    }
+
+    private function formatTeamsImage(): void
+    {
+        $this->fixture->fixtureInfo->teams = $this->fixture->fixtureInfo->teams
+            ->map(function ($team) {
+
+                $team['img'] = $this->teamImage->existsOrDefault($team['id']);
+
+                return $team;  
+            });
+    }
+
+    private function formatLeagueImage(): void
+    {        
+        $this->fixture->fixtureInfo->league = $this->fixture->fixtureInfo->league
+            ->put('img', $this->leagueImage->existsOrDefault($this->fixture->fixtureInfo->league['id']));
     }
     
     /**

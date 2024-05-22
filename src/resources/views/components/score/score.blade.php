@@ -24,14 +24,8 @@
     <div class="flex justify-around w-full">        
         @if ($teamsData['home'])
             <div class="flex flex-col items-center w-1/3 p-2">
-                @if ($teamsData['home']['img'])
-                    <img src="{{ asset($teamsData['home']['img']) }}"
-                        class="w-12 h-12 md:w-16 md:h-16">
-                @endif
-
-                @unless($teamsData['home']['img'])
-                    <div class="w-12 h-12 bg-gray-400 md:w-16 md:h-16"></div>
-                @endunless
+                <img src="{{ asset($teamsData['home']['img']) }}"
+                    class="w-12 h-12 md:w-16 md:h-16">
 
                 <p class="p-2 text-sm font-black text-center text-gray-300 md:text-xl">{{ $teamsData['home']['name'] }}</p>
             </div>

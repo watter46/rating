@@ -18,7 +18,7 @@
         <div class="flex justify-end gap-x-2">
             <p class="text-xs text-gray-300 truncate md:text-base">{{ $league['name'] }}</p>
             <p class="text-xs text-gray-300 truncate md:text-base">{{ $league['round'] }}</p>
-            <img src="{{ $league['img'] }}" class="hidden w-5 h-5 bg-pink-500 rounded-xl md:block">
+            <img src="{{ asset($league['img']) }}" class="hidden w-5 h-5 bg-pink-500 rounded-lg object-fit md:block">
         </div>
     </div>
   
@@ -31,14 +31,7 @@
                         {{ $teams['home']['name'] }}
                     </p>
 
-                    @if ($teams['home']['img'])
-                        <img src="{{ $teams['home']['img'] }}"
-                            class="w-6 h-6 md:w-10 md:h-10">
-                    @endif
-
-                    @unless($teams['home']['img'])
-                        <div class="w-6 h-6 bg-gray-400 md:w-10 md:h-10"></div>
-                    @endunless
+                    <img src="{{ asset($teams['home']['img']) }}" class="w-6 h-6 md:w-10 md:h-10">
                 </div>
             </div>
         @endif
@@ -59,14 +52,7 @@
         @if ($teams['away'])
             <div class="flex items-center justify-start w-full">
                 <div class="flex items-center justify-end h-full ml-1 space-x-1">                        
-                    @if ($teams['away']['img'])
-                        <img src="{{ $teams['away']['img'] }}"
-                            class="w-6 h-6 md:w-10 md:h-10">
-                    @endif
-
-                    @unless($teams['away']['img'])
-                        <div class="w-6 h-6 bg-gray-400 md:w-10 md:h-10"></div>
-                    @endunless
+                    <img src="{{ asset($teams['away']['img']) }}" class="w-6 h-6 md:w-10 md:h-10">
 
                     <p class="text-sm font-black text-gray-300 truncate md:text-xl whitespace-nowrap">
                         {{ $teams['away']['name'] }}
