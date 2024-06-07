@@ -51,6 +51,8 @@ class FixtureInfo extends Model
         'lineups' => AsCollection::class,
     ];
 
+    public const SELECT_COLUMNS = 'fixtureInfo:id,score,teams,league,fixture,lineups';
+
     /**
      * Fixtureを更新する
      *

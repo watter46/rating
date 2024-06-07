@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-use App\Models\Scopes\CurrentUserScope;
-use Illuminate\Support\Facades\Auth;
 
 class Player extends Model
 {
@@ -45,10 +41,6 @@ class Player extends Model
         'mom' => 'boolean'
     ];
 
-    // protected $hidden = [
-    //     'user_id'
-    // ];
-
     /**
      * デフォルト値
      *
@@ -59,28 +51,6 @@ class Player extends Model
         'mom' => false,
         'rate_count' => 0
     ];
-    
-    // /**
-    //  * 保存されるときにUserIdを紐づける
-    //  *
-    //  * @return void
-    //  */
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     self::saving(function($player) {
-    //         $player->user_id = Auth::id();
-    //     });
-    // }
-
-    // /**
-    //  * UserBooted
-    //  */
-    // protected static function booted(): void
-    // {
-    //     static::addGlobalScope(new CurrentUserScope);
-    // }
 
     public function decideMOM(): self
     {

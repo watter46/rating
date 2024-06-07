@@ -8,7 +8,7 @@ use App\Models\Fixture;
 use App\Models\Player;
 
 
-class FixtureValidator
+class FixtureDomain
 {
     private const RATE_PERIOD_DAY = 50;
     public const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
@@ -22,11 +22,6 @@ class FixtureValidator
     public function __construct(private Fixture $fixture)
     {
         
-    }
-
-    public function validate(Fixture $fixture): self
-    {
-        return new self($fixture);
     }
 
     public function getRateCountLimit(): int
@@ -91,5 +86,24 @@ class FixtureValidator
         return !$this->exceedPeriodDay()
             && !$this->exceedMomLimit()
             && !$player->mom;
+    }
+    
+    /**
+     * プレイヤーにドメイン情報を追加する
+     *
+     * @param  Player $player
+     * @return Player
+     */
+    public function make(?Player $player): ?Player
+    {
+        if (!$player) return null;
+
+        return $player
+            ->setAttribute('canRate', $this->canRate($player))
+            ->setAttribute('canMom', $this->canMom($player))
+            ->setAttribute('rateLimit', $this->getRateCountLimit())
+            ->setAttribute('momCount', $this->fixture->mom_count)
+            ->setAttribute('momLimit', $this->getMomCountLimit())
+            ->setAttribute('exceedMomLimit', $this->exceedMomLimit());
     }
 }

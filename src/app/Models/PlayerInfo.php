@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use App\UseCases\Util\Season;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+
+use App\UseCases\Util\Season;
 
 
 class PlayerInfo extends Model
@@ -33,8 +33,11 @@ class PlayerInfo extends Model
         'number',
         'season',
         'foot_player_id',
-        'sofa_image_id'
+        'sofa_image_id',
+        'fixture_info_id'
     ];
+
+    public const SELECT_COLUMNS = 'playerInfos:id,foot_player_id';
 
     /**
      * 試合に出場した選手を取得する
