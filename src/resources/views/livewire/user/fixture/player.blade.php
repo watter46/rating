@@ -2,12 +2,7 @@
     <x-slot:icon>
         <div id="{{ $name }}" class="h-full {{ $size }}"
             :class=" componentName === 'startXI' ? 'invisible' : ''"
-            x-data="{
-                rating: @entangle('rating'),
-                mom: @entangle('mom'),
-                machine: @entangle('defaultRating'),
-                componentName: @entangle('name')
-            }"
+            x-data="{ componentName: @entangle('name') }"
             wire:ignore.self>
             
             <div class="flex justify-center player">
@@ -15,53 +10,81 @@
                     <!-- PlayerImage -->
                     <x-player.player-image
                         class="{{ $size }} cursor-default"
-                        :number="$playerData['number']"
-                        :img="$playerData['img']" />
+                        :number="$player['number']"
+                        :img="$player['img']" />
 
                     <!-- Goals -->
                     <div class="absolute top-[-10%] right-[77%]">
                         <x-player.goals
                             class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
-                            :goals="$playerData['goal']" />
+                            :goals="$player['goals']" />
                     </div>
 
                     <!-- Assists -->
                     <div class="absolute top-[-10%] left-[77%]">
                         <x-player.assists
                             class="w-[13px] h-[13px] md:w-[14px] md:h-[14px]"
-                            :assists="$playerData['assists']" />
+                            :assists="$player['assists']" />
                     </div>
-                    
-                    <!-- Rating -->
+
                     <div class="absolute bottom-[-10%] left-[65%] min-w-[40px]"
-                        x-data="{ isUser: true }"
-                        @user-machine-toggled.window="isUser = !isUser">
+                        x-data="{
+                            toggleStates: 'my',
+                            isMy() { return this.toggleStates === 'my' },
+                            isUsers() { return this.toggleStates === 'users' },
+                            isMachine() { return this.toggleStates === 'machine' },
+                            
+                            myMom: @entangle('player.ratings.my.mom'),
+                            myRating: @entangle('player.ratings.my.rating'),
+                            machineRating: @entangle('player.ratings.machine'),
+                            usersRating: @entangle('player.ratings.users.rating'),
+                            usersMom: @entangle('player.ratings.users.mom'),
+                        }"
+                        @toggle-states-updated.window="toggleStates = event.detail.state">
                         
-                        <!-- UserRating -->
-                        <template x-if="isUser">
+                        <!-- MyRating -->
+                        <template x-if="isMy()">
                             <div class="flex items-center justify-center px-1 rounded-xl"
-                                :style=" mom
+                                :style=" myMom
                                     ? 'background-color: #0E87E0'
-                                    : `background-color: ${ratingBgColor(rating)}`
+                                    : `background-color: ${ratingBgColor(myRating)}`
                                 ">
 
-                                <template x-if="mom">
+                                <template x-if="myMom">
                                     <p class="text-xs font-black text-gray-50">★</p>
                                 </template>
                                 
                                 <p class="text-xs font-black md:text-sm text-gray-50"
-                                    x-text="ratingValue(rating)">
+                                    x-text="ratingValue(myRating)">
+                                </p>
+                            </div>
+                        </template>
+
+                        <!-- UserRating -->
+                        <template x-if="isUsers()">
+                            <div class="flex items-center justify-center px-1 rounded-xl"
+                                :style=" usersMom
+                                    ? 'background-color: #0E87E0'
+                                    : `background-color: ${ratingBgColor(usersRating)}`
+                                ">
+
+                                <template x-if="usersMom">
+                                    <p class="text-xs font-black text-gray-50">★</p>
+                                </template>
+                                
+                                <p class="text-xs font-black md:text-sm text-gray-50"
+                                    x-text="ratingValue(usersRating)">
                                 </p>
                             </div>
                         </template>
 
                         <!-- MachineRating -->
-                        <template x-if="!isUser">
+                        <template x-if="isMachine()">
                             <div class="flex items-center justify-center rounded-xl"
-                                :style="`background-color: ${ratingBgColor(machine)}`">
+                                :style="`background-color: ${ratingBgColor(machineRating)}`">
                                 
                                 <p class="text-xs font-black md:text-sm text-gray-50"
-                                    x-text="ratingValue(machine)">
+                                    x-text="ratingValue(machineRating)">
                                 </p>
                             </div>
                         </template>
@@ -71,7 +94,7 @@
 
             <div class="flex items-center justify-center pointer-events-none gap-x-2">            
                 <p class="text-xs font-black text-white md:text-sm">
-                    {{ $playerData['name'] }}
+                    {{ $player['name'] }}
                 </p>
             </div>
         </div>
@@ -83,18 +106,18 @@
 
     <div class="flex flex-col items-stretch w-full p-3">
         <!-- PlayerDetail -->
-        <x-fixture.player-detail :$playerData />
+        <x-fixture.player-detail :$player />
     
         <!-- Rating -->
         <div class="flex items-center justify-center w-full h-full border-t-2 border-gray-700">
             <div x-data="{
-                    rating: @entangle('rating'),
                     ratingInput: null,
-                    mom: @entangle('mom'),
-                    canRate: @entangle('canRate'),
-                    canMom: @entangle('canMom'),
+                    myRating: @entangle('player.ratings.my.rating'),
+                    myMom: @entangle('player.ratings.my.mom'),
+                    canRate: @entangle('player.canRate'),
+                    canMom: @entangle('player.canMom'),
                 }"
-                x-init="ratingInput = rating, $watch('rating', (rating) => ratingInput = rating)"
+                x-init="ratingInput = myRating, $watch('myRating', (myRating) => ratingInput = myRating)"
                 class="w-full"
                 @mom-button-disabled.window="canMom = false">
             
@@ -119,7 +142,8 @@
             
                 <div class="flex justify-end mt-8 gap-x-5">
                     <div class="w-fit">
-                        <div class="w-full mb-1 rounded-lg bg-gray-800 grid-flow-col grid gap-1 grid-cols-{{ $momLimit }}">
+                        <div class="w-full mb-1 rounded-lg bg-gray-800 grid-flow-col grid gap-1
+                            grid-cols-{{ $player['momLimit'] }}">
                             @foreach($remainingMomCountRange as $count)
                                 <x-svg.remaining-count-image class="fill-amber-300" />
                             @endforeach
@@ -137,7 +161,8 @@
                     </div>
             
                     <div class="w-fit">
-                        <div class="w-full mb-1 bg-gray-800 rounded-lg grid-flow-col grid gap-1 grid-cols-{{ $rateLimit }}">
+                        <div class="w-full mb-1 bg-gray-800 rounded-lg grid-flow-col grid gap-1
+                            grid-cols-{{ $player['rateLimit'] }}">
                             @foreach($remainingRateCountRange as $count)
                                 <x-svg.remaining-count-image class="fill-sky-500" />
                             @endforeach

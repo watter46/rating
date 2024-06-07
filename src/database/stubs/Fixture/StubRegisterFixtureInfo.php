@@ -21,7 +21,7 @@ class StubRegisterFixtureInfo
         
         if (!$data->isFinished()) return;
         
-        $fixtureInfo->updateLineups($data);
+        $fixtureInfo->updateFixtureInfoData($data);
         
         $fixtureInfo->save();
         

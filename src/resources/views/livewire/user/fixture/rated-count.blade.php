@@ -1,4 +1,4 @@
-<div class="w-full px-3"
+<div class="w-full"
     x-cloak
     x-data="{ isZero: @entangle('isZero') }">
     <label class="text-sm font-black text-gray-400">Rated</label>

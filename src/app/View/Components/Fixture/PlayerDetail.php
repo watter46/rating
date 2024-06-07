@@ -12,7 +12,7 @@ class PlayerDetail extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public array $playerData)
+    public function __construct(public array $player)
     {
         //
     }

@@ -50,18 +50,18 @@ class LineupsData
                 return collect($lineups)
                     ->map(function (array $player) use ($players) {
                         $data = collect($player)->merge($players->get($player['id']));
-        
+                        
                         return collect([
-                                'id'            => $data['id'],
-                                'name'          => $data['name'],
-                                'number'        => $data['number'],
-                                'position'      => PositionType::from($data['pos'])->name,
-                                'grid'          => $data['grid'],
-                                'img'           => $this->playerImage->generatePath($data['id']),
-                                'goal'          => $data['goal'], 
-                                'assists'       => $data['assists'], 
-                                'defaultRating' => $data['defaultRating'],
-                                'minutes'       => $data['minutes']
+                                'id'       => $data['id'],
+                                'name'     => $data['name'],
+                                'number'   => $data['number'],
+                                'position' => PositionType::from($data['pos'])->name,
+                                'grid'     => $data['grid'],
+                                'img'      => $this->playerImage->generatePath($data['id']),
+                                'goal'     => $data['goal'], 
+                                'assists'  => $data['assists'], 
+                                'rating'   => $data['rating'],
+                                'minutes'  => $data['minutes']
                             ]);
                     })
                     ->map(fn(Collection $player) => $player->except('minutes'));
@@ -76,11 +76,11 @@ class LineupsData
                 $data = collect($players);
 
                 return [
-                    'id' => $data->dataGet('player.id', false),
-                    'name' => $data->dataGet('player.name', false),
-                    'goal' => $data->dataGet('statistics.0.goals.total', false), 
+                    'id'      => $data->dataGet('player.id', false),
+                    'name'    => $data->dataGet('player.name', false),
+                    'goal'    => $data->dataGet('statistics.0.goals.total', false), 
                     'assists' => $data->dataGet('statistics.0.goals.assists', false), 
-                    'defaultRating' => $data->dataGet('statistics.0.games.rating', false),
+                    'rating'  => $data->dataGet('statistics.0.games.rating', false),
                     'minutes' => $data->dataGet('statistics.0.games.minutes', false)
                 ];
             })

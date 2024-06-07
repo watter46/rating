@@ -111,25 +111,45 @@ readonly class FixtureDataPresenter
      */
     public function formatPlayerData(Collection $playerInfos)
     {
-        $players = $this->fixture->newPlayers->keyBy('player_info_id');
+        $players = $this->fixture->players->keyBy('player_info_id');
 
-        $formatPlayer = function ($player) use ($playerInfos, $players) {
-            $playerInfo = $playerInfos->keyBy('foot_player_id')->get($player['id']);
+        $formatPlayer = function (array $playerData) use ($playerInfos, $players) {
+            /** @var PlayerInfo $playerInfo */
+            $playerInfo = $playerInfos->keyBy('foot_player_id')->get($playerData['id']);
 
-            $playerData = collect($player) 
-                ->merge([
-                    'id' => $playerInfo->id,
-                    'name' => $this->toLastName($player['name']),
-                    'rating' => $player['defaultRating'],
-                    'img' => $this->playerImage->exists($player['id'])
-                        ? $player['img']
-                        : $this->playerImage->getDefaultPath(),
-                ]);
+            /** @var Player $player */
+            $player = $players->get($playerInfo->id);
 
-            return [
-                'playerData' => $playerData->toArray(),
-                'player' => $players->get($playerData['id'])
-            ];
+            return collect([
+                'fixture_info_id' => $this->fixture->fixture_info_id,
+                'player_info_id' => $player->player_info_id,
+                'canRate' => $player->canRate,
+                'canMom' => $player->canMom,
+                'momCount' => $this->fixture->mom_count,
+                'momLimit' => $this->fixture->momLimit,
+                'rateCount' => $player->rate_count,
+                'rateLimit' => $player->rateLimit,
+                'img' => $this->playerImage->exists($playerData['id'])
+                    ? $playerData['img']
+                    : $this->playerImage->getDefaultPath(),
+                'goals' => $playerData['goal'],
+                'grid' => $playerData['grid'],
+                'name' => $this->toLastName($playerData['name']),
+                'number' => $playerData['number'],
+                'assists' => $playerData['assists'],
+                'position' => $playerData['position'],
+                'ratings' => [
+                    'my' => [
+                        'rating' => $player->rating,
+                        'mom' => $player->mom
+                    ],
+                    'users' => [
+                        'rating' => $player->average?->rating,
+                        'mom' => $player->average?->mom
+                    ],
+                    'machine' => $playerData['rating']
+                ]
+            ]);
         };
 
         $playerData = $this->fixture->fixtureInfo->lineups
