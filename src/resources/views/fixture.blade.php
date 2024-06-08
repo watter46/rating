@@ -94,7 +94,7 @@
                 <div class="flex flex-col justify-center w-full md:absolute md:left-full"> 
                     <div class="flex items-center w-full h-full mt-5 justify-evenly gap-x-3">
                         <!-- RatedCount -->
-                        {{-- <livewire:user.fixture.rated-count :$fixtureInfoId /> --}}
+                        <livewire:user.fixture.rated-count :$fixtureInfoId />
                     </div>
                     {{--  --}}
                     {{-- <div class="flex items-center justify-around w-full h-full mt-5 gap-x-3"> --}}

@@ -109,11 +109,6 @@ class Fixture extends Model
         return $this->hasMany(Player::class)->whereNotNull('rating');
     }
 
-    public function playerInfos()
-    {
-        return $this->hasManyThrough(PlayerInfo::class, FixtureInfo::class);
-    }
-
     /**
      * player
      *
