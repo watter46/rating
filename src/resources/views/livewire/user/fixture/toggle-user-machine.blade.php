@@ -1,12 +1,36 @@
-<div class="flex flex-col items-center justify-center" x-cloak>
-    <div class="flex items-center gap-x-1">
-        <x-svg.machine-image class="w-4 h-4" />
-        <p class="text-white">/</p>
-        <x-svg.user-image class="w-4 h-4" />
-    </div>
-    <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" value="" class="sr-only peer" wire:model.live="isUser">
-        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-0 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-700 md:scale-[1.1]">
-        </div>
-    </label>
+<div class="flex flex-col items-center justify-center w-full gap-y-1.5" x-cloak>
+    <label class="w-full text-sm font-black text-gray-400 text-start">Rating Switch</label>
+    <ul class="flex w-full gap-6">
+        <li class="grow">
+            <input type="radio" id="my" name="my" value="my" class="hidden peer" wire:model.live="toggleStates">
+            <label for="my" class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                <div class="block">
+                    <div class="w-full text-xs">My</div>
+                </div>
+                <x-svg.user-image class="w-4 h-4 fill-[#6B7280]" />
+            </label>
+        </li>
+
+        <li class="grow">
+            <input type="radio" id="users" name="users" value="users" class="hidden peer"
+            wire:model.live="toggleStates">
+            <label for="users" class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                <div class="block">
+                    <div class="w-full text-xs">Users</div>
+                </div>
+                <x-svg.users-image class="w-4 h-4 fill-[#6B7280]" />
+            </label>
+        </li>
+
+        <li class="grow">
+            <input type="radio" id="machine" name="machine" value="machine" class="hidden peer"
+            wire:model.live="toggleStates" />
+            <label for="machine" class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
+                <div class="block">
+                    <div class="w-full text-xs">Machine</div>
+                </div>
+                <x-svg.machine-image class="w-4 h-4 fill-[#6B7280]" />
+            </label>
+        </li>
+    </ul>
 </div>

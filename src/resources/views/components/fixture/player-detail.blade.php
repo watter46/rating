@@ -1,15 +1,15 @@
 <div class="flex flex-col items-center justify-center gap-3">
     <x-player.player-image
         class="w-20 h-20"
-        :number="$playerData['number']"
-        :img="$playerData['img']" />
+        :number="$player['number']"
+        :img="$player['img']" />
 
     <div class="flex justify-center w-full gap-x-3">                    
         <p class="text-sm font-bold text-center text-gray-100 md:text-2xl whitespace-nowrap">
-            {{ $playerData['number'] }}
+            {{ $player['number'] }}
         </p> 
         <p class="text-sm font-bold text-center text-gray-100 md:text-2xl whitespace-nowrap">
-            {{ $playerData['name'] }}
+            {{ $player['name'] }}
         </p>
     </div>
 </div>
@@ -18,19 +18,19 @@
     <!-- Position -->
     <div class="p-0.5">
         <p class="text-xs font-black text-gray-500 md:text-base">Position</p>
-        <p class="text-base font-black text-gray-300 md:text-lg">{{ $playerData['position'] }}</p>
+        <p class="text-base font-black text-gray-300 md:text-lg">{{ $player['position'] }}</p>
     </div>
 
     <!-- ShirtNumber -->
     <div class="p-0.5">
         <p class="text-xs font-black text-gray-500 md:text-base">ShirtNumber</p>
-        <p class="text-base font-black text-gray-300 md:text-lg">{{ $playerData['number'] }}</p>
+        <p class="text-base font-black text-gray-300 md:text-lg">{{ $player['number'] }}</p>
     </div>
 
     <!-- machineRating -->
     <div class="p-0.5">
         <p class="text-xs font-black text-gray-500 md:text-base">MachineRating</p>
-        <p class="text-base font-black text-gray-300 md:text-lg">{{ $playerData['defaultRating'] }}</p>
+        <p class="text-base font-black text-gray-300 md:text-lg">{{ $player['ratings']['machine'] }}</p>
     </div>
     
     <!-- Goals -->
@@ -39,7 +39,7 @@
         <div class="flex items-center justify-center w-full h-full">
             <x-player.goals
                 class="w-[13px] h-[13px]"
-                :goals="$playerData['goal']" />
+                :goals="$player['goals']" />
         </div>
     </div>
     
@@ -49,7 +49,7 @@
         <div class="flex items-center justify-center w-full h-full">
             <x-player.assists
                 class="w-[13px] h-[13px]"
-                :assists="$playerData['assists']" />
+                :assists="$player['assists']" />
         </div>
     </div>
 </div>

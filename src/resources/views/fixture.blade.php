@@ -31,12 +31,8 @@
                                             <livewire:user.fixture.player
                                                 name="startXI"
                                                 size="w-[40px] h-[40px] md:w-[45px] md:h-[45px]"
-                                                :$fixtureInfoId
-                                                :playerData="$player['playerData']"
-                                                :player="$player['player']"
-                                                :$momCount
-                                                :$momLimit
-                                                :key="$player['playerData']['id']" />
+                                                :$player
+                                                :key="$player['player_info_id']" />
                                         </div>
                                     @endforeach
                                 </div>
@@ -55,12 +51,8 @@
                                         <livewire:user.fixture.player
                                             name="substitutes"
                                             size="w-[40px] h-[40px]"
-                                            :$fixtureInfoId
-                                            :playerData="$player['playerData']"
-                                            :player="$player['player']"
-                                            :$momCount
-                                            :$momLimit
-                                            :key="$player['playerData']['id']" />
+                                            :$player
+                                            :key="$player['player_info_id']" />
                                     </div>
                                 @endforeach
                             @endif
@@ -72,12 +64,8 @@
                                         <livewire:user.fixture.player
                                             name="substitutes"
                                             size="w-[40px] h-[40px]"
-                                            :$fixtureInfoId
-                                            :playerData="$player['playerData']"
-                                            :player="$player['player']"
-                                            :$momCount
-                                            :$momLimit
-                                            :key="$player['playerData']['id']" />
+                                            :$player
+                                            :key="$player['player_info_id']" />
                                     </div>
                                 @endforeach
                             @endif
@@ -94,12 +82,8 @@
                                     <livewire:user.fixture.player
                                         name="substitutes"
                                         size="w-12 h-12"
-                                        :$fixtureInfoId
-                                        :playerData="$player['playerData']"
-                                        :player="$player['player']"
-                                        :$momCount
-                                        :$momLimit
-                                        :key="$player['playerData']['id']" />
+                                        :$player
+                                        :key="$player['player_info_id']" />
                                 </div>
                             @endforeach
                         </div>
@@ -107,13 +91,14 @@
                 </div>
 
                 <!-- Options -->
-                <div class="flex flex-col justify-center w-full md:absolute md:left-full"> 
-                    <div class="flex items-center w-full h-full mt-5 justify-evenly gap-x-3">
-                        <!-- RatedCount -->
-                        <livewire:user.fixture.rated-count :$fixtureInfoId />
-                    </div>
-                    
-                    <div class="flex items-center justify-around w-full h-full mt-5 gap-x-3">
+                <div class="flex flex-col w-full px-2 gap-y-5 md:absolute md:left-full"> 
+                    <!-- RatedCount -->
+                    <livewire:user.fixture.rated-count :$fixtureInfoId />
+
+                    <!-- ToggleUserMacine -->
+                    <livewire:user.fixture.toggle-user-machine />
+
+                    <div class="w-fit">
                         <!-- Result -->
                         <x-result.result-button
                             :$fixtureData
@@ -122,10 +107,7 @@
                             :$scoreData
                             :$lineupsData
                             :$fixtureInfoId
-                         />
-        
-                        <!-- ToggleUserMacine -->
-                        <livewire:user.fixture.toggle-user-machine />
+                        />
                     </div>
                 </div>
             </div>

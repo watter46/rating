@@ -7,7 +7,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 use App\Livewire\MessageType;
-use App\UseCases\User\FixtureRequest;
 use App\UseCases\User\Player\CountRatedPlayer;
 
 
@@ -39,9 +38,7 @@ class RatedCount extends Component
     public function fetch(): void
     {
         try {
-            $request = FixtureRequest::make($this->fixtureInfoId);
-
-            $fixture = $this->countRatedPlayer->execute($request);
+            $fixture = $this->countRatedPlayer->execute($this->fixtureInfoId);
             
             $this->ratedPercentage = $this->calculateRatedPercentage(...$fixture);
             

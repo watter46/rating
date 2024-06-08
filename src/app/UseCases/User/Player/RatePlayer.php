@@ -6,27 +6,41 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use App\UseCases\User\FixtureRequest;
+use App\Models\Fixture;
+use App\Models\Player;
 
 
 final readonly class RatePlayer
 {    
-    public function execute(FixtureRequest $request, float $rating)
+    public function execute(string $fixtureInfoId, string $playerInfoId, float $rating)
     {
         try {
-            $builder = $request->buildFixture()->assignPlayer($request);
-            
-            $fixture = $builder->get();
-            $player = $builder->getPlayer();
+            /** @var Fixture $fixture */
+            $fixture = Fixture::query()
+                ->with(['players' => fn ($query) => $query
+                    ->where('player_info_id', $playerInfoId)
+                ])
+                ->fixtureInfoId($fixtureInfoId)
+                ->selectWithout()
+                ->fixtureInfoId($fixtureInfoId)
+                ->firstOrNew(['fixture_info_id' => $fixtureInfoId]);
 
-            if ($builder->exceedPeriodDay()) {
-                throw new Exception($builder->validator()::RATE_PERIOD_EXPIRED_MESSAGE);
-            } 
+            $player = $fixture->players->first()
+                ?? new Player([
+                    'player_info_id' => $playerInfoId,
+                    'fixture_id' => $fixture?->id
+                ]);
 
-            if ($builder->exceedRateLimit()) {
-                throw new Exception($builder->validator()::RATE_LIMIT_EXCEEDED_MESSAGE);
+            $fixtureDomain = $fixture->toDomain();
+                
+            if ($fixtureDomain->exceedPeriodDay()) {
+                throw new Exception($fixtureDomain::RATE_PERIOD_EXPIRED_MESSAGE);
             }
-            
+
+            if ($fixtureDomain->exceedRateLimit($player)) {
+                throw new Exception($fixtureDomain::RATE_LIMIT_EXCEEDED_MESSAGE);
+            }
+
             $player->rate($rating);
             
             DB::transaction(function () use ($fixture, $player) {
@@ -42,10 +56,7 @@ final readonly class RatePlayer
                 $player->save();
             });
 
-            return $builder
-                ->assignUpdatedPlayer($player)
-                ->addColumnValidationToPlayer()
-                ->getPlayer();
+            return $fixtureDomain->make($player);
 
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Player Not Found');

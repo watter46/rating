@@ -4,72 +4,84 @@ namespace App\UseCases\User\Player;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Player;
-use App\UseCases\User\FixtureRequest;
+use App\Models\Fixture;
 
 
 final readonly class DecideManOfTheMatch
-{    
+{
     /**
      * execute
      *
-     * @param  mixed $request
-     * @return array{newMomPlayer: Player, oldMomPlayer: Player}
+     * @param  string $fixtureInfoId
+     * @param  string $playerInfoId
+     * @return array{newMom: Player, oldMom: Player}
      */
-    public function execute(FixtureRequest $request)
+    public function execute(string $fixtureInfoId, string $playerInfoId)
     {
         try {
-            $builder = $request->buildFixture()->assignPlayer($request);
+            /** @var Fixture $fixture */
+            $fixture = Fixture::query()
+                ->with([
+                    'players' => fn ($query) => $query
+                        ->orWhere('player_info_id', $playerInfoId)
+                        ->orWhere('mom', true),
+                ])
+                ->fixtureInfoId($fixtureInfoId)
+                ->selectWithout()
+                ->fixtureInfoId($fixtureInfoId)
+                ->firstOrNew(['fixture_info_id' => $fixtureInfoId]);
 
-            $fixture = $builder->get();
-            $player  = $builder->getPlayer();
+            $newMomId = $fixture->players
+                ->first(fn(Player $player) => $player->player_info_id === $playerInfoId)
+                ?->id;
 
-            if ($builder->exceedPeriodDay()) {
-                throw new Exception($builder->validator()::RATE_PERIOD_EXPIRED_MESSAGE);
-            } 
+            $oldMomId = $fixture->players
+                ->first(fn(Player $player) => $player->mom)
+                ?->id;
 
-            if ($builder->exceedRateLimit()) {
-                throw new Exception($builder->validator()::RATE_LIMIT_EXCEEDED_MESSAGE);
+            /** @var Player $newMom */
+            $newMom = ($fixture->players
+                ->first(fn (Player $player) => $player->id === $newMomId)
+                ?? new Player([
+                    'player_info_id' => $playerInfoId,
+                    'fixture_id' => $fixture?->id
+                ]))
+                ->decideMOM();
+
+            /** @var Player $oldMom */
+            $oldMom = $fixture->players
+                ->first(fn (Player $player) => $player->id === $oldMomId)
+                ?->unDecideMOM();
+
+            $fixtureDomain = $fixture->toDomain();
+                
+            if ($fixtureDomain->exceedPeriodDay()) {
+                throw new Exception($fixtureDomain::RATE_PERIOD_EXPIRED_MESSAGE);
             }
 
-            /** @var Player $oldMomPlayer */
-            $oldMomPlayer = $fixture
-                ->players
-                ->first(fn(Player $player) => $player->mom)
-                ?->unDecideMOM();
-            
-            $newMomPlayer = $player->decideMOM();
+            if ($fixtureDomain->exceedMomLimit()) {
+                throw new Exception($fixtureDomain::MOM_LIMIT_EXCEEDED_MESSAGE);
+            }
 
             $fixture->incrementMomCount();
 
-            DB::transaction(function () use ($fixture, $oldMomPlayer, $newMomPlayer) {
+            DB::transaction(function () use ($fixture, $newMom, $oldMom) {
                 $fixture->save();
 
-                $newMomPlayer->fixture()->associate($fixture->id ?? $fixture->refresh());
-                $newMomPlayer->save();
+                $newMom->fixture()->associate($fixture->id ?? $fixture->refresh());
+                $newMom->save();
 
-                if (!$oldMomPlayer) return;
+                if (!$oldMom) return;
 
-                $oldMomPlayer->save();
+                $oldMom->save();
             });
 
             return [
-                'newMomPlayer' => $builder
-                    ->assignUpdatedPlayer($newMomPlayer)
-                    ->addColumnValidationToPlayer()
-                    ->getPlayer(),
-                'oldMomPlayer' => $oldMomPlayer
-                    ? $builder
-                        ->assignUpdatedPlayer($oldMomPlayer)
-                        ->addColumnValidationToPlayer()
-                        ->getPlayer()
-                    : null
-                ];
-
-        } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException('Player Not Found');
+                $fixture->toDomain()->make($newMom),
+                $fixture->toDomain()->make($oldMom)
+            ];
 
         } catch (Exception $e) {
             throw $e;

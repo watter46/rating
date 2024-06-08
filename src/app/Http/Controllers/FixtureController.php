@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\UseCases\User\Fixture\fetchLatestFixture;
 use Exception;
 
 use App\UseCases\User\Fixture\FindFixture;
-use App\UseCases\User\FixtureRequest;
+use App\UseCases\User\Fixture\fetchLatestFixture;
 
 
 class FixtureController extends Controller
@@ -19,7 +18,7 @@ class FixtureController extends Controller
     public function find(string $fixtureInfoId, FindFixture $findFixture, FixturePresenter $presenter)
     {
         try {
-            $fixture = $findFixture->execute(FixtureRequest::make($fixtureInfoId));
+            $fixture = $findFixture->execute($fixtureInfoId);
             
             return view('fixture', $presenter->format($fixture));
 

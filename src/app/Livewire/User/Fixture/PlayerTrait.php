@@ -4,38 +4,41 @@ namespace App\Livewire\User\Fixture;
 
 use Livewire\Attributes\On;
 
-use App\UseCases\User\Player\FindPlayer;
+use App\Models\Player;
 
 
 trait PlayerTrait
 {
-    public ?float $rating;
-    public bool $mom;
-    public bool $canRate;
-    public bool $canMom;
-    public int $rateCount;
-    public int $rateLimit;
-
-    private readonly FindPlayer $findPlayer;
-    
-    public function bootPlayerTrait(FindPlayer $findPlayer)
+    /**
+     * プロパティを更新するイベントを発行する
+     *
+     * @param  ?Player $player
+     * @return void
+     */
+    public function dispatchPlayerUpdated(?Player $player)
     {
-        $this->findPlayer = $findPlayer;
+        if (!$player) return;
+
+        $this->dispatch('update-player.'.$player->player_info_id, $player);
     }
 
-    public function mountPlayerTrait()
-    {
-        $this->update($this->player->toArray());
-    }
-
-    #[On('update-player.{playerData.id}')]
+    #[On('update-player.{player.player_info_id}')]
     public function update(array $player)
     {
-        $this->rating = $player['rating'];
-        $this->mom    = $player['mom'];
-        $this->canRate = $player['canRate'];
-        $this->canMom  = $player['canMom'];
-        $this->rateCount = $player['rate_count'];
-        $this->rateLimit = $player['rateLimit'];
+        $this->player['canRate'] = $player['canRate'];
+        $this->player['canMom'] = $player['canMom'];
+        $this->player['rateCount'] = $player['rate_count'];
+        $this->player['ratings']['my']['rating'] = $player['rating'];
+        $this->player['ratings']['my']['mom'] = $player['mom'];
+    }
+
+    #[On('mom-count-updated')]
+    public function updateMomCount(array $player)
+    {
+        $this->player['momCount'] = $player['momCount'];
+
+        if ($player['exceedMomLimit']) {
+            $this->dispatch('mom-button-disabled');
+        }
     }
 }

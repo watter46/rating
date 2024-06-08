@@ -6,16 +6,10 @@ use Exception;
 
 use App\Models\Player;
 use App\UseCases\User\FixtureRequest;
-use App\UseCases\User\FixtureValidator;
 
 
 final readonly class FindPlayer
-{
-    public function __construct(private FixtureValidator $validator)
-    {
-        //
-    }
-    
+{   
     public function execute(FixtureRequest $request): Player
     {
         try {

@@ -26,10 +26,8 @@
                                         <livewire:user.result.rated-player
                                             name="startXI"
                                             size="w-[40px] h-[40px] md:w-[45px] md:h-[45px]"
-                                            :$fixtureInfoId
-                                            :playerData="$player['playerData']"
-                                            :player="$player['player']"
-                                            :key="$player['playerData']['id']" />
+                                            :$player
+                                            :key="$player['player_info_id']" />
                                     </div>
                                 @endforeach
                             </div>
@@ -44,14 +42,13 @@
                     @foreach($lineupsData['mobile_substitutes'] as $substitutes)
                         @if($loop->odd)
                             @foreach($substitutes as $player)
+                            
                                 <div class="flex justify-center w-full col-span-2">
                                     <livewire:user.result.rated-player
                                         name="substitutes"
                                         size="w-[40px] h-[40px]"
-                                        :$fixtureInfoId
-                                        :playerData="$player['playerData']"
-                                        :player="$player['player']"
-                                        :key="$player['playerData']['id']" />
+                                        :$player
+                                        :key="$player['player_info_id']" />
                                 </div>
                             @endforeach
                         @endif
@@ -63,10 +60,8 @@
                                     <livewire:user.result.rated-player
                                         name="substitutes"
                                         size="w-[40px] h-[40px]"
-                                        :$fixtureInfoId
-                                        :playerData="$player['playerData']"
-                                        :player="$player['player']"
-                                        :key="$player['playerData']['id']" />
+                                        :$player
+                                        :key="$player['player_info_id']" />
                                 </div>
                             @endforeach
                         @endif
@@ -81,12 +76,10 @@
                         @foreach($lineupsData['substitutes'] as $player)
                             <div class="flex justify-center w-full">
                                 <livewire:user.result.rated-player
-                                name="substitutes"
-                                size="w-12 h-12"
-                                :$fixtureInfoId
-                                :playerData="$player['playerData']"
-                                :player="$player['player']"
-                                :key="$player['playerData']['id']" />
+                                    name="substitutes"
+                                    size="w-12 h-12"
+                                    :$player
+                                    :key="$player['player_info_id']" />
                             </div>
                         @endforeach
                     </div>
