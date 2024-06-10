@@ -6,6 +6,7 @@ use App\Models\TournamentType;
 use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
 use App\UseCases\Util\Season;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 
 class FixtureInfoQueryBuilder extends Builder
 {
@@ -65,7 +66,20 @@ class FixtureInfoQueryBuilder extends Builder
         return $this
             ->whereDate('date', '>=', now('UTC'))
             ->orderBy('date')
-            ->whereNull('fixture');
+            ->whereNull('lineups');
+    }
+
+    /**
+     * 指定の期間内の試合を取得する
+     *
+     * @return Builder
+     */
+    public function last(): Builder
+    {
+        return $this
+            ->whereDate('date', '<=', now('UTC'))
+            ->where('status', FixtureStatusType::MatchFinished)
+            ->orderBy('date', 'desc');
     }
 
     /**
