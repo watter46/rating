@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdatePlayerInfosUseCase;
 use Illuminate\Console\Command;
+
+use App\UseCases\Admin\Player\UpdatePlayerInfos;
+
 
 class UpdatePlayerInfosCommand extends Command
 {
@@ -12,7 +14,7 @@ class UpdatePlayerInfosCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'players:update';
+    protected $signature = 'playerInfos:update';
 
     /**
      * The console command description.
@@ -24,7 +26,7 @@ class UpdatePlayerInfosCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(UpdatePlayerInfosUseCase $updatePlayerInfos)
+    public function handle(UpdatePlayerInfos $updatePlayerInfos)
     {
         $updatePlayerInfos->execute();
     }
