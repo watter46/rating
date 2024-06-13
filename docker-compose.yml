@@ -75,7 +75,7 @@ services:
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
       - TZ=Asia/Tokyo
-  
+
   db-testing:
     container_name: ${APP_NAME}-db-testing
     build:
@@ -89,7 +89,7 @@ services:
       - MYSQL_PASSWORD=${DB_TEST_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_TEST_PASS}
       - TZ=Asia/Tokyo
-
+      
   redis:
     image: "redis:7.2.4-alpine"
     container_name: ${APP_NAME}-redis
