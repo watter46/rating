@@ -23,12 +23,8 @@
             <env name="DB_HOST" value="db-testing" force="true"/>
             <env name="DB_PORT" value="3306" force="true"/>
             <env name="DB_DATABASE" value="rating-test" force="true"/>
-            <env name="DB_USERNAME" value="phper" force="true"/>
-            <env name="DB_PASSWORD" value="secret" force="true"/>
-            <env name="BCRYPT_ROUNDS" value="4"/>
-            <env name="CACHE_DRIVER" value="array"/>
-            <env name="MAIL_DRIVER" value="array"/>
-            <env name="QUEUE_CONNECTION" value="sync"/>
-            <env name="SESSION_DRIVER" value="array"/>
+            <env name="DB_USERNAME" value="root" force="true"/>
+            <env name="DB_PASSWORD" value="password" force="true"/>
+            <env name="APP_PROVIDERS_CACHE" value="bootstrap/cache/testing_disabled_service_providers.php"/>
         </php>
 </phpunit>

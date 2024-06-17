@@ -78,7 +78,7 @@ tinker:
 test:
 	docker compose exec app composer test
 unit:
-	docker compose exec app php artisan test tests/Unit
+	docker compose exec app composer unit
 test-clear:
 	docker compose exec app php artisan config:clear
 	docker compose exec app php artisan key:generate --env=testing
