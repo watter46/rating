@@ -33,6 +33,8 @@ final readonly class RatePlayer
 
             $fixtureDomain = $fixture->toDomain();
                 
+            $player->rate($rating);
+            
             if ($fixtureDomain->exceedPeriodDay()) {
                 throw new Exception($fixtureDomain::RATE_PERIOD_EXPIRED_MESSAGE);
             }
@@ -40,8 +42,6 @@ final readonly class RatePlayer
             if ($fixtureDomain->exceedRateLimit($player)) {
                 throw new Exception($fixtureDomain::RATE_LIMIT_EXCEEDED_MESSAGE);
             }
-
-            $player->rate($rating);
             
             DB::transaction(function () use ($fixture, $player) {
                 if (!$fixture->id) {
