@@ -10,7 +10,8 @@ use App\Models\Player;
 
 class FixtureDomain
 {
-    private const RATE_PERIOD_DAY = 50;
+    /** 評価可能期間 5日間 */
+    private const RATE_PERIOD_HOURS = 24 * 5;
     public const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
 
     private const RATE_COUNT_LIMIT = 3;
@@ -40,8 +41,8 @@ class FixtureDomain
      * @return bool
      */
     public function exceedRateLimit(Player $player): bool
-    {
-        return $player->rate_count >= self::RATE_COUNT_LIMIT;
+    {        
+        return $player->rate_count > self::RATE_COUNT_LIMIT;
     }
     
     /**
@@ -51,7 +52,7 @@ class FixtureDomain
      */
     public function exceedMomLimit(): bool
     {
-        return $this->fixture->mom_count >= self::MOM_COUNT_LIMIT;
+        return $this->fixture->mom_count > self::MOM_COUNT_LIMIT;
     }
     
     /**
@@ -62,8 +63,8 @@ class FixtureDomain
     public function exceedPeriodDay(): bool
     {
         $specifiedDate = Carbon::parse($this->fixture->fixtureInfo->date);
-        
-        return $specifiedDate->diffInDays(now('UTC')) > self::RATE_PERIOD_DAY;
+
+        return $specifiedDate->diffInHours(now('UTC')) >= self::RATE_PERIOD_HOURS;
     }
         
     /**
@@ -98,9 +99,15 @@ class FixtureDomain
     {
         if (!$player) return null;
 
+        $copyFixture = $this->fixture->replicate();
+        $copyPlayer = $player->replicate();
+
+        $copyPlayer->rate_count++;
+        $copyFixture->mom_count++;
+
         return $player
-            ->setAttribute('canRate', $this->canRate($player))
-            ->setAttribute('canMom', $this->canMom($player))
+            ->setAttribute('canRate', $this->canRate($copyPlayer))
+            ->setAttribute('canMom', $this->canMom($copyPlayer))
             ->setAttribute('rateLimit', $this->getRateCountLimit())
             ->setAttribute('momCount', $this->fixture->mom_count)
             ->setAttribute('momLimit', $this->getMomCountLimit())

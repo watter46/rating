@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\UsersRatingFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +30,15 @@ class Average extends Model
         'player_info_id',
         'fixture_info_id'
     ];
+
+    protected $casts = [
+        'mom' => 'boolean'
+    ];
+
+    protected static function newFactory()
+    {
+        return UsersRatingFactory::new();
+    }
 
     public function scopeFixtureInfoId(Builder $query, string $fixtureInfoId)
     {

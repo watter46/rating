@@ -32,20 +32,10 @@ class Player extends Model
         'fixture_id'
     ];
     
-    /**
-     * キャスト
-     *
-     * @var array
-     */
     protected $casts = [
         'mom' => 'boolean'
     ];
 
-    /**
-     * デフォルト値
-     *
-     * @var array
-     */
     protected $attributes = [
         'rating' => null,
         'mom' => false,

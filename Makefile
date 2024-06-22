@@ -48,6 +48,8 @@ log-app-watch:
 	docker compose logs --follow app
 log-db:
 	docker compose logs db
+log-db-testing:
+	docker compose logs db-testing
 log-redis:
 	docker compose logs redis
 log-db-watch:
@@ -74,9 +76,9 @@ rollback-test:
 tinker:
 	docker compose exec app php artisan tinker
 test:
-	docker compose exec app php artisan test tests/Feature
+	docker compose exec app composer test
 unit:
-	docker compose exec app php artisan test tests/Unit
+	docker compose exec app composer unit
 test-clear:
 	docker compose exec app php artisan config:clear
 	docker compose exec app php artisan key:generate --env=testing

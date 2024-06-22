@@ -75,7 +75,7 @@ services:
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
       - TZ=Asia/Tokyo
-  
+
   db-testing:
     container_name: ${APP_NAME}-db-testing
     build:
@@ -85,11 +85,10 @@ services:
       - 3000:3306
     environment:
       - MYSQL_DATABASE=${DB_TEST_NAME}
-      - MYSQL_USER=${DB_TEST_USER}
-      - MYSQL_PASSWORD=${DB_TEST_PASS}
-      - MYSQL_ROOT_PASSWORD=${DB_TEST_PASS}
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
       - TZ=Asia/Tokyo
-
+      
   redis:
     image: "redis:7.2.4-alpine"
     container_name: ${APP_NAME}-redis

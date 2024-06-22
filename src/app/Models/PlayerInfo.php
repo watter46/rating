@@ -33,7 +33,7 @@ class PlayerInfo extends Model
         'number',
         'season',
         'foot_player_id',
-        'sofa_image_id',
+        'sofa_player_id',
         'fixture_info_id'
     ];
 

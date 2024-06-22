@@ -57,6 +57,8 @@ final readonly class DecideManOfTheMatch
 
             $fixtureDomain = $fixture->toDomain();
                 
+            $fixture->incrementMomCount();
+            
             if ($fixtureDomain->exceedPeriodDay()) {
                 throw new Exception($fixtureDomain::RATE_PERIOD_EXPIRED_MESSAGE);
             }
@@ -64,8 +66,6 @@ final readonly class DecideManOfTheMatch
             if ($fixtureDomain->exceedMomLimit()) {
                 throw new Exception($fixtureDomain::MOM_LIMIT_EXCEEDED_MESSAGE);
             }
-
-            $fixture->incrementMomCount();
 
             DB::transaction(function () use ($fixture, $newMom, $oldMom) {
                 $fixture->save();
