@@ -5,7 +5,10 @@ namespace Database\Seeders\Tests\User;
 use Illuminate\Database\Seeder;
 
 use App\Models\FixtureInfo;
-use App\Models\User;
+use App\Models\PlayerInfo;
+use App\Http\Controllers\Util\TestFixtureInfoFile;
+use App\Http\Controllers\Util\TestPlayerInfoFile;
+
 
 class TestingFixtureInfoSeeder extends Seeder
 {
@@ -17,13 +20,19 @@ class TestingFixtureInfoSeeder extends Seeder
         // 1035480 utd
 
         $external_fixture_id = 1035480;
-
-        $testData = new TestDataGenerator();
                 
         FixtureInfo::factory()
-            ->fromFile($testData->getFixtureInfo($external_fixture_id))
+            ->fromFile((new TestFixtureInfoFile)->get($external_fixture_id))
             ->create()
             ->playerInfos()
-            ->saveMany($testData->getPlayerInfos($external_fixture_id));
+            ->saveMany(
+                (new TestPlayerInfoFile)
+                    ->get($external_fixture_id)
+                    ->map(function ($player) {
+                        return PlayerInfo::factory()
+                            ->fromFile($player)
+                            ->make();
+                    })
+            );
     }
 }

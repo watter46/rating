@@ -26,17 +26,34 @@ class FixtureInfoFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($data) {
             return [
+                'id'                  => $data->id,
                 'external_fixture_id' => $data->external_fixture_id,
                 'external_league_id'  => $data->external_league_id,
                 'season'              => $data->season,
                 'date'                => now('UTC'),
                 'status'              => $data->status,
-                'score'               => $data->score,
-                'teams'               => $data->teams,
-                'league'              => $data->league,
-                'fixture'             => $data->fixture,
-                'lineups'             => $data->lineups
+                'score'               => collect($data->score),
+                'teams'               => collect($data->teams),
+                'league'              => collect($data->league),
+                'fixture'             => collect($data->fixture),
+                'lineups'             => collect($data->lineups)
             ];
         });
+    }
+
+    public function fromFileToArray($data): array
+    {
+        return [
+            'external_fixture_id' => $data->external_fixture_id,
+            'external_league_id'  => $data->external_league_id,
+            'season'              => $data->season,
+            'date'                => now('UTC'),
+            'status'              => $data->status,
+            'score'               => collect($data->score),
+            'teams'               => collect($data->teams),
+            'league'              => collect($data->league),
+            'fixture'             => collect($data->fixture),
+            'lineups'             => collect($data->lineups)
+        ];
     }
 }
