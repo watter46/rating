@@ -54,11 +54,9 @@ final readonly class fetchLatestFixture
                         }
                 ))
                 ->map(function (Player $player) use ($fixtureDomain, $averages) {
-                    return $player
-                        ->setAttribute('average', $averages->get($player->player_info_id))
-                        ->setAttribute('canRate', $fixtureDomain->canRate($player))
-                        ->setAttribute('canMom', $fixtureDomain->canMom($player))
-                        ->setAttribute('rateLimit', $fixtureDomain->getRateCountLimit());
+                    return $fixtureDomain
+                        ->make($player)
+                        ->setAttribute('average', $averages->get($player->player_info_id));
                 });
 
             $fixture->momLimit = $fixtureDomain->getMomCountLimit();
