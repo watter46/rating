@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Database\Stubs\Infrastructure\SofaScore;
+namespace App\Infrastructure\SofaScore;
 
 use App\Http\Controllers\Util\PlayerFile;
 use App\Http\Controllers\Util\PlayerImageFile;

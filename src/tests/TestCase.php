@@ -21,13 +21,13 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        if (!$this->seeder) return;
-
         if (!self::$migrated) {
             $this->artisan('migrate');
 
             self::$migrated = true;
         }
+
+        if (!$this->seeder) return;
 
         $this->actingAs(User::factory()->create());
         

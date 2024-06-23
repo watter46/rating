@@ -35,10 +35,13 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
      */
     public function checkRequiredData(): bool
     {
-        return $this->getInvalidTeamIds()->isEmpty()
-            && $this->getInvalidLeagueIds()->isEmpty()
-            && $this->getInvalidPlayers()->isEmpty()
-            && $this->getInvalidPlayerImageIds()->isEmpty();
+        return collect([
+            $this->getInvalidTeamIds(),
+            $this->getInvalidLeagueIds(),
+            $this->getInvalidPlayers(),
+            $this->getInvalidPlayerImageIds()
+        ])
+        ->every(fn (Collection $ids) => $ids->isEmpty());
     }
     
     /**

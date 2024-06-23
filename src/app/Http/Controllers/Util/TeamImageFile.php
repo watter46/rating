@@ -34,8 +34,8 @@ final readonly class TeamImageFile
     public function exists(int $teamId): bool
     {
         $path = $this->generatePath($teamId);
-
-        return file_exists($path);
+        
+        return File::exists(public_path($path));
     }
 
     private function ensureDirExists(): void

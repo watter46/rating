@@ -13,7 +13,7 @@ use App\Models\FixtureInfo;
 
 class TestFixtureInfoFile
 {
-    private const DIR_PATH = 'Template/tests/fixtureInfos/';
+    private const DIR_PATH = 'Template/tests/fixtureInfo/';
 
     private function dirPath()
     {
@@ -27,7 +27,7 @@ class TestFixtureInfoFile
 
     public function get(int $external_fixture_id)
     {
-        return json_decode(File::get($this->fileName($external_fixture_id)));
+        return collect(json_decode(File::get($this->fileName($external_fixture_id))));
     }
     
     /**
@@ -48,7 +48,7 @@ class TestFixtureInfoFile
     {
         return collect(File::files($this->dirPath()))
             ->map(function (SplFileInfo $file) {
-                return json_decode($file->getContents());
+                return collect(json_decode($file->getContents()));
             });
     }
 

@@ -34,7 +34,7 @@ final readonly class PlayerImageFile
     {
         $path = $this->generatePath($playerId);
 
-        return file_exists($path);
+        return File::exists(public_path($path));
     }
 
     private function ensureDirExists(): void
