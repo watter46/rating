@@ -2,19 +2,22 @@
 
 namespace App\Infrastructure\SofaScore;
 
+use Illuminate\Support\Facades\Http;
+
 use App\Http\Controllers\Util\PlayerFile;
+use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\PlayerOfTeamFile;
 use App\UseCases\Admin\Player\PlayerData\PlayerData;
 use App\UseCases\Admin\Player\PlayersOfTeamData\PlayersOfTeamData;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-
 use App\UseCases\Admin\SofaScoreRepositoryInterface;
 
 
 class SofaScoreRepository implements SofaScoreRepositoryInterface
 {
-    public function __construct(private PlayerFile $playerFile, private PlayerOfTeamFile $playerOfTeamFile)
+    public function __construct(
+        private PlayerFile $playerFile,
+        private PlayerOfTeamFile $playerOfTeamFile,
+        private PlayerImageFile $playerImageFile)
     {
         
     }
@@ -34,9 +37,9 @@ class SofaScoreRepository implements SofaScoreRepositoryInterface
     public function fetchPlayer(array $player): PlayerData
     {
         $json = $this->httpClient('https://sofascores.p.rapidapi.com/v1/search/multi', [
-            'query' => $player['name'],
-            'group' => 'players'
-        ]);
+                'query' => $player['name'],
+                'group' => 'players'
+            ]);
 
         $data = collect(json_decode($json)->data);
 
@@ -48,8 +51,8 @@ class SofaScoreRepository implements SofaScoreRepositoryInterface
     public function fetchPlayersOfTeam(): PlayersOfTeamData
     {
         $json = $this->httpClient('https://sofascores.p.rapidapi.com/v1/teams/players', [
-            'team_id' => (string) config('sofa-score.chelsea-id')
-        ]);
+                'team_id' => (string) config('sofa-score.chelsea-id')
+            ]);
   
         $data = collect(json_decode($json)->data);
 
@@ -61,7 +64,7 @@ class SofaScoreRepository implements SofaScoreRepositoryInterface
     public function fetchPlayerImage(int $playerId): string
     {
         return $this->httpClient('https://sofascores.p.rapidapi.com/v1/players/photo', [
-            'player_id' => (string) $playerId
-        ]);
+                'player_id' => (string) $playerId
+            ]);
     }
 }

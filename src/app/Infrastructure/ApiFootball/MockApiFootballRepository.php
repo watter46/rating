@@ -7,6 +7,8 @@ use App\Http\Controllers\Util\FixturesFile;
 use App\Http\Controllers\Util\SquadsFile;
 use App\Http\Controllers\Util\TestFixtureInfoFile;
 use App\Http\Controllers\Util\TestFixtureInfosFile;
+use App\Http\Controllers\Util\TestLeagueImageFile;
+use App\Http\Controllers\Util\TestTeamImageFile;
 use Illuminate\Support\Facades\Http;
 
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
@@ -14,7 +16,7 @@ use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
 use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 use App\UseCases\Admin\Player\SquadsData\SquadsData;
 use App\UseCases\Util\Season;
-
+use Illuminate\Support\Facades\File;
 
 class MockApiFootballRepository implements ApiFootballRepositoryInterface
 {
@@ -109,11 +111,15 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
     public function fetchLeagueImage(int $leagueId): string
     {
-        return $this->httpClient("https://media-4.api-sports.io/football/leagues/$leagueId.png");
+        $file = new TestLeagueImageFile;
+
+        return $file->get();
     }
 
     public function fetchTeamImage(int $teamId): string
     {
-        return $this->httpClient("https://media-4.api-sports.io/football/teams/$teamId.png");
+        $file = new TestTeamImageFile;
+
+        return $file->get();
     }
 }

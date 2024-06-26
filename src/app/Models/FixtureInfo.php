@@ -81,7 +81,7 @@ class FixtureInfo extends Model
         if ($fixtureInfoData->equalLineupCount($this->lineupCount) && $fixtureInfoData->checkRequiredData()) {
             return;
         }
-        
+                
         FixtureInfoRegistered::dispatch($fixtureInfoData, $this);
     }
 

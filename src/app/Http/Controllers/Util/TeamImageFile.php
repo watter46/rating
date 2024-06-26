@@ -19,7 +19,7 @@ final readonly class TeamImageFile
 
     public function write(int $teamId, string $teamImage)
     {
-        File::put($this->generatePath($teamId), $teamImage);
+        File::put(public_path($this->generatePath($teamId)), $teamImage);
     }
 
     public function existsOrDefault(int $teamId): string

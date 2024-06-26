@@ -16,10 +16,6 @@ use App\UseCases\Util\Season;
 
 class ApiFootballRepository implements ApiFootballRepositoryInterface
 {
-    public function __construct(private FixturesFile $fixturesFile, private FixtureFile $fixtureFile, private SquadsFile $squadsFile)
-    {
-        
-    }
     private function httpClient(string $url, ?array $queryParams = null): string
     {
         $response = Http::withHeaders([
@@ -35,13 +31,11 @@ class ApiFootballRepository implements ApiFootballRepositoryInterface
     public function fetchFixtures(): FixtureInfosData
     {
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'season' => Season::current(),
-            'team'   => config('api-football.chelsea-id')
-        ]);
+                'season' => Season::current(),
+                'team'   => config('api-football.chelsea-id')
+            ]);
 
         $data = collect(json_decode($json)->response);
-
-        $this->fixturesFile->write($data);
 
         return FixtureInfosData::create($data);
     }
@@ -49,25 +43,21 @@ class ApiFootballRepository implements ApiFootballRepositoryInterface
     public function fetchFixture(int $fixtureId): FixtureInfoData
     {
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'id' => $fixtureId
-        ]);
+                'id' => $fixtureId
+            ]);
 
         $data = collect(json_decode($json)->response[0]);
         
-        $this->fixtureFile->write($fixtureId, $data);
-
         return FixtureInfoData::create($data);
     }
 
     public function fetchSquads(): SquadsData
     {
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/players/squads', [
-            'team' => config('api-football.chelsea-id')
-        ]);
+                'team' => config('api-football.chelsea-id')
+            ]);
 
         $data = collect(json_decode($json)->response[0]);
-
-        $this->squadsFile->write($data);
 
         return SquadsData::create($data);
     }

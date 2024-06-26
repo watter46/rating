@@ -134,8 +134,7 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
         $file = new PlayerImageFile();
 
         $this->invalidPlayerImageIds = $this->fixtureData->getPlayedPlayers()
-            ->reject(fn($player) => $file->exists($player['id']))
-            ->pluck('id')
-            ->values();
+            ->map(fn($player) => $player['id'])
+            ->filter(fn($playerId) => !$file->exists($playerId));
     }
 }

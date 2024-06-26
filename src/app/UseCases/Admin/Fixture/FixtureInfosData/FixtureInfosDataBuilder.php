@@ -29,7 +29,7 @@ final readonly class FixtureInfosDataBuilder
             ->map(function (FixtureInfo $fixtureInfo) {
                 return $fixtureInfo->castsToJson();
             });
-            
+                        
         return $fixtureInfos->isNotEmpty()
             ? $fixtureInfosData->getData()
                 ->map(function (FixtureData $fixtureData) use ($fixtureInfos) {
@@ -37,6 +37,8 @@ final readonly class FixtureInfosDataBuilder
                         ->keyBy('external_fixture_id')
                         ->get($fixtureData->getFixtureId());
 
+                    dd($fixtureData->build(), $fixtureInfo, $fixtureInfos, $fixtureData->getFixtureId());
+                        
                     return $fixtureInfo
                         ->merge($fixtureData->build());
                 })

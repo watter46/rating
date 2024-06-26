@@ -32,10 +32,10 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         FixtureInfoRegistered::class => [
+            RegisterPlayerInfos::class,
             RegisterLineups::class,
             RegisterTeamImages::class,
             RegisterLeagueImage::class,
-            RegisterPlayerInfos::class,
             RegisterPlayerImage::class
         ]
     ];

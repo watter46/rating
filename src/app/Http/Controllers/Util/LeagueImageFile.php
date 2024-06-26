@@ -33,9 +33,7 @@ final readonly class LeagueImageFile
 
     public function exists(int $leagueId): bool
     {
-        $path = $this->generatePath($leagueId);
-
-        return File::exists(public_path($path));
+        return File::exists($this->generatePath($leagueId));
     }
 
     private function ensureDirExists(): void
@@ -49,6 +47,6 @@ final readonly class LeagueImageFile
 
     public function generatePath(int $leagueId): string
     {                
-        return self::DIR_PATH.'/'.Season::current().'_'.$leagueId;
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$leagueId);
     }
 }
