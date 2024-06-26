@@ -11,7 +11,8 @@ use App\UseCases\Admin\SofaScoreRepositoryInterface;
 
 final readonly class RegisterPlayerInfos
 {
-    public function __construct(private SofaScoreRepositoryInterface $sofaScoreRepository,
+    public function __construct(
+        private SofaScoreRepositoryInterface $sofaScoreRepository,
         private RegisterPlayerBuilder $builder)
     {
         //
@@ -26,7 +27,7 @@ final readonly class RegisterPlayerInfos
      */
     public function execute(Collection $invalidPlayers, Collection $playerInfos)
     {
-        try {
+        try {            
             $playersData = $invalidPlayers
                 ->map(function (array $player) {
                     return $this->sofaScoreRepository->fetchPlayer($player);

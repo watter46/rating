@@ -3,26 +3,20 @@
 namespace App\UseCases\Admin\Player;
 
 use Exception;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 use App\Models\PlayerInfo;
-use App\Http\Controllers\Util\PlayerImageFile;
 
 
 final readonly class FetchPlayerInfosUseCase
 {
-    public function __construct(private PlayerImageFile $playerImage)
-    {
-        //
-    }
-
     public function execute(): Collection
     {
         try {
             return PlayerInfo::query()
-                ->select('id')
+                ->select(['id', 'name', 'number', 'foot_player_id'])
                 ->currentSeason()
-                ->pluck('id');
+                ->get();
 
         } catch (Exception $e) {
             throw $e;
