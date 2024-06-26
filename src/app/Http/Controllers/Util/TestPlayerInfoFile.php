@@ -11,7 +11,7 @@ use App\Models\PlayerInfo;
 
 class TestPlayerInfoFile
 {
-    private const DIR_PATH = 'Template/tests/playerInfos/';
+    private const DIR_PATH = 'Template/tests/playerInfo/';
 
     private function dirPath()
     {

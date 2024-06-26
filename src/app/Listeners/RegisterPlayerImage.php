@@ -25,14 +25,14 @@ class RegisterPlayerImage
     public function handle(FixtureInfoRegistered $event): void
     {
         $invalidPlayerImageIds = $event->data->validated()->getInvalidPlayerImageIds();
-
+                        
         if ($invalidPlayerImageIds->isEmpty()) return;
-
+        
         $players = $event
             ->fixtureInfo
             ->playerInfos
             ->whereIn('foot_player_id', $invalidPlayerImageIds->toArray());
-
+            
         foreach($players as $player) {
             try {
                 if ($this->file->exists($player->foot_player_id)) {
@@ -40,7 +40,7 @@ class RegisterPlayerImage
                 }
     
                 $playerImage = $this->repository->fetchPlayerImage($player->sofa_player_id);
-    
+                
                 $this->file->write($player->foot_player_id, $playerImage);
 
             } catch (RequestException $e) {

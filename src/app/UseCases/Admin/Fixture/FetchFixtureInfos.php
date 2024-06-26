@@ -21,7 +21,6 @@ final readonly class FetchFixtureInfos
                     'date',
                     'status',
                     'season',
-                    'lineups'
                 ])
                 ->inSeasonTournament()
                 ->currentSeason()
@@ -31,6 +30,8 @@ final readonly class FetchFixtureInfos
             $fixtureInfos->getCollection()
                 ->transform(function (FixtureInfo $fixture) {
                     $fixture->lineupsExists = !is_null($fixture->lineups);
+
+                    unset($fixture->lineups);
                     
                     return $fixture;
                 });

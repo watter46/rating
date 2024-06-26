@@ -2,32 +2,25 @@
 
 namespace App\Livewire\Admin;
 
-use App\Livewire\MessageType;
-use App\UseCases\Admin\Player\FetchPlayerInfoUseCase;
-use App\UseCases\Admin\Player\UpdatePlayerImageUseCase;
 use Exception;
 use Livewire\Component;
 
+use App\Livewire\MessageType;
+use App\Models\PlayerInfo;
+use App\UseCases\Admin\Player\UpdatePlayerImageUseCase;
+
+
 class Player extends Component
 {
-    public string $playerInfoId;
+    public PlayerInfo $playerInfo;
     public string $refreshKey;
 
     private const SUCCESS_MESSAGE = 'Please Reload!!';
     private const ERROR_MESSAGE   = 'Incorrect key';
 
-    private FetchPlayerInfoUseCase $fetchPlayerInfo;
-    
-    public function boot(FetchPlayerInfoUseCase $fetchPlayerInfo)
-    {
-        $this->fetchPlayerInfo = $fetchPlayerInfo;
-    }
-
     public function render()
     {
-        return view('livewire.admin.player', [
-            'player' => $this->fetchPlayerInfo->execute($this->playerInfoId)
-        ]);
+        return view('livewire.admin.player');
     }
 
     public function updateImage(UpdatePlayerImageUseCase $updatePlayerImage): void
@@ -37,7 +30,7 @@ class Player extends Component
                 throw new Exception(self::ERROR_MESSAGE);
             }
 
-            $updatePlayerImage->execute($this->playerInfoId);
+            $updatePlayerImage->execute($this->playerInfo->id);
     
             $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close');

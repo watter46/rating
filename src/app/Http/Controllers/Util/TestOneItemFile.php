@@ -1,9 +1,12 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers\Util;
 
-use App\Models\FixtureInfo;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+
+use App\Models\FixtureInfo;
+
 
 class TestOneItemFile
 {
@@ -25,6 +28,11 @@ class TestOneItemFile
     public function getFixtureInfo()
     {
         return json_decode(File::get($this->fileName('fixtureInfo')));
+    }
+
+    public function getPlayerInfos(): Collection
+    {
+        return collect(json_decode(File::get($this->fileName('playerInfo'))), true);
     }
 
     public function getPlayerInfo(int $foot_player_id)

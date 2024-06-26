@@ -34,4 +34,17 @@ class PlayerInfoFactory extends Factory
             ];
         });
     }
+
+    public function toArray()
+    {
+        $playerInfo = $this->make();
+        
+        return [
+            'name'           => $playerInfo->name, 
+            'number'         => $playerInfo->number, 
+            'season'         => $playerInfo->season, 
+            'foot_player_id' => $playerInfo->foot_player_id, 
+            'sofa_player_id' => $playerInfo->sofa_player_id
+        ];
+    }
 }

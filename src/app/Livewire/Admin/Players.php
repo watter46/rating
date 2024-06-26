@@ -37,7 +37,9 @@ class Players extends Component
     public function players(): Collection
     {
         try {
-            return $this->fetchPlayerInfos->execute();
+            $presenter = new PlayersPresenter;
+
+            return $presenter->execute($this->fetchPlayerInfos->execute());
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));

@@ -20,9 +20,7 @@ abstract class TestCase extends BaseTestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        if (!$this->seeder) return;
-
+        
         if (!self::$migrated) {
             $this->artisan('migrate');
 
@@ -31,6 +29,8 @@ abstract class TestCase extends BaseTestCase
 
         $this->actingAs(User::factory()->create());
         
+        if (!$this->seeder) return;
+
         $this->artisan('db:seed', ['--class' => $this->seeder]);
     }
 }

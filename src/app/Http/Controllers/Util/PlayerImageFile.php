@@ -23,18 +23,19 @@ final readonly class PlayerImageFile
         return self::DEFAULT_IMAGE_PATH;
     }
 
-    public function write(int $playerId, string $playerImage): void
+    public function get(int $playerId)
     {
-        $path = $this->generatePath($playerId);
-        
-        File::put($path, $playerImage);
+        File::get($this->generatePath($playerId));
+    }
+
+    public function write(int $playerId, string $playerImage): void
+    {        
+        File::put($this->generatePath($playerId), $playerImage);
     }
 
     public function exists(int $playerId): bool
     {
-        $path = $this->generatePath($playerId);
-
-        return file_exists($path);
+        return File::exists($this->generatePath($playerId));
     }
 
     private function ensureDirExists(): void
@@ -48,6 +49,6 @@ final readonly class PlayerImageFile
 
     public function generatePath(int $playerId): string
     {
-        return self::DIR_PATH.'/'.Season::current().'_'.$playerId;
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$playerId);
     }
 }

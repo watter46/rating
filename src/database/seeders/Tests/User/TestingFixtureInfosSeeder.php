@@ -10,7 +10,7 @@ use App\Models\Player;
 use App\Models\PlayerInfo;
 use App\Http\Controllers\Util\TestFixtureInfoFile;
 use App\Http\Controllers\Util\TestOneItemFile;
-
+use Illuminate\Support\Collection;
 
 class TestingFixtureInfosSeeder extends Seeder
 {
@@ -23,7 +23,7 @@ class TestingFixtureInfosSeeder extends Seeder
 
         $fixtureInfos = $testFixtureInfos
             ->getAll()
-            ->map(function ($data) {
+            ->map(function (Collection $data) {
                 return FixtureInfo::factory()->fromFileToArray($data);
             });
         

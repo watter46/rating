@@ -20,7 +20,7 @@ class RegisterFixtureInfos
     {
         try {
             $fixturesInfosData = $this->apiFootballRepository->fetchFixtures();
-            
+                        
             DB::transaction(function () use ($fixturesInfosData) {
                 $unique = ['id'];
                 $updateColumns = [

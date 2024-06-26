@@ -36,8 +36,8 @@
     </div>
     
     <div class="grid w-full h-full gap-3 mt-3">
-        @foreach($this->players as $playerInfoId)
-            <livewire:admin.player :$playerInfoId :key="$playerInfoId" />
+        @foreach($this->players as $playerInfo)
+            <livewire:admin.player :$playerInfo :key="$playerInfo->id" />
         @endforeach
     </div>
 </div>
