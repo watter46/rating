@@ -18,11 +18,6 @@ final readonly class PlayerImageFile
         $this->ensureDirExists();
     }
 
-    public function getDefaultPath(): string
-    {
-        return self::DEFAULT_IMAGE_PATH;
-    }
-
     public function get(int $playerId)
     {
         File::get($this->generatePath($playerId));
@@ -38,6 +33,22 @@ final readonly class PlayerImageFile
         return File::exists($this->generatePath($playerId));
     }
 
+    public function generatePath(int $playerId): string
+    {
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$playerId);
+    }
+
+    public function generateViewPath(int $playerId)
+    {
+        return self::DIR_PATH.'/'.Season::current().'_'.$playerId;
+    }
+
+    public function getDefaultPath(): string
+    {
+        return self::DEFAULT_IMAGE_PATH;
+    }
+
+
     private function ensureDirExists(): void
     {
         $path = public_path(self::DIR_PATH);
@@ -45,10 +56,5 @@ final readonly class PlayerImageFile
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-    }
-
-    public function generatePath(int $playerId): string
-    {
-        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$playerId);
     }
 }

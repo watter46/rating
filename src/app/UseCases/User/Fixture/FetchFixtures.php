@@ -2,9 +2,6 @@
 
 namespace App\UseCases\User\Fixture;
 
-use App\Http\Controllers\Util\TestFixtureInfoFile;
-use App\Http\Controllers\Util\TestOneItemFile;
-use App\Http\Controllers\Util\TestPlayerInfoFile;
 use Exception;
 use Illuminate\Pagination\Paginator;
 
@@ -17,10 +14,6 @@ final readonly class FetchFixtures
     public function execute(TournamentType $tournament, $page = 1): Paginator
     {
         try {
-            // (new TestFixtureInfoFile)->writeAll();
-            // (new TestPlayerInfoFile)->writeAll();
-            // (new TestOneItemFile)->write();
-            
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
                 ->with('fixture.players')

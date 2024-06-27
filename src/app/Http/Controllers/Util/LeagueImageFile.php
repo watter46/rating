@@ -21,19 +21,25 @@ final readonly class LeagueImageFile
     {
         File::put($this->generatePath($leagueId), $image);
     }
-    
-    public function existsOrDefault(int $leagueId): string
-    {
-        if ($this->exists($leagueId)) {
-            return $this->generatePath($leagueId);
-        }
-
-        return self::DEFAULT_IMAGE_PATH;
-    }
 
     public function exists(int $leagueId): bool
     {
         return File::exists($this->generatePath($leagueId));
+    }
+
+    public function generatePath(int $leagueId): string
+    {                
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$leagueId);
+    }
+
+    public function generateViewPath(int $leagueId): string
+    {
+        return self::DIR_PATH.'/'.Season::current().'_'.$leagueId;
+    }
+
+    public function defaultPath(): string
+    {
+        return self::DEFAULT_IMAGE_PATH;
     }
 
     private function ensureDirExists(): void
@@ -43,10 +49,5 @@ final readonly class LeagueImageFile
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-    }
-
-    public function generatePath(int $leagueId): string
-    {                
-        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$leagueId);
     }
 }

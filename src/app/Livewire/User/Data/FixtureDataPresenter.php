@@ -43,7 +43,9 @@ readonly class FixtureDataPresenter
         $this->fixture->fixtureInfo->teams = $this->fixture->fixtureInfo->teams
             ->map(function ($team) {
 
-                $team['img'] = $this->teamImage->existsOrDefault($team['id']);
+                $team['img'] = $this->teamImage->exists($team['id'])
+                    ? $this->teamImage->generateViewPath($team['id'])
+                    : $this->teamImage->defaultPath();
 
                 return $team;  
             });
@@ -51,8 +53,13 @@ readonly class FixtureDataPresenter
 
     private function formatLeagueImage(): void
     {        
+        $leagueId = $this->fixture->fixtureInfo->league['id'];
+        
         $this->fixture->fixtureInfo->league = $this->fixture->fixtureInfo->league
-            ->put('img', $this->leagueImage->existsOrDefault($this->fixture->fixtureInfo->league['id']));
+            ->put('img', $this->leagueImage->exists($leagueId)
+                ? $this->leagueImage->generateViewPath($leagueId)
+                : $this->leagueImage->defaultPath()
+            );
     }
     
     /**
@@ -130,7 +137,7 @@ readonly class FixtureDataPresenter
                 'rateCount' => $player->rate_count,
                 'rateLimit' => $player->rateLimit,
                 'img' => $this->playerImage->exists($playerData['id'])
-                    ? $playerData['img']
+                    ? $this->playerImage->generateViewPath($playerData['id'])
                     : $this->playerImage->getDefaultPath(),
                 'goals' => $playerData['goal'],
                 'grid' => $playerData['grid'],

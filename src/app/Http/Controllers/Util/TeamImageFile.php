@@ -19,23 +19,29 @@ final readonly class TeamImageFile
 
     public function write(int $teamId, string $teamImage)
     {
-        File::put(public_path($this->generatePath($teamId)), $teamImage);
-    }
-
-    public function existsOrDefault(int $teamId): string
-    {
-        if ($this->exists($teamId)) {
-            return $this->generatePath($teamId);
-        }
-
-        return self::DEFAULT_IMAGE_PATH;
+        File::put($this->generatePath($teamId), $teamImage);
     }
 
     public function exists(int $teamId): bool
     {
         $path = $this->generatePath($teamId);
         
-        return File::exists(public_path($path));
+        return File::exists($path);
+    }
+
+    public function generatePath(int $teamId): string
+    {                
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$teamId);
+    }
+
+    public function generateViewPath(int $teamId): string
+    {
+        return self::DIR_PATH.'/'.Season::current().'_'.$teamId;
+    }
+
+    public function defaultPath(): string
+    {
+        return self::DEFAULT_IMAGE_PATH;
     }
 
     private function ensureDirExists(): void
@@ -45,10 +51,5 @@ final readonly class TeamImageFile
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-    }
-
-    public function generatePath(int $teamId): string
-    {                
-        return self::DIR_PATH.'/'.Season::current().'_'.$teamId;
     }
 }
