@@ -38,16 +38,23 @@ class FixturesDataPresenter
         $this->fixtureInfo->teams = $this->fixtureInfo->teams
             ->map(function ($team) {
 
-                $team['img'] = $this->teamImage->existsOrDefault($team['id']);
+                $team['img'] = $this->teamImage->exists($team['id'])
+                    ? $this->teamImage->generateViewPath($team['id'])
+                    : $this->teamImage->defaultPath();
 
                 return $team;  
             });
     }
 
     private function formatLeagueImage(): void
-    {        
+    {
+        $leagueId = $this->fixtureInfo->league['id'];
+
         $this->fixtureInfo->league = $this->fixtureInfo->league
-            ->put('img', $this->leagueImage->existsOrDefault($this->fixtureInfo->league['id']));
+            ->put('img', $this->leagueImage->exists($leagueId)
+                ? $this->leagueImage->generateViewPath($leagueId)
+                : $this->leagueImage->defaultPath()
+            );
     }
     
     /**
