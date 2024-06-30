@@ -28,7 +28,7 @@ class PlayerInfoFactory extends Factory
                 'name' => $data->name, 
                 'number' => $data->number, 
                 'season' => $data->season, 
-                'foot_ball_api_id' => $data->foot_ball_api_id, 
+                'api_football_id' => $data->api_football_id, 
                 'sofa_score_id' => $data->sofa_score_id,
                 'flash_live_sports_id' => $data->flash_live_sports_id,
             ];
@@ -43,7 +43,7 @@ class PlayerInfoFactory extends Factory
             'name' => $playerInfo->name, 
             'number' => $playerInfo->number, 
             'season' => $playerInfo->season, 
-            'foot_ball_api_id' => $playerInfo->foot_ball_api_id, 
+            'api_football_id' => $playerInfo->api_football_id, 
             'sofa_score_id' => $playerInfo->sofa_score_id,
             'flash_live_sports_id' => $playerInfo->flash_live_sports_id
         ];

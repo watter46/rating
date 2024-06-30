@@ -16,8 +16,8 @@ return new class extends Migration
             $table->tinyText('name');
             $table->unsignedSmallInteger('season')->length(4);
             $table->unsignedTinyInteger('number')->nullable();
-            $table->unsignedMediumInteger('foot_player_id');
-            $table->unsignedMediumInteger('sofa_player_id')->nullable();
+            $table->unsignedMediumInteger('api_football_id');
+            $table->unsignedMediumInteger('sofa_score_id')->nullable();
             $table->tinyText('flash_live_sports_id')->nullable();
         });
     }
