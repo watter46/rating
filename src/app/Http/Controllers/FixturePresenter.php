@@ -11,7 +11,7 @@ use App\Livewire\User\Data\FixtureDataPresenter;
 final readonly class FixturePresenter
 {    
     public function format(Fixture $fixture): Collection
-    {
+    {        
         $newFixture = FixtureDataPresenter::create($fixture)
             ->formatFormation()
             ->formatSubstitutes()

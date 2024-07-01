@@ -18,36 +18,35 @@ final readonly class PlayerImageFile
         $this->ensureDirExists();
     }
 
-    public function get(int $playerId)
+    public function get(int $apiFootballId)
     {
-        File::get($this->generatePath($playerId));
+        File::get($this->generatePath($apiFootballId));
     }
 
-    public function write(int $playerId, string $playerImage): void
+    public function write(int $apiFootballId, string $playerImage): void
     {        
-        File::put($this->generatePath($playerId), $playerImage);
+        File::put($this->generatePath($apiFootballId), $playerImage);
     }
 
-    public function exists(int $playerId): bool
+    public function exists(int $apiFootballId): bool
     {
-        return File::exists($this->generatePath($playerId));
+        return File::exists($this->generatePath($apiFootballId));
     }
 
-    public function generatePath(int $playerId): string
+    public function generatePath(int $apiFootballId): string
     {
-        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$playerId);
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$apiFootballId);
     }
 
-    public function generateViewPath(int $playerId)
+    public function generateViewPath(int $apiFootballId)
     {
-        return self::DIR_PATH.'/'.Season::current().'_'.$playerId;
+        return self::DIR_PATH.'/'.Season::current().'_'.$apiFootballId;
     }
 
     public function getDefaultPath(): string
     {
         return self::DEFAULT_IMAGE_PATH;
     }
-
 
     private function ensureDirExists(): void
     {

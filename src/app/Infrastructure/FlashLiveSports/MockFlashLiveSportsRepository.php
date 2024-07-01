@@ -55,4 +55,9 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
         
         return TeamSquad::create($data);
     }
+
+    public function fetchPlayerImage(string $path): string
+    {
+        return $this->httpClient($path);
+    }
 }

@@ -8,4 +8,5 @@ use App\UseCases\Admin\Data\FlashLiveSports\TeamSquad;
 interface FlashLiveSportsRepositoryInterface
 {
     public function fetchTeamSquad(): TeamSquad;
+    public function fetchPlayerImage(string $path);
 }

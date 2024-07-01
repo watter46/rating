@@ -2,6 +2,8 @@
 
 namespace App\UseCases\Admin\Fixture\FixtureInfoData;
 
+use App\Models\TournamentIdType;
+use App\Models\TournamentType;
 use Illuminate\Support\Collection;
 
 use App\UseCases\Admin\Fixture\Data\FixtureData;
@@ -18,6 +20,12 @@ readonly class FixtureInfoData
     public static function create(Collection $fixtureData): self
     {
         return new self(FixtureData::create($fixtureData));
+    }
+
+    public function isSeasonTournament()
+    {
+        return collect(TournamentIdType::inSeasonTournaments())
+            ->contains(fn($id) => $id === $this->fixtureData->getLeagueId());
     }
 
     public function buildLineups(): Collection

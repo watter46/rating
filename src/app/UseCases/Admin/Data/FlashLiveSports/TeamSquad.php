@@ -7,11 +7,14 @@ use App\UseCases\Admin\Player\UpdatePlayerInfos\PlayerDataMatcher;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+
 class TeamSquad
 {
+    private PlayerImageChecker $checker;
+    
     private function __construct(private Collection $teamSquad)
     {
-        //
+        $this->checker = new PlayerImageChecker($this);
     }
     
     public static function create(Collection $teamSquad): self
@@ -36,18 +39,27 @@ class TeamSquad
                 };
 
                 return collect($group->ITEMS)
-                    ->map(fn($player) => [
-                        'id' => $player->PLAYER_ID,
-                        'name' => $swapFirstAndLastName($player->PLAYER_NAME),
-                        'number' => $player->PLAYER_JERSEY_NUMBER
-                    ]);
+                    ->map(function ($player) use ($swapFirstAndLastName) {
+                        return [
+                            'id' => $player->PLAYER_ID,
+                            'name' => $swapFirstAndLastName($player->PLAYER_NAME),
+                            'number' => $player->PLAYER_JERSEY_NUMBER ?? null
+                        ];
+                    });
             })
             ->flatten(1);
     }
 
+    public function check()
+    {
+        return $this->checker->check();
+    }
+
     public function imagePaths(): Collection
     {
-        return $this->teamSquad
+        $invalidPlayerInfos = $this->checker->invalidPlayerInfos();
+
+        $invalidData = $this->teamSquad
             ->flatten(1)
             ->map(function ($group) {
                 return collect($group->ITEMS)
@@ -56,6 +68,15 @@ class TeamSquad
                         'path' => $player->PLAYER_IMAGE_PATH
                     ]);
             })
-            ->flatten(1);
+            ->flatten(1)
+            ->whereIn('id', $invalidPlayerInfos->pluck('flash_live_sports_id')->toArray())
+            ->keyBy('id');
+
+        return $invalidPlayerInfos
+            ->map(function (PlayerInfo $playerInfo) use ($invalidData) {
+                $playerInfo->path = $invalidData->get($playerInfo->flash_live_sports_id)['path'];
+
+                return $playerInfo;
+            });
     }
 }

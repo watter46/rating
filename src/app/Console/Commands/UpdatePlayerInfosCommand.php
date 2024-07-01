@@ -4,7 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use App\UseCases\Admin\Player\UpdatePlayerInfos;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiFootBallIds;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashLiveSportsIds;
 
 
 class UpdatePlayerInfosCommand extends Command
@@ -26,8 +27,11 @@ class UpdatePlayerInfosCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(UpdatePlayerInfos $updatePlayerInfos)
+    public function handle(
+        UpdateApiFootBallIds $updateApiFootBallIds,
+        UpdateFlashLiveSportsIds $updateFlashLiveSportsIds)
     {
-        $updatePlayerInfos->execute();
+        $updateApiFootBallIds->execute();
+        $updateFlashLiveSportsIds->execute();
     }
 }
