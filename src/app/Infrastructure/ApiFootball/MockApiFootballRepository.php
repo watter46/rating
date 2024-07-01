@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Http;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
 use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
-use App\UseCases\Admin\Player\SquadsData\SquadsData;
+use App\UseCases\Admin\Data\ApiFootball\SquadsData;
 use App\UseCases\Util\Season;
-use Illuminate\Support\Facades\File;
+
 
 class MockApiFootballRepository implements ApiFootballRepositoryInterface
 {

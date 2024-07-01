@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Player\PlayersOfTeamData;
+namespace App\UseCases\Admin\Data\SofaScore;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 use App\Models\PlayerInfo;
 use App\UseCases\Admin\Player\UpdatePlayerInfos\PlayerDataMatcher;
+
 
 readonly class PlayersOfTeamData
 {

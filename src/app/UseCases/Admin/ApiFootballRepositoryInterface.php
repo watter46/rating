@@ -4,7 +4,7 @@ namespace App\UseCases\Admin;
 
 use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
 use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
-use App\UseCases\Admin\Player\SquadsData\SquadsData;
+use App\UseCases\Admin\Data\ApiFootball\SquadsData;
 
 
 interface ApiFootballRepositoryInterface

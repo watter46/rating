@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Player\PlayerData;
+namespace App\UseCases\Admin\Data\ApiFootball;
 
 use App\UseCases\Util\Season;
 use Illuminate\Support\Collection;
+
 
 class PlayerData
 {
