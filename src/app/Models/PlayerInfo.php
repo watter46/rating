@@ -35,7 +35,6 @@ class PlayerInfo extends Model
         'number',
         'season',
         'api_football_id',
-        'sofa_score_id',
         'flash_live_sports_id',
         'fixture_info_id'
     ];
@@ -49,7 +48,6 @@ class PlayerInfo extends Model
         'number',
         'season',
         'api_football_id',
-        'sofa_score_id',
         'flash_live_sports_id'
     ];
 

@@ -3,12 +3,9 @@
 namespace App\Providers;
 
 use App\Infrastructure\ApiFootball\ApiFootballRepository;
-use App\Infrastructure\SofaScore\SofaScoreRepository;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
-use App\UseCases\Admin\SofaScoreRepositoryInterface;
 use App\Infrastructure\ApiFootball\MockApiFootballRepository;
 use App\Infrastructure\FlashLiveSports\MockFlashLiveSportsRepository;
-use App\Infrastructure\SofaScore\MockSofaScoreRepository;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
@@ -24,8 +21,6 @@ class AppServiceProvider extends ServiceProvider
     public $bindings = [
         // ApiFootballRepositoryInterface::class => ApiFootballRepository::class,
         ApiFootballRepositoryInterface::class => MockApiFootballRepository::class,
-        // SofaScoreRepositoryInterface::class => SofaScoreRepository::class
-        SofaScoreRepositoryInterface::class => MockSofaScoreRepository::class,
         FlashLiveSportsRepositoryInterface::class => MockFlashLiveSportsRepository::class
     ];
 
