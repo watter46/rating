@@ -122,8 +122,8 @@ readonly class FixtureDataPresenter
 
         $formatPlayer = function (array $playerData) use ($playerInfos, $players) {
             /** @var PlayerInfo $playerInfo */
-            $playerInfo = $playerInfos->keyBy('foot_player_id')->get($playerData['id']);
-
+            $playerInfo = $playerInfos->keyBy('api_football_id')->get($playerData['id']);
+            
             /** @var Player $player */
             $player = $players->get($playerInfo->id);
 

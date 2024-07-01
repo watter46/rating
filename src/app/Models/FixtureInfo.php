@@ -51,6 +51,8 @@ class FixtureInfo extends Model
         'lineups' => AsCollection::class,
     ];
 
+    public const UPSERT_UNIQUE = ['id'];
+
     public const SELECT_COLUMNS = 'fixtureInfo:id,score,teams,league,fixture,lineups';
 
     /**

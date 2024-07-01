@@ -4,9 +4,7 @@ namespace App\UseCases\Admin\Player\SquadsData;
 
 use Illuminate\Support\Collection;
 
-use App\Models\PlayerInfo;
-use App\UseCases\Admin\Player\PlayersOfTeamData\PlayersOfTeamData;
-use App\UseCases\Util\Season;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\PlayerDataMatcher;
 
 
 readonly class SquadsData
@@ -21,43 +19,20 @@ readonly class SquadsData
         return new self($squadsData);
     }
 
-    private function getPlayersData(): Collection
+    public function getPlayers(): Collection
     {
         return collect($this->squadsData->get('players'))
             ->map(function ($player) {
-                return collect([
-                    'foot_player_id' => $player->id,
+                return [
+                    'id'     => $player->id,
                     'name'   => $player->name,
-                    'number' => $player->number,
-                    'season' => Season::current()
-                ]);
+                    'number' => $player->number
+                ];
             });
     }
 
-    public function getByPlayerInfo(PlayerInfo $playerInfo): Collection
+    public function getByPlayerInfo(PlayerDataMatcher $matcher)
     {
-        return $this->getPlayersData()
-            ->filter(function (Collection $player) use ($playerInfo) {
-                return $player->get('name') === $playerInfo->name
-                    && $player->get('number') === $playerInfo->number;
-            })
-            ->whenEmpty(function (Collection $player) use ($playerInfo) {
-                return $player
-                    ->filter(function ($player) use ($playerInfo) {
-                        return $player->get('name') === $playerInfo->name;
-                    });
-            });
-    }
-
-    public function merge(PlayersOfTeamData $playersOfTeamData): Collection
-    {        
-        return $this->getPlayersData()
-            ->map(function ($player) use ($playersOfTeamData) {
-                return $player->merge(
-                    $playersOfTeamData
-                        ->getBySquadsData($player->only(['name', 'number']))
-                        ->first()
-                );
-            });
+        return $this->getPlayers()->first(fn ($player) => $matcher->match($player));
     }
 }

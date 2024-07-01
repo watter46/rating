@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\File;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PlayerInfo>
@@ -26,11 +25,12 @@ class PlayerInfoFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($data) {
             return [
-                'name'           => $data->name, 
-                'number'         => $data->number, 
-                'season'         => $data->season, 
-                'foot_player_id' => $data->foot_player_id, 
-                'sofa_player_id' => $data->sofa_player_id
+                'name' => $data->name, 
+                'number' => $data->number, 
+                'season' => $data->season, 
+                'api_football_id' => $data->api_football_id, 
+                'sofa_score_id' => $data->sofa_score_id,
+                'flash_live_sports_id' => $data->flash_live_sports_id,
             ];
         });
     }
@@ -40,11 +40,12 @@ class PlayerInfoFactory extends Factory
         $playerInfo = $this->make();
         
         return [
-            'name'           => $playerInfo->name, 
-            'number'         => $playerInfo->number, 
-            'season'         => $playerInfo->season, 
-            'foot_player_id' => $playerInfo->foot_player_id, 
-            'sofa_player_id' => $playerInfo->sofa_player_id
+            'name' => $playerInfo->name, 
+            'number' => $playerInfo->number, 
+            'season' => $playerInfo->season, 
+            'api_football_id' => $playerInfo->api_football_id, 
+            'sofa_score_id' => $playerInfo->sofa_score_id,
+            'flash_live_sports_id' => $playerInfo->flash_live_sports_id
         ];
     }
 }

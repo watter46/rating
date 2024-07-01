@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\FixtureInfoRegistered;
 use App\Events\FixtureInfosRegistered;
+use App\Events\PlayerInfoRegistered;
 use App\Listeners\RegisterLeagueImage;
 use App\Listeners\RegisterLineups;
 use App\Listeners\RegisterPlayerImage;
@@ -36,6 +37,10 @@ class EventServiceProvider extends ServiceProvider
             RegisterLineups::class,
             RegisterTeamImages::class,
             RegisterLeagueImage::class,
+            RegisterPlayerImage::class
+        ],
+
+        PlayerInfoRegistered::class => [
             RegisterPlayerImage::class
         ]
     ];

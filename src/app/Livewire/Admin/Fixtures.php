@@ -47,14 +47,14 @@ class Fixtures extends Component
     #[Computed()]
     public function fixtureInfos(): Paginator
     {
-        try {
+        // try {
             return $this->fetchFixtureInfos();
 
-        } catch (Exception $e) {
-            $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
+        // } catch (Exception $e) {
+        //     $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));
             
-            return $this->fetch();
-        }
+        //     return $this->fetchFixtureInfos();
+        // }
     }
 
     /**
@@ -64,15 +64,15 @@ class Fixtures extends Component
      */
     private function fetchFixtureInfos(): Paginator
     {
-        try {
+        // try {
             $fixtures = $this->fetchFixtureInfos->execute();
 
             return $this->presenter->format($fixtures);
 
-        } catch (Exception $e) {            
+        // } catch (Exception $e) {
 
-            return $this->fetch();
-        }
+        //     return $this->fetchFixtureInfos();
+        // }
     }
     
     /**

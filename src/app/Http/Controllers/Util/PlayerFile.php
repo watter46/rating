@@ -17,7 +17,7 @@ final readonly class PlayerFile
     private const DIR_PATH  = 'Template/players';
     private const FILE_PATH = '.json';
     
-    public function __construct(private Season $season)
+    public function __construct()
     {
         $this->ensureDirExists();
     }

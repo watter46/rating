@@ -14,7 +14,7 @@ final readonly class FetchPlayerInfosUseCase
     {
         try {
             return PlayerInfo::query()
-                ->select(['id', 'name', 'number', 'foot_player_id'])
+                ->select(['id', 'name', 'number', 'api_football_id'])
                 ->currentSeason()
                 ->get();
 
