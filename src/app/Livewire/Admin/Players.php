@@ -19,13 +19,15 @@ class Players extends Component
     public string $refreshKey;
     
     private readonly FetchPlayerInfosUseCase $fetchPlayerInfos;
+    private readonly PlayersPresenter $presenter;
 
     private const SUCCESS_MESSAGE = 'Please Reload!!';
     private const ERROR_MESSAGE   = 'Incorrect key';
     
-    public function boot(FetchPlayerInfosUseCase $fetchPlayerInfos)
+    public function boot(FetchPlayerInfosUseCase $fetchPlayerInfos, PlayersPresenter $presenter)
     {
         $this->fetchPlayerInfos = $fetchPlayerInfos;
+        $this->presenter = $presenter;
     }
     
     public function render()
@@ -37,9 +39,7 @@ class Players extends Component
     public function players(): Collection
     {
         try {
-            $presenter = new PlayersPresenter;
-
-            return $presenter->execute($this->fetchPlayerInfos->execute());
+            return $this->presenter->execute($this->fetchPlayerInfos->execute());
 
         } catch (Exception $e) {
             $this->dispatch('notify', message: MessageType::Error->toArray($e->getMessage()));

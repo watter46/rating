@@ -25,27 +25,22 @@ class UpdateApiFootBallIds
                 ->get();
 
             $squads = $this->repository->fetchSquads();
-                
-            if ($playerInfos->isEmpty()) {
-                throw new Exception('PlayerInfo data does not exist.');
-            }
 
             $data = $playerInfos
                 ->map(function (PlayerInfo $playerInfo) use ($squads) {
                     $player = $squads->getByPlayerInfo(new PlayerDataMatcher($playerInfo));
 
                     if ($player) {
-                        $playerInfo->foot_player_id = $player['id'];
+                        $playerInfo->api_football_id = $player['id'];
                     }
 
                     return $playerInfo;
                 });
             
             DB::transaction(function () use ($data) {
-                $unique = ['id'];
-                $updateColumns = ['flash_live_sports_id'];
+                $unique = PlayerInfo::UPSERT_UNIQUE;
                 
-                PlayerInfo::upsert($data->toArray(), $unique, $updateColumns);
+                PlayerInfo::upsert($data->toArray(), $unique);
             });
 
         } catch (Exception $e) {

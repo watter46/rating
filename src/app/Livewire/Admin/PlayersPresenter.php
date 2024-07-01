@@ -19,8 +19,8 @@ class PlayersPresenter
     {
         return $playerInfos
             ->map(function (PlayerInfo $playerInfo) {
-                $playerInfo->img = $this->playerImage->exists($playerInfo->foot_player_id)
-                    ? $this->playerImage->generateViewPath($playerInfo->foot_player_id)
+                $playerInfo->img = $this->playerImage->exists($playerInfo->api_football_id)
+                    ? $this->playerImage->generateViewPath($playerInfo->api_football_id)
                     : $this->playerImage->getDefaultPath();
                 
                 return $playerInfo;

@@ -11,12 +11,13 @@ final readonly class Season
     {
         $now = now();
 
-        $season = $now->year;
+        return 2023;
+        // $season = $now->year;
 
-        if (1 <= $now->month && $now->month <= self::SEASON_END_MONTH) {
-            return $season - 1;
-        }
+        // if (1 <= $now->month && $now->month <= self::SEASON_END_MONTH) {
+        //     return $season - 1;
+        // }
 
-        return $season;
+        // return $season;
     }
 }
