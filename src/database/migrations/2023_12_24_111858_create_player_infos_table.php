@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('number')->nullable();
             $table->unsignedMediumInteger('api_football_id');
             $table->tinyText('flash_live_sports_id')->nullable();
+            $table->tinyText('flash_live_sports_image_id')->nullable();
         });
     }
 

@@ -46,8 +46,7 @@ class PlayerInfoSeeder extends Seeder
                 $teamSquadPlayer = $teamSquad->getByPlayerInfo(new PlayerDataMatcher($playerInfo));
                 
                 $playerInfo->flash_live_sports_id = $teamSquadPlayer['id'] ?? null;
-
-                $playerInfo->sofa_score_id = $playerOfTeamPlayer['id'] ?? null;
+                $playerInfo->flash_live_sports_image_id = $teamSquadPlayer['imageId'] ?? null;
 
                 return $playerInfo;
             });
