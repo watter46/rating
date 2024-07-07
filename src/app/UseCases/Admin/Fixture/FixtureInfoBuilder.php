@@ -96,6 +96,21 @@ class FixtureInfoBuilder
     {
         return FixtureInfoDataValidator::validate($this->toData());
     }
+
+    public function getFixtureInfo(): FixtureInfo
+    {
+        return $this->fixtureInfo;
+    }
+    
+    /**
+     * getApiFootballIds
+     *
+     * @return Collection<int>
+     */
+    public function getApiFootballIds(): Collection
+    {
+        return $this->toData()->getPlayedPlayers()->pluck('id');
+    }
     
     /**
      * invalidPlayerInfos

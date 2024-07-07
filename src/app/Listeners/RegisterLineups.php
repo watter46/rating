@@ -5,16 +5,21 @@ namespace App\Listeners;
 use App\Events\FixtureInfoRegistered;
 use App\Models\PlayerInfo;
 
+
 class RegisterLineups
 {
     public function handle(FixtureInfoRegistered $event): void
     {
-        $fixtureInfo = $event->fixtureInfo;
+        $builder = $event->builder;
+
+        $apiFootballIds = $builder->getApiFootballIds();
         
-        $footPlayerIds = $fixtureInfo->lineups->flatten(1)->pluck('id');
+        $playerInfoIds = PlayerInfo::query()
+            ->whereIn('api_football_id', $apiFootballIds)
+            ->pluck('id');
         
-        $playerInfoIds = PlayerInfo::whereIn('foot_player_id', $footPlayerIds)->pluck('id');
-        
-        $fixtureInfo->playerInfos()->sync($playerInfoIds);
+        $builder->getFixtureInfo()
+            ->playerInfos()
+            ->sync($playerInfoIds);
     }
 }
