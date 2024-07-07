@@ -23,7 +23,7 @@ class RegisterTeamImages
      */
     public function handle(FixtureInfosRegistered|FixtureInfoRegistered $event): void
     {
-        $invalidTeamIds = $event->data->validated()->getInvalidTeamIds();
+        $invalidTeamIds = $event->builder->getInvalidTeamImageIds();
         
         if ($invalidTeamIds->isEmpty()) return;
         
