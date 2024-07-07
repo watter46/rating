@@ -23,7 +23,7 @@ class RegisterLeagueImage
      */
     public function handle(FixtureInfosRegistered|FixtureInfoRegistered $event): void
     {
-        $invalidLeagueIds = $event->data->validated()->getInvalidLeagueIds();
+        $invalidLeagueIds = $event->builder->getInvalidLeagueImageIds();
                 
         if ($invalidLeagueIds->isEmpty()) return;
 
