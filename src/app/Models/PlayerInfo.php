@@ -36,10 +36,11 @@ class PlayerInfo extends Model
         'season',
         'api_football_id',
         'flash_live_sports_id',
+        'flash_live_sports_image_id',
         'fixture_info_id'
     ];
 
-    public const SELECT_COLUMNS = 'playerInfos:id,foot_player_id';
+    public const SELECT_COLUMNS = 'playerInfos:id,api_football_id';
 
     public const UPSERT_UNIQUE = ['id'];
 

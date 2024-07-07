@@ -35,7 +35,7 @@ class PlayerData
     public function getPlayerData(): Collection
     {
         return collect([
-            'foot_player_id' => $this->footPlayerId,
+            'api_football_id' => $this->footPlayerId,
             'sofa_player_id' => $this->playerData->isEmpty() ? null : $this->playerData['id'],
             'season' => Season::current(),
             'number' => $this->playerData['jerseyNumber'],

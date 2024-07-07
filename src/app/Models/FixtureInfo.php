@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Events\FixtureInfoRegistered;
 use App\Events\FixtureInfosRegistered;
-use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
+use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
+use App\UseCases\Admin\Fixture\FixtureInfoBuilder;
 use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
 use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 
@@ -55,37 +56,51 @@ class FixtureInfo extends Model
 
     public const SELECT_COLUMNS = 'fixtureInfo:id,score,teams,league,fixture,lineups';
 
-    /**
-     * Fixtureを更新する
-     *
-     * @param  FixtureInfoData $fixtureInfoData
-     * @return self
-     */
-    public function updateFixtureInfoData(FixtureInfoData $fixtureInfoData): self
-    {        
-        $this->lineups = $fixtureInfoData->buildLineups()->get('lineups');
-        $this->score   = $fixtureInfoData->buildScore();
-        $this->fixture = $fixtureInfoData->buildFixture();
-        $this->status  = FixtureStatusType::MatchFinished->value;
+    // /**
+    //  * Fixtureを更新する
+    //  *
+    //  * @param  FixtureInfoData $fixtureInfoData
+    //  * @return self
+    //  */
+    // public function updateFixtureInfoData(FixtureInfoData $fixtureInfoData): self
+    // {        
+    //     $this->lineups = $fixtureInfoData->buildLineups()->get('lineups');
+    //     $this->score   = $fixtureInfoData->buildScore();
+    //     $this->fixture = $fixtureInfoData->buildFixture();
+    //     $this->status  = FixtureStatusType::MatchFinished->value;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    /**
-     * 試合で使用するデータがすべて存在するか確認して
-     * 存在しない場合、不足しているデータを取得するイベントを発行する
-     *
-     * @param  FixtureInfoData $fixtureInfoData
-     * @return void
-     */
-    public function fixtureRegistered(FixtureInfoData $fixtureInfoData): void
+    public function builder(): FixtureInfoBuilder
     {
-        if ($fixtureInfoData->equalLineupCount($this->lineupCount) && $fixtureInfoData->checkRequiredData()) {
-            return;
-        }
-                
-        FixtureInfoRegistered::dispatch($fixtureInfoData, $this);
+        return FixtureInfoBuilder::create($this);
     }
+
+    // public function fixtureRegistered()
+    // {
+    //     if ($this->builder()->checkRequiredData()) {
+    //         return;
+    //     }
+
+    //     FixtureInfoRegistered::dispatch($fixtureInfoData, $this);
+    // }
+
+    // /**
+    //  * 試合で使用するデータがすべて存在するか確認して
+    //  * 存在しない場合、不足しているデータを取得するイベントを発行する
+    //  *
+    //  * @param  FixtureInfoData $fixtureInfoData
+    //  * @return void
+    //  */
+    // public function fixtureRegistered(FixtureInfoData $fixtureInfoData): void
+    // {
+    //     if ($fixtureInfoData->equalLineupCount($this->lineupCount) && $fixtureInfoData->checkRequiredData()) {
+    //         return;
+    //     }
+                
+    //     FixtureInfoRegistered::dispatch($fixtureInfoData, $this);
+    // }
 
     /**
      * 試合の一覧で使用するデータがすべて存在するか確認して

@@ -11,7 +11,7 @@ class TestPlayerImageFile
 {
     private const DIR_PATH = 'images';
     private const BACKUP_DIR = 'tests/images';
-    private const FOOT_PLAYER_ID = 116117;
+    private const API_FOOTBALL_ID = 116117;
 
     
     public function __construct()
@@ -23,22 +23,22 @@ class TestPlayerImageFile
     
     public function get()
     {
-        return File::get($this->generateBackupPath(self::FOOT_PLAYER_ID));
+        return File::get($this->generateBackupPath(self::API_FOOTBALL_ID));
     }
 
     private function generateBackupPath(): string
     {
-        return public_path(self::BACKUP_DIR.'/'.Season::current().'_'.self::FOOT_PLAYER_ID);
+        return public_path(self::BACKUP_DIR.'/'.Season::current().'_'.self::API_FOOTBALL_ID);
     }
 
     private function generatePath()
     {
-        return public_path(self::DIR_PATH.'/'.Season::current().'_'.self::FOOT_PLAYER_ID);
+        return public_path(self::DIR_PATH.'/'.Season::current().'_'.self::API_FOOTBALL_ID);
     }
 
     public function toBackup()
     {
-        File::move($this->generatePath(self::FOOT_PLAYER_ID), $this->generateBackupPath(self::FOOT_PLAYER_ID));
+        File::move($this->generatePath(self::API_FOOTBALL_ID), $this->generateBackupPath(self::API_FOOTBALL_ID));
     }
 
     public function deleteBackUp()

@@ -8,6 +8,7 @@ use App\Events\PlayerInfoRegistered;
 use App\Listeners\RegisterLeagueImage;
 use App\Listeners\RegisterLineups;
 use App\Listeners\RegisterPlayerImage;
+use App\Listeners\RegisterPlayerInfos;
 use App\Listeners\RegisterTeamImages;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -32,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         FixtureInfoRegistered::class => [
+            RegisterPlayerInfos::class,
             RegisterLineups::class,
             RegisterTeamImages::class,
             RegisterLeagueImage::class,

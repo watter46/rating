@@ -2,11 +2,17 @@
 
 namespace App\UseCases\Admin;
 
+use Illuminate\Support\Collection;
+
+use App\UseCases\Admin\Data\FlashLiveSports\PlayerData;
+use App\UseCases\Admin\Data\FlashLiveSports\PlayersData;
 use App\UseCases\Admin\Data\FlashLiveSports\TeamSquad;
 
 
 interface FlashLiveSportsRepositoryInterface
 {
     public function fetchTeamSquad(): TeamSquad;
-    public function fetchPlayerImage(string $path);
+    public function fetchPlayer(string $flashLiveSportsId): PlayerData;
+    public function searchPlayer(Collection $playerInfo): PlayersData;
+    public function fetchPlayerImageByPath(string $path): string;
 }
