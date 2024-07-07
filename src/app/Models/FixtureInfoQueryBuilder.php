@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\TournamentType;
-use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
-use App\UseCases\Util\Season;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
+
+use App\Models\TournamentType;
+use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
+use App\UseCases\Util\Season;
+
 
 class FixtureInfoQueryBuilder extends Builder
 {

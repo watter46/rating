@@ -2,14 +2,17 @@
 
 namespace App\UseCases\Admin\Fixture;
 
+use Illuminate\Support\Collection;
+
 use App\Events\FixtureInfoRegistered;
 use App\Models\FixtureInfo;
+use App\Models\PlayerInfo;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
 use App\UseCases\Admin\Data\ApiFootball\FixturesData;
 use App\UseCases\Admin\Fixture\FixtureInfoData\FilterInvalidPlayerInfos;
 use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoDataValidator;
-use Illuminate\Support\Collection;
+
 
 class FixtureInfoBuilder
 {
@@ -110,6 +113,44 @@ class FixtureInfoBuilder
     public function getApiFootballIds(): Collection
     {
         return $this->toData()->getPlayedPlayers()->pluck('id');
+    }
+    
+    /**
+     * getTeamImageIds
+     *
+     * @return Collection<int>
+     */
+    public function getInvalidTeamImageIds(): Collection
+    {
+        return $this->validator()->getInvalidTeamIds();
+    }
+
+    /**
+     * getTeamImageIds
+     *
+     * @return Collection<int>
+     */
+    public function getInvalidLeagueImageIds(): Collection
+    {
+        return $this->validator()->getInvalidLeagueIds();
+    }
+
+    /**
+     * getTeamImageIds
+     *
+     * @return Collection<PlayerInfo>
+     */
+    public function getInvalidPlayerImageIds(): Collection
+    {
+        $invalidPlayerImageIds = $this->validator()->getInvalidPlayerImageIds();
+        
+        $playerInfos = $this->fixtureInfo
+            ->load('playerInfos:api_football_id,flash_live_sports_image_id')
+            ->playerInfos;
+        
+        return $playerInfos
+            ->whereIn('api_football_id', $invalidPlayerImageIds->toArray())
+            ->filter(fn (PlayerInfo $playerInfo) => $playerInfo->flash_live_sports_image_id);
     }
     
     /**

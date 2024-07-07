@@ -2,17 +2,19 @@
 
 namespace App\Infrastructure\FlashLiveSports;
 
+use Exception;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
+
 use App\Http\Controllers\Util\Api\FlashLiveSports\PlayerFile;
 use App\Http\Controllers\Util\Api\FlashLiveSports\PlayersFile;
-use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\Util\TeamSquadFile;
 use App\UseCases\Admin\Data\FlashLiveSports\PlayerData;
 use App\UseCases\Admin\Data\FlashLiveSports\PlayersData;
 use App\UseCases\Admin\Data\FlashLiveSports\TeamSquad;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
-use Exception;
-use Illuminate\Support\Collection;
+
 
 class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterface
 {
@@ -113,8 +115,10 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
         return PlayersData::create($data);
     }
 
-    public function fetchPlayerImageByPath(string $path): string
+    public function fetchPlayerImage(string $flash_live_sports_image_id): string
     {
-        return $this->httpClient($path);
+        return $this->httpClient('https://flashlive-sports.p.rapidapi.com/v1/images/data', [
+                'image_id'=> $flash_live_sports_image_id
+            ]);
     }
 }

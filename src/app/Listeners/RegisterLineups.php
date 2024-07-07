@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\FixtureInfoRegistered;
+use App\Models\FixtureInfo;
 use App\Models\PlayerInfo;
 
 
