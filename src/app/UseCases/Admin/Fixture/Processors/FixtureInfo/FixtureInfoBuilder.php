@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture;
+namespace App\UseCases\Admin\Fixture\Processors\FixtureInfo;
 
 use Illuminate\Support\Collection;
 
@@ -9,9 +9,8 @@ use App\Models\FixtureInfo;
 use App\Models\PlayerInfo;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
-use App\UseCases\Admin\Data\ApiFootball\FixturesData;
-use App\UseCases\Admin\Fixture\FixtureInfoData\FilterInvalidPlayerInfos;
-use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoDataValidator;
+use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FilterInvalidPlayerInfos;
+use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoDataValidator;
 
 
 class FixtureInfoBuilder
@@ -40,38 +39,8 @@ class FixtureInfoBuilder
         $this->fixtureInfo->score   = $fixtureData->getScore();
         $this->fixtureInfo->fixture = $fixtureData->getFixture();
         $this->fixtureInfo->status  = FixtureStatusType::MatchFinished->value;
-
+        
         return $this->fixtureInfo;
-    }
-    
-    /**
-     * buildFixtureInfosForUpsert
-     *
-     * @param  FixturesData $fixturesData
-     * @return Collection<PlayerInfo>
-     */
-    public static function buildFixtureInfosForUpsert(FixturesData $fixturesData): Collection
-    {
-        return $fixturesData
-            ->get()
-            ->filter(function (FixtureData $fixtureData) {
-                return $fixtureData->isSeasonTournament();
-            })
-            ->map(function (FixtureData $fixtureData) {
-                $data = $fixtureData->getResultData();
-                
-                return new FixtureInfo([
-                    'external_fixture_id' => $data['fixtureId'],
-                    'external_league_id'  => $data['leagueId'],
-                    'season'              => $data['season'],
-                    'date'                => $data['date'],
-                    'status'              => $data['status'],
-                    'score'               => $data['score'],
-                    'teams'               => $data['teams'],
-                    'league'              => $data['league'],
-                    'fixture'             => $data['fixture']
-                ]);
-            });
     }
     
     /**
@@ -200,34 +169,4 @@ class FixtureInfoBuilder
 
         FixtureInfoRegistered::dispatch($this);
     }
-    
-    // public function validated(): FixtureInfoDataValidator
-    // {
-    //     return FixtureInfoDataValidator::validate($this->fixtureData);
-    // }
-
-    // public function getPlayer(int $apiFootballId): array
-    // {
-    //     return $this->fixtureData
-    //         ->getPlayedPlayers()
-    //         ->filter(fn(array $player) => $player['id'] === $apiFootballId)
-    //         ->first();
-    // }
-
-    // public function getPlayerInfoFotUpdate(int $apiFootballId): PlayerInfo
-    // {
-    //     // dd($this->fixtureData->);
-        
-    //     $player = $this->fixtureData
-    //         ->getPlayedPlayers()
-    //         ->filter(fn(array $player) => $player['id'] === $apiFootballId)
-    //         ->first();
-
-    //     dd($player);
-    // }
-    
-    // public function isFinished(): bool
-    // {
-    //     return $this->fixtureData->isFinished();
-    // }
 }

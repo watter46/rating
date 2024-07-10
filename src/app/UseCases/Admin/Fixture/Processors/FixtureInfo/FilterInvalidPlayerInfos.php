@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture\FixtureInfoData;
+namespace App\UseCases\Admin\Fixture\Processors\FixtureInfo;
 
 use Illuminate\Support\Collection;
 

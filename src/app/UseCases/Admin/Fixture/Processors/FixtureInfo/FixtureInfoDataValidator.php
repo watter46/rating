@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture\FixtureInfoData;
+namespace App\UseCases\Admin\Fixture\Processors\FixtureInfo;
 
 use Illuminate\Support\Collection;
 
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\UseCases\Admin\Fixture\FixtureInfoData;
+use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoData;
 use App\UseCases\Admin\Fixture\ValidatorInterface;
 
 
@@ -102,6 +102,11 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
     
     public function validatePlayerImage(): void
     {
+        if (!$this->fixtureInfoData->lineupsExists()) {
+            $this->invalidPlayerImageIds = collect();
+            return;
+        }
+        
         $file = new PlayerImageFile();
 
         $this->invalidPlayerImageIds = $this->fixtureInfoData->getPlayedPlayers()

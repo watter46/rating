@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture;
+namespace App\UseCases\Admin\Fixture\Processors\FixtureInfo;
 
 use Illuminate\Support\Collection;
 
@@ -58,5 +58,10 @@ class FixtureInfoData
     public function getPlayedPlayers(): Collection
     {
         return $this->lineups->flatten(1);
+    }
+
+    public function lineupsExists(): bool
+    {
+        return $this->lineups->isNotEmpty();
     }
 }

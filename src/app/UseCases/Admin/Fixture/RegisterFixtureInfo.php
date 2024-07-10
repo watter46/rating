@@ -4,7 +4,6 @@ namespace App\UseCases\Admin\Fixture;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\FixtureInfo;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
@@ -26,14 +25,14 @@ final readonly class RegisterFixtureInfo
             $fixtureData = $this->apiFootballRepository->fetchFixture($fixtureInfo->external_fixture_id);
                         
             $updated = $fixtureInfo
-                ->builder()
+                ->fixtureInfoBuilder()
                 ->update($fixtureData);
                         
             DB::transaction(function () use ($updated) {
                 $updated->save();
             });
 
-            $updated->builder()->dispatch();
+            $updated->fixtureInfoBuilder()->dispatch();
 
             return $updated;
  

@@ -5,47 +5,31 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 
-use App\Infrastructure\ApiFootball\MockApiFootballRepository;
 use App\Models\FixtureInfo;
-use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
+use App\Infrastructure\ApiFootball\MockApiFootballRepository;
 
 
 class FixtureInfosSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         /** @var MockApiFootballRepository $repository */
         $repository = app(MockApiFootballRepository::class);
 
-        $fixtureInfosData = $repository->fetchFixtures();
+        $fixturesData = $repository->fetchFixtures();
 
-        $data = $fixtureInfosData
-            ->build()
-            ->filter(function (Collection $fixtureInfo) use ($repository) {
-                $data = $repository->fetchFixture($fixtureInfo['external_fixture_id']);
-
-                return $data->isSeasonTournament();
-            })
-            ->map(function (Collection $fixtureInfo) use ($repository) {
-                $data = $repository->fetchFixture($fixtureInfo['external_fixture_id']);
+        $data = (new FixtureInfo)
+            ->fixtureInfosBuilder()
+            ->bulkUpdate($fixturesData)
+            ->map(function (Collection $fixtureInfoFotUpsert) use ($repository) {
+                $fixtureInfo = new FixtureInfo($fixtureInfoFotUpsert->toArray());
                 
-                if (!$data->isSeasonTournament()) {
-                    return $fixtureInfo;
-                }
+                $fixtureData = $repository->fetchFixture($fixtureInfo->external_fixture_id);
                 
-                if (!$data->isFinished()) {
-                    return $fixtureInfo;
-                }
-
-                $fixtureInfo['lineups'] = $data->buildLineups()->get('lineups')->toJson();
-                $fixtureInfo['score']   = $data->buildScore()->toJson();
-                $fixtureInfo['fixture'] = $data->buildFixture()->toJson();
-                $fixtureInfo['status']  = FixtureStatusType::MatchFinished->value;
-
-                return $fixtureInfo;
+                return $fixtureInfo
+                    ->fixtureInfoBuilder()
+                    ->update($fixtureData)
+                    ->castsToJson();
             });
 
         FixtureInfo::upsert($data->toArray(), FixtureInfo::UPSERT_UNIQUE);
