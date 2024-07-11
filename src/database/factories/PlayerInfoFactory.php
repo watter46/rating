@@ -29,8 +29,8 @@ class PlayerInfoFactory extends Factory
                 'number' => $data->number, 
                 'season' => $data->season, 
                 'api_football_id' => $data->api_football_id, 
-                'sofa_score_id' => $data->sofa_score_id,
                 'flash_live_sports_id' => $data->flash_live_sports_id,
+                'flash_live_sports_image_id' => $data->flash_live_sports_image_id
             ];
         });
     }
@@ -44,8 +44,8 @@ class PlayerInfoFactory extends Factory
             'number' => $playerInfo->number, 
             'season' => $playerInfo->season, 
             'api_football_id' => $playerInfo->api_football_id, 
-            'sofa_score_id' => $playerInfo->sofa_score_id,
-            'flash_live_sports_id' => $playerInfo->flash_live_sports_id
+            'flash_live_sports_id' => $playerInfo->flash_live_sports_id,
+            'flash_live_sports_image_id' => $playerInfo->flash_live_sports_image_id
         ];
     }
 }

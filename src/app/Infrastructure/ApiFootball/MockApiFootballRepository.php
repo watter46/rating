@@ -12,11 +12,11 @@ use App\Http\Controllers\Util\TestTeamImageFile;
 use Illuminate\Support\Facades\Http;
 
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
-use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
-use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
-use App\UseCases\Admin\Player\SquadsData\SquadsData;
+use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
+use App\UseCases\Admin\Data\ApiFootball\FixturesData;
+use App\UseCases\Admin\Data\ApiFootball\SquadsData;
 use App\UseCases\Util\Season;
-use Illuminate\Support\Facades\File;
+
 
 class MockApiFootballRepository implements ApiFootballRepositoryInterface
 {
@@ -49,14 +49,14 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         return $response->throw()->body();
     }
 
-    public function fetchFixtures(): FixtureInfosData
+    public function fetchFixtures(): FixturesData
     {
         if ($this->isTest()) {
-            return FixtureInfosData::create($this->testFixtureInfosFile->get());
+            return FixturesData::create($this->testFixtureInfosFile->get());
         }
         
         if ($this->fixturesFile->exists()) {
-            return FixtureInfosData::create($this->fixturesFile->get());
+            return FixturesData::create($this->fixturesFile->get());
         }
         
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
@@ -68,30 +68,30 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
         $this->fixturesFile->write($data);
 
-        return FixtureInfosData::create($data);
+        return FixturesData::create($data);
     }
 
-    public function fetchFixture(int $fixtureId): FixtureInfoData
+    public function fetchFixture(int $fixtureDataId): FixtureData
     {
-        if ($this->fixtureFile->exists($fixtureId) || $this->isTest()) {
-            return FixtureInfoData::create($this->fixtureFile->get($fixtureId));
+        if ($this->fixtureFile->exists($fixtureDataId) || $this->isTest()) {
+            return FixtureData::create($this->fixtureFile->get($fixtureDataId));
         }
         
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'id' => $fixtureId
+            'id' => $fixtureDataId
         ]);
 
         $data = collect(json_decode($json)->response[0]);
         
-        $this->fixtureFile->write($fixtureId, $data);
+        $this->fixtureFile->write($fixtureDataId, $data);
 
-        return FixtureInfoData::create($data);
+        return FixtureData::create($data);
     }
 
     public function fetchSquads(): SquadsData
     {
         if ($this->isTest()) {
-            // return
+            //
         }
         
         if ($this->squadsFile->exists()) {

@@ -6,19 +6,13 @@ use Exception;
 use Illuminate\Pagination\Paginator;
 
 use App\Models\FixtureInfo;
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashLiveSportsIds;
+
 
 final readonly class FetchFixtureInfos
 {
-    public function __construct(private UpdateFlashLiveSportsIds $u)
-    {
-        
-    }
     public function execute(): Paginator
     {
         try {
-            $this->u->execute();
-            
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
                 ->selectWithout([

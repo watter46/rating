@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture\Data;
+namespace App\UseCases\Admin\Data\ApiFootball\FixtureData;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -32,6 +32,21 @@ class ResultData
     public static function create(Collection $resultData): self
     {
         return new self($resultData);
+    }
+
+    public function getAll(): Collection
+    {
+        return collect([
+            'fixtureId' => $this->getFixtureId(),
+            'leagueId'  => $this->getLeagueId(),
+            'season'    => $this->getSeason(),
+            'date'      => $this->getDate(),
+            'status'    => $this->getStatus(),
+            'score'     => $this->getScore(),
+            'teams'     => $this->getTeams(),
+            'league'    => $this->getLeague(),
+            'fixture'   => $this->getFixture()
+        ]);
     }
 
     public function build(): Collection

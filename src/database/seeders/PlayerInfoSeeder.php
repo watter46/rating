@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 use App\Http\Controllers\Util\PlayerFile;
 use App\Infrastructure\ApiFootball\MockApiFootballRepository;
 use App\Infrastructure\FlashLiveSports\MockFlashLiveSportsRepository;
-use App\Infrastructure\SofaScore\MockSofaScoreRepository;
 use App\Models\PlayerInfo;
 use App\UseCases\Admin\Player\UpdatePlayerInfos\PlayerDataMatcher;
 use App\UseCases\Util\Season;
@@ -30,13 +29,9 @@ class PlayerInfoSeeder extends Seeder
 
         /** @var MockFlashLiveSportsRepository $flashLiveSportsRepository */
         $flashLiveSportsRepository = app(MockFlashLiveSportsRepository::class);
-
-        /** @var MockSofaScoreRepository $sofaScoreRepository */
-        $sofaScoreRepository = app(MockSofaScoreRepository::class);
         
         $squads = $apiFootballRepository->fetchSquads();
         $teamSquad = $flashLiveSportsRepository->fetchTeamSquad();
-        $playersOfTeam = $sofaScoreRepository->fetchPlayersOfTeam();
 
         $data = $squads->getPlayers()
             ->map(function ($player) {
@@ -47,13 +42,11 @@ class PlayerInfoSeeder extends Seeder
                     'season' => Season::current()
                 ]);
             })
-            ->map(function (PlayerInfo $playerInfo) use ($teamSquad, $playersOfTeam) {
+            ->map(function (PlayerInfo $playerInfo) use ($teamSquad) {
                 $teamSquadPlayer = $teamSquad->getByPlayerInfo(new PlayerDataMatcher($playerInfo));
-                $playerOfTeamPlayer = $playersOfTeam->getByPlayerInfo(new PlayerDataMatcher($playerInfo));
                 
                 $playerInfo->flash_live_sports_id = $teamSquadPlayer['id'] ?? null;
-
-                $playerInfo->sofa_score_id = $playerOfTeamPlayer['id'] ?? null;
+                $playerInfo->flash_live_sports_image_id = $teamSquadPlayer['imageId'] ?? null;
 
                 return $playerInfo;
             });
@@ -85,7 +78,6 @@ class PlayerInfoSeeder extends Seeder
                     'season' => Season::current(),
                     'number' => $newPlayer->jerseyNumber,
                     'api_football_id' => $data['apiFootballId'],
-                    'sofa_score_id' => $newPlayer->id,
                     'flash_live_sports_id' => null
                 ]);
 

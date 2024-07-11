@@ -2,12 +2,13 @@
 
 namespace Tests\Unit\UseCases\Admin\Fixture;
 
-use App\Models\FixtureInfo;
-use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
-use App\UseCases\Admin\Fixture\RegisterFixtureInfo;
 use Database\Seeders\Tests\Admin\TestingFixtureInfoSeeder;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
+
+use App\Models\FixtureInfo;
+use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
+use App\UseCases\Admin\Fixture\RegisterFixtureInfo;
 
 
 class RegisterFixtureInfoTest extends TestCase

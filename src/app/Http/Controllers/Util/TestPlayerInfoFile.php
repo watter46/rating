@@ -9,9 +9,10 @@ use Illuminate\Support\Str;
 use App\Models\FixtureInfo;
 use App\Models\PlayerInfo;
 
+
 class TestPlayerInfoFile
 {
-    private const DIR_PATH = 'Template/tests/playerInfo/';
+    private const DIR_PATH = 'Template/tests/playerInfo';
 
     private function dirPath()
     {
@@ -20,7 +21,7 @@ class TestPlayerInfoFile
 
     private function fileName(int $external_fixture_id)
     {
-        return $this->dirPath().$external_fixture_id.'.json';
+        return $this->dirPath().'/'.$external_fixture_id.'.json';
     }
 
     public function get(int $external_fixture_id)
@@ -34,8 +35,10 @@ class TestPlayerInfoFile
             ->where('external_fixture_id', $external_fixture_id)
             ->first();
 
+        if (!$fixtureInfo?->lineups) return;
+
         $playerInfos = PlayerInfo::query()
-            ->whereIn('foot_player_id', collect($fixtureInfo->lineups)
+            ->whereIn('api_football_id', collect($fixtureInfo->lineups)
                 ->flatten(1)
                 ->pluck('id')
                 ->toArray())

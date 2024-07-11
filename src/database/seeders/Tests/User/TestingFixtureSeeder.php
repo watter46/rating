@@ -11,8 +11,8 @@ use App\Models\Fixture;
 use App\Models\FixtureInfo;
 use App\Models\Player;
 use App\Models\PlayerInfo;
-use Database\Factories\UsersRatingFactory;
 use Illuminate\Support\Carbon;
+
 
 class TestingFixtureSeeder extends Seeder
 {
@@ -23,7 +23,7 @@ class TestingFixtureSeeder extends Seeder
     private const EXTERNAL_FIXTURE_ID_LIST = [1035454, 1035480, 1035151];
 
     /** Caicedo */
-    private const FOOT_PLAYER_ID = 116117;
+    private const API_FOOTBALL_ID = 116117;
     
     public function run(): void
     {   
@@ -55,7 +55,7 @@ class TestingFixtureSeeder extends Seeder
             ->playerInfos()
             ->save(
                 PlayerInfo::factory()
-                    ->fromFile($testData->getPlayerInfo(self::FOOT_PLAYER_ID))
+                    ->fromFile($testData->getPlayerInfo(self::API_FOOTBALL_ID))
                     ->make()
             );
 

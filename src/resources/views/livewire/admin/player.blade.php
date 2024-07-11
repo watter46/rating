@@ -1,7 +1,7 @@
 <div class="flex items-center border-b border-gray-500 gap-x-5">
     <x-util.modal-button>
         <x-slot:icon>
-            <img src="{{ asset($playerInfo->img) }}" class="rounded-full cursor-pointer w-14 h-14">
+            <img src="{{ asset($playerInfo->img) }}" class="bg-white rounded-full cursor-pointer w-14 h-14">
         </x-slot:icon>
 
         <x-slot:disabled-icon></x-slot:disabled-icon>

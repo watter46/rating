@@ -2,15 +2,12 @@
 
 namespace App\Infrastructure\ApiFootball;
 
-use App\Http\Controllers\Util\FixtureFile;
-use App\Http\Controllers\Util\FixturesFile;
-use App\Http\Controllers\Util\SquadsFile;
 use Illuminate\Support\Facades\Http;
 
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
 use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
-use App\UseCases\Admin\Player\SquadsData\SquadsData;
+use App\UseCases\Admin\Data\ApiFootball\SquadsData;
 use App\UseCases\Util\Season;
 
 

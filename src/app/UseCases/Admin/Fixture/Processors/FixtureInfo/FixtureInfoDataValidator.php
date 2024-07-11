@@ -1,30 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture\FixtureInfoData;
+namespace App\UseCases\Admin\Fixture\Processors\FixtureInfo;
 
 use Illuminate\Support\Collection;
 
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\UseCases\Admin\Fixture\Data\FixtureData;
+use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoData;
 use App\UseCases\Admin\Fixture\ValidatorInterface;
-use App\UseCases\Admin\Fixture\FixtureInfoData\FilterInvalidFootPlayerIds;
 
 
 readonly class FixtureInfoDataValidator implements ValidatorInterface
 {
-    /** @var Collection<array{ id: int, name: string }> $invalidPlayers */
-    private Collection $invalidPlayers;
     private Collection $invalidTeamIds;
     private Collection $invalidLeagueIds;
     private Collection $invalidPlayerImageIds;
     
-    private function __construct(private FixtureData $fixtureData)
+    private function __construct(private FixtureInfoData $fixtureInfoData)
     {
         $this->validateTeamIds();
         $this->validateLeagueIds();
-        $this->validatePlayers();
         $this->validatePlayerImage();
     }
 
@@ -38,7 +34,6 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
         return collect([
             $this->getInvalidTeamIds(),
             $this->getInvalidLeagueIds(),
-            $this->getInvalidPlayers(),
             $this->getInvalidPlayerImageIds()
         ])
         ->every(fn (Collection $ids) => $ids->isEmpty());
@@ -47,12 +42,12 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
     /**
      * FixtureData
      *
-     * @param  FixtureData $fixtureData
+     * @param  FixtureInfoData $fixtureInfoData
      * @return self
      */
-    public static function validate(FixtureData $fixtureData): self
+    public static function validate(FixtureInfoData $fixtureInfoData): self
     {
-        return new self($fixtureData);
+        return new self($fixtureInfoData);
     }
     
     /**
@@ -76,16 +71,6 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
     }
     
     /**
-     * 保存されていないPlayerIDを取得する
-     *
-     * @return Collection
-     */
-    public function getInvalidPlayers(): Collection
-    {
-        return $this->invalidPlayers;
-    }
-    
-    /**
      * 保存されていない選手の画像のPlayerIDを取得する
      *
      * @return Collection
@@ -99,9 +84,8 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
     {
         $file = new TeamImageFile();
 
-        $this->invalidTeamIds = $this->fixtureData->getTeams()
-            ->map(fn ($team) => $team->get('id'))
-            ->values()
+        $this->invalidTeamIds = $this->fixtureInfoData
+            ->getTeamIds()
             ->filter(fn (int $teamId) => !$file->exists($teamId));
     }
     
@@ -109,31 +93,23 @@ readonly class FixtureInfoDataValidator implements ValidatorInterface
     {
         $file = new LeagueImageFile();
 
-        $leagueId = $this->fixtureData->getLeague()->get('id');
+        $leagueId = $this->fixtureInfoData->getLeagueId();
 
         $this->invalidLeagueIds = $file->exists($leagueId)
             ? collect()
             : collect($leagueId);
     }
     
-    public function validatePlayers(): void
-    {
-        $players = $this->fixtureData->getPlayedPlayers();
-
-        $invalidFootPlayerIds = (new FilterInvalidFootPlayerIds)->execute($players->pluck('id'));
-
-        $this->invalidPlayers = $players
-            ->whereIn('id', $invalidFootPlayerIds->toArray())
-            ->map(fn(array $player) =>
-                collect($player)->only(['id', 'name'])->toArray()
-            );
-    }
-    
     public function validatePlayerImage(): void
     {
+        if (!$this->fixtureInfoData->lineupsExists()) {
+            $this->invalidPlayerImageIds = collect();
+            return;
+        }
+        
         $file = new PlayerImageFile();
 
-        $this->invalidPlayerImageIds = $this->fixtureData->getPlayedPlayers()
+        $this->invalidPlayerImageIds = $this->fixtureInfoData->getPlayedPlayers()
             ->map(fn($player) => $player['id'])
             ->filter(fn($playerId) => !$file->exists($playerId));
     }

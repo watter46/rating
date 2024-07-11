@@ -13,7 +13,9 @@ class RegisterLeagueImage
     /**
      * Create the event listener.
      */
-    public function __construct(private LeagueImageFile $file, private ApiFootballRepositoryInterface $repository)
+    public function __construct(
+        private LeagueImageFile $file,
+        private ApiFootballRepositoryInterface $repository)
     {
         //
     }
@@ -23,18 +25,19 @@ class RegisterLeagueImage
      */
     public function handle(FixtureInfosRegistered|FixtureInfoRegistered $event): void
     {
-        $invalidLeagueIds = $event->data->validated()->getInvalidLeagueIds();
+        $invalidLeagueIds = $event->builder->getInvalidLeagueImageIds();
                 
         if ($invalidLeagueIds->isEmpty()) return;
 
-        foreach($invalidLeagueIds as $leagueId) {
-            if ($this->file->exists($leagueId)) {
-                continue;
-            }
-
-            $leagueImage = $this->repository->fetchLeagueImage($leagueId);
-
-            $this->file->write($leagueId, $leagueImage);
-        }
+        $invalidLeagueIds
+            ->each(function ($leagueId) {
+                if ($this->file->exists($leagueId)) {
+                    return true;
+                }
+    
+                $leagueImage = $this->repository->fetchLeagueImage($leagueId);
+    
+                $this->file->write($leagueId, $leagueImage);
+            });
     }
 }

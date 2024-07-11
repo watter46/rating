@@ -11,7 +11,9 @@ use App\UseCases\Admin\ApiFootballRepositoryInterface;
 
 class RegisterFixtureInfos
 {
-    public function __construct(private ApiFootballRepositoryInterface $apiFootballRepository)
+    public function __construct(
+        private FixtureInfo $fixtureInfo,
+        private ApiFootballRepositoryInterface $apiFootballRepository)
     {
         //
     }
@@ -20,23 +22,16 @@ class RegisterFixtureInfos
     {
         try {
             $fixturesInfosData = $this->apiFootballRepository->fetchFixtures();
-                        
-            DB::transaction(function () use ($fixturesInfosData) {
-                $unique = ['id'];
-                $updateColumns = [
-                    'season',
-                    'date',
-                    'status',
-                    'score',
-                    'teams',
-                    'league',
-                    'fixture'
-                ];
 
-                FixtureInfo::upsert($fixturesInfosData->build()->toArray(), $unique, $updateColumns);
+            $data = $this->fixtureInfo
+                ->fixtureInfosBuilder()
+                ->bulkUpdate($fixturesInfosData);
+
+            DB::transaction(function () use ($data) {
+                FixtureInfo::upsert($data->toArray(), FixtureInfo::UPSERT_UNIQUE);
             });
 
-            FixtureInfo::fixturesRegistered($fixturesInfosData);
+            $this->fixtureInfo->fixtureInfosBuilder()->dispatch();
 
         } catch (Exception $e) {
             throw $e;

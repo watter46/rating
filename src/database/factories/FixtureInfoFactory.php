@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
 
-use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
+use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FixtureInfo>

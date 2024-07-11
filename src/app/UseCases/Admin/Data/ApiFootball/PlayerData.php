@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Player\PlayerData;
+namespace App\UseCases\Admin\Data\ApiFootball;
 
 use App\UseCases\Util\Season;
 use Illuminate\Support\Collection;
+
 
 class PlayerData
 {
@@ -34,7 +35,7 @@ class PlayerData
     public function getPlayerData(): Collection
     {
         return collect([
-            'foot_player_id' => $this->footPlayerId,
+            'api_football_id' => $this->footPlayerId,
             'sofa_player_id' => $this->playerData->isEmpty() ? null : $this->playerData['id'],
             'season' => Season::current(),
             'number' => $this->playerData['jerseyNumber'],

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Player\SquadsData;
+namespace App\UseCases\Admin\Data\ApiFootball;
 
 use Illuminate\Support\Collection;
 

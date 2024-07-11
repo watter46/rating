@@ -32,7 +32,7 @@ class FixtureInfoRegisteredTest extends TestCase
         $this->assertDatabaseCount('player_infos', 15);
     }
     
-    public function test_出場した選手のPlayerInfoが存在しないときSofaScoreからデータを取得して保存する(): void
+    public function test_出場した選手のPlayerInfoが存在しないときFlashLiveSportsからデータを取得して保存する(): void
     {
         $fixtureInfo = FixtureInfo::select('id')->first();
 
@@ -99,8 +99,9 @@ class FixtureInfoRegisteredTest extends TestCase
         $fixtureInfo
             ->playerInfos()
             ->saveMany(
-                (new TestPlayerInfoFile)->get($fixtureInfo->external_fixture_id)
-                    ->filter(fn ($player) => $player->foot_player_id === 116117)
+                (new TestPlayerInfoFile)
+                    ->get($fixtureInfo->external_fixture_id)
+                    ->filter(fn ($player) => $player->api_football_id === 116117)
                     ->map(function ($player) {
                         return PlayerInfo::factory()
                             ->fromFile($player)

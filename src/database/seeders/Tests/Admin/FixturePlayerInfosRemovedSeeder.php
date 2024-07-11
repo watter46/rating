@@ -13,7 +13,7 @@ use App\Models\PlayerInfo;
 class FixturePlayerInfosRemovedSeeder extends Seeder
 {    
     /**
-     * Lineupから1人(foot_player_id: 116117, "Moisés Caicedo")を取り除いて
+     * Lineupから1人(api_football_id: 116117, "Moisés Caicedo")を取り除いて
      * PlyerInfoを保存する
      *
      * @return void
@@ -34,7 +34,7 @@ class FixturePlayerInfosRemovedSeeder extends Seeder
                             ->fromFile($player)
                             ->make();
                     })
-                    ->reject(fn($player) => $player->foot_player_id === 116117)
+                    ->reject(fn($player) => $player->api_football_id === 116117)
             );
     }
 }

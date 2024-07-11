@@ -38,12 +38,21 @@ class TeamSquad
                     return $names->reverse()->implode(' ');
                 };
 
+                $pathToImageId = function (string $path) {
+                    $png = Str::afterLast($path, '/');
+
+                    return Str::beforeLast($png, '.png');
+                };
+
                 return collect($group->ITEMS)
-                    ->map(function ($player) use ($swapFirstAndLastName) {
+                    ->map(function ($player) use ($swapFirstAndLastName, $pathToImageId) {                        
                         return [
                             'id' => $player->PLAYER_ID,
                             'name' => $swapFirstAndLastName($player->PLAYER_NAME),
-                            'number' => $player->PLAYER_JERSEY_NUMBER ?? null
+                            'number' => $player->PLAYER_JERSEY_NUMBER ?? null,
+                            'imageId' => $player->PLAYER_IMAGE_PATH
+                                ? $pathToImageId($player->PLAYER_IMAGE_PATH)
+                                : null
                         ];
                     });
             })

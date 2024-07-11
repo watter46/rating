@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture\Data;
+namespace App\UseCases\Admin\Data\ApiFootball\FixtureData;
 
+use App\Models\TournamentIdType;
 use Illuminate\Support\Collection;
+
 
 class FixtureData
 {
@@ -41,35 +43,30 @@ class FixtureData
         return new self($resultData, $lineupsData);
     }
 
-    public function build(): Collection
+    public function isSeasonTournament(): bool
     {
-        $fixtureData = collect([
-            'external_fixture_id' => $this->resultData->getFixtureId(),
-            'external_league_id'  => $this->resultData->getLeagueId(),
-            'season'              => $this->resultData->getSeason(),
-            'date'                => $this->resultData->getDate(),
-            'status'              => $this->resultData->getStatus(),
-            'score'               => $this->resultData->getScore()->toJson(),
-            'teams'               => $this->resultData->getTeams()->toJson(),
-            'league'              => $this->resultData->getLeague()->toJson(),
-            'fixture'             => $this->resultData->getFixture()->toJson()
-        ]);
-
-        if ($this->lineupsData) {
-            return $fixtureData->merge($this->lineupsData->build()->toJson());
-        }
-
-        return $fixtureData;
+        return collect(TournamentIdType::inSeasonTournaments())
+            ->contains(fn($id) => $id === $this->getLeagueId());
     }
 
+    public function equal(int $fixtureId): bool
+    {
+        return $fixtureId === $this->getFixtureId();
+    }
+
+    public function exists(Collection $fixtureIds): bool
+    {
+        return $fixtureIds->some(fn (int $fixtureId) => $fixtureId === $this->getFixtureId());
+    }
+    
     public function isFinished(): bool
     {
         return $this->resultData->isFinished();
     }
 
-    public function buildLineups(): Collection
+    public function getLineups(): Collection
     {
-        return $this->lineupsData->build();
+        return $this->lineupsData->getLineups();
     }
 
     public function getScore(): Collection
@@ -107,6 +104,11 @@ class FixtureData
         return $this->resultData->getFixture();
     }
 
+    public function getResultData(): Collection
+    {
+        return $this->resultData->getAll();
+    }
+    
     public function getPlayedPlayers(): Collection
     {
         return $this->lineupsData->playedPlayers();

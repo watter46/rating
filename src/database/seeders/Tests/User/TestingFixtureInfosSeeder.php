@@ -30,7 +30,7 @@ class TestingFixtureInfosSeeder extends Seeder
         FixtureInfo::upsert($fixtureInfos->toArray(), ['id']);
         
         // // external_fixture_id: 1035480 utd
-        // // player: Caicedo '01j0jwemj3gqjy4abpz5zv13hv' foot_player_id: 116117
+        // // player: Caicedo '01j0jwemj3gqjy4abpz5zv13hv' api_football_id: 116117
 
         $fixtureInfo = $fixtureInfos->first(function ($fixtureInfo) {
                 return $fixtureInfo['external_fixture_id'] === 1035480;

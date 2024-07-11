@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture\FixtureInfosData;
+namespace App\UseCases\Admin\Fixture\Processors\FixtureInfos;
 
 use Illuminate\Support\Collection;
 
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
-use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
+use App\UseCases\Admin\Fixture\Processors\FixtureInfos\FixtureInfosData;
 use App\UseCases\Admin\Fixture\ValidatorInterface;
 
 
@@ -23,8 +23,8 @@ class FixtureInfosDataValidator implements ValidatorInterface
      */
     private function __construct(private FixtureInfosData $fixtureInfosData)
     {
-        $this->teamImage   = new TeamImageFile();
-        $this->leagueImage = new LeagueImageFile();
+        $this->teamImage   = new TeamImageFile;
+        $this->leagueImage = new LeagueImageFile;
     }
     
     /**

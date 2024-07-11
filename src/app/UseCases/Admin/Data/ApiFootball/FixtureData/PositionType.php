@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Fixture\Data;
+namespace App\UseCases\Admin\Data\ApiFootball\FixtureData;
 
 
 enum PositionType: string
