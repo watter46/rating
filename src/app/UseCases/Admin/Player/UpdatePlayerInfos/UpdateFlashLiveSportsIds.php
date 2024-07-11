@@ -11,7 +11,9 @@ use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 
 class UpdateFlashLiveSportsIds
 {
-    public function __construct(private FlashLiveSportsRepositoryInterface $repository)
+    public function __construct(
+        private PlayerInfo $playerInfo,
+        private FlashLiveSportsRepositoryInterface $repository)
     {
         
     }
@@ -19,34 +21,19 @@ class UpdateFlashLiveSportsIds
     public function execute()
     {
         try {
-            $playerInfos = PlayerInfo::query()
-                ->currentSeason()
-                ->get();
-
             $teamSquad = $this->repository->fetchTeamSquad();
-            
-            if ($playerInfos->isEmpty()) {
-                throw new Exception('PlayerInfo data does not exist.');
-            }
 
-            $data = $playerInfos
-                ->map(function (PlayerInfo $playerInfo) use ($teamSquad) {
-                    $player = $teamSquad->getByPlayerInfo(new PlayerDataMatcher($playerInfo));
-                    
-                    if ($player) {
-                        $playerInfo->flash_live_sports_id = $player['id'];
-                    }
-
-                    return $playerInfo;
-                });
+            $data = $this->playerInfo
+                ->playerInfosBuilder()
+                ->bulkUpdateFlashLiveSportsData($teamSquad);
             
             DB::transaction(function () use ($data) {
                 $unique = PlayerInfo::UPSERT_UNIQUE;
                 
-                PlayerInfo::upsert($data->toArray(), $unique);
+                PlayerInfo::upsert($data->toArray(), $unique, PlayerInfo::UPSERT_FLASH_LIVE_SPORTS_COLUMNS);
             });
 
-            PlayerInfo::upserted($teamSquad);
+            $this->playerInfo->playerInfosBuilder()->dispatch($teamSquad);
 
         } catch (Exception $e) {
             throw $e;

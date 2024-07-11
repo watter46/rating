@@ -2,10 +2,11 @@
 
 namespace App\UseCases\Admin\Data\FlashLiveSports;
 
-use App\Models\PlayerInfo;
-use App\UseCases\Admin\Player\UpdatePlayerInfos\PlayerDataMatcher;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+
+use App\Models\PlayerInfo;
+use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerDataMatcher;
 
 
 class TeamSquad
@@ -62,6 +63,11 @@ class TeamSquad
     public function check()
     {
         return $this->checker->check();
+    }
+
+    public function getInvalidPlayerInfos()
+    {
+        return $this->checker->invalidPlayerInfos();
     }
 
     public function imagePaths(): Collection
