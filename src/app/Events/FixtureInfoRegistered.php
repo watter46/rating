@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\UseCases\Admin\Fixture\FixtureInfoBuilder;
+use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoBuilder;
 
 
 class FixtureInfoRegistered

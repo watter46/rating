@@ -2,13 +2,14 @@
 
 namespace App\UseCases\Admin\Fixture\Processors\FixtureInfos;
 
+use Illuminate\Support\Collection;
+
 use App\Events\FixtureInfosRegistered;
 use App\Models\FixtureInfo;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
 use App\UseCases\Admin\Data\ApiFootball\FixturesData;
 use App\UseCases\Admin\Fixture\Processors\FixtureInfos\FixtureInfosDataValidator;
 use App\UseCases\Admin\Fixture\Processors\FixtureInfos\FixtureInfosData;
-use Illuminate\Database\Eloquent\Collection;
 
 
 class FixtureInfosBuilder
@@ -77,6 +78,26 @@ class FixtureInfosBuilder
 
                 return $formatForUpsert($fixtureData)->put('id', $fixtureInfo->id);
             });
+    }
+
+    /**
+     * getTeamImageIds
+     *
+     * @return Collection<int>
+     */
+    public function getInvalidTeamImageIds(): Collection
+    {
+        return $this->validator()->getInvalidTeamIds();
+    }
+
+    /**
+     * getLeagueImageIds
+     *
+     * @return Collection<int>
+     */
+    public function getInvalidLeagueImageIds(): Collection
+    {
+        return $this->validator()->getInvalidLeagueIds();
     }
 
     private function toData(): FixtureInfosData

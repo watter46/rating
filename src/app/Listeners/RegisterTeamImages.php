@@ -13,7 +13,9 @@ class RegisterTeamImages
     /**
      * Create the event listener.
      */
-    public function __construct(private TeamImageFile $file, private ApiFootballRepositoryInterface $repository)
+    public function __construct(
+        private TeamImageFile $file,
+        private ApiFootballRepositoryInterface $repository)
     {
         //
     }
@@ -27,14 +29,15 @@ class RegisterTeamImages
         
         if ($invalidTeamIds->isEmpty()) return;
         
-        foreach($invalidTeamIds as $teamId) {
-            if ($this->file->exists($teamId)) {
-                continue;
-            }
-
-            $teamImage = $this->repository->fetchTeamImage($teamId);
-
-            $this->file->write($teamId, $teamImage);
-        }
+        $invalidTeamIds
+            ->each(function ($teamId) {
+                if ($this->file->exists($teamId)) {
+                    return true;
+                }
+    
+                $teamImage = $this->repository->fetchTeamImage($teamId);
+    
+                $this->file->write($teamId, $teamImage);
+            });
     }
 }

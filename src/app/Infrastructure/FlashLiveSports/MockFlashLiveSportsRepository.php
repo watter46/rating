@@ -10,6 +10,7 @@ use App\Http\Controllers\Util\Api\FlashLiveSports\PlayerFile;
 use App\Http\Controllers\Util\Api\FlashLiveSports\PlayersFile;
 
 use App\Http\Controllers\Util\TeamSquadFile;
+use App\Http\Controllers\Util\TestPlayerImageFile;
 use App\UseCases\Admin\Data\FlashLiveSports\PlayerData;
 use App\UseCases\Admin\Data\FlashLiveSports\PlayersData;
 use App\UseCases\Admin\Data\FlashLiveSports\TeamSquad;
@@ -21,7 +22,8 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
     public function __construct(
         private TeamSquadFile $teamSquadFile,
         private PlayerFile $playerFile,
-        private PlayersFile $playersFile)
+        private PlayersFile $playersFile,
+        private TestPlayerImageFile $testPlayerImageFile)
     {
         //
     }
@@ -117,6 +119,10 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
 
     public function fetchPlayerImage(string $flash_live_sports_image_id): string
     {
+        if ($this->isTest()) {
+            return $this->testPlayerImageFile->get();
+        }
+
         return $this->httpClient('https://flashlive-sports.p.rapidapi.com/v1/images/data', [
                 'image_id'=> $flash_live_sports_image_id
             ]);

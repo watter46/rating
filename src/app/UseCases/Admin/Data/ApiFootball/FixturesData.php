@@ -26,14 +26,51 @@ class FixturesData
         }));
     }
     
+    // /**
+    //  * getData
+    //  *
+    //  * @return Collection<FixtureData> $fixturesData
+    //  */
+    // public function get(): Collection
+    // {
+    //     return $this->fixturesData;
+    // }
+
+    // public function partition(Collection $fixtureIds)
+    // {        
+    //     return $this->fixturesData
+    //         ->partition(function (FixtureData $fixtureData) use ($fixtureIds) {
+    //             return $fixtureData->exists($fixtureIds);
+    //         });
+    // }
+    
     /**
-     * getData
+     * keyByFixtureId
      *
-     * @return Collection<FixtureData> $fixturesData
+     * @return Collection<FixtureData>
      */
-    public function get(): Collection
+    public function keyByFixtureId(): Collection
     {
-        return $this->fixturesData;
+        return $this->fixturesData
+            ->keyBy(function (FixtureData $fixtureData) {
+                return $fixtureData->getFixtureId();
+            });
+    }
+
+    public function get(int $fixtureId): ?FixtureData
+    {
+        return $this->fixturesData
+            ->first(function (FixtureData $fixtureData) use ($fixtureId) {
+                return $fixtureData->equal($fixtureId);
+            });
+    }
+
+    public function getFixtureIds()
+    {
+        return $this->fixturesData
+            ->map(function (FixtureData $fixtureData) {
+                return $fixtureData->getFixtureId();
+            });
     }
 
     // public function defaultFormat(): Collection

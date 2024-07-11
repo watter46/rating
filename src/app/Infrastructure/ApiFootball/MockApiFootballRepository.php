@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Http;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
 use App\UseCases\Admin\Data\ApiFootball\FixturesData;
-use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
-use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 use App\UseCases\Admin\Data\ApiFootball\SquadsData;
 use App\UseCases\Util\Season;
 
@@ -93,7 +91,7 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
     public function fetchSquads(): SquadsData
     {
         if ($this->isTest()) {
-            // return
+            //
         }
         
         if ($this->squadsFile->exists()) {

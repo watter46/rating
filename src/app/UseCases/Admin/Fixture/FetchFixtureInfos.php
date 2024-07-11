@@ -10,16 +10,9 @@ use App\Models\FixtureInfo;
 
 final readonly class FetchFixtureInfos
 {
-    public function __construct(private RegisterFixtureInfos $registerFixtureInfos)
-    {
-        
-    }
-
     public function execute(): Paginator
     {
         try {
-            dd($this->registerFixtureInfos->execute());
-            
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
                 ->selectWithout([

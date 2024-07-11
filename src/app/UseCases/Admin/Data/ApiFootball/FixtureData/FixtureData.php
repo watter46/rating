@@ -48,6 +48,16 @@ class FixtureData
         return collect(TournamentIdType::inSeasonTournaments())
             ->contains(fn($id) => $id === $this->getLeagueId());
     }
+
+    public function equal(int $fixtureId): bool
+    {
+        return $fixtureId === $this->getFixtureId();
+    }
+
+    public function exists(Collection $fixtureIds): bool
+    {
+        return $fixtureIds->some(fn (int $fixtureId) => $fixtureId === $this->getFixtureId());
+    }
     
     public function isFinished(): bool
     {

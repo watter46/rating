@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\UseCases\Admin\Fixture;
 
-use App\Models\FixtureInfo;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 

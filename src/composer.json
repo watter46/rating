@@ -54,7 +54,7 @@
         ],
         "unit": [
             "@php artisan config:clear",
-            "@php artisan test --parallel tests/Unit/UseCases/Admin"
+            "@php artisan test --parallel tests/Unit/UseCases/Admin/Fixture"
         ]
     },
     "extra": {

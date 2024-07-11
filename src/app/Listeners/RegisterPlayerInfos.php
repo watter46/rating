@@ -34,7 +34,18 @@ class RegisterPlayerInfos
                 $flashLiveSportsPlayer = $this->repository
                     ->searchPlayer($playerInfo)
                     ->get();
-                
+
+                if (!$playerInfo['id']) {
+                    return [
+                        'name' => $playerInfo['name'],
+                        'number' => $playerInfo['number'],
+                        'season' => Season::current(),
+                        'api_football_id' => $playerInfo['api_football_id'],
+                        'flash_live_sports_id' => $flashLiveSportsPlayer['id'],
+                        'flash_live_sports_image_id' => $flashLiveSportsPlayer['imageId']
+                    ];
+                }
+
                 return [
                     'id' => $playerInfo['id'],
                     'name' => $playerInfo['name'],
