@@ -10,6 +10,7 @@ use App\Models\PlayerInfo;
 use App\UseCases\Admin\Data\ApiFootball\SquadsData;
 use App\UseCases\Admin\Data\FlashLiveSports\TeamSquad;
 use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerDataMatcher;
+use App\UseCases\Util\Season;
 
 
 class PlayerInfosBuilder
@@ -41,7 +42,22 @@ class PlayerInfosBuilder
                 }
 
                 return $playerInfo;
-            });
+            })
+            ->push(
+                ...$squads
+                    ->getPlayers()
+                    ->whereNotIn('id', $this->playerInfos->pluck('api_football_id'))
+                    ->map(function (array $player) {
+                        return new PlayerInfo([
+                            'name' => $player['name'],
+                            'number' => $player['number'],
+                            'season' => Season::current(),
+                            'api_football_id' => $player['id'],
+                            'flash_live_sports_id' => null,
+                            'flash_live_sports_image_id' => null,
+                        ]);
+                    })
+            );
     }
 
     public function bulkUpdateFlashLiveSportsData(TeamSquad $teamSquad)

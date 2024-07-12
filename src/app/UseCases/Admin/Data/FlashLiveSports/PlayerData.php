@@ -13,7 +13,6 @@ class PlayerData
 
     public static function create(Collection $playerData)
     {
-        dd($playerData);
         return new self($playerData);
     }
 

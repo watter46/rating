@@ -11,9 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 use App\UseCases\Util\Season;
-use App\Events\PlayerInfoRegistered;
-use App\UseCases\Admin\Data\FlashLiveSports\TeamSquad;
 use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerInfosBuilder;
+
 
 class PlayerInfo extends Model
 {

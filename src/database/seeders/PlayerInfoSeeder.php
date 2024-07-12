@@ -10,7 +10,7 @@ use App\Http\Controllers\Util\PlayerFile;
 use App\Infrastructure\ApiFootball\MockApiFootballRepository;
 use App\Infrastructure\FlashLiveSports\MockFlashLiveSportsRepository;
 use App\Models\PlayerInfo;
-use App\UseCases\Admin\Player\UpdatePlayerInfos\PlayerDataMatcher;
+use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerDataMatcher;
 use App\UseCases\Util\Season;
 
 
