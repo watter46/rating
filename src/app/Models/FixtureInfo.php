@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoBuilder;
 use App\UseCases\Admin\Fixture\Processors\FixtureInfos\FixtureInfosBuilder;
-
+use Illuminate\Support\Collection;
 
 class FixtureInfo extends Model
 {
@@ -62,12 +62,12 @@ class FixtureInfo extends Model
         return FixtureInfosBuilder::create();
     }
 
-    public function castsToJson()
+    public function castsToJson(): Collection
     {
+        $jsonKeys = collect($this->getCasts())->keys();
+        
         return collect($this)
-            ->map(function ($value, $key) {
-                $jsonKeys = collect($this->getCasts())->keys();
-
+            ->map(function ($value, $key) use ($jsonKeys) {
                 if ($jsonKeys->some($key)) {
                     return collect($value)->toJson();
                 }
@@ -93,6 +93,9 @@ class FixtureInfo extends Model
 
     public function playerInfos(): BelongsToMany
     {
-        return $this->belongsToMany(PlayerInfo::class);
+        return $this->belongsToMany(PlayerInfo::class, 'users_player_statistics')
+            ->using(UsersPlayerStatistic::class)
+            ->withPivot('id', 'rating', 'mom', 'fixture_info_id', 'player_info_id')
+            ->as('users_player_statistic');
     }
 }

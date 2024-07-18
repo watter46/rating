@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 use App\UseCases\Util\Season;
 use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerInfosBuilder;
-
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PlayerInfo extends Model
 {
@@ -88,18 +88,9 @@ class PlayerInfo extends Model
         $query->where('season', Season::current());
     }
 
-    public function fixture(): BelongsTo
+    public function fixtureInfo()
     {
-        return $this->belongsTo(Fixture::class);
-    }
-    
-    /**
-     * playerInfos
-     *
-     * @return BelongsToMany
-     */
-    public function players(): BelongsToMany
-    {
-        return $this->belongsToMany(PlayerInfo::class);
+        return $this->belongsToMany(FixtureInfo::class, 'users_player_statistics')
+            ->withPivot('rating', 'comment');
     }
 }
