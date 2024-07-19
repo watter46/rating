@@ -11,6 +11,12 @@ use App\UseCases\Admin\Fixture\FetchFixtureInfos;
 
 class FetchFixtureInfosTest extends TestCase
 {
+    /** 
+     * テスト用全Fixture数: 17
+     * paginator取得数: 15
+     * outSeason数: 3
+     */
+
     protected $seeder = TestingFixtureInfosSeeder::class;
 
     public function test_FixtureInfoが保存されている()

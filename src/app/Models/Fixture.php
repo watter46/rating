@@ -58,7 +58,7 @@ class Fixture extends Model
         return new FixtureDomain($this);
     }
 
-    public function scopeFixtureInfoId(Builder $query, string $fixtureInfoId)
+    public function scopeByFixtureInfoId(Builder $query, string $fixtureInfoId)
     {
         $query->where('fixture_info_id', $fixtureInfoId);
     }

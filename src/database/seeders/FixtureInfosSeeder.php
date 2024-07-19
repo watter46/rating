@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Collection;
 
 use App\Models\FixtureInfo;
 use App\Infrastructure\ApiFootball\MockApiFootballRepository;
@@ -21,9 +20,7 @@ class FixtureInfosSeeder extends Seeder
         $data = (new FixtureInfo)
             ->fixtureInfosBuilder()
             ->bulkUpdate($fixturesData)
-            ->map(function (Collection $fixtureInfoFotUpsert) use ($repository) {
-                $fixtureInfo = new FixtureInfo($fixtureInfoFotUpsert->toArray());
-                
+            ->map(function (FixtureInfo $fixtureInfo) use ($repository) {                
                 $fixtureData = $repository->fetchFixture($fixtureInfo->external_fixture_id);
                 
                 return $fixtureInfo

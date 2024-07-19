@@ -28,9 +28,8 @@ final readonly class DecideManOfTheMatch
                         ->orWhere('player_info_id', $playerInfoId)
                         ->orWhere('mom', true),
                 ])
-                ->fixtureInfoId($fixtureInfoId)
+                ->byFixtureInfoId($fixtureInfoId)
                 ->selectWithout()
-                ->fixtureInfoId($fixtureInfoId)
                 ->firstOrNew(['fixture_info_id' => $fixtureInfoId]);
 
             $newMomId = $fixture->players

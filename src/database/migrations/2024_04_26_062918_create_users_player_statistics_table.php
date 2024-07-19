@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fixture_info_player_info', function (Blueprint $table) {
-            $table->id();
+        Schema::create('users_player_statistics', function (Blueprint $table) {
+            $table->ulid('id')->primary();
+            $table->unsignedFloat('rating', 3, 1)->nullable();
+            $table->boolean('mom')->nullable();
             $table->foreignUlid('fixture_info_id')->constrained();
             $table->foreignUlid('player_info_id')->constrained();
         });
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fixture_info_player_info');
+        Schema::dropIfExists('users_player_statistics');
     }
 };

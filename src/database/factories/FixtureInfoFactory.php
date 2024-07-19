@@ -83,21 +83,10 @@ class FixtureInfoFactory extends Factory
         });
     }
 
-    public function toArray()
+    public function subDays(int $days)
     {
-        $fixtureInfo = $this->make();
-        
-        return [
-            'external_fixture_id' => $fixtureInfo->external_fixture_id,
-            'external_league_id'  => $fixtureInfo->external_league_id,
-            'season'              => $fixtureInfo->season,
-            'date'                => $fixtureInfo->date,
-            'status'              => $fixtureInfo->status,
-            'score'               => $fixtureInfo->score,
-            'teams'               => $fixtureInfo->teams,
-            'league'              => $fixtureInfo->league,
-            'fixture'             => $fixtureInfo->fixture,
-            'lineups'             => $fixtureInfo->lineups
-        ];
+        return $this->state(function (array $attributes) use ($days) {
+            return ['date' => now()->subDays($days)];
+        });
     }
 }

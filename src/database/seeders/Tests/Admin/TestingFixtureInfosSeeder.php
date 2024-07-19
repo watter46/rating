@@ -25,14 +25,16 @@ class TestingFixtureInfosSeeder extends Seeder
                     return FixtureInfo::factory()
                         ->fromFile($data)
                         ->nullLineup()
-                        ->state(['date' => now()->subDays(1 * ($index + 1))])
-                        ->toArray();
+                        ->subDays($index + 1)
+                        ->make()
+                        ->castsToJson();
                 }
 
                 return FixtureInfo::factory()
                     ->fromFile($data)
-                    ->state(['date' => now()->subDays(1 * ($index + 1))])
-                    ->toArray();
+                    ->subDays($index + 1)
+                    ->make()
+                    ->castsToJson();
             });
         
         FixtureInfo::upsert($fixtureInfos->toArray(), ['id']);

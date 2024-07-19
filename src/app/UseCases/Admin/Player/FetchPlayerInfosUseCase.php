@@ -12,7 +12,7 @@ final readonly class FetchPlayerInfosUseCase
 {
     public function execute(): Collection
     {
-        try {
+        try {            
             return PlayerInfo::query()
                 ->select(['id', 'name', 'number', 'api_football_id'])
                 ->currentSeason()

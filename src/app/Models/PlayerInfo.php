@@ -11,9 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 use App\UseCases\Util\Season;
-use App\Events\PlayerInfoRegistered;
-use App\UseCases\Admin\Data\FlashLiveSports\TeamSquad;
-
+use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerInfosBuilder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PlayerInfo extends Model
 {
@@ -44,26 +43,18 @@ class PlayerInfo extends Model
 
     public const UPSERT_UNIQUE = ['id'];
 
-    public const UPSERT_ALL = [
-        'name',
-        'number',
-        'season',
-        'api_football_id',
-        'flash_live_sports_id'
+    public const UPSERT_API_FOOTBALL_COLUMNS = [
+        'api_football_id'
     ];
 
-    /**
-     * 試合で使用するデータがすべて存在するか確認して
-     * 存在しない場合、不足しているデータを取得するイベントを発行する
-     *
-     * @param  TeamSquad $teamSquad
-     * @return void
-     */
-    public static function upserted(TeamSquad $teamSquad): void
+    public const UPSERT_FLASH_LIVE_SPORTS_COLUMNS = [
+        'flash_live_sports_id',
+        'flash_live_sports_image_id'
+    ];
+
+    public function playerInfosBuilder(): PlayerInfosBuilder
     {
-        if ($teamSquad->check()) return;
-        
-        PlayerInfoRegistered::dispatch($teamSquad);
+        return PlayerInfosBuilder::create();
     }
     
     /**
@@ -97,18 +88,9 @@ class PlayerInfo extends Model
         $query->where('season', Season::current());
     }
 
-    public function fixture(): BelongsTo
+    public function fixtureInfo()
     {
-        return $this->belongsTo(Fixture::class);
-    }
-    
-    /**
-     * playerInfos
-     *
-     * @return BelongsToMany
-     */
-    public function players(): BelongsToMany
-    {
-        return $this->belongsToMany(PlayerInfo::class);
+        return $this->belongsToMany(FixtureInfo::class, 'users_player_statistics')
+            ->withPivot('rating', 'comment');
     }
 }

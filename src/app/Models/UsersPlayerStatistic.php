@@ -2,23 +2,25 @@
 
 namespace App\Models;
 
-use Database\Factories\UsersRatingFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 
-class Average extends Model
+class UsersPlayerStatistic extends Pivot
 {
     use HasFactory;
     use HasUlids;
 
+    protected $table = 'users_player_statistics';
+    
     public $incrementing = false;
-    public $timestamps   = false;
     
     protected $keyType = 'string';
 
+    public $timestamps = false;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -26,21 +28,23 @@ class Average extends Model
      */
     protected $fillable = [
         'rating',
-        'mom',
-        'player_info_id',
-        'fixture_info_id'
+        'mom'
     ];
 
     protected $casts = [
         'mom' => 'boolean'
     ];
 
-    protected static function newFactory()
-    {
-        return UsersRatingFactory::new();
-    }
+    public const UPSERT_UNIQUE = ['id'];
 
-    public function scopeFixtureInfoId(Builder $query, string $fixtureInfoId)
+    /**
+     * ManOfTheMatchの選手を取得する
+     *
+     * @param  Builder<Player> $query
+     * @param  string $fixtureInfoId
+     * @return void
+     */
+    public function scopeByFixtureInfo(Builder $query, string $fixtureInfoId)
     {
         $query->where('fixture_info_id', $fixtureInfoId);
     }

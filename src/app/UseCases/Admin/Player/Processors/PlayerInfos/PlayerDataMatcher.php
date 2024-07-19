@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Player\UpdatePlayerInfos;
+namespace App\UseCases\Admin\Player\Processors\PlayerInfos;
 
 use Illuminate\Support\Str;
 

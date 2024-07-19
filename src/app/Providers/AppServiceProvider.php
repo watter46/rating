@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Infrastructure\ApiFootball\ApiFootballRepository;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\Infrastructure\ApiFootball\MockApiFootballRepository;
 use App\Infrastructure\FlashLiveSports\MockFlashLiveSportsRepository;
@@ -40,6 +39,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Collection::macro('toCollection', function () {
+            $wrapCollectionRecursive = function ($items) use (&$wrapCollectionRecursive) {
+                if (is_array($items)) {
+                    return collect($items)
+                        ->map(function ($item) use ($wrapCollectionRecursive) {
+                            if (is_array($item)) {
+                                return $wrapCollectionRecursive($item);
+                            }
+        
+                            return $item;
+                        });
+                }
+                
+                return collect($items);
+            };
+        
+            return $wrapCollectionRecursive($this->toArray());
+        });
+        
         Collection::macro('dataGet', function ($key, bool $collection = true) {
             $data = $this->toArray();
             

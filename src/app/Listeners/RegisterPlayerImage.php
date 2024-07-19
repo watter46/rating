@@ -23,7 +23,7 @@ class RegisterPlayerImage
     /**
      * Handle the event.
      */
-    public function handle(FixtureInfoRegistered $event): void
+    public function handle(FixtureInfoRegistered|PlayerInfoRegistered $event): void
     {
         $invalidPlayerInfos = $event->builder->getInvalidPlayerImageIds();
         

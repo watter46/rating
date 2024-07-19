@@ -4,7 +4,7 @@ namespace App\UseCases\Admin\Data\ApiFootball;
 
 use Illuminate\Support\Collection;
 
-use App\UseCases\Admin\Player\UpdatePlayerInfos\PlayerDataMatcher;
+use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerDataMatcher;
 
 
 readonly class SquadsData
