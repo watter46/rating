@@ -52,7 +52,7 @@ readonly class FixtureDataPresenter
     }
 
     private function formatLeagueImage(): void
-    {        
+    {
         $leagueId = $this->fixture->fixtureInfo->league['id'];
         
         $this->fixture->fixtureInfo->league = $this->fixture->fixtureInfo->league
@@ -151,8 +151,8 @@ readonly class FixtureDataPresenter
                         'mom' => $player->mom
                     ],
                     'users' => [
-                        'rating' => $player->average?->rating,
-                        'mom' => $player->average?->mom
+                        'rating' => $player->usersRating['rating'],
+                        'mom' => $player->usersRating['mom']
                     ],
                     'machine' => $playerData['rating']
                 ]

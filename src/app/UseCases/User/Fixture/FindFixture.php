@@ -5,7 +5,6 @@ namespace App\UseCases\User\Fixture;
 use Exception;
 use Illuminate\Support\Collection;
 
-use App\Models\Average;
 use App\Models\Fixture;
 use App\Models\FixtureInfo;
 use App\Models\Player;
@@ -19,19 +18,22 @@ final readonly class FindFixture
         try {
             /** @var Fixture $fixture */
             $fixture = Fixture::query()
-                ->with([
+                ->selectWithout()
+                ->byFixtureInfoId($fixtureInfoId)
+                ->firstOrNew(['fixture_info_id' => $fixtureInfoId])
+                ->load([
                     FixtureInfo::SELECT_COLUMNS => [PlayerInfo::SELECT_COLUMNS],
                     'players'
-                ])
-                ->selectWithout()
-                ->fixtureInfoId($fixtureInfoId)
-                ->firstOrNew(['fixture_info_id' => $fixtureInfoId]);
+                ]);
             
-            $averages = Average::query()
-                ->select(['player_info_id', 'rating', 'mom'])
-                ->fixtureInfoId($fixtureInfoId)
-                ->get()
-                ->keyBy('player_info_id');
+            $playerInfoKeyById = $fixture->fixtureInfo->playerInfos
+                ->keyBy('id')
+                ->map(function (PlayerInfo $playerInfo) {
+                    return [
+                        'rating' => $playerInfo->users_player_statistic->rating,
+                        'mom' => $playerInfo->users_player_statistic->mom
+                    ];
+                });
                 
             /** @var Collection $notInPlayerInfoIds */
             $notInPlayerInfoIds = $fixture
@@ -49,10 +51,10 @@ final readonly class FindFixture
                             return new Player(['player_info_id' => $playerInfoId]);
                         }
                 ))
-                ->map(function (Player $player) use ($fixtureDomain, $averages) {
+                ->map(function (Player $player) use ($fixtureDomain, $playerInfoKeyById) {
                     return $fixtureDomain
                         ->make($player)
-                        ->setAttribute('average', $averages->get($player->player_info_id));
+                        ->setAttribute('usersRating', $playerInfoKeyById->get($player->player_info_id));
                 });
 
             $fixture->momLimit = $fixtureDomain->getMomCountLimit();

@@ -20,9 +20,8 @@ final readonly class RatePlayer
                 ->with(['players' => fn ($query) => $query
                     ->where('player_info_id', $playerInfoId)
                 ])
-                ->fixtureInfoId($fixtureInfoId)
+                ->byFixtureInfoId($fixtureInfoId)
                 ->selectWithout()
-                ->fixtureInfoId($fixtureInfoId)
                 ->firstOrNew(['fixture_info_id' => $fixtureInfoId]);
 
             $player = $fixture->players->first()
@@ -62,6 +61,7 @@ final readonly class RatePlayer
             throw new ModelNotFoundException('Player Not Found');
 
         } catch (Exception $e) {
+            dd($e);
             throw $e;
         }
     }

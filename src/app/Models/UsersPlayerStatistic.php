@@ -31,6 +31,10 @@ class UsersPlayerStatistic extends Pivot
         'mom'
     ];
 
+    protected $casts = [
+        'mom' => 'boolean'
+    ];
+
     public const UPSERT_UNIQUE = ['id'];
 
     /**

@@ -63,11 +63,15 @@ class FixtureInfo extends Model
     }
 
     public function castsToJson(): Collection
-    {
+    {        
         $jsonKeys = collect($this->getCasts())->keys();
         
         return collect($this)
             ->map(function ($value, $key) use ($jsonKeys) {
+                if (!$value) {
+                    return $value;
+                }
+                
                 if ($jsonKeys->some($key)) {
                     return collect($value)->toJson();
                 }

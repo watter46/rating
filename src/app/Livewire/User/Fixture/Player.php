@@ -8,7 +8,6 @@ use Livewire\Component;
 use App\Livewire\MessageType;
 use App\UseCases\User\Player\DecideManOfTheMatch;
 use App\UseCases\User\Player\RatePlayer;
-use App\UseCases\User\Player\FindPlayer;
 
 
 class Player extends Component
@@ -18,7 +17,6 @@ class Player extends Component
 
     public array $player;
 
-    private readonly FindPlayer $findPlayer;
     private readonly RatePlayer $ratePlayer;
     private readonly RatingPresenter $presenter;
     private readonly DecideManOfTheMatch $decideMom;

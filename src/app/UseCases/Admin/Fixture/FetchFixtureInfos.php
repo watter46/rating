@@ -6,13 +6,20 @@ use Exception;
 use Illuminate\Pagination\Paginator;
 
 use App\Models\FixtureInfo;
-
+use App\UseCases\Admin\Player\UpdateUsersRating;
 
 final readonly class FetchFixtureInfos
 {
+    public function __construct(private UpdateUsersRating $updateUsersRating)
+    {
+        
+    }
+    
     public function execute(): Paginator
     {
         try {
+            $this->updateUsersRating->execute('01j31r85jagyfwejf6nn47j3q3');
+            
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
                 ->selectWithout([

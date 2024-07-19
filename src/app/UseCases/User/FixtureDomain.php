@@ -11,7 +11,7 @@ use App\Models\Player;
 class FixtureDomain
 {
     /** 評価可能期間 5日間 */
-    private const RATE_PERIOD_HOURS = 24 * 5;
+    private const RATE_PERIOD_HOURS = 2400 * 5;
     public const RATE_PERIOD_EXPIRED_MESSAGE = 'Rate period has expired.';
 
     private const RATE_COUNT_LIMIT = 3;
