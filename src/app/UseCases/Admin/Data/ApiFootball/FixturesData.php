@@ -2,9 +2,9 @@
 
 namespace App\UseCases\Admin\Data\ApiFootball;
 
-use App\Models\FixtureInfo;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
 use Illuminate\Support\Collection;
+
 
 class FixturesData
 {    
@@ -25,24 +25,6 @@ class FixturesData
             return FixtureData::create(collect($fixtureData));
         }));
     }
-    
-    // /**
-    //  * getData
-    //  *
-    //  * @return Collection<FixtureData> $fixturesData
-    //  */
-    // public function get(): Collection
-    // {
-    //     return $this->fixturesData;
-    // }
-
-    // public function partition(Collection $fixtureIds)
-    // {        
-    //     return $this->fixturesData
-    //         ->partition(function (FixtureData $fixtureData) use ($fixtureIds) {
-    //             return $fixtureData->exists($fixtureIds);
-    //         });
-    // }
     
     /**
      * keyByFixtureId
@@ -72,72 +54,4 @@ class FixturesData
                 return $fixtureData->getFixtureId();
             });
     }
-
-    // public function defaultFormat(): Collection
-    // {
-    //     return $this->fixturesData->map(function (FixtureData $fixtureData) {
-    //         return $fixtureData->build();
-    //     });
-    // }
-
-    // // Modelを持ち込まない方が良い
-    // public function build(): Collection
-    // {
-    //     /** @var Collection */
-    //     $fixtureInfos = FixtureInfo::query()
-    //         ->selectWithoutTimestamps()   
-    //         ->currentSeason()
-    //         ->get()
-    //         ->map(function (FixtureInfo $fixtureInfo) {
-    //             return $fixtureInfo->castsToJson();
-    //         });
-
-    //     return $fixtureInfos->isNotEmpty()
-    //         ? $fixtureInfosData->getData()
-    //             ->map(function (FixtureData $fixtureData) use ($fixtureInfos) {
-    //                 $fixtureInfo = $fixtureInfos
-    //                     ->keyBy('external_fixture_id')
-    //                     ->get($fixtureData->getFixtureId());
-
-    //                 dd($fixtureData->build(), $fixtureInfo, $fixtureInfos, $fixtureData->getFixtureId());
-                        
-    //                 return $fixtureInfo
-    //                     ->merge($fixtureData->build());
-    //             })
-    //         : $fixtureInfosData->defaultFormat();
-    // }
-
-    // public function validated(): FixtureInfosDataValidator
-    // {
-    //     return FixtureInfosDataValidator::validate($this);
-    // }
-
-    // public function checkRequiredData(): bool
-    // {
-    //     return FixtureInfosDataValidator::validate($this)->checkRequiredData();
-    // }
-
-    // public function getUniqueTeamIds(): Collection
-    // {
-    //     return $this->fixturesData
-    //         ->map(function (FixtureData $fixtureData) {
-    //             return $fixtureData->getTeamIds();
-    //         })
-    //         ->flatten()
-    //         ->unique()
-    //         ->values();
-    // }
-        
-    // /**
-    //  * リーグIDのリストを取得する
-    //  *
-    //  * @return Collection<int, int>
-    //  */
-    // public function getUniqueLeagueIds(): Collection
-    // {
-    //     return $this->fixturesData
-    //         ->map(function (FixtureData $fixtureData) {
-    //             return $fixtureData->getLeagueId();
-    //         });
-    // }
 }

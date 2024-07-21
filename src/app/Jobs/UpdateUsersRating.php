@@ -1,39 +1,39 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Jobs;
 
-use Illuminate\Console\Command;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 use App\Models\FixtureInfo;
-use App\UseCases\Admin\Player\UpdateRatingAverage\UpdateRatingAverage;
+use App\UseCases\Admin\Player\UpdateUsersRating as UpdateUsersRatingUC;
 
 
-class UpdateUsersRating extends Command
+class UpdateUsersRating implements ShouldQueue
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'users-rating:update';
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * The console command description.
-     *
-     * @var string
+     * Create a new job instance.
      */
-    protected $description = 'Command description';
+    public function __construct()
+    {
+        //
+    }
 
     /**
-     * Execute the console command.
+     * Execute the job.
      */
-    public function handle(UpdateRatingAverage $updateRatingAverage)
+    public function handle(UpdateUsersRatingUC $updateUsersRating)
     {
         if (!$this->shouldHandle()) return;
 
-        $updateRatingAverage->execute($this->getLastFixtureInfo()->id);
+        $updateUsersRating->execute($this->getLastFixtureInfo()->id);
     }
     
     /**

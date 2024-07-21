@@ -5,10 +5,7 @@ namespace App\UseCases\Admin\Player;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\UsersRating;
 use App\Models\Fixture;
-use App\Models\FixtureInfoPlayerInfo;
-use App\Models\Player;
 use App\Models\UsersPlayerStatistic;
 use App\UseCases\Admin\Player\Processors\UsersRating\UsersRatingBuilder;
 
@@ -27,7 +24,7 @@ class UpdateUsersRating
      */
     public function execute(string $fixtureInfoId)
     {
-        try {
+        try {            
             $fixtures = Fixture::query()
                 ->select(['id', 'fixture_info_id'])
                 ->with([
