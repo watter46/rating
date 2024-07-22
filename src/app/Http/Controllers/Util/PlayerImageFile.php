@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers\Util;
 
-
 use Illuminate\Support\Facades\File;
-
-use App\UseCases\Util\Season;
 
 
 final readonly class PlayerImageFile
@@ -35,12 +32,12 @@ final readonly class PlayerImageFile
 
     public function generatePath(int $apiFootballId): string
     {
-        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$apiFootballId);
+        return public_path(self::DIR_PATH.'/'.$apiFootballId);
     }
 
     public function generateViewPath(int $apiFootballId)
     {
-        return self::DIR_PATH.'/'.Season::current().'_'.$apiFootballId;
+        return self::DIR_PATH.'/'.$apiFootballId;
     }
 
     public function getDefaultPath(): string

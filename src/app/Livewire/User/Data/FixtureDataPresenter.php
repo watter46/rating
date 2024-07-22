@@ -136,9 +136,13 @@ readonly class FixtureDataPresenter
                 'momLimit' => $this->fixture->momLimit,
                 'rateCount' => $player->rate_count,
                 'rateLimit' => $player->rateLimit,
-                'img' => $this->playerImage->exists($playerData['id'])
-                    ? $this->playerImage->generateViewPath($playerData['id'])
-                    : $this->playerImage->getDefaultPath(),
+                'img' => [
+                    'exists' => $this->playerImage->exists($playerData['id']),
+                    'img' => $this->playerImage->exists($playerData['id'])
+                        ? $this->playerImage->generateViewPath($playerData['id'])
+                        : $this->playerImage->getDefaultPath(),
+                    'number' => $playerData['number']
+                ],
                 'goals' => $playerData['goal'],
                 'grid' => $playerData['grid'],
                 'name' => $this->toLastName($playerData['name']),
