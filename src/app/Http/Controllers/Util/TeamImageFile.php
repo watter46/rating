@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Util;
 
 use Illuminate\Support\Facades\File;
 
-use App\UseCases\Util\Season;
-
 
 final readonly class TeamImageFile
 {
@@ -17,6 +15,13 @@ final readonly class TeamImageFile
         $this->ensureDirExists();
     }
 
+    public function get(int $teamId)
+    {
+        return $path = $this->generatePath($teamId);
+        
+        return dd(File::get($path));
+    }
+    
     public function write(int $teamId, string $teamImage)
     {
         File::put($this->generatePath($teamId), $teamImage);
@@ -31,12 +36,12 @@ final readonly class TeamImageFile
 
     public function generatePath(int $teamId): string
     {                
-        return public_path(self::DIR_PATH.'/'.Season::current().'_'.$teamId);
+        return public_path(self::DIR_PATH.'/'.$teamId);
     }
 
     public function generateViewPath(int $teamId): string
     {
-        return self::DIR_PATH.'/'.Season::current().'_'.$teamId;
+        return self::DIR_PATH.'/'.$teamId;
     }
 
     public function defaultPath(): string

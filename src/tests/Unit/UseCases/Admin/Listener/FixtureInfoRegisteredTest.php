@@ -57,7 +57,7 @@ class FixtureInfoRegisteredTest extends TestCase
 
         $file->toBackup();
 
-        $this->assertFileDoesNotExist(public_path('teams/2023_49'));
+        $this->assertFileDoesNotExist(public_path('teams/49'));
         
         $fixtureInfo = FixtureInfo::select('id')->first();
 
@@ -66,7 +66,7 @@ class FixtureInfoRegisteredTest extends TestCase
         
         $registerFixtureInfo->execute($fixtureInfo->id);
 
-        $this->assertFileExists(public_path('teams/2023_49'));
+        $this->assertFileExists(public_path('teams/49'));
 
         $file->deleteBackUp();
     }
@@ -77,7 +77,7 @@ class FixtureInfoRegisteredTest extends TestCase
         
         $file->toBackup();
 
-        $this->assertFileDoesNotExist(public_path('leagues/2023_39'));
+        $this->assertFileDoesNotExist(public_path('leagues/39'));
         
         $fixtureInfo = FixtureInfo::select('id')->first();
 
@@ -86,7 +86,7 @@ class FixtureInfoRegisteredTest extends TestCase
         
         $registerFixtureInfo->execute($fixtureInfo->id);
 
-        $this->assertFileExists(public_path('leagues/2023_39'));
+        $this->assertFileExists(public_path('leagues/39'));
 
         $file->deleteBackUp();
     }
@@ -113,14 +113,14 @@ class FixtureInfoRegisteredTest extends TestCase
         
         $file->toBackup();
         
-        $this->assertFileDoesNotExist(public_path('images/2023_116117'));
+        $this->assertFileDoesNotExist(public_path('images/116117'));
 
         /** @var RegisterFixtureInfo $registerFixtureInfo */
         $registerFixtureInfo = app(RegisterFixtureInfo::class);
         
         $registerFixtureInfo->execute($fixtureInfo->id);
 
-        $this->assertFileExists(public_path('images/2023_116117'));
+        $this->assertFileExists(public_path('images/116117'));
 
         $file->deleteBackUp();
     }

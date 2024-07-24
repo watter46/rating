@@ -2,11 +2,12 @@
 
 namespace Tests\Unit\UseCases\Admin\Fixture;
 
-use Database\Seeders\Tests\Admin\TestingFixtureInfosSeeder;
 use Tests\TestCase;
+use Illuminate\Support\Carbon;
 
 use App\Models\FixtureInfo;
 use App\UseCases\Admin\Fixture\FetchFixtureInfos;
+use Database\Seeders\Tests\Admin\TestingFixtureInfosSeeder;
 
 
 class FetchFixtureInfosTest extends TestCase
@@ -19,6 +20,13 @@ class FetchFixtureInfosTest extends TestCase
 
     protected $seeder = TestingFixtureInfosSeeder::class;
 
+    public function setUp(): void
+    {
+        Carbon::setTestNow('2024-05-01');
+
+        parent::setUp();
+    }
+    
     public function test_FixtureInfoが保存されている()
     {
         $this->assertDatabaseCount('fixture_infos', 17);

@@ -36,7 +36,7 @@ class RegisterTeamImages
                 }
     
                 $teamImage = $this->repository->fetchTeamImage($teamId);
-    
+                
                 $this->file->write($teamId, $teamImage);
             });
     }

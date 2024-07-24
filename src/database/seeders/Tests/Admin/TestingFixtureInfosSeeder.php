@@ -20,21 +20,26 @@ class TestingFixtureInfosSeeder extends Seeder
 
         $fixtureInfos = $testFixtureInfos
             ->getAll()
-            ->map(function (Collection $data, $index) {                
-                if ($index <= 2) {
-                    return FixtureInfo::factory()
-                        ->fromFile($data)
-                        ->nullLineup()
-                        ->subDays($index + 1)
-                        ->make()
-                        ->castsToJson();
-                }
-
-                return FixtureInfo::factory()
-                    ->fromFile($data)
-                    ->subDays($index + 1)
-                    ->make()
-                    ->castsToJson();
+            ->pipe(function (Collection $fixtureInfos) {
+                $nullLineupsIndexes = $fixtureInfos->keys()->reverse()->take(3);
+                
+                return $fixtureInfos
+                    ->map(function (Collection $data, $index) use ($nullLineupsIndexes) {
+                        if ($nullLineupsIndexes->some(fn($i) => $i === $index)) {
+                            return FixtureInfo::factory()
+                                ->fromFile($data)
+                                ->nullLineup()
+                                ->subDays($index + 1)
+                                ->make()
+                                ->castsToJson();
+                        }
+        
+                        return FixtureInfo::factory()
+                            ->fromFile($data)
+                            ->subDays($index + 1)
+                            ->make()
+                            ->castsToJson();
+                    });
             });
         
         FixtureInfo::upsert($fixtureInfos->toArray(), ['id']);

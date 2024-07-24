@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Util;
 
 use Illuminate\Support\Facades\File;
 
-use App\UseCases\Util\Season;
-
 
 class TestLeagueImageFile
 {
@@ -27,12 +25,12 @@ class TestLeagueImageFile
 
     private function generateBackupPath(): string
     {
-        return public_path(self::BACKUP_DIR.'/'.Season::current().'_'.self::LEAGUE_ID);
+        return public_path(self::BACKUP_DIR.'/'.self::LEAGUE_ID);
     }
 
     private function generatePath()
     {
-        return public_path(self::DIR_PATH.'/'.Season::current().'_'.self::LEAGUE_ID);
+        return public_path(self::DIR_PATH.'/'.self::LEAGUE_ID);
     }
 
     public function toBackup()

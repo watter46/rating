@@ -2,9 +2,10 @@
 
 namespace Tests\Unit\UseCases\Admin\Player;
 
-use App\Models\PlayerInfo;
 use Tests\TestCase;
+use Illuminate\Support\Carbon;
 
+use App\Models\PlayerInfo;
 use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashLiveSportsIds;
 use Database\Seeders\Tests\Admin\PlayerInfosSeeder;
 
@@ -13,6 +14,13 @@ class UpdateFlashLiveSportsIdsTest extends TestCase
 {
     protected $seeder = PlayerInfosSeeder::class;
 
+    public function setUp(): void
+    {
+        Carbon::setTestNow('2024-06-01');
+
+        parent::setUp();
+    }
+    
     public function test_DBに保存されている()
     {
         PlayerInfo::query()

@@ -2,18 +2,26 @@
 
 namespace Tests\Unit\UseCases\Admin\Player;
 
-use Database\Seeders\Tests\Admin\RatedByUsersSeeder;
 use Tests\TestCase;
+use Illuminate\Support\Carbon;
 
 use App\Models\FixtureInfo;
 use App\Models\UsersPlayerStatistic;
 use App\UseCases\Admin\Player\UpdateUsersRating;
+use Database\Seeders\Tests\Admin\RatedByUsersSeeder;
 
 
 class UpdateUsersRatingTest extends TestCase
 {
     protected $seeder = RatedByUsersSeeder::class;
 
+    public function setUp(): void
+    {
+        Carbon::setTestNow('2024-06-01');
+
+        parent::setUp();
+    }
+    
     public function test_テスト用データが保存されている()
     {
         $this->assertDatabaseCount('users', 10);

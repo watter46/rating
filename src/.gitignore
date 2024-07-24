@@ -1,10 +1,6 @@
 /.phpunit.cache
 /node_modules
-/public/build
-/public/hot
-/public/images
-/public/storage
-/public/vendor/
+/public/
 /storage/*.key
 /vendor
 /app/Template
