@@ -84,6 +84,16 @@ class FixtureInfoQueryBuilder extends Builder
     }
 
     /**
+     * 1か月以内の試合から取得する
+     *
+     * @return Builder
+     */
+    public function withinOneMonth(): Builder
+    {
+        return $this->where('date', '>=', now('UTC')->subMonth());
+    }
+
+    /**
      * 今日までの試合を取得する
      *
      * @return Builder

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\Infrastructure\ApiFootball\MockApiFootballRepository;
+use App\Infrastructure\ApiFootball\ApiFootballRepository;
 use App\Infrastructure\FlashLiveSports\MockFlashLiveSportsRepository;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 use Illuminate\Support\Collection;

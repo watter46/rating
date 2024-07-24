@@ -66,9 +66,6 @@ class FixtureInfosBuilder
             
         return $fixturesData
             ->keyByFixtureId()
-            ->filter(function (FixtureData $fixtureData) {
-                return $fixtureData->isSeasonTournament();
-            })
             ->map(function (FixtureData $fixtureData, $fixtureId) use ($fixtureInfos, $formatForUpsert) {
                 $fixtureInfo = $fixtureInfos->get($fixtureId);
 

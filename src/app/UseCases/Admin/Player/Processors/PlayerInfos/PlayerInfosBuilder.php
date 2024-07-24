@@ -32,11 +32,10 @@ class PlayerInfosBuilder
     }
 
     public function bulkUpdateApiFootballData(SquadsData $squads)
-    {
+    {        
         return $this->playerInfos
             ->map(function (PlayerInfo $playerInfo) use ($squads) {
                 $player = $squads->getByPlayerInfo(new PlayerDataMatcher($playerInfo));
-
                 if ($player) {
                     $playerInfo->api_football_id = $player['id'];
                 }

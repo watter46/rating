@@ -3,6 +3,7 @@
 namespace App\UseCases\Admin\Data\ApiFootball;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerDataMatcher;
 
@@ -25,7 +26,7 @@ readonly class SquadsData
             ->map(function ($player) {
                 return [
                     'id'     => $player->id,
-                    'name'   => $player->name,
+                    'name'   => $this->transliterate($player->name),
                     'number' => $player->number
                 ];
             });
@@ -34,5 +35,10 @@ readonly class SquadsData
     public function getByPlayerInfo(PlayerDataMatcher $matcher)
     {
         return $this->getPlayers()->first(fn ($player) => $matcher->match($player));
+    }
+
+    private function transliterate(string $name): string
+    {
+        return Str::ascii($name);
     }
 }

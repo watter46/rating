@@ -28,6 +28,11 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
         //
     }
 
+    private function isSeed(): bool
+    {
+        return config('seeder.status');
+    }
+
     private function isTest(): bool
     {
         return env('APP_ENV') === 'testing';
@@ -51,6 +56,14 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
 
     public function fetchTeamSquad(): TeamSquad
     {
+        if ($this->isSeed()) {
+            if ($this->teamSquadFile->exists()) {
+                return TeamSquad::create($this->teamSquadFile->get());
+            }
+
+            dd('not exists');
+        }
+
         if ($this->isTest()) {
             return TeamSquad::create($this->teamSquadFile->get());
         }
@@ -74,6 +87,14 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
 
     public function fetchPlayer(string $flashLiveSportsId): PlayerData
     {
+        if ($this->isSeed()) {
+            if ($this->playerFile->exists($flashLiveSportsId)) {
+                return PlayerData::create($this->playerFile->get($flashLiveSportsId));
+            }
+
+            dd('not exists');
+        }
+        
         if ($this->isTest()) {
             return PlayerData::create($this->playerFile->get($flashLiveSportsId));
         }
@@ -97,6 +118,14 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
 
     public function searchPlayer(Collection $playerInfo): PlayersData
     {
+        if ($this->isSeed()) {
+            if ($this->playersFile->exists($playerInfo['api_football_id'])) {
+                return PlayersData::create($this->playersFile->get($playerInfo['api_football_id']));
+            }
+
+            dd('not exists');
+        }
+
         if ($this->isTest()) {
             return PlayersData::create($this->playersFile->get($playerInfo['api_football_id']));
         }

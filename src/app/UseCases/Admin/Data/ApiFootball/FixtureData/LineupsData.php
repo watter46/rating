@@ -22,10 +22,11 @@ class LineupsData
         return new self($lineupsData);
     }
 
-    // public function build(): Collection
-    // {
-    //     return collect(['lineups' => $this->getLineups()]);
-    // }
+    public function lineupsExists(): bool
+    {
+        return collect($this->lineupsData)
+            ->every(fn($data) => !empty($data));
+    }
 
     private function filterChelsea(Collection $teams): Collection
     {

@@ -23,7 +23,9 @@ class PlayerDataMatcher
     public function match(array $player): bool
     {
         return collect([
+            $this->matchShortenNameAndNumber($player),
                 $this->matchFullNameAndNumber($player),
+                $this->matchShortenNameAndNumber($player),
                 $this->matchLastNameAndNumber($player)
             ])
             ->some(fn($matched) => $matched);
@@ -32,6 +34,20 @@ class PlayerDataMatcher
     private function matchFullNameAndNumber(array $player): bool
     {
         return $this->transliterate($this->playerInfo->name) === $this->transliterate($player['name'])
+            && $this->playerInfo->number === $player['number'];
+    }
+
+    private function matchShortenNameAndNumber(array $player): bool
+    {
+        $shorten = function (string $name) {
+            $transliterated = $this->transliterate($name);
+            $shortenFirstName = Str::substr($transliterated, 0, 1);
+            $lastName = Str::afterLast($transliterated, ' ');
+
+            return $shortenFirstName.'. '.$lastName;
+        };
+        
+        return $shorten($this->playerInfo->name) === $shorten($player['name'])
             && $this->playerInfo->number === $player['number'];
     }
 

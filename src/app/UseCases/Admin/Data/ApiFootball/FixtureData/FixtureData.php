@@ -58,6 +58,11 @@ class FixtureData
     {
         return $fixtureIds->some(fn (int $fixtureId) => $fixtureId === $this->getFixtureId());
     }
+
+    public function lineupsExists(): bool
+    {
+        return $this->lineupsData->lineupsExists();
+    }
     
     public function isFinished(): bool
     {

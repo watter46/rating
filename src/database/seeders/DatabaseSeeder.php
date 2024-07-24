@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        config(['seeder.status' => true]);
+                
         $this->call([
             FixtureInfosSeeder::class,
             PlayerInfoSeeder::class,
@@ -19,5 +21,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AdminSeeder::class
         ]);
+
+        config(['seeder.status' => false]);
     }
 }

@@ -4,7 +4,9 @@ namespace App\Infrastructure\ApiFootball;
 
 use App\Http\Controllers\Util\FixtureFile;
 use App\Http\Controllers\Util\FixturesFile;
+use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\SquadsFile;
+use App\Http\Controllers\Util\TeamImageFile;
 use App\Http\Controllers\Util\TestFixtureInfoFile;
 use App\Http\Controllers\Util\TestFixtureInfosFile;
 use App\Http\Controllers\Util\TestLeagueImageFile;
@@ -25,12 +27,21 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         private FixturesFile $fixturesFile,
         private TestFixtureInfoFile $testFixtureInfoFile,
         private FixtureFile $fixtureFile,
-        private SquadsFile $squadsFile
+        private SquadsFile $squadsFile,
+        private LeagueImageFile $leagueImageFile,
+        private TestLeagueImageFile $testLeagueImageFile,
+        private TeamImageFile $teamImageFile,
+        private TestTeamImageFile $testTeamImageFile
     ) {}
 
     private function isTest(): bool
     {
         return env('APP_ENV') === 'testing';
+    }
+
+    private function isSeed(): bool
+    {
+        return config('seeder.status');
     }
 
     private function httpClient(string $url, ?array $queryParams = null): string
@@ -51,10 +62,18 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
     public function fetchFixtures(): FixturesData
     {
+        if ($this->isSeed()) {
+            if ($this->fixturesFile->exists()) {
+                return FixturesData::create($this->fixturesFile->get());
+            }
+
+            dd('not exists');
+        }
+        
         if ($this->isTest()) {
             return FixturesData::create($this->testFixtureInfosFile->get());
         }
-        
+                
         if ($this->fixturesFile->exists()) {
             return FixturesData::create($this->fixturesFile->get());
         }
@@ -73,6 +92,14 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
     public function fetchFixture(int $fixtureDataId): FixtureData
     {
+        if ($this->isSeed()) {
+            if ($this->fixtureFile->exists($fixtureDataId)) {
+                return FixtureData::create($this->fixtureFile->get($fixtureDataId));
+            }
+
+            dd('not exists');
+        }
+
         if ($this->fixtureFile->exists($fixtureDataId) || $this->isTest()) {
             return FixtureData::create($this->fixtureFile->get($fixtureDataId));
         }
@@ -90,6 +117,14 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
     public function fetchSquads(): SquadsData
     {
+        if ($this->isSeed()) {
+            if ($this->squadsFile->exists()) {
+                return SquadsData::create($this->squadsFile->get());
+            }
+
+            dd('not exists');
+        }
+
         if ($this->isTest()) {
             //
         }
@@ -111,15 +146,27 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
     public function fetchLeagueImage(int $leagueId): string
     {
-        $file = new TestLeagueImageFile;
+        if ($this->isTest()) {
+            return $this->testLeagueImageFile->get();
+        }
+        
+        if ($this->leagueImageFile->exists($leagueId)) {
+            return $this->leagueImageFile->get($leagueId);
+        }
 
-        return $file->get();
+        return $this->httpClient("https://media-4.api-sports.io/football/leagues/$leagueId.png");
     }
 
     public function fetchTeamImage(int $teamId): string
     {
-        $file = new TestTeamImageFile;
+        if ($this->isTest()) {
+            return $this->testTeamImageFile->get();
+        }
+        
+        if ($this->teamImageFile->exists($teamId)) {
+            return $this->teamImageFile->get($teamId);
+        }
 
-        return $file->get();
+        return $this->httpClient("https://media-4.api-sports.io/football/teams/$teamId.png");
     }
 }
