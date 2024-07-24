@@ -62,18 +62,18 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
     public function fetchFixtures(): FixturesData
     {
+        if ($this->isTest()) {
+            return FixturesData::create($this->testFixtureInfosFile->get());
+        }
+
         if ($this->isSeed()) {
             if ($this->fixturesFile->exists()) {
                 return FixturesData::create($this->fixturesFile->get());
             }
 
             dd('not exists');
-        }
-        
-        if ($this->isTest()) {
-            return FixturesData::create($this->testFixtureInfosFile->get());
-        }
-                
+        } 
+
         if ($this->fixturesFile->exists()) {
             return FixturesData::create($this->fixturesFile->get());
         }
@@ -92,16 +92,16 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
     public function fetchFixture(int $fixtureDataId): FixtureData
     {
+        if ($this->fixtureFile->exists($fixtureDataId) || $this->isTest()) {
+            return FixtureData::create($this->fixtureFile->get($fixtureDataId));
+        }
+        
         if ($this->isSeed()) {
             if ($this->fixtureFile->exists($fixtureDataId)) {
                 return FixtureData::create($this->fixtureFile->get($fixtureDataId));
             }
 
             dd('not exists');
-        }
-
-        if ($this->fixtureFile->exists($fixtureDataId) || $this->isTest()) {
-            return FixtureData::create($this->fixtureFile->get($fixtureDataId));
         }
         
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
@@ -117,16 +117,16 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
     public function fetchSquads(): SquadsData
     {
+        if ($this->isTest()) {
+            return SquadsData::create($this->squadsFile->get());
+        }
+        
         if ($this->isSeed()) {
             if ($this->squadsFile->exists()) {
                 return SquadsData::create($this->squadsFile->get());
             }
 
             dd('not exists');
-        }
-
-        if ($this->isTest()) {
-            //
         }
         
         if ($this->squadsFile->exists()) {

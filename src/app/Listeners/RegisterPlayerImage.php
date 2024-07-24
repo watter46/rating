@@ -27,6 +27,8 @@ class RegisterPlayerImage
     {
         $invalidPlayerInfos = $event->builder->getInvalidPlayerImageIds();
         
+        if ($invalidPlayerInfos->isEmpty()) return;
+        
         $invalidPlayerInfos
             ->each(function (PlayerInfo $playerInfo) {
                 $image = $this->repository->fetchPlayerImage($playerInfo->flash_live_sports_image_id);
