@@ -2,10 +2,11 @@
 
 namespace App\UseCases\Admin\Data\ApiFootball\FixtureData;
 
-use App\Http\Controllers\Util\PlayerImageFile;
 use Illuminate\Support\Collection;
 
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\PositionType;
+use App\UseCases\Util\PlayerName;
+use App\Http\Controllers\Util\PlayerImageFile;
 
 
 class LineupsData
@@ -71,31 +72,19 @@ class LineupsData
 
     public function playedPlayers(): Collection
     {
-        $lineupsData = $this->filterChelsea($this->lineupsData->dataGet('lineups'))
-            ->only(['startXI', 'substitutes'])
-            ->flatten(2)
-            ->keyBy('id');
-        
         return $this->filterChelsea($this->lineupsData->dataGet('players'))
             ->dataGet('players')
-            ->map(function ($players) use ($lineupsData) {
-                $data = collect($players)
-                    ->pipe(function (Collection $data) use ($lineupsData) {
-                        return $data->dataGet('player')
-                            ->pipe(function (Collection $player) use ($lineupsData) {
-                                return $player->merge($lineupsData[$player['id']]);
-                            })
-                            ->merge($data->dataGet('statistics.0'));
-                    });
+            ->map(function (array $playerData) {                
+                $player = collect($playerData);
 
                 return [
-                    'id'      => $data->dataGet('id', false),
-                    'name'    => $data->dataGet('name', false),
-                    'number'  => $data->dataGet('number', false),
-                    'goal'    => $data->dataGet('goals.total', false), 
-                    'assists' => $data->dataGet('goals.assists', false), 
-                    'rating'  => $data->dataGet('games.rating', false),
-                    'minutes' => $data->dataGet('games.minutes', false)
+                    'id'      => $player->dataGet('player.id', false),
+                    'name'    => PlayerName::create($player->dataGet('player.name', false))->getFullName(),
+                    'number'  => $player->dataGet('statistics.0.games.number', false),
+                    'goal'    => $player->dataGet('statistics.0.goals.total', false), 
+                    'assists' => $player->dataGet('statistics.0.goals.assists', false), 
+                    'rating'  => $player->dataGet('statistics.0.games.rating', false),
+                    'minutes' => $player->dataGet('statistics.0.games.minutes', false)
                 ];
             })
             ->filter(fn(array $player) => !is_null($player['minutes']));

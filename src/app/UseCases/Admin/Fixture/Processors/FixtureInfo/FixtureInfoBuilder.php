@@ -10,16 +10,19 @@ use App\Models\PlayerInfo;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
 use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FilterInvalidPlayerInfos;
+use App\UseCases\Admin\Fixture\Processors\FixtureInfo\GetInvalidApiFootballIds;
 use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoDataValidator;
 
 
 class FixtureInfoBuilder
 {
-    private FilterInvalidPlayerInfos $filterInvalidPlayerInfos;
+    private GetInvalidApiFootballIds $getInvalidApiFootballIds;
+    // private FilterInvalidPlayerInfos $filterInvalidPlayerInfos;
 
     private function __construct(private FixtureInfo $fixtureInfo)
     {
-        $this->filterInvalidPlayerInfos = new filterInvalidPlayerInfos;
+        // $this->filterInvalidPlayerInfos = new filterInvalidPlayerInfos;
+        $this->getInvalidApiFootballIds = new GetInvalidApiFootballIds;
     }
 
     public static function create(FixtureInfo $fixtureInfo)
@@ -131,18 +134,25 @@ class FixtureInfoBuilder
     {
         $players = $this->toData()->getPlayedPlayers();
 
-        $invalidPlayerInfos = $this->filterInvalidPlayerInfos
-            ->execute($players->pluck('id'))
-            ->keyBy('api_football_id');
-
+        /** @var Collection<PlayerInfo> $playerInfos */
+        $playerInfos = PlayerInfo::query()
+            ->currentSeason()
+            ->whereIn('api_football_id', $players->pluck('id'))
+            ->get();
+        
         return $players
-            ->whereIn('id', $invalidPlayerInfos->pluck('api_football_id'))
-            ->map(function (Collection $player) use ($invalidPlayerInfos) {
-                $invalidPlayer = $invalidPlayerInfos->get($player['id']);
-                
+            ->whereIn('id', $this->getInvalidApiFootballIds->execute($playerInfos, $players))
+            ->map(function (Collection $player) use ($playerInfos) {
+                $playerInfo = $playerInfos
+                    ->first(fn(PlayerInfo $playerInfo) =>
+                        $playerInfo->api_football_id === $player['id']
+                    );
+
                 return collect([
-                    'id' => $invalidPlayer['player_info_id'],
-                    'api_football_id' => $invalidPlayer['api_football_id'],
+                    'id' => $playerInfo?->id,
+                    'flash_live_sports_id' => $playerInfo?->flash_live_sports_id,
+                    'flash_live_sports_image_id' => $playerInfo?->flash_live_sports_image_id,
+                    'api_football_id' => $player['id'],
                     'name' => $player['name'],
                     'number' => $player['number']
                 ]);
@@ -158,7 +168,7 @@ class FixtureInfoBuilder
     {
         return $this->equalLineupCount()
             && $this->validator()->checkRequiredData()
-            && $this->invalidPlayerInfos()->isNotEmpty();
+            && $this->invalidPlayerInfos()->isEmpty();
     }
     
     public function dispatch(): void

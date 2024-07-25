@@ -31,10 +31,18 @@ class RegisterPlayerInfos
         
         $data = $invalidPlayerInfos
             ->map(function (Collection $playerInfo) {
+                // nameのみ更新する
+                if ($playerInfo['flash_live_sports_id']) {
+                    return $playerInfo
+                        ->merge(['season' => Season::current()])
+                        ->toArray();
+                }
+                
                 $flashLiveSportsPlayer = $this->repository
                     ->searchPlayer($playerInfo)
                     ->get();
 
+                // 新しい選手を保存する
                 if (!$playerInfo['id']) {
                     return [
                         'name' => $playerInfo['name'],
@@ -46,6 +54,7 @@ class RegisterPlayerInfos
                     ];
                 }
 
+                // flashLiveSportsのidとimage_idを更新する
                 return [
                     'id' => $playerInfo['id'],
                     'name' => $playerInfo['name'],

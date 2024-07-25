@@ -23,7 +23,7 @@ class FixtureInfosSeeder extends Seeder
             ->bulkUpdate($fixturesData)
             ->map(function (Collection $fixtureInfo) use ($repository) {                
                 $fixtureData = $repository->fetchFixture($fixtureInfo['external_fixture_id']);
-                                
+                                                
                 if (!$fixtureData->lineupsExists()) {
                     $fixtureInfo['lineups'] = null;
 

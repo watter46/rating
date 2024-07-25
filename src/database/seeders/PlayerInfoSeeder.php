@@ -21,9 +21,7 @@ class PlayerInfoSeeder extends Seeder
      */
     public function run(): void
     {
-        /** PlayerInfoを保存する */
-        Carbon::setTestNow('2023-11-01');
-            
+        /** PlayerInfoを保存する */            
         /** @var MockApiFootballRepository $apiFootballRepository */
         $apiFootballRepository = app(MockApiFootballRepository::class);
 

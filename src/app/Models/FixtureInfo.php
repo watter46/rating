@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
 use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoBuilder;
 use App\UseCases\Admin\Fixture\Processors\FixtureInfos\FixtureInfosBuilder;
-use Illuminate\Support\Collection;
+
 
 class FixtureInfo extends Model
 {
@@ -39,7 +40,7 @@ class FixtureInfo extends Model
         'fixture',
         'lineups'
     ];
-
+    
     protected $casts = [
         'score' => AsCollection::class,
         'teams' => AsCollection::class,
