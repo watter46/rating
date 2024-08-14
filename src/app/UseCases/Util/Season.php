@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Util;
 
+use Illuminate\Support\Carbon;
 
 final readonly class Season
 {
@@ -11,10 +12,20 @@ final readonly class Season
     {
         $now = now();
 
-        // return 2023;
         $season = $now->year;
 
         if (1 <= $now->month && $now->month <= self::SEASON_END_MONTH) {
+            return $season - 1;
+        }
+
+        return $season;
+    }
+
+    public static function fromDate(Carbon $date): int
+    {
+        $season = $date->year;
+
+        if (1 <= $date->month && $date->month <= self::SEASON_END_MONTH) {
             return $season - 1;
         }
 

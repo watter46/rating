@@ -6,6 +6,7 @@ use App\Events\FixtureInfoRegistered;
 use App\Events\PlayerInfoRegistered;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Models\PlayerInfo;
+use App\UseCases\Admin\Fixture\Accessors\Player;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 
 class RegisterPlayerImage
@@ -23,17 +24,21 @@ class RegisterPlayerImage
     /**
      * Handle the event.
      */
-    public function handle(FixtureInfoRegistered|PlayerInfoRegistered $event): void
+    public function handle(FixtureInfoRegistered $event): void
     {
-        $invalidPlayerInfos = $event->builder->getInvalidPlayerImageIds();
+        $fixtureInfo = $event->fixtureInfo;
         
-        if ($invalidPlayerInfos->isEmpty()) return;
-        
-        $invalidPlayerInfos
-            ->each(function (PlayerInfo $playerInfo) {
-                $image = $this->repository->fetchPlayerImage($playerInfo->flash_live_sports_image_id);
+        $invalidPlayers = $fixtureInfo
+            ->refreshPlayerInfos()
+            ->getInvalidImagePlayers();
                 
-                $this->file->write($playerInfo->api_football_id, $image);
+        if ($invalidPlayers->isEmpty()) return;
+        
+        $invalidPlayers
+            ->each(function (Player $player) {
+                $image = $this->repository->fetchPlayerImage($player);
+                
+                $this->file->write($player->getPlayerId(), $image);
             });
     }
 }

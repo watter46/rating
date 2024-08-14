@@ -17,8 +17,10 @@ use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
 use App\UseCases\Admin\Data\ApiFootball\FixturesData;
 use App\UseCases\Admin\Data\ApiFootball\SquadsData;
+use App\UseCases\Admin\Fixture\Accessors\FixtureInfo;
+use App\UseCases\Admin\Fixture\Accessors\FixtureInfos;
 use App\UseCases\Util\Season;
-
+use Illuminate\Support\Collection;
 
 class MockApiFootballRepository implements ApiFootballRepositoryInterface
 {
@@ -90,9 +92,75 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         return FixturesData::create($data);
     }
 
+    public function preFetchFixtures(): FixtureInfos
+    {
+        if ($this->isTest()) {
+            return FixturesData::create($this->testFixtureInfosFile->get());
+        }
+
+        if ($this->isSeed()) {
+            return FixtureInfos::create($this->fixturesFile->get());
+
+            // if ($this->fixturesFile->exists()) {
+            //     return FixturesData::create($this->fixturesFile->get());
+            // }
+
+            // dd('not exists');
+        } 
+
+        if ($this->fixturesFile->exists()) {
+            return FixtureInfos::create($this->fixturesFile->get());
+        }
+        
+        $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
+            'season' => Season::current(),
+            'team'   => config('api-football.chelsea-id')
+        ]);
+
+        $data = collect(json_decode($json)->response);
+
+        $this->fixturesFile->write($data);
+
+        return FixturesData::create($data);
+    }
+
+    public function preFetchFixture(int $fixtureDataId): FixtureInfo
+    {
+        if ($this->fixtureFile->exists($fixtureDataId) &&
+            $this->fixtureFile->isFinished($fixtureDataId) ||
+            $this->isTest()) {
+            
+            return FixtureInfo::create($this->fixtureFile->get($fixtureDataId));
+                
+            // return FixtureData::create($this->fixtureFile->get($fixtureDataId));
+        }
+        
+        if ($this->isSeed()) {
+            return FixtureInfo::create($this->fixtureFile->get($fixtureDataId));
+            
+            // if ($this->fixtureFile->exists($fixtureDataId)) {
+            //     return FixtureData::create($this->fixtureFile->get($fixtureDataId));
+            // }
+
+            // dd('not exists');
+        }
+        
+        $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
+            'id' => $fixtureDataId
+        ]);
+
+        $data = collect(json_decode($json)->response[0]);
+        
+        $this->fixtureFile->write($fixtureDataId, $data);
+
+        return FixtureInfo::create($data);
+    }
+
     public function fetchFixture(int $fixtureDataId): FixtureData
     {
-        if ($this->fixtureFile->exists($fixtureDataId) || $this->isTest()) {
+        if ($this->fixtureFile->exists($fixtureDataId) &&
+            $this->fixtureFile->isFinished($fixtureDataId) ||
+            $this->isTest()) {
             return FixtureData::create($this->fixtureFile->get($fixtureDataId));
         }
         
@@ -103,6 +171,8 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
             dd('not exists');
         }
+
+        dd($fixtureDataId);
         
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
             'id' => $fixtureDataId

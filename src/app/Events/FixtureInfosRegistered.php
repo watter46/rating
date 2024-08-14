@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\UseCases\Admin\Fixture\Accessors\FixtureInfos;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -18,7 +19,7 @@ class FixtureInfosRegistered
     /**
      * @param FixturesData $data 
      */
-    public function __construct(public FixtureInfosBuilder $builder)
+    public function __construct(public FixtureInfos $fixtureInfos)
     {
         //
     }

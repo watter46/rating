@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         config(['seeder.status' => true]);
                 
         $this->call([
-            // FixtureInfosSeeder::class,
+            FixtureInfosSeeder::class,
             PlayerInfoSeeder::class,
-            FixtureInfoSeeder::class,
+            // FixtureInfoSeeder::class,
             // FixturePlayerInfosSeeder::class,
             // FixtureInfoInPlayerInfoSeeder::class,
             UserSeeder::class,

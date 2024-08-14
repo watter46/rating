@@ -6,13 +6,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 use App\UseCases\Util\Season;
 use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerInfosBuilder;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+
 
 class PlayerInfo extends Model
 {
@@ -24,20 +22,7 @@ class PlayerInfo extends Model
     
     protected $keyType = 'string';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'number',
-        'season',
-        'api_football_id',
-        'flash_live_sports_id',
-        'flash_live_sports_image_id',
-        'fixture_info_id'
-    ];
+    protected $guarded= ['id'];
 
     public const SELECT_COLUMNS = 'playerInfos:id,api_football_id';
 

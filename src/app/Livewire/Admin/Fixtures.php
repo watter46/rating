@@ -86,7 +86,7 @@ class Fixtures extends Component
             if ($this->refreshKey !== config('refreshKey.key')) {
                 throw new Exception(self::ERROR_MESSAGE);
             }
-            
+            dd('test');
             $this->registerFixtureInfos->execute();
             
             $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));

@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
             $data = $this->toArray();
             
             return $collection
-                ? collect(data_get($data, $key))
+                ? collect(data_get($data, $key))->toCollection()
                 : data_get($data, $key);
         });
 

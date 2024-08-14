@@ -20,7 +20,7 @@ final readonly class FetchFixtureInfos
                     'external_league_id',
                     'date',
                     'status',
-                    'season',
+                    'season'
                 ])
                 ->orderBy('date', 'asc')
                 ->currentSeason()

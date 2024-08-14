@@ -23,25 +23,28 @@ class FixtureInfo extends Model
     
     protected $keyType = 'string';
     
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'external_fixture_id',
-        'external_league_id',
-        'season',
-        'date',
-        'status',
-        'score',
-        'teams',
-        'league',
-        'fixture',
-        'lineups'
-    ];
+    // /**
+    //  * The attributes that are mass assignable.
+    //  *
+    //  * @var array<int, string>
+    //  */
+    // protected $fillable = [
+    //     'api_fixture_id',
+    //     'api_league_id',
+    //     'season',
+    //     'date',
+    //     'is_end',
+    //     'score',
+    //     'teams',
+    //     'league',
+    //     'fixture',
+    //     'lineups'
+    // ];
+
+    protected $guarded = ['id'];
     
     protected $casts = [
+        'is_end' => 'boolean',
         'score' => AsCollection::class,
         'teams' => AsCollection::class,
         'league' => AsCollection::class,
@@ -50,6 +53,18 @@ class FixtureInfo extends Model
     ];
 
     public const UPSERT_UNIQUE = ['id'];
+
+    public const UPSERT_COLUMNS = [
+        'api_fixture_id',
+        'api_league_id',
+        'season',
+        'date',
+        'is_end',
+        'score',
+        'teams',
+        'league',
+        'fixture'
+    ];
 
     public const SELECT_COLUMNS = 'fixtureInfo:id,score,teams,league,fixture,lineups';
 
@@ -65,7 +80,13 @@ class FixtureInfo extends Model
 
     public function castsToJson(): Collection
     {        
-        $jsonKeys = collect($this->getCasts())->keys();
+        $jsonKeys = collect([
+                'score',
+                'teams',
+                'league',
+                'fixture',
+                'lineups'
+            ]);
         
         return collect($this)
             ->map(function ($value, $key) use ($jsonKeys) {

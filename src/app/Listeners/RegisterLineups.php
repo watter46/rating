@@ -11,15 +11,17 @@ class RegisterLineups
 {
     public function handle(FixtureInfoRegistered $event): void
     {
-        $builder = $event->builder;
-
-        $apiFootballIds = $builder->getApiFootballIds();
+        $fixtureInfo = $event->fixtureInfo;
         
+        $playerIds = $fixtureInfo->getPlayerIds();
+
         $playerInfoIds = PlayerInfo::query()
-            ->whereIn('api_football_id', $apiFootballIds)
+            ->whereIn('api_football_id', $playerIds)
             ->pluck('id');
         
-        $builder->getFixtureInfo()
+        FixtureInfo::query()
+            ->select('id')
+            ->find($fixtureInfo->getId())
             ->playerInfos()
             ->sync($playerInfoIds);
     }

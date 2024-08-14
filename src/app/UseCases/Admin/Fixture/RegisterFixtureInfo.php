@@ -5,36 +5,41 @@ namespace App\UseCases\Admin\Fixture;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\FixtureInfo;
+use App\Models\FixtureInfo as FixtureInfoModel;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 
 
 final readonly class RegisterFixtureInfo
 {
-    public function __construct(private ApiFootballRepositoryInterface $apiFootballRepository)
-    {
+    public function __construct(private ApiFootballRepositoryInterface $repository) {
         //
     }
 
-    public function execute(string $fixtureInfoId): FixtureInfo
+    public function execute(string $fixtureInfoId): FixtureInfoModel
     {
         try {
-            /** @var FixtureInfo $fixtureInfo */
-            $fixtureInfo = FixtureInfo::findOrFail($fixtureInfoId);
+            /** @var FixtureInfoModel $model */
+            $model = FixtureInfoModel::with('playerInfos')
+                ->selectWithout(['lineups'])
+                ->findOrFail($fixtureInfoId);
+            
+            $fixtureInfo = $this->repository
+                ->preFetchFixture($model->api_fixture_id)
+                ->updatePlayerInfos();
 
-            $fixtureData = $this->apiFootballRepository->fetchFixture($fixtureInfo->external_fixture_id);
-                        
-            $updated = $fixtureInfo
-                ->fixtureInfoBuilder()
-                ->update($fixtureData);
-                        
-            DB::transaction(function () use ($updated) {
-                $updated->save();
+            $newModel = $model->fill($fixtureInfo->buildFill());
+            
+            DB::transaction(function () use ($newModel) {
+                $newModel->save();
             });
+            
+            if ($fixtureInfo->shouldDispatch()) {
+                $fixtureInfo
+                    ->assignId($newModel->id)
+                    ->dispatch();
+            }
 
-            $updated->fixtureInfoBuilder()->dispatch();
-
-            return $updated;
+            return $newModel;
  
         } catch (Exception $e) {
             throw $e;

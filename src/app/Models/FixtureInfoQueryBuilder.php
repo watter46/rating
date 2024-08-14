@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Schema;
 
 use App\Models\TournamentType;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
 use App\UseCases\Util\Season;
-
+use Illuminate\Support\Collection;
 
 class FixtureInfoQueryBuilder extends Builder
 {
@@ -114,28 +115,6 @@ class FixtureInfoQueryBuilder extends Builder
     {
         return $this->where('season', Season::current());
     }
-
-    /**
-     * Timestamps以外のカラムを取得する
-     *
-     * @return Builder
-     */
-    public function selectWithoutTimestamps(): Builder
-    {
-        return $this->select([
-            'id',
-            'external_fixture_id',
-            'external_league_id',
-            'season',
-            'date',
-            'status',
-            'score',
-            'teams',
-            'league',
-            'fixture',
-            'lineups'
-        ]);
-    }
     
     /**
      * 指定したカラム名以外を取得する
@@ -146,12 +125,19 @@ class FixtureInfoQueryBuilder extends Builder
     public function selectWithout(array $except = []): Builder
     {
         return $this->select(
-                collect($this->model->getFillable())
+                $this->withOutTimeStamp()
                     ->flip()
                     ->except($except)
                     ->flip()
-                    ->merge(['id'])
                     ->toArray()
             );
+    }
+
+    private function withOutTimeStamp(): Collection
+    {
+        return collect(Schema::getColumnListing('fixture_infos'))
+            ->flip()
+            ->except(['created_at', 'updated_at'])
+            ->flip();
     }
 }

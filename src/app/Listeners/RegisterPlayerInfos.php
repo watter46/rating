@@ -5,71 +5,46 @@ namespace App\Listeners;
 use Illuminate\Support\Facades\DB;
 
 use App\Events\FixtureInfoRegistered;
-use App\Models\PlayerInfo;
+use App\Models\PlayerInfo as PlayerInfoModel;
+use App\UseCases\Admin\Fixture\Accessors\Player;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
-use App\UseCases\Util\Season;
-use Illuminate\Support\Collection;
+use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
+
 
 class RegisterPlayerInfos
 {
-    /**
-     * Create the event listener.
-     */
     public function __construct(private FlashLiveSportsRepositoryInterface $repository)
     {
         //
     }
 
-    /**
-     * Handle the event.
-     */
     public function handle(FixtureInfoRegistered $event): void
     {
-        $invalidPlayerInfos = $event->builder->invalidPlayerInfos();
+        $invalidPlayers = $event->fixtureInfo->getInvalidPlayers();
 
-        if ($invalidPlayerInfos->isEmpty()) return;
+        if ($invalidPlayers->isEmpty()) {
+            return;
+        }
         
-        $data = $invalidPlayerInfos
-            ->map(function (Collection $playerInfo) {
-                // nameのみ更新する
-                if ($playerInfo['flash_live_sports_id']) {
-                    return $playerInfo
-                        ->merge(['season' => Season::current()])
-                        ->toArray();
+        $data = $invalidPlayers
+            ->map(function (Player $player) {
+                $playerInfo = $player->getPlayerInfo();
+
+                if ($playerInfo->isNeedsUpdate()) {
+                    return $playerInfo->updateFromPlayer($player);
                 }
                 
-                $flashLiveSportsPlayer = $this->repository
-                    ->searchPlayer($playerInfo)
-                    ->get();
+                $flashPlayer = $this->repository->searchPlayer($player);
 
-                // 新しい選手を保存する
-                if (!$playerInfo['id']) {
-                    return [
-                        'name' => $playerInfo['name'],
-                        'number' => $playerInfo['number'],
-                        'season' => Season::current(),
-                        'api_football_id' => $playerInfo['api_football_id'],
-                        'flash_live_sports_id' => $flashLiveSportsPlayer['id'],
-                        'flash_live_sports_image_id' => $flashLiveSportsPlayer['imageId']
-                    ];
-                }
-
-                // flashLiveSportsのidとimage_idを更新する
-                return [
-                    'id' => $playerInfo['id'],
-                    'name' => $playerInfo['name'],
-                    'number' => $playerInfo['number'],
-                    'season' => Season::current(),
-                    'api_football_id' => $playerInfo['api_football_id'],
-                    'flash_live_sports_id' => $flashLiveSportsPlayer['id'],
-                    'flash_live_sports_image_id' => $flashLiveSportsPlayer['imageId']
-                ];
-            });
+                return $playerInfo->makeFromPlayer($player, $flashPlayer);
+            })
+            ->map(fn (PlayerInfo $playerInfo) => $playerInfo->toArray());
+        
 
         DB::transaction(function () use ($data) {
-            $unique = PlayerInfo::UPSERT_UNIQUE;
+            $unique = PlayerInfoModel::UPSERT_UNIQUE;
             
-            PlayerInfo::upsert($data->toArray(), $unique);
+            PlayerInfoModel::upsert($data->toArray(), $unique);
         });
     }
 }
