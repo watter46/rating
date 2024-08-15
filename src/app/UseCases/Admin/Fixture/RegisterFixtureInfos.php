@@ -30,27 +30,26 @@ class RegisterFixtureInfos
     public function execute(): void
     {
         try {
-            $fixturesInfos = $this->apiFootballRepository->preFetchFixtures();
-
-            $fixtureInfoModels = FixtureInfoModel::query()
+            /** @var Collection<FixtureInfoModel> $models */
+            $models = FixtureInfoModel::query()
                 ->currentSeason()
                 ->get(['id', 'api_fixture_id'])
                 ->toCollection();
 
-            $newFixtureInfos = $fixturesInfos->bulkUpdate($fixtureInfoModels);
+            $fixtureInfos = $this->apiFootballRepository
+                ->preFetchFixtures()
+                ->bulkUpdate($models);
 
-            DB::transaction(function () use ($newFixtureInfos) {
+            DB::transaction(function () use ($fixtureInfos) {
                 FixtureInfoModel::upsert(
-                    $newFixtureInfos->toArray(),
+                    $fixtureInfos->toArray(),
                     FixtureInfoModel::UPSERT_UNIQUE,
                     FixtureInfoModel::UPSERT_COLUMNS
                 );
             });
 
-            if ($newFixtureInfos->shouldDispatch()) {
-                // Dispatch
-
-                dd('dispatch');
+            if ($fixtureInfos->shouldDispatch()) {                
+                $fixtureInfos->dispatch();
             }
 
         } catch (Exception $e) {

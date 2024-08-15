@@ -3,6 +3,7 @@
 
 namespace App\UseCases\Admin\Fixture\Accessors;
 
+use App\Events\FixtureInfosRegistered;
 use Illuminate\Support\Collection;
 
 use App\Models\FixtureInfo as FixtureInfoModel;
@@ -40,19 +41,25 @@ class FixtureInfos
                 })
         );
     }
-
-    public function bulkUpdate(Collection $fixtureInfoModels): self
+    
+    /**
+     * bulkUpdate
+     *
+     * @param  Collection<FixtureInfoModel> $models
+     * @return self
+     */
+    public function bulkUpdate(Collection $models): self
     {
-        if ($fixtureInfoModels->isEmpty()) {
+        if ($models->isEmpty()) {
             return new self($this->fixtureInfos);
         }
         
-        $fixtureInfoModelsByFixtureId = $fixtureInfoModels->keyBy('api_fixture_id');
+        $modelsByFixtureId = $models->keyBy('api_fixture_id');
 
         return new self(
             $this->fixtureInfos
-                ->map(function (FixtureInfo $fixtureInfo) use ($fixtureInfoModelsByFixtureId) {
-                    $fixtureInfoId = $fixtureInfoModelsByFixtureId
+                ->map(function (FixtureInfo $fixtureInfo) use ($modelsByFixtureId) {
+                    $fixtureInfoId = $modelsByFixtureId
                         ->get($fixtureInfo->getFixtureId())
                         ?->get('id');
 
@@ -68,6 +75,24 @@ class FixtureInfos
     public function get()
     {
         return $this->fixtureInfos;
+    }
+    
+    public function getInvalidTeamImageIds()
+    {
+        return $this->fixtureInfos->map(function (FixtureInfo $fixtureInfo) {
+            return $fixtureInfo->getInvalidTeamImageIds();
+        })
+        ->flatten()
+        ->unique();
+    }
+
+    public function getInvalidLeagueImageIds()
+    {
+        return $this->fixtureInfos->map(function (FixtureInfo $fixtureInfo) {
+            return $fixtureInfo->getInvalidLeagueImageIds();
+        })
+        ->flatten()
+        ->unique();
     }
 
     public function toArray(): array
@@ -85,8 +110,13 @@ class FixtureInfos
     public function shouldDispatch(): bool
     {
         return $this->fixtureInfos
-            ->every(function (FixtureInfo $fixtureInfo) {
-                return !$fixtureInfo->hasImages();
+            ->some(function (FixtureInfo $fixtureInfo) {
+                return $fixtureInfo->shouldDispatch();
             });
+    }
+
+    public function dispatch()
+    {
+        FixtureInfosRegistered::dispatch($this);
     }
 }

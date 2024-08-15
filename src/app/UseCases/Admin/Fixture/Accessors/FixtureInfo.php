@@ -179,6 +179,34 @@ class FixtureInfo
         ];
     }
 
+    public function toModel()
+    {
+        $model = new FixtureInfoModel($this->toArray());
+        
+        if ($this->id) {
+            return $model->setAttribute('id', $this->id);
+        }
+
+        return $model;
+    }
+
+    private function toArray()
+    {
+        return collect([
+            'api_fixture_id' => $this->getFixtureId(),
+            'api_league_id'  => $this->league->getLeagueId(),
+            'season'         => $this->fixture->getSeason(),
+            'date'           => $this->fixture->getDate(),
+            'is_end'         => $this->fixture->isEnd(),
+            'score'          => $this->score->toModel(),
+            'teams'          => $this->teams->toModel(),
+            'league'         => $this->league->toModel(),
+            'fixture'        => $this->fixture->toModel(),
+            'lineups'        => $this->lineups ? $this->lineups->toModel() : collect()
+        ])
+        ->toArray();
+    }
+
     public function shouldDispatch(): bool
     {
         return !$this->teams->hasImages()

@@ -28,7 +28,7 @@ class RegisterTeamImages
         };
         
         $invalidTeamImageIds = $fixture->getInvalidTeamImageIds();
-
+        
         if ($invalidTeamImageIds->isEmpty()) {
             return;
         }

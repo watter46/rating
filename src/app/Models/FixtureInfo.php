@@ -55,9 +55,6 @@ class FixtureInfo extends Model
     public const UPSERT_UNIQUE = ['id'];
 
     public const UPSERT_COLUMNS = [
-        'api_fixture_id',
-        'api_league_id',
-        'season',
         'date',
         'is_end',
         'score',
@@ -67,11 +64,6 @@ class FixtureInfo extends Model
     ];
 
     public const SELECT_COLUMNS = 'fixtureInfo:id,score,teams,league,fixture,lineups';
-
-    public function fixtureInfoBuilder(): FixtureInfoBuilder
-    {
-        return FixtureInfoBuilder::create($this);
-    }
 
     public function fixtureInfosBuilder(): FixtureInfosBuilder
     {

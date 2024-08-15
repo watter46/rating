@@ -28,7 +28,7 @@ class RegisterLeagueImage
         };
         
         $invalidLeagueIds = $fixture->getInvalidLeagueImageIds();
-                
+        
         if ($invalidLeagueIds->isEmpty()) return;
 
         $invalidLeagueIds
