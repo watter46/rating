@@ -5,8 +5,9 @@ namespace App\UseCases\Admin\Fixture\Accessors;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
-use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
+use App\UseCases\Admin\Fixture\Accessors\FixtureStatusType;
 use App\UseCases\Util\Season;
+
 
 class Fixture
 {
@@ -61,7 +62,7 @@ class Fixture
     }
 
     public function isEnd(): bool
-    {
+    {        
         return $this->fixture->get('is_end');
     }
 }

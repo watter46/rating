@@ -39,8 +39,7 @@ class RegisterPlayerInfos
                 return $playerInfo->makeFromPlayer($player, $flashPlayer);
             })
             ->map(fn (PlayerInfo $playerInfo) => $playerInfo->toArray());
-        
-
+            
         DB::transaction(function () use ($data) {
             $unique = PlayerInfoModel::UPSERT_UNIQUE;
             

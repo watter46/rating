@@ -91,22 +91,6 @@ class FixtureInfo
     }
     
     /**
-     * @param  FixtureInfo $fixtureInfo
-     * @return self
-     */
-    public function update(FixtureInfo $fixtureInfo): self
-    {
-        return new self(
-            $this->id,
-            $fixtureInfo->score,
-            $fixtureInfo->teams,
-            $fixtureInfo->league,
-            $fixtureInfo->fixture,
-            $fixtureInfo->lineups
-        );
-    }
-    
-    /**
      * 更新されたPlayerInfoのみを最新のモデルにする
      *
      * @return self
@@ -118,7 +102,7 @@ class FixtureInfo
             ->map(fn (Player $player) => $player->getPlayerId());
 
         $playerInfoModels = PlayerInfoModel::query()
-            ->whereIn('api_football_id', $playerIds)
+            ->whereIn('api_player_id', $playerIds)
             ->get();
         
         return new self(
@@ -141,7 +125,7 @@ class FixtureInfo
         $playerIds = $this->lineups->getNeedsRegisterPlayerIds();
 
         $playerInfoModels = PlayerInfoModel::query()
-            ->whereIn('api_football_id', $playerIds)
+            ->whereIn('api_player_id', $playerIds)
             ->get();
         
         return new self(
@@ -207,12 +191,22 @@ class FixtureInfo
         ->toArray();
     }
 
+    private function hasValidPlayers(): bool
+    {
+        if (!$this->lineups) {
+            return true;
+        }
+
+        return $this->lineups->areAllPlayersValid();
+    }
+
     public function shouldDispatch(): bool
     {
         return !$this->teams->hasImages()
             || !$this->league->hasImage()
             || !$this->lineups->hasImages()
-            || !$this->lineups->equalLineupsPlayerInfosCount();
+            || !$this->lineups->equalLineupsPlayerInfosCount()
+            || !$this->hasValidPlayers();
     }
 
     public function dispatch(): void

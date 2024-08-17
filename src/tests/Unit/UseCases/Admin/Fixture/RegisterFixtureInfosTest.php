@@ -2,12 +2,12 @@
 
 namespace Tests\Unit\UseCases\Admin\Fixture;
 
-use App\Models\FixtureInfo;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 use App\UseCases\Admin\Fixture\RegisterFixtureInfos;
 use Database\Seeders\Tests\Admin\TestingFixtureInfoSeeder;
+
 
 class RegisterFixtureInfosTest extends TestCase
 {

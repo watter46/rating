@@ -4,8 +4,7 @@ namespace App\UseCases\Admin\Fixture\Accessors;
 
 use Illuminate\Support\Collection;
 
-use App\Http\Controllers\Util\PlayerImageFile;
-use App\UseCases\Admin\Data\ApiFootball\FixtureData\PositionType;
+use App\UseCases\Admin\Fixture\Accessors\PositionType;
 
 
 class Lineups
@@ -93,7 +92,7 @@ class Lineups
 
     public static function reconstruct(Collection $lineups, Collection $playerInfos): self
     {
-        $playerInfoModelsByApiId = $playerInfos->keyBy('api_football_id');
+        $playerInfoModelsByApiId = $playerInfos->keyBy('api_player_id');
         
         return (new self(
             $lineups
@@ -111,7 +110,7 @@ class Lineups
 
     public function updatePlayerInfos(Collection $playerInfoModels)
     {
-        $keyByPlayerId = $playerInfoModels->keyBy('api_football_id');
+        $keyByPlayerId = $playerInfoModels->keyBy('api_player_id');
         
         $lineups = $this->lineups
             ->map(function (Collection $players) use ($keyByPlayerId) {
@@ -146,6 +145,12 @@ class Lineups
     {
         return $this->getPlayers()
             ->every(fn(Player $player) => $player->hasImage());
+    }
+
+    public function areAllPlayersValid()
+    {
+        return $this->getPlayers()
+            ->every(fn (Player $player) => $player->isValid());
     }
 
     public function toModel(): Collection

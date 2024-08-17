@@ -62,50 +62,14 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         return $response->throw()->body();
     }
 
-    public function fetchFixtures(): FixturesData
+    public function fetchFixtures(): FixtureInfos
     {
         if ($this->isTest()) {
-            return FixturesData::create($this->testFixtureInfosFile->get());
-        }
-
-        if ($this->isSeed()) {
-            if ($this->fixturesFile->exists()) {
-                return FixturesData::create($this->fixturesFile->get());
-            }
-
-            dd('not exists');
-        } 
-
-        if ($this->fixturesFile->exists()) {
-            return FixturesData::create($this->fixturesFile->get());
-        }
-        
-        $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'season' => Season::current(),
-            'team'   => config('api-football.chelsea-id')
-        ]);
-
-        $data = collect(json_decode($json)->response);
-
-        $this->fixturesFile->write($data);
-
-        return FixturesData::create($data);
-    }
-
-    public function preFetchFixtures(): FixtureInfos
-    {
-        if ($this->isTest()) {
-            return FixturesData::create($this->testFixtureInfosFile->get());
+            return FixtureInfos::create($this->testFixtureInfosFile->get());
         }
 
         if ($this->isSeed()) {
             return FixtureInfos::create($this->fixturesFile->get());
-
-            // if ($this->fixturesFile->exists()) {
-            //     return FixturesData::create($this->fixturesFile->get());
-            // }
-
-            // dd('not exists');
         } 
 
         if ($this->fixturesFile->exists()) {
@@ -121,28 +85,20 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
         $this->fixturesFile->write($data);
 
-        return FixturesData::create($data);
+        return FixtureInfos::create($data);
     }
 
-    public function preFetchFixture(int $fixtureDataId): FixtureInfo
+    public function fetchFixture(int $fixtureDataId): FixtureInfo
     {
         if ($this->fixtureFile->exists($fixtureDataId) &&
             $this->fixtureFile->isFinished($fixtureDataId) ||
             $this->isTest()) {
             
             return FixtureInfo::create($this->fixtureFile->get($fixtureDataId));
-                
-            // return FixtureData::create($this->fixtureFile->get($fixtureDataId));
         }
         
         if ($this->isSeed()) {
             return FixtureInfo::create($this->fixtureFile->get($fixtureDataId));
-            
-            // if ($this->fixtureFile->exists($fixtureDataId)) {
-            //     return FixtureData::create($this->fixtureFile->get($fixtureDataId));
-            // }
-
-            // dd('not exists');
         }
         
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
@@ -154,35 +110,6 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         $this->fixtureFile->write($fixtureDataId, $data);
 
         return FixtureInfo::create($data);
-    }
-
-    public function fetchFixture(int $fixtureDataId): FixtureData
-    {
-        if ($this->fixtureFile->exists($fixtureDataId) &&
-            $this->fixtureFile->isFinished($fixtureDataId) ||
-            $this->isTest()) {
-            return FixtureData::create($this->fixtureFile->get($fixtureDataId));
-        }
-        
-        if ($this->isSeed()) {
-            if ($this->fixtureFile->exists($fixtureDataId)) {
-                return FixtureData::create($this->fixtureFile->get($fixtureDataId));
-            }
-
-            dd('not exists');
-        }
-
-        dd($fixtureDataId);
-        
-        $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'id' => $fixtureDataId
-        ]);
-
-        $data = collect(json_decode($json)->response[0]);
-        
-        $this->fixtureFile->write($fixtureDataId, $data);
-
-        return FixtureData::create($data);
     }
 
     public function fetchSquads(): SquadsData

@@ -24,7 +24,7 @@ final readonly class RegisterFixtureInfo
                 ->findOrFail($fixtureInfoId);
             
             $fixtureInfo = $this->repository
-                ->preFetchFixture($model->api_fixture_id)
+                ->fetchFixture($model->api_fixture_id)
                 ->updatePlayerInfos();
 
             $newModel = $model->fill($fixtureInfo->buildFill());
@@ -38,7 +38,7 @@ final readonly class RegisterFixtureInfo
                     ->assignId($newModel->id)
                     ->dispatch();
             }
-
+            
             return $newModel;
  
         } catch (Exception $e) {

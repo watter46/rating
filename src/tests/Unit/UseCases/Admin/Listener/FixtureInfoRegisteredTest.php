@@ -54,31 +54,29 @@ class FixtureInfoRegisteredTest extends TestCase
     public function test_選手名が省略形ならフルネームで更新する(): void
     {
         // カイセドのPlayerInfoを登録する
-        $fixtureInfo = FixtureInfo::select(['id', 'external_fixture_id'])->first();
+        $fixtureInfo = FixtureInfo::select(['id', 'api_fixture_id'])->first();
         
         $fixtureInfo
             ->playerInfos()
             ->saveMany(
                 (new TestPlayerInfoFile)
-                    ->get($fixtureInfo->external_fixture_id)
-                    ->filter(fn ($player) => $player->api_football_id === 116117)
+                    ->get($fixtureInfo->api_fixture_id)
+                    ->filter(fn ($player) => $player->api_player_id === 116117)
                     ->map(function ($player) {
                         return PlayerInfo::factory()
                             ->fromFile($player)
                             ->make();
                     })
             );
-
-        $playerInfo = PlayerInfo::get()->first();
-
-        $this->assertSame('Đ. Petrović', $playerInfo->name);
-
+            
+        $this->assertDatabaseHas('player_infos', ['api_player_id' => 118307, 'name' => 'D. Petrovic']);
+        
         /** @var RegisterFixtureInfo $registerFixtureInfo */
         $registerFixtureInfo = app(RegisterFixtureInfo::class);
         
         $registerFixtureInfo->execute($fixtureInfo->id);
         
-        $this->assertSame('Dorde Petrovic', $playerInfo->refresh()->name);
+        $this->assertDatabaseHas('player_infos', ['api_player_id' => 118307, 'name' => 'Dorde Petrovic']);
     }
 
     public function test_チームの画像が存在しないとき取得して画像をpublic下に保存できる(): void
@@ -124,14 +122,14 @@ class FixtureInfoRegisteredTest extends TestCase
     public function test_選手の画像が存在しないとき取得して画像をpublic下に保存する(): void
     {
         // カイセドのPlayerInfoを登録する
-        $fixtureInfo = FixtureInfo::select(['id', 'external_fixture_id'])->first();
+        $fixtureInfo = FixtureInfo::select(['id', 'api_fixture_id'])->first();
 
         $fixtureInfo
             ->playerInfos()
             ->saveMany(
                 (new TestPlayerInfoFile)
-                    ->get($fixtureInfo->external_fixture_id)
-                    ->filter(fn ($player) => $player->api_football_id === 116117)
+                    ->get($fixtureInfo->api_fixture_id)
+                    ->filter(fn ($player) => $player->api_player_id === 116117)
                     ->map(function ($player) {
                         return PlayerInfo::factory()
                             ->fromFile($player)

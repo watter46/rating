@@ -16,7 +16,7 @@ class RegisterLineups
         $playerIds = $fixtureInfo->getPlayerIds();
 
         $playerInfoIds = PlayerInfo::query()
-            ->whereIn('api_football_id', $playerIds)
+            ->whereIn('api_player_id', $playerIds)
             ->pluck('id');
         
         FixtureInfo::query()

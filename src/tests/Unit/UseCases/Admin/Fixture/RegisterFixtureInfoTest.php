@@ -7,7 +7,6 @@ use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 use App\Models\FixtureInfo;
-use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
 use App\UseCases\Admin\Fixture\RegisterFixtureInfo;
 
 
@@ -25,7 +24,7 @@ class RegisterFixtureInfoTest extends TestCase
     public function test_指定の試合の試合内容を更新できる(): void
     {
         $fixtureInfo = FixtureInfo::query()
-            ->where('external_fixture_id', 1035480)
+            ->where('api_fixture_id', 1035480)
             ->first();
         
         // Lineups
@@ -40,7 +39,7 @@ class RegisterFixtureInfoTest extends TestCase
         $this->assertNull($fixtureInfo->score['fulltime']['home']);
 
         // Status
-        $this->assertSame(FixtureStatusType::NotStarted->value, $fixtureInfo->status);
+        $this->assertFalse($fixtureInfo->is_end);
 
         /** @var RegisterFixtureInfo $registerFixtureInfo */
         $registerFixtureInfo = app(RegisterFixtureInfo::class);
@@ -59,6 +58,6 @@ class RegisterFixtureInfoTest extends TestCase
         $this->assertSame(4, $result->score['fulltime']['home']);
 
         // Status
-        $this->assertSame(FixtureStatusType::MatchFinished->value, $result->status);
+        $this->assertTrue($result->is_end);
     }
 }

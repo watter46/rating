@@ -5,9 +5,9 @@ namespace App\Infrastructure\ApiFootball;
 use Illuminate\Support\Facades\Http;
 
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
-use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
-use App\UseCases\Admin\Data\ApiFootball\FixturesData;
 use App\UseCases\Admin\Data\ApiFootball\SquadsData;
+use App\UseCases\Admin\Fixture\Accessors\FixtureInfo;
+use App\UseCases\Admin\Fixture\Accessors\FixtureInfos;
 use App\UseCases\Util\Season;
 
 
@@ -25,7 +25,7 @@ class ApiFootballRepository implements ApiFootballRepositoryInterface
         return $response->throw()->body();
     }
 
-    public function fetchFixtures(): FixturesData
+    public function fetchFixtures(): FixtureInfos
     {
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
             'season' => Season::current(),
@@ -34,18 +34,18 @@ class ApiFootballRepository implements ApiFootballRepositoryInterface
 
         $data = collect(json_decode($json)->response);
 
-        return FixturesData::create($data);
+        return FixtureInfos::create($data);
     }
 
-    public function fetchFixture(int $fixtureDataId): FixtureData
+    public function fetchFixture(int $apiFixtureId): FixtureInfo
     {
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-            'id' => $fixtureDataId
+            'id' => $apiFixtureId
         ]);
 
         $data = collect(json_decode($json)->response[0]);
         
-        return FixtureData::create($data);
+        return FixtureInfo::create($data);
     }
 
     public function fetchSquads(): SquadsData

@@ -24,17 +24,17 @@ class PlayerInfo extends Model
 
     protected $guarded= ['id'];
 
-    public const SELECT_COLUMNS = 'playerInfos:id,api_football_id';
+    public const SELECT_COLUMNS = 'playerInfos:id,api_player_id';
 
     public const UPSERT_UNIQUE = ['id'];
 
     public const UPSERT_API_FOOTBALL_COLUMNS = [
-        'api_football_id'
+        'api_player_id'
     ];
 
     public const UPSERT_FLASH_LIVE_SPORTS_COLUMNS = [
-        'flash_live_sports_id',
-        'flash_live_sports_image_id'
+        'flash_id',
+        'flash_image_id'
     ];
 
     public function playerInfosBuilder(): PlayerInfosBuilder
@@ -59,7 +59,7 @@ class PlayerInfo extends Model
             ->values()
             ->toArray();
                 
-        $query->whereIn('api_football_id', $lineupIdList);
+        $query->whereIn('api_player_id', $lineupIdList);
     }
 
     /**

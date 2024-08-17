@@ -20,21 +20,21 @@ class FixturePlayerInfosRemovedSeeder extends Seeder
      */
     public function run(): void
     {
-        $external_fixture_id = 1035480;
+        $api_fixture_id = 1035480;
                 
         FixtureInfo::factory()
-            ->fromFile((new TestFixtureInfoFile)->get($external_fixture_id))
+            ->fromFile((new TestFixtureInfoFile)->get($api_fixture_id))
             ->create()
             ->playerInfos()
             ->saveMany(
                 (new TestPlayerInfoFile)
-                    ->get($external_fixture_id)
+                    ->get($api_fixture_id)
                     ->map(function ($player) {
                         return PlayerInfo::factory()
                             ->fromFile($player)
                             ->make();
                     })
-                    ->reject(fn($player) => $player->api_football_id === 116117)
+                    ->reject(fn($player) => $player->api_player_id === 116117)
             );
     }
 }

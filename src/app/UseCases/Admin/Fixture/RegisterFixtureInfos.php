@@ -37,7 +37,7 @@ class RegisterFixtureInfos
                 ->toCollection();
 
             $fixtureInfos = $this->apiFootballRepository
-                ->preFetchFixtures()
+                ->fetchFixtures()
                 ->bulkUpdate($models);
 
             DB::transaction(function () use ($fixtureInfos) {

@@ -20,27 +20,27 @@ class TestFixtureInfoFile
         return app_path(self::DIR_PATH);
     }
 
-    private function fileName(int $external_fixture_id)
+    private function fileName(int $api_fixture_id)
     {
-        return $this->dirPath().$external_fixture_id.'.json';
+        return $this->dirPath().$api_fixture_id.'.json';
     }
 
-    public function get(int $external_fixture_id)
+    public function get(int $api_fixture_id)
     {
-        return collect(json_decode(File::get($this->fileName($external_fixture_id))));
+        return collect(json_decode(File::get($this->fileName($api_fixture_id))));
     }
     
     /**
      * gets
      *
-     * @param  int[] $external_fixture_ids
+     * @param  int[] $api_fixture_ids
      * @return Collection
      */
-    public function gets(array $external_fixture_ids)
+    public function gets(array $api_fixture_ids)
     {
-        return collect($external_fixture_ids)
-            ->map(function ($external_fixture_id) {
-                return $this->get($external_fixture_id);
+        return collect($api_fixture_ids)
+            ->map(function ($api_fixture_id) {
+                return $this->get($api_fixture_id);
             });
     }
 
@@ -52,13 +52,13 @@ class TestFixtureInfoFile
             });
     }
 
-    public function write(int $external_fixture_id)
+    public function write(int $api_fixture_id)
     {
         $fixtureInfo = FixtureInfo::query()
-            ->where('external_fixture_id', $external_fixture_id)
+            ->where('api_fixture_id', $api_fixture_id)
             ->first();
         
-        File::put($this->fileName($external_fixture_id), $fixtureInfo->toJson());
+        File::put($this->fileName($api_fixture_id), $fixtureInfo->toJson());
     }
 
     public function idList()
@@ -90,8 +90,8 @@ class TestFixtureInfoFile
         $invalidExternalFixtureIds = $file->getIdList()->diff($testExternalFixtureIds);
 
         $invalidExternalFixtureIds
-            ->each(function (int $external_fixture_id) {
-                $this->write($external_fixture_id);
+            ->each(function (int $api_fixture_id) {
+                $this->write($api_fixture_id);
             });
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Models\PlayerInfo as PlayerInfoModel;
 use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
-use App\UseCases\Admin\Data\ApiFootball\FixtureData\PositionType;
+use App\UseCases\Admin\Fixture\Accessors\PositionType;
 
 
 class Player

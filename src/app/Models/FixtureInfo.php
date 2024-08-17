@@ -10,9 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 
-use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoBuilder;
-use App\UseCases\Admin\Fixture\Processors\FixtureInfos\FixtureInfosBuilder;
-
 
 class FixtureInfo extends Model
 {
@@ -22,24 +19,6 @@ class FixtureInfo extends Model
     public $incrementing = false;
     
     protected $keyType = 'string';
-    
-    // /**
-    //  * The attributes that are mass assignable.
-    //  *
-    //  * @var array<int, string>
-    //  */
-    // protected $fillable = [
-    //     'api_fixture_id',
-    //     'api_league_id',
-    //     'season',
-    //     'date',
-    //     'is_end',
-    //     'score',
-    //     'teams',
-    //     'league',
-    //     'fixture',
-    //     'lineups'
-    // ];
 
     protected $guarded = ['id'];
     
@@ -64,11 +43,6 @@ class FixtureInfo extends Model
     ];
 
     public const SELECT_COLUMNS = 'fixtureInfo:id,score,teams,league,fixture,lineups';
-
-    public function fixtureInfosBuilder(): FixtureInfosBuilder
-    {
-        return FixtureInfosBuilder::create();
-    }
 
     public function castsToJson(): Collection
     {        

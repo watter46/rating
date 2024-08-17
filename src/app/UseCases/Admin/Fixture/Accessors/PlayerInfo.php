@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 
 use App\Models\PlayerInfo as playerInfoModel;
 use App\UseCases\Admin\Data\FlashLiveSports\PlayersData;
+use App\UseCases\Admin\Fixture\Accessors\Flash\FlashPlayer;
 use App\UseCases\Util\Season;
 
 
@@ -18,9 +19,9 @@ class PlayerInfo
         private ?PlayerName $name = null,
         private ?PlayerNumber $number = null,
         private ?int $season = null,
-        private ?int $api_football_id = null,
-        private ?string $flash_live_sports_id = null,
-        private ?string $flash_live_sports_image_id = null
+        private ?int $api_player_id = null,
+        private ?string $flash_id = null,
+        private ?string $flash_image_id = null
     ) {
         $this->status = $this->updateStatus();
     }
@@ -36,20 +37,20 @@ class PlayerInfo
             PlayerName::create($model->name),
             PlayerNumber::create($model->number),
             $model->season,
-            $model->api_football_id,
-            $model->flash_live_sports_id,
-            $model->flash_live_sports_image_id,
+            $model->api_player_id,
+            $model->flash_id,
+            $model->flash_image_id,
         );
     }
 
     public function getFlashPlayerId()
     {
-        return $this->flash_live_sports_id;
+        return $this->flash_id;
     }
 
     public function getImageId(): ?string
     {
-        return $this->flash_live_sports_image_id;
+        return $this->flash_image_id;
     }
 
     public function exist(): bool
@@ -74,7 +75,7 @@ class PlayerInfo
 
     public function shouldFetchFlash(): bool
     {
-        return !$this->flash_live_sports_id;
+        return !$this->flash_id;
     }
 
     public function updatePlayerId(int $apiPlayerId): self
@@ -107,7 +108,7 @@ class PlayerInfo
         return $this->setAttribute(season: Season::current());
     }
 
-    public function makeFromPlayer(Player $player, PlayersData $flashPlayer): self
+    public function makeFromPlayer(Player $player, FlashPlayer $flashPlayer): self
     {
         ['apiPlayerId' => $apiPlayerId, 'name' => $name, 'number' => $number] = $player->toPlayerData();
         
@@ -142,9 +143,9 @@ class PlayerInfo
             name: $name ?? $this->name,
             number: $number ?? $this->number,
             season: $season ?? $this->season,
-            api_football_id: $api_player_id ?? $this->api_football_id,
-            flash_live_sports_id: $flash_id ?? $this->flash_live_sports_id,
-            flash_live_sports_image_id: $flash_image_id ?? $this->flash_live_sports_image_id,
+            api_player_id: $api_player_id ?? $this->api_player_id,
+            flash_id: $flash_id ?? $this->flash_id,
+            flash_image_id: $flash_image_id ?? $this->flash_image_id,
         );
     }
 
@@ -186,9 +187,9 @@ class PlayerInfo
             $this->name->getFullName(),
             $this->number->get(),
             $this->season,
-            $this->api_football_id,
-            $this->flash_live_sports_id,
-            $this->flash_live_sports_image_id,
+            $this->api_player_id,
+            $this->flash_id,
+            $this->flash_image_id,
         ];
     }
 
@@ -204,9 +205,9 @@ class PlayerInfo
             'name' => $this->name->getFullName(),
             'number' => $this->number->get(),
             'season' => $this->season,
-            'api_football_id' => $this->api_football_id,
-            'flash_live_sports_id' => $this->flash_live_sports_id,
-            'flash_live_sports_image_id' => $this->flash_live_sports_image_id
+            'api_player_id' => $this->api_player_id,
+            'flash_id' => $this->flash_id,
+            'flash_image_id' => $this->flash_image_id
         ])
         ->pipe(function (Collection $playerInfo) {
             if ($playerInfo['id']) {

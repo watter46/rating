@@ -2,6 +2,8 @@
 
 namespace App\UseCases\Admin\Fixture;
 
+use App\Http\Controllers\Util\TestFixtureInfoFile;
+use App\Http\Controllers\Util\TestPlayerInfoFile;
 use Exception;
 use Illuminate\Pagination\Paginator;
 
@@ -16,8 +18,8 @@ final readonly class FetchFixtureInfos
             /** @var Paginator $fixtureInfos */
             $fixtureInfos = FixtureInfo::query()
                 ->selectWithout([
-                    'external_fixture_id',
-                    'external_league_id',
+                    'api_fixture_id',
+                    'api_league_id',
                     'date',
                     'status',
                     'season'

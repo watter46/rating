@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Collection;
 
 use App\Models\TournamentType;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
 use App\UseCases\Util\Season;
-use Illuminate\Support\Collection;
+
 
 class FixtureInfoQueryBuilder extends Builder
 {
@@ -20,7 +21,7 @@ class FixtureInfoQueryBuilder extends Builder
      */
     public function tournament(TournamentType $tournament): Builder
     {        
-        return $this->whereIn('external_league_id', $tournament->toIds());
+        return $this->whereIn('api_league_id', $tournament->toIds());
     }
 
     /**
@@ -31,7 +32,7 @@ class FixtureInfoQueryBuilder extends Builder
     public function inSeasonTournament(): Builder
     {
         return $this
-            ->whereIn('external_league_id', [
+            ->whereIn('api_league_id', [
                 TournamentType::PREMIER_LEAGUE->toIds(),
                 TournamentType::FA_CUP->toIds(),
                 TournamentType::LEAGUE_CUP->toIds()
@@ -55,7 +56,7 @@ class FixtureInfoQueryBuilder extends Builder
      */
     public function finished(): Builder
     {
-        return $this->where('status', FixtureStatusType::MatchFinished->value);
+        return $this->where('is_end', FixtureStatusType::MatchFinished->value);
     }
     
     /**
@@ -80,7 +81,7 @@ class FixtureInfoQueryBuilder extends Builder
     {
         return $this
             ->whereDate('date', '<=', now('UTC'))
-            ->where('status', FixtureStatusType::MatchFinished)
+            ->where('is_end', true)
             ->orderBy('date', 'desc');
     }
 
