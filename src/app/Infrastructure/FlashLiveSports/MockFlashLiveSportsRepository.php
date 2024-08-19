@@ -10,12 +10,9 @@ use App\Http\Controllers\Util\Api\FlashLiveSports\PlayersFile;
 
 use App\Http\Controllers\Util\TeamSquadFile;
 use App\Http\Controllers\Util\TestPlayerImageFile;
-use App\UseCases\Admin\Data\FlashLiveSports\PlayerData;
-use App\UseCases\Admin\Data\FlashLiveSports\PlayersData;
-use App\UseCases\Admin\Data\FlashLiveSports\TeamSquad;
 use App\UseCases\Admin\Fixture\Accessors\Flash\FlashPlayer;
-use App\UseCases\Admin\Fixture\Accessors\Flash\FlashPlayers;
-use App\UseCases\Admin\Fixture\Accessors\Player;
+use App\UseCases\Admin\Fixture\Accessors\Flash\FlashSquad;
+use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 
 
@@ -56,22 +53,22 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
         }
     }
 
-    public function fetchTeamSquad(): TeamSquad
+    public function fetchSquad(): FlashSquad
     {
         if ($this->isTest()) {
-            return TeamSquad::create($this->teamSquadFile->get());
+            return FlashSquad::create($this->teamSquadFile->get());
         }
         
         if ($this->isSeed()) {
             if ($this->teamSquadFile->exists()) {
-                return TeamSquad::create($this->teamSquadFile->get());
+                return FlashSquad::create($this->teamSquadFile->get());
             }
 
             dd('not exists');
         }
 
         if ($this->teamSquadFile->exists()) {
-            return TeamSquad::create($this->teamSquadFile->get());
+            return FlashSquad::create($this->teamSquadFile->get());
         }
         
         $json = $this->httpClient('https://flashlive-sports.p.rapidapi.com/v1/teams/squad', [
@@ -84,76 +81,72 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
 
         $this->teamSquadFile->write($data);
         
-        return TeamSquad::create($data);
+        return FlashSquad::create($data);
     }
 
-    public function fetchPlayer(Player $player): FlashPlayer
+    public function fetchPlayer(PlayerInfo $playerInfo): FlashPlayer
     {
-        $flashPlayerId = $player->getPlayerInfo()->getFlashPlayerId();
+        // if ($this->isTest()) {
+        //     return FlashPlayer::fromPlayer($this->playerFile->get($player->getFlashId()));
+        // }
 
-        if ($this->isTest()) {
-            return FlashPlayer::create($this->playerFile->get($flashPlayerId));
-        }
+        // if ($this->isSeed()) {
+        //     if ($this->playerFile->exists($player->getFlashId())) {
+        //         return FlashPlayer::fromPlayer($this->playerFile->get($player->getFlashId()));
+        //     }
 
-        if ($this->isSeed()) {
-            if ($this->playerFile->exists($flashPlayerId)) {
-                return FlashPlayer::create($this->playerFile->get($flashPlayerId));
-            }
+        //     dd('not exists');
+        // }
 
-            dd('not exists');
-        }
-
-        if ($this->playerFile->exists($flashPlayerId)) {
-            return FlashPlayer::create($this->playerFile->get($flashPlayerId));
-        }
+        // if ($this->playerFile->exists($player->getFlashId())) {
+        //     return FlashPlayer::fromPlayer($this->playerFile->get($player->getFlashId()));
+        // }
         
-        $json = $this->httpClient('https://flashlive-sports.p.rapidapi.com/v1/players/data', [
-                'player_id' => $flashPlayerId,
-                'sport_id'  => config('flash-live-sports.sport-id'),
-                'locale'    => config('flash-live-sports.locale')
-            ]);
+        // $json = $this->httpClient('https://flashlive-sports.p.rapidapi.com/v1/players/data', [
+        //         'player_id' => $player->getFlashId(),
+        //         'sport_id'  => config('flash-live-sports.sport-id'),
+        //         'locale'    => config('flash-live-sports.locale')
+        //     ]);
             
-        $data = collect(json_decode($json)->DATA);
+        // $data = collect(json_decode($json)->DATA);
 
-        $this->playerFile->write($flashPlayerId, $data);
+        // $this->playerFile->write($player->getFlashId(), $data);
         
-        return FlashPlayer::create($data);
+        // return FlashPlayer::fromPlayer($data);
     }
 
-    public function searchPlayer(Player $player): FlashPlayer
+    public function searchPlayer(PlayerInfo $playerInfo): FlashPlayer
     {
         if ($this->isTest()) {
-            return FlashPlayer::fromPlayers($this->playersFile->get($player->getPlayerId()));
+            return FlashPlayer::fromPlayers($this->playersFile->get($playerInfo->getPlayerId()));
         }
 
         if ($this->isSeed()) {
-            if ($this->playersFile->exists($player->getPlayerId())) {
-                return FlashPlayer::fromPlayers($this->playersFile->get($player->getPlayerId()));
+            if ($this->playersFile->exists($playerInfo->getPlayerId())) {
+                return FlashPlayer::fromPlayers($this->playersFile->get($playerInfo->getPlayerId()));
             }
 
             dd('not exists');
         }
 
-        if ($this->playersFile->exists($player->getPlayerId())) {
-            return FlashPlayer::fromPlayers($this->playersFile->get($player->getPlayerId()));
+        if ($this->playersFile->exists($playerInfo->getPlayerId())) {
+            return FlashPlayer::fromPlayers($this->playersFile->get($playerInfo->getPlayerId()));
         }
         
         $json = $this->httpClient('https://flashlive-sports.p.rapidapi.com/v1/search/multi-search', [
                 'locale' => config('flash-live-sports.locale'),
-                'query'  => $player->getName()
+                'query'  => $playerInfo->getName()
             ]);
             
         $data = collect(json_decode($json));
 
-        $this->playersFile->write($player->getPlayerId(), $data);
+        $this->playersFile->write($playerInfo->getPlayerId(), $data);
         
         return FlashPlayer::fromPlayers($data);
     }
 
-    public function fetchPlayerImage(Player $player): string
+    public function fetchPlayerImage(PlayerInfo $playerInfo): string
     {
-        $playerInfo = $player->getPlayerInfo();
-
         if ($this->isTest()) {
             return $this->testPlayerImageFile->get();
         }

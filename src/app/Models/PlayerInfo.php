@@ -32,7 +32,8 @@ class PlayerInfo extends Model
         'api_player_id'
     ];
 
-    public const UPSERT_FLASH_LIVE_SPORTS_COLUMNS = [
+    public const UPSERT_FLASH_COLUMNS = [
+        'name',
         'flash_id',
         'flash_image_id'
     ];

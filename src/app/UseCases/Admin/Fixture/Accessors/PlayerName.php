@@ -46,4 +46,24 @@ class PlayerName
     {
         return $this->names->last();
     }
+
+    public function equalsFullName(PlayerName $name)
+    {
+        return $this->getFullName() === $name->getFullName();
+    }
+
+    public function equalsShortenName(PlayerName $name)
+    {
+        return $this->getShortenName() === $name->getShortenName();
+    }
+
+    public function equalsLastName(PlayerName $name)
+    {
+        return $this->getLastName() === $name->getLastName();
+    }
+
+    public function swapFirstAndLastName(): self
+    {                                
+        return new self($this->names->reverse());
+    }
 }

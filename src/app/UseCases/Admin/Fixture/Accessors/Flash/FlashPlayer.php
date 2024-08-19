@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Admin\Fixture\Accessors\Flash;
 
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -29,14 +30,14 @@ class FlashPlayer
     public static function fromPlayers(Collection $rawPlayersData)
     {
         $isChelsea = fn ($name) => Str::between($name, '(', ')') === self::TEAM_NAME;
-        
-        return $rawPlayersData
+    
+        $player = $rawPlayersData
             ->filter(fn ($player) => $isChelsea($player->NAME))
             ->pipe(function (Collection $player) {
                 if ($player->isEmpty()) {
                     return [
-                        'id' => null,
-                        'imageId' => null
+                        'flash_id' => null,
+                        'flash_image_id' => null
                     ];
                 }
 
@@ -46,13 +47,19 @@ class FlashPlayer
                     return Str::beforeLast($png, '.png');
                 };
 
-                return new self(
-                    flash_id: $player[0]->ID,
-                    flash_image_id: $player[0]->IMAGE
-                        ? $pathToImageId($player[0]->IMAGE)
+                return [
+                    'flash_id' => $player->first()->ID,
+                    'flash_image_id' => $player->first()->IMAGE
+                        ? $pathToImageId($player->first()->IMAGE)
                         : null
-                );
+                ];
             });
+        
+        return new self(
+            $player['flash_id'],
+            $player['flash_image_id']
+        );
+        
     }
 
     public function getFlashId()

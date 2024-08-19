@@ -99,7 +99,7 @@ class FixtureInfo
     {
         $playerIds = $this->lineups
             ->getInvalidPlayers()
-            ->map(fn (Player $player) => $player->getPlayerId());
+            ->map(fn (LineupPlayer $player) => $player->getPlayerId());
 
         $playerInfoModels = PlayerInfoModel::query()
             ->whereIn('api_player_id', $playerIds)

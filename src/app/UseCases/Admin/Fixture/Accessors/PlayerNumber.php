@@ -5,17 +5,17 @@ namespace App\UseCases\Admin\Fixture\Accessors;
 
 class PlayerNumber
 {
-    private function __construct(private int $number)
+    private function __construct(private ?int $number)
     {
         
     }
 
-    public static function create(int $number)
+    public static function create(?int $number)
     {
         return new self($number);
     }
 
-    public function get(): int
+    public function get(): ?int
     {
         return $this->number;
     }

@@ -5,7 +5,7 @@ namespace Tests\Unit\UseCases\Admin\Player;
 use Tests\TestCase;
 use Illuminate\Support\Carbon;
 
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiFootBallIds;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiPlayerIds;
 use Database\Seeders\Tests\Admin\PlayerInfosRemovedSeeder;
 
 
@@ -27,10 +27,10 @@ class UpdateApiFootballIdsTest extends TestCase
     
     public function test_ApiFootballのデータで存在するPlayerInfoをすべてアップデートできる(): void
     {
-        /** @var UpdateApiFootBallIds $updateApiFootballIds */
-        $updateApiFootballIds = app(UpdateApiFootBallIds::class);
+        /** @var UpdateApiPlayerIds $updateApiPlayerIds */
+        $updateApiPlayerIds = app(UpdateApiPlayerIds::class);
 
-        $updateApiFootballIds->execute();
+        $updateApiPlayerIds->execute();
 
         $this->assertDatabaseCount('player_infos', 48);
     }

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Events\FixtureInfoRegistered;
 use App\Models\PlayerInfo as PlayerInfoModel;
-use App\UseCases\Admin\Fixture\Accessors\Player;
+use App\UseCases\Admin\Fixture\Accessors\LineupPlayer;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
 
@@ -19,7 +19,7 @@ class RegisterPlayerInfos
     }
 
     public function handle(FixtureInfoRegistered $event): void
-    {
+    {        
         $invalidPlayers = $event->fixtureInfo->getInvalidPlayers();
 
         if ($invalidPlayers->isEmpty()) {
@@ -27,16 +27,16 @@ class RegisterPlayerInfos
         }
         
         $data = $invalidPlayers
-            ->map(function (Player $player) {
+            ->map(function (LineupPlayer $player) {
                 $playerInfo = $player->getPlayerInfo();
 
-                if ($playerInfo->isNeedsUpdate()) {
+                if ($playerInfo->needsUpdate()) {
                     return $playerInfo->updateFromPlayer($player);
                 }
                 
-                $flashPlayer = $this->repository->searchPlayer($player);
+                $flashPlayer = $this->repository->searchPlayer($player->getPlayerInfo());
 
-                return $playerInfo->makeFromPlayer($player, $flashPlayer);
+                return $playerInfo->updateFlash($flashPlayer);
             })
             ->map(fn (PlayerInfo $playerInfo) => $playerInfo->toArray());
             

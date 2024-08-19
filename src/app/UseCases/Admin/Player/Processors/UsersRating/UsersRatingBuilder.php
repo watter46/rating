@@ -18,7 +18,7 @@ class UsersRatingBuilder
         $usersRatingsKeyByPlayerInfoId = $this->calculateUsersRatings($fixtures)->keyBy('player_info_id');
         
         return $this->getUsersFixtureStatistics($fixtures)
-            ->map(function (array $statistic) use ($usersRatingsKeyByPlayerInfoId) {
+            ->map(function (Collection $statistic) use ($usersRatingsKeyByPlayerInfoId) {
                 $newStatistic = $usersRatingsKeyByPlayerInfoId->get($statistic['player_info_id']);
 
                 if (!$newStatistic) {

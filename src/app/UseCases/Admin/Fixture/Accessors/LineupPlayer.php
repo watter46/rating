@@ -4,17 +4,12 @@ namespace App\UseCases\Admin\Fixture\Accessors;
 
 use Illuminate\Support\Collection;
 
-use App\Http\Controllers\Util\PlayerImageFile;
 use App\Models\PlayerInfo as PlayerInfoModel;
-use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
-use App\UseCases\Admin\Fixture\Accessors\PositionType;
 
 
-class Player
+class LineupPlayer
 {
-    private PlayerImageFile $image;
-    
-    public function __construct(
+    private function __construct(
         private int $id,
         private PlayerName $name,
         private PlayerNumber $number,
@@ -23,23 +18,25 @@ class Player
         private ?int $goal,
         private ?int $assists,
         private ?string $rating,
-        private PlayerInfo $playerInfo = new PlayerInfo
-    ) {
-        $this->image = new PlayerImageFile;
-    }
+        private PlayerInfo $playerInfo
+    ) {}
 
     public static function create(Collection $player)
     {
+        $id = $player['id'];
+        $name = PlayerName::create($player['name']);
+        $number = PlayerNumber::create($player['number']);
+        
         return new self(
-            $player['id'],
-            PlayerName::create($player['name']),
-            PlayerNumber::create($player['number']),
+            $id,
+            $name,
+            $number,
             $player['position'],
             $player['grid'],
             $player['goal'],
             $player['assists'],
             $player['rating'],
-            PlayerInfo::create()
+            PlayerInfo::fromPlayer($name, $number, $id)
         );
     }
 
@@ -104,11 +101,7 @@ class Player
 
     public function hasImage(): bool
     {
-        if (!$this->playerInfo->getImageId()) {
-            return true;
-        }
-
-        return $this->image->exists($this->getPlayerId());
+        return $this->playerInfo->hasImage();
     }
 
     public function existPlayerInfo(): bool
@@ -121,9 +114,9 @@ class Player
         return $this->playerInfo->isValid();
     }
 
-    public function isNeedsRegister(): bool
+    public function needsRegister(): bool
     {
-        return $this->playerInfo->isNeedsRegister();
+        return $this->playerInfo->needsRegister();
     }
 
     public function toPlayerData()

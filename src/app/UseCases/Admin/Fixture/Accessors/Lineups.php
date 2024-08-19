@@ -14,7 +14,7 @@ class Lineups
     /**
      * __construct
      *
-     * @param  Collection<Player> $lineups
+     * @param  Collection<LineupPlayer> $lineups
      * @return void
      */
     private function __construct(private Collection $lineups)
@@ -84,7 +84,7 @@ class Lineups
                 ->map(function (Collection $lineup) {
                     return $lineup
                         ->map(function (Collection $player) {
-                            return Player::create($player);
+                            return LineupPlayer::create($player);
                         });
                 })
         );
@@ -102,7 +102,7 @@ class Lineups
                         ->map(function (Collection $player) use ($playerInfoModelsByApiId) {
                             $playerInfoModel = $playerInfoModelsByApiId->get($player['id']);
                             
-                            return Player::reconstruct($player, $playerInfoModel);
+                            return LineupPlayer::reconstruct($player, $playerInfoModel);
                         });
                 })
         ));
@@ -115,7 +115,7 @@ class Lineups
         $lineups = $this->lineups
             ->map(function (Collection $players) use ($keyByPlayerId) {
                 return $players
-                    ->map(function (Player $player) use ($keyByPlayerId) {
+                    ->map(function (LineupPlayer $player) use ($keyByPlayerId) {
                         $playerInfoModel = $keyByPlayerId->get($player->getPlayerId());
 
                         if ($playerInfoModel) {
@@ -135,7 +135,7 @@ class Lineups
 
         $playerInfoCount = $this->lineups
             ->flatten(1)
-            ->filter(fn (Player $player) => $player->existPlayerInfo())
+            ->filter(fn (LineupPlayer $player) => $player->existPlayerInfo())
             ->count();
 
         return $lineupsCount === $playerInfoCount;
@@ -144,27 +144,27 @@ class Lineups
     public function hasImages(): bool
     {
         return $this->getPlayers()
-            ->every(fn(Player $player) => $player->hasImage());
+            ->every(fn(LineupPlayer $player) => $player->hasImage());
     }
 
     public function areAllPlayersValid()
     {
         return $this->getPlayers()
-            ->every(fn (Player $player) => $player->isValid());
+            ->every(fn (LineupPlayer $player) => $player->isValid());
     }
 
     public function toModel(): Collection
     {
         return $this->lineups
             ->map(function (Collection $players) {
-                return $players->map(fn(Player $player) => $player->toModel());
+                return $players->map(fn(LineupPlayer $player) => $player->toModel());
             });
     }
 
     public function getPlayerIds(): Collection
     {
         return $this->getPlayers()
-            ->map(fn(Player $player) => $player->getPlayerId());
+            ->map(fn(LineupPlayer $player) => $player->getPlayerId());
     }
 
     private function getPlayers(): Collection
@@ -175,19 +175,19 @@ class Lineups
     public function getInvalidPlayers(): Collection
     {
         return $this->getPlayers()
-            ->filter(fn (Player $player) => !$player->isValid());
+            ->filter(fn (LineupPlayer $player) => !$player->isValid());
     }
 
     public function getInvalidImagePlayers()
     {
         return $this->getPlayers()
-            ->filter(fn (Player $player) => !$player->hasImage());
+            ->filter(fn (LineupPlayer $player) => !$player->hasImage());
     }
 
     public function getNeedsRegisterPlayerIds()
     {
         return $this->getPlayers()
-            ->filter(fn (Player $player) => $player->isNeedsRegister())
-            ->map(fn (Player $player) => $player->getPlayerId());
+            ->filter(fn (LineupPlayer $player) => $player->needsRegister())
+            ->map(fn (LineupPlayer $player) => $player->getPlayerId());
     }
 }

@@ -3,11 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\FixtureInfoRegistered;
-use App\Events\PlayerInfoRegistered;
+use App\Events\PlayerInfosRegistered;
 use App\Http\Controllers\Util\PlayerImageFile;
-use App\Models\PlayerInfo;
+use App\UseCases\Admin\Fixture\Accessors\LineupPlayer;
 use App\UseCases\Admin\Fixture\Accessors\Player;
+use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
+
 
 class RegisterPlayerImage
 {
@@ -24,21 +26,36 @@ class RegisterPlayerImage
     /**
      * Handle the event.
      */
-    public function handle(FixtureInfoRegistered $event): void
+    public function handle(FixtureInfoRegistered|PlayerInfosRegistered $event): void
     {
-        $fixtureInfo = $event->fixtureInfo;
+        if ($event instanceof FixtureInfoRegistered) {
+            $fixtureInfo = $event->fixtureInfo;
         
-        $invalidPlayers = $fixtureInfo
-            ->refreshPlayerInfos()
-            ->getInvalidImagePlayers();
+            $invalidPlayers = $fixtureInfo
+                ->refreshPlayerInfos()
+                ->getInvalidImagePlayers();
+                    
+            if ($invalidPlayers->isEmpty()) return;
+            
+            $invalidPlayers
+                ->each(function (LineupPlayer $player) {
+                    $image = $this->repository->fetchPlayerImage($player->getPlayerInfo());
+                    
+                    $this->file->write($player->getPlayerId(), $image);
+                });
+            
+            return;
+        }
                 
-        if ($invalidPlayers->isEmpty()) return;
-        
-        $invalidPlayers
-            ->each(function (Player $player) {
-                $image = $this->repository->fetchPlayerImage($player);
+        $invalidPlayerInfos = $event->playerInfos->getInvalidImagePlayers();
+
+        if ($invalidPlayerInfos->isEmpty()) return;
+
+        $invalidPlayerInfos
+            ->each(function (PlayerInfo $playerInfo) {
+                $image = $this->repository->fetchPlayerImage($playerInfo);
                 
-                $this->file->write($player->getPlayerId(), $image);
+                $this->file->write($playerInfo->getPlayerId(), $image);
             });
     }
 }

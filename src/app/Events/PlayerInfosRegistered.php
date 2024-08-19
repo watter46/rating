@@ -7,17 +7,17 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerInfosBuilder;
+use App\UseCases\Admin\Fixture\Accessors\PlayerInfos;
 
 
-class PlayerInfoRegistered
+class PlayerInfosRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public PlayerInfosBuilder $builder)
+    public function __construct(public PlayerInfos $playerInfos)
     {
         //
     }

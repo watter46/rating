@@ -6,15 +6,18 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
 use App\Models\PlayerInfo;
-
+use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashIds;
 
 final readonly class FetchPlayerInfosUseCase
 {
     public function execute(): Collection
     {
-        try {            
+        try {
+            $update = app(UpdateFlashIds::class);
+            $update->execute();
+            
             return PlayerInfo::query()
-                ->select(['id', 'name', 'number', 'api_football_id'])
+                ->select(['id', 'name', 'number', 'api_player_id'])
                 ->currentSeason()
                 ->get();
 

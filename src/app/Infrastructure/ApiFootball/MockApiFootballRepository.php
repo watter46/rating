@@ -2,6 +2,9 @@
 
 namespace App\Infrastructure\ApiFootball;
 
+use Illuminate\Support\Facades\Http;
+use App\UseCases\Util\Season;
+
 use App\Http\Controllers\Util\FixtureFile;
 use App\Http\Controllers\Util\FixturesFile;
 use App\Http\Controllers\Util\LeagueImageFile;
@@ -11,16 +14,12 @@ use App\Http\Controllers\Util\TestFixtureInfoFile;
 use App\Http\Controllers\Util\TestFixtureInfosFile;
 use App\Http\Controllers\Util\TestLeagueImageFile;
 use App\Http\Controllers\Util\TestTeamImageFile;
-use Illuminate\Support\Facades\Http;
-
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
-use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
-use App\UseCases\Admin\Data\ApiFootball\FixturesData;
 use App\UseCases\Admin\Data\ApiFootball\SquadsData;
 use App\UseCases\Admin\Fixture\Accessors\FixtureInfo;
 use App\UseCases\Admin\Fixture\Accessors\FixtureInfos;
-use App\UseCases\Util\Season;
-use Illuminate\Support\Collection;
+use App\UseCases\Admin\Fixture\Accessors\PlayerInfos;
+use App\UseCases\Admin\Fixture\Accessors\Squad;
 
 class MockApiFootballRepository implements ApiFootballRepositoryInterface
 {
@@ -112,22 +111,22 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         return FixtureInfo::create($data);
     }
 
-    public function fetchSquads(): SquadsData
+    public function fetchSquads(): PlayerInfos
     {
         if ($this->isTest()) {
-            return SquadsData::create($this->squadsFile->get());
+            return PlayerInfos::fromSquad(Squad::create($this->squadsFile->get()));
         }
         
         if ($this->isSeed()) {
             if ($this->squadsFile->exists()) {
-                return SquadsData::create($this->squadsFile->get());
+                return PlayerInfos::fromSquad(Squad::create($this->squadsFile->get()));
             }
 
             dd('not exists');
         }
         
         if ($this->squadsFile->exists()) {
-            return SquadsData::create($this->squadsFile->get());
+            return PlayerInfos::fromSquad(Squad::create($this->squadsFile->get()));
         }
         
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/players/squads', [
@@ -138,7 +137,7 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
         $this->squadsFile->write($data);
 
-        return SquadsData::create($data);
+        return PlayerInfos::fromSquad(Squad::create($this->squadsFile->get()));
     }
 
     public function fetchLeagueImage(int $leagueId): string
@@ -150,6 +149,8 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         if ($this->leagueImageFile->exists($leagueId)) {
             return $this->leagueImageFile->get($leagueId);
         }
+
+        dd('league');
 
         return $this->httpClient("https://media-4.api-sports.io/football/leagues/$leagueId.png");
     }
@@ -163,6 +164,8 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
         if ($this->teamImageFile->exists($teamId)) {
             return $this->teamImageFile->get($teamId);
         }
+
+        dd('team');
 
         return $this->httpClient("https://media-4.api-sports.io/football/teams/$teamId.png");
     }

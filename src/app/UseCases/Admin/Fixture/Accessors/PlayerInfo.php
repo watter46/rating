@@ -5,14 +5,16 @@ namespace App\UseCases\Admin\Fixture\Accessors;
 use Illuminate\Support\Collection;
 
 use App\Models\PlayerInfo as playerInfoModel;
-use App\UseCases\Admin\Data\FlashLiveSports\PlayersData;
+use App\Http\Controllers\Util\PlayerImageFile;
 use App\UseCases\Admin\Fixture\Accessors\Flash\FlashPlayer;
+use App\UseCases\Admin\Fixture\PlayerMatcher;
 use App\UseCases\Util\Season;
 
 
 class PlayerInfo
 {
-    private PlayerStatus $status;
+    private PlayerImageFile $image;
+    private PlayerStatusType $status;
 
     private function __construct(
         private ?string $id = null,
@@ -24,7 +26,15 @@ class PlayerInfo
         private ?string $flash_image_id = null
     ) {
         $this->status = $this->updateStatus();
+        $this->image = new PlayerImageFile;
     }
+
+    public function st()
+    {
+        return $this->status->name;
+    }
+    
+    // ifを消せるか
 
     public static function create(playerInfoModel $model = new playerInfoModel): self
     {
@@ -43,14 +53,22 @@ class PlayerInfo
         );
     }
 
-    public function getFlashPlayerId()
+    public static function fromPlayer(PlayerName $name, PlayerNumber $number, int $api_player_id)
     {
-        return $this->flash_id;
+        return new self(
+            name: $name,
+            number: $number,
+            season: Season::current(),
+            api_player_id: $api_player_id
+        );
     }
 
-    public function getImageId(): ?string
+    public function updateFlash(FlashPlayer $flashPlayer)
     {
-        return $this->flash_image_id;
+        return $this->setAttribute(
+            flash_id: $flashPlayer->getFlashId(),
+            flash_image_id: $flashPlayer->getFlashImageId()
+        );
     }
 
     public function exist(): bool
@@ -78,85 +96,21 @@ class PlayerInfo
         return !$this->flash_id;
     }
 
-    public function updatePlayerId(int $apiPlayerId): self
+    public function match(array $player)
     {
-        return $this->setAttribute(api_player_id: $apiPlayerId);
+        $matcher = new PlayerMatcher($this->name, $this->number);
+
+        return $matcher->match($player);
     }
 
-    public function updateName(PlayerName $name): self
+    public function needsRegister(): bool
     {
-        return $this->setAttribute(name:$name);
+        return $this->status->needsRegister();
     }
 
-    public function updateNumber(PlayerNumber $number): self
+    public function needsUpdate(): bool
     {
-        return $this->setAttribute(number:$number);
-    }
-
-    public function updateFlashId(string $flashId): self
-    {
-        return $this->setAttribute(flash_image_id: $flashId);
-    }
-
-    public function updateFlashImageId(string $flashImageId): self
-    {
-        return $this->setAttribute(flash_image_id: $flashImageId);
-    }
-
-    public function updateSeason(): self
-    {
-        return $this->setAttribute(season: Season::current());
-    }
-
-    public function makeFromPlayer(Player $player, FlashPlayer $flashPlayer): self
-    {
-        ['apiPlayerId' => $apiPlayerId, 'name' => $name, 'number' => $number] = $player->toPlayerData();
-        
-        return $this->setAttribute(
-            api_player_id: $apiPlayerId,
-            name: $name,
-            number: $number,
-            season: Season::current(),
-            flash_id: $flashPlayer->getFlashId(),
-            flash_image_id: $flashPlayer->getFlashImageId(),
-        );
-    }
-
-    public function updateFromPlayer(Player $player): self
-    {        
-        ['name' => $name, 'number' => $number] = $player->toPlayerData();
-
-        return $this->setAttribute(name: $name, number: $number, season: Season::current());
-    }
-
-    private function setAttribute(
-        ?string $id = null,
-        ?PlayerName $name = null,
-        ?PlayerNumber $number = null,
-        ?int $season = null,
-        ?int $api_player_id = null,
-        ?string $flash_id = null,
-        ?string $flash_image_id = null): self
-    {
-        return new self(
-            id: $id ?? $this->id,
-            name: $name ?? $this->name,
-            number: $number ?? $this->number,
-            season: $season ?? $this->season,
-            api_player_id: $api_player_id ?? $this->api_player_id,
-            flash_id: $flash_id ?? $this->flash_id,
-            flash_image_id: $flash_image_id ?? $this->flash_image_id,
-        );
-    }
-
-    public function isNeedsRegister(): bool
-    {
-        return $this->status->isNeedsRegister();
-    }
-
-    public function isNeedsUpdate(): bool
-    {
-        return $this->status->isNeedsUpdate();
+        return $this->status->needsUpdate();
     }
 
     public function isValid(): bool
@@ -164,21 +118,13 @@ class PlayerInfo
         return $this->status->isValid();
     }
 
-    private function updateStatus(): PlayerStatus
+    public function hasImage(): bool
     {
-        if (!$this->exist()) {
-            return PlayerStatus::NeedsRegister;
+        if (!$this->flash_image_id) {
+            return true;
         }
 
-        if ($this->shouldUpdate($this->number)) {
-            return PlayerStatus::NeedsUpdate;
-        }
-
-        if ($this->shouldFetchFlash()) {
-            return PlayerStatus::NeedsFetchFlash;
-        }
-
-        return PlayerStatus::Valid;
+        return $this->image->exists($this->api_player_id);
     }
 
     public function buildFill(): array
@@ -217,5 +163,122 @@ class PlayerInfo
             return $playerInfo->forget('id');
         })
         ->toArray();
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getFlashPlayerId()
+    {
+        return $this->flash_id;
+    }
+
+    public function getImageId(): ?string
+    {
+        return $this->flash_image_id;
+    }
+
+    public function getPlayerId()
+    {
+        return $this->api_player_id;
+    }
+
+    public function getName()
+    {
+        return $this->name->getFullName();
+    }
+
+    public function updateFromPlayer(LineupPlayer $player): self
+    {        
+        ['name' => $name, 'number' => $number] = $player->toPlayerData();
+
+        return $this->setAttribute(name: $name, number: $number, season: Season::current());
+    }
+
+    public function updatePlayerId(int $apiPlayerId): self
+    {
+        return $this->setAttribute(api_player_id: $apiPlayerId);
+    }
+
+    public function updateName(PlayerName $name): self
+    {
+        return $this->setAttribute(name:$name);
+    }
+
+    public function updateNumber(PlayerNumber $number): self
+    {
+        return $this->setAttribute(number:$number);
+    }
+
+    public function updateFlashId(string $flashId): self
+    {
+        return $this->setAttribute(flash_id: $flashId);
+    }
+
+    public function updateFlashImageId(string $flashImageId): self
+    {
+        return $this->setAttribute(flash_image_id: $flashImageId);
+    }
+
+    public function updateSeason(): self
+    {
+        return $this->setAttribute(season: Season::current());
+    }
+
+    public function updateIfShortenName(PlayerName $name)
+    {
+        if (!$this->isShortenName()) {
+            return $this;
+        }
+
+        return $this->updateName($name);
+    }
+
+    public function updateIfDifferentNumber(PlayerNumber $number)
+    {
+        if ($this->equalNumber($number)) {
+            return $this;
+        }
+
+        return $this->updateNumber($number);
+    }
+
+    private function updateStatus(): PlayerStatusType
+    {
+        if (!$this->exist()) {
+            return PlayerStatusType::NeedsRegister;
+        }
+
+        if ($this->shouldUpdate($this->number)) {
+            return PlayerStatusType::NeedsUpdate;
+        }
+
+        if ($this->shouldFetchFlash()) {
+            return PlayerStatusType::NeedsFetchFlash;
+        }
+
+        return PlayerStatusType::Valid;
+    }
+
+    private function setAttribute(
+        ?string $id = null,
+        ?PlayerName $name = null,
+        ?PlayerNumber $number = null,
+        ?int $season = null,
+        ?int $api_player_id = null,
+        ?string $flash_id = null,
+        ?string $flash_image_id = null): self
+    {
+        return new self(
+            id: $id ?? $this->id,
+            name: $name ?? $this->name,
+            number: $number ?? $this->number,
+            season: $season ?? $this->season,
+            api_player_id: $api_player_id ?? $this->api_player_id,
+            flash_id: $flash_id ?? $this->flash_id,
+            flash_image_id: $flash_image_id ?? $this->flash_image_id,
+        );
     }
 }

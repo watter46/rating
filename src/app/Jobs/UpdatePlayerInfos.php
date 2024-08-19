@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiFootBallIds;
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashLiveSportsIds;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashIds;
 
 
 class UpdatePlayerInfos implements ShouldQueue
@@ -29,9 +29,9 @@ class UpdatePlayerInfos implements ShouldQueue
      */
     public function handle(
         UpdateApiFootBallIds $updateApiFootBallIds,
-        UpdateFlashLiveSportsIds $updateFlashLiveSportsIds): void
+        UpdateFlashIds $updateFlashIds): void
     {
         $updateApiFootBallIds->execute();
-        $updateFlashLiveSportsIds->execute();
+        $updateFlashIds->execute();
     }
 }

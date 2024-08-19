@@ -6,13 +6,13 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\PlayerInfo;
+use App\UseCases\Admin\Fixture\Accessors\PlayerInfos;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 
 
-class UpdateFlashLiveSportsIds
+class UpdateFlashIds
 {
     public function __construct(
-        private PlayerInfo $playerInfo,
         private FlashLiveSportsRepositoryInterface $repository)
     {
         
@@ -21,19 +21,19 @@ class UpdateFlashLiveSportsIds
     public function execute()
     {
         try {
-            $teamSquad = $this->repository->fetchTeamSquad();
+            $flashSquad = $this->repository->fetchSquad();
 
-            $data = $this->playerInfo
-                ->playerInfosBuilder()
-                ->bulkUpdateFlashLiveSportsData($teamSquad);
+            $playerInfos = PlayerInfos::create($flashSquad);
             
-            DB::transaction(function () use ($data) {
+            DB::transaction(function () use ($playerInfos) {
                 $unique = PlayerInfo::UPSERT_UNIQUE;
                 
-                PlayerInfo::upsert($data->toArray(), $unique, PlayerInfo::UPSERT_FLASH_LIVE_SPORTS_COLUMNS);
+                PlayerInfo::upsert($playerInfos->upsert(), $unique, PlayerInfo::UPSERT_FLASH_COLUMNS);
             });
-
-            $this->playerInfo->playerInfosBuilder()->dispatch($teamSquad);
+            
+            if ($playerInfos->shouldDispatch()) {
+                $playerInfos->dispatch();
+            }
 
         } catch (Exception $e) {
             throw $e;

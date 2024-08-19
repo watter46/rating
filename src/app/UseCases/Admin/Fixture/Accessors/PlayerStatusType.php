@@ -3,7 +3,7 @@
 namespace App\UseCases\Admin\Fixture\Accessors;
 
 
-enum PlayerStatus
+enum PlayerStatusType
 {
     /** 新しいプレイヤーが未登録であり保存する必要がある */
     case NeedsRegister;
@@ -16,18 +16,19 @@ enum PlayerStatus
 
     /** 正常なPlayerInfo */
     case Valid;
+    
 
-    public function isNeedsRegister(): bool
+    public function needsRegister(): bool
     {
         return $this === self::NeedsRegister;
     }
 
-    public function isNeedsUpdate(): bool
+    public function needsUpdate(): bool
     {
         return $this === self::NeedsUpdate;
     }
 
-    public function isNeedsFetchFlash(): bool
+    public function needsFetchFlash(): bool
     {
         return $this === self::NeedsFetchFlash;
     }
