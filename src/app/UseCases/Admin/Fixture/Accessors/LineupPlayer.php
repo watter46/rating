@@ -36,7 +36,7 @@ class LineupPlayer
             $player['goal'],
             $player['assists'],
             $player['rating'],
-            PlayerInfo::fromPlayer($name, $number, $id)
+            PlayerInfo::create($name, $number, $id)
         );
     }
 
@@ -51,11 +51,11 @@ class LineupPlayer
             $player['goal'],
             $player['assists'],
             $player['rating'],
-            PlayerInfo::create($model)
+            PlayerInfo::fromModel($model)
         );
     }
 
-    public function assignPlayerInfo(PlayerInfoModel $playerInfoModel)
+    public function assignPlayerInfo(PlayerInfoModel $model)
     {
         return new self(
             $this->id,
@@ -66,7 +66,7 @@ class LineupPlayer
             $this->goal,
             $this->assists,
             $this->rating,
-            PlayerInfo::create($playerInfoModel)
+            PlayerInfo::fromModel($model)->updateIfNeeded($this->playerInfo)
         );
     }
 
@@ -117,14 +117,5 @@ class LineupPlayer
     public function needsRegister(): bool
     {
         return $this->playerInfo->needsRegister();
-    }
-
-    public function toPlayerData()
-    {
-        return [
-            'apiPlayerId' => $this->id,
-            'name' => $this->name,
-            'number' => $this->number
-        ];
     }
 }

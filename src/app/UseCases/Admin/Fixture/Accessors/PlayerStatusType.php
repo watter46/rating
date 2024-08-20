@@ -16,6 +16,11 @@ enum PlayerStatusType
 
     /** 正常なPlayerInfo */
     case Valid;
+
+    /** 初期状態 */
+    case Created;
+
+    case Updated;
     
 
     public function needsRegister(): bool
@@ -31,6 +36,11 @@ enum PlayerStatusType
     public function needsFetchFlash(): bool
     {
         return $this === self::NeedsFetchFlash;
+    }
+
+    public function isUpdated()
+    {
+        return $this === self::Updated;
     }
     
     public function isValid(): bool

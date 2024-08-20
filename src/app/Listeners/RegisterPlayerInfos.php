@@ -21,7 +21,7 @@ class RegisterPlayerInfos
     public function handle(FixtureInfoRegistered $event): void
     {        
         $invalidPlayers = $event->fixtureInfo->getInvalidPlayers();
-
+        
         if ($invalidPlayers->isEmpty()) {
             return;
         }
@@ -30,8 +30,8 @@ class RegisterPlayerInfos
             ->map(function (LineupPlayer $player) {
                 $playerInfo = $player->getPlayerInfo();
 
-                if ($playerInfo->needsUpdate()) {
-                    return $playerInfo->updateFromPlayer($player);
+                if ($playerInfo->isUpdated()) {
+                    return $playerInfo;
                 }
                 
                 $flashPlayer = $this->repository->searchPlayer($player->getPlayerInfo());

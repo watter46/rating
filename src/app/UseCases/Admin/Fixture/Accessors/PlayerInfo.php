@@ -14,9 +14,9 @@ use App\UseCases\Util\Season;
 class PlayerInfo
 {
     private PlayerImageFile $image;
-    private PlayerStatusType $status;
 
     private function __construct(
+        private PlayerStatusType $status,
         private ?string $id = null,
         private ?PlayerName $name = null,
         private ?PlayerNumber $number = null,
@@ -25,49 +25,56 @@ class PlayerInfo
         private ?string $flash_id = null,
         private ?string $flash_image_id = null
     ) {
-        $this->status = $this->updateStatus();
         $this->image = new PlayerImageFile;
     }
-
-    public function st()
+    
+    public static function create(PlayerName $name, PlayerNumber $number, int $api_player_id)
     {
-        return $this->status->name;
+        return (new self(
+            name: $name,
+            number: $number,
+            season: Season::current(),
+            api_player_id: $api_player_id,
+            status: PlayerStatusType::Created
+        ))
+        ->updateStatus();
     }
     
-    // ifを消せるか
-
-    public static function create(playerInfoModel $model = new playerInfoModel): self
+    public static function fromModel(playerInfoModel $model): self
     {
-        if (!$model->id) {
-            return new self;
-        }
-        
-        return new self(
+        return (new self(
+            PlayerStatusType::Created,
             $model->id,
             PlayerName::create($model->name),
             PlayerNumber::create($model->number),
             $model->season,
             $model->api_player_id,
             $model->flash_id,
-            $model->flash_image_id,
-        );
+            $model->flash_image_id
+        ))
+        ->updateStatus();
     }
 
-    public static function fromPlayer(PlayerName $name, PlayerNumber $number, int $api_player_id)
+    public function updateIfNeeded(PlayerInfo $playerInfo)
     {
-        return new self(
+        $name = $this->isShortenName() ? $playerInfo->getName() : $this->name;
+        $number = !$this->equalNumber($playerInfo->getNumber()) ? $playerInfo->getNumber() : $this->number;
+
+        return $this->setAttribute(
+            status: PlayerStatusType::Updated,
             name: $name,
             number: $number,
-            season: Season::current(),
-            api_player_id: $api_player_id
-        );
+            season: Season::current()
+        )
+        ->updateStatus();
     }
-
+    
     public function updateFlash(FlashPlayer $flashPlayer)
     {
         return $this->setAttribute(
+            status: PlayerStatusType::Updated,
             flash_id: $flashPlayer->getFlashId(),
-            flash_image_id: $flashPlayer->getFlashImageId()
+            flash_image_id: $flashPlayer->getFlashImageId(),
         );
     }
 
@@ -94,6 +101,11 @@ class PlayerInfo
     public function shouldFetchFlash(): bool
     {
         return !$this->flash_id;
+    }
+
+    public function isUpdated()
+    {
+        return $this->status->isUpdated();
     }
 
     public function match(array $player)
@@ -187,44 +199,42 @@ class PlayerInfo
 
     public function getName()
     {
-        return $this->name->getFullName();
+        return $this->name;
     }
 
-    public function updateFromPlayer(LineupPlayer $player): self
-    {        
-        ['name' => $name, 'number' => $number] = $player->toPlayerData();
-
-        return $this->setAttribute(name: $name, number: $number, season: Season::current());
+    public function getNumber()
+    {
+        return $this->number;
     }
 
     public function updatePlayerId(int $apiPlayerId): self
     {
-        return $this->setAttribute(api_player_id: $apiPlayerId);
+        return $this->setAttribute(api_player_id: $apiPlayerId, status: PlayerStatusType::Updated);
     }
 
     public function updateName(PlayerName $name): self
     {
-        return $this->setAttribute(name:$name);
+        return $this->setAttribute(name:$name, status: PlayerStatusType::Updated);
     }
 
     public function updateNumber(PlayerNumber $number): self
     {
-        return $this->setAttribute(number:$number);
+        return $this->setAttribute(number:$number, status: PlayerStatusType::Updated);
     }
 
     public function updateFlashId(string $flashId): self
     {
-        return $this->setAttribute(flash_id: $flashId);
+        return $this->setAttribute(flash_id: $flashId, status: PlayerStatusType::Updated);
     }
 
     public function updateFlashImageId(string $flashImageId): self
     {
-        return $this->setAttribute(flash_image_id: $flashImageId);
+        return $this->setAttribute(flash_image_id: $flashImageId, status: PlayerStatusType::Updated);
     }
 
     public function updateSeason(): self
     {
-        return $this->setAttribute(season: Season::current());
+        return $this->setAttribute(season: Season::current(), status: PlayerStatusType::Updated);
     }
 
     public function updateIfShortenName(PlayerName $name)
@@ -245,24 +255,30 @@ class PlayerInfo
         return $this->updateNumber($number);
     }
 
-    private function updateStatus(): PlayerStatusType
+    private function getStatus()
     {
         if (!$this->exist()) {
             return PlayerStatusType::NeedsRegister;
-        }
-
-        if ($this->shouldUpdate($this->number)) {
-            return PlayerStatusType::NeedsUpdate;
         }
 
         if ($this->shouldFetchFlash()) {
             return PlayerStatusType::NeedsFetchFlash;
         }
 
+        if ($this->status->isUpdated()) {
+            return $this->status;
+        }
+
         return PlayerStatusType::Valid;
     }
 
+    private function updateStatus()
+    {
+        return $this->setAttribute(status: $this->getStatus());
+    }
+
     private function setAttribute(
+        PlayerStatusType $status,
         ?string $id = null,
         ?PlayerName $name = null,
         ?PlayerNumber $number = null,
@@ -272,13 +288,14 @@ class PlayerInfo
         ?string $flash_image_id = null): self
     {
         return new self(
+            status: $status,
             id: $id ?? $this->id,
             name: $name ?? $this->name,
             number: $number ?? $this->number,
             season: $season ?? $this->season,
             api_player_id: $api_player_id ?? $this->api_player_id,
             flash_id: $flash_id ?? $this->flash_id,
-            flash_image_id: $flash_image_id ?? $this->flash_image_id,
+            flash_image_id: $flash_image_id ?? $this->flash_image_id
         );
     }
 }

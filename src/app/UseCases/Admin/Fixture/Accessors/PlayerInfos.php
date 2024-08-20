@@ -31,7 +31,7 @@ class PlayerInfos
             ->get();
 
         $playerInfos = $models
-            ->map(fn (PlayerInfoModel $model) => PlayerInfo::create($model))
+            ->map(fn (PlayerInfoModel $model) => PlayerInfo::fromModel($model))
             ->pipe(function (Collection $playerInfos) use ($squad) {
                 $playerIds = $playerInfos
                     ->map(function (PlayerInfo $playerInfo) {
@@ -46,11 +46,11 @@ class PlayerInfos
 
                         return $players
                             ->map(function (array $player) {
-                                return PlayerInfo::create()
-                                    ->updatePlayerId($player['id'])
-                                    ->updateName(PlayerName::create($player['name']))
-                                    ->updateNumber(PlayerNumber::create($player['number']))
-                                    ->updateSeason();
+                                return PlayerInfo::create(
+                                    PlayerName::create($player['name']),
+                                    PlayerNumber::create($player['number']),
+                                    $player['id']
+                                );
                             });
                     });
                 
@@ -86,7 +86,7 @@ class PlayerInfos
         }
             
         $playerInfos = $models
-            ->map(fn (PlayerInfoModel $model) => PlayerInfo::create($model))
+            ->map(fn (PlayerInfoModel $model) => PlayerInfo::fromModel($model))
             ->filter(fn (PlayerInfo $playerInfo) => $playerInfo->needsUpdate())
             ->map(function (PlayerInfo $playerInfo) use ($flashPlayers) {
                 $player = $flashPlayers

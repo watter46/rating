@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiFootBallIds;
+use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiPlayerIds;
 use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashIds;
 
 
@@ -28,10 +28,10 @@ class UpdatePlayerInfos implements ShouldQueue
      * Execute the job.
      */
     public function handle(
-        UpdateApiFootBallIds $updateApiFootBallIds,
+        UpdateApiPlayerIds $updateApiPlayerIds,
         UpdateFlashIds $updateFlashIds): void
     {
-        $updateApiFootBallIds->execute();
+        $updateApiPlayerIds->execute();
         $updateFlashIds->execute();
     }
 }
