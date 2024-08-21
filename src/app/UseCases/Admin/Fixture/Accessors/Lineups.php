@@ -5,6 +5,7 @@ namespace App\UseCases\Admin\Fixture\Accessors;
 use Illuminate\Support\Collection;
 
 use App\UseCases\Admin\Fixture\Accessors\PositionType;
+use App\Models\PlayerInfo as PlayerInfoModel;
 
 
 class Lineups
@@ -14,7 +15,7 @@ class Lineups
     /**
      * __construct
      *
-     * @param  Collection<LineupPlayer> $lineups
+     * @param  Collection<Player> $lineups
      * @return void
      */
     private function __construct(private Collection $lineups)
@@ -84,7 +85,7 @@ class Lineups
                 ->map(function (Collection $lineup) {
                     return $lineup
                         ->map(function (Collection $player) {
-                            return LineupPlayer::create($player);
+                            return Player::create($player);
                         });
                 })
         );
@@ -102,24 +103,64 @@ class Lineups
                         ->map(function (Collection $player) use ($playerInfoModelsByApiId) {
                             $playerInfoModel = $playerInfoModelsByApiId->get($player['id']);
                             
-                            return LineupPlayer::reconstruct($player, $playerInfoModel);
+                            return Player::reconstruct($player, $playerInfoModel);
                         });
                 })
         ));
     }
-
-    public function updatePlayerInfos(Collection $playerInfoModels)
+    
+    /**
+     * 不正な値を持っていた最新のPlayerInfoを取得して更新する
+     *
+     * @return self
+     */
+    public function refreshInvalidPlayerInfos()
     {
-        $keyByPlayerId = $playerInfoModels->keyBy('api_player_id');
+        $playerIds = $this->getInvalidPlayers()
+            ->map(fn (Player $player) => $player->getPlayerId());
+
+        $models = PlayerInfoModel::query()
+            ->whereIn('api_player_id', $playerIds)
+            ->get();
+
+        return $this->updatePlayerInfos($models);
+    }
+    
+    /**
+     * 新規登録する必要がある or FixtureInfoに紐づいていない
+     * PlayerInfoを取得して更新する
+     *
+     * @return self
+     */
+    public function refreshNeedsRegisterPlayerInfos()
+    {
+        $playerIds = $this->getNeedsRegisterPlayerIds();
+
+        $models = PlayerInfoModel::query()
+            ->whereIn('api_player_id', $playerIds)
+            ->get();
+
+        return $this->updatePlayerInfos($models);
+    }
+
+    /**
+     * Lineups内の指定のPlayerInfoを更新する
+     *
+     * @param  Collection<PlayerInfoModel> $models
+     * @return self
+     */
+    private function updatePlayerInfos(Collection $models)
+    {
+        $modelsByPlayerId = $models->keyBy('api_player_id');
         
         $lineups = $this->lineups
-            ->map(function (Collection $players) use ($keyByPlayerId) {
+            ->map(function (Collection $players) use ($modelsByPlayerId) {
                 return $players
-                    ->map(function (LineupPlayer $player) use ($keyByPlayerId) {
-                        $playerInfoModel = $keyByPlayerId->get($player->getPlayerId());
+                    ->map(function (Player $player) use ($modelsByPlayerId) {
+                        $model = $modelsByPlayerId->get($player->getPlayerId());
 
-                        if ($playerInfoModel) {
-                            return $player->assignPlayerInfo($playerInfoModel);
+                        if ($model) {
+                            return $player->updatePlayerInfo($model);
                         }
                         
                         return $player;
@@ -135,7 +176,7 @@ class Lineups
 
         $playerInfoCount = $this->lineups
             ->flatten(1)
-            ->filter(fn (LineupPlayer $player) => $player->existPlayerInfo())
+            ->filter(fn (Player $player) => $player->existPlayerInfo())
             ->count();
 
         return $lineupsCount === $playerInfoCount;
@@ -144,27 +185,27 @@ class Lineups
     public function hasImages(): bool
     {
         return $this->getPlayers()
-            ->every(fn(LineupPlayer $player) => $player->hasImage());
+            ->every(fn(Player $player) => $player->hasImage());
     }
 
     public function areAllPlayersValid()
     {
         return $this->getPlayers()
-            ->every(fn (LineupPlayer $player) => $player->isValid());
+            ->every(fn (Player $player) => $player->isValid());
     }
 
     public function toModel(): Collection
     {
         return $this->lineups
             ->map(function (Collection $players) {
-                return $players->map(fn(LineupPlayer $player) => $player->toModel());
+                return $players->map(fn(Player $player) => $player->toModel());
             });
     }
 
     public function getPlayerIds(): Collection
     {
         return $this->getPlayers()
-            ->map(fn(LineupPlayer $player) => $player->getPlayerId());
+            ->map(fn(Player $player) => $player->getPlayerId());
     }
 
     private function getPlayers(): Collection
@@ -175,19 +216,19 @@ class Lineups
     public function getInvalidPlayers(): Collection
     {
         return $this->getPlayers()
-            ->filter(fn (LineupPlayer $player) => !$player->isValid());
+            ->filter(fn (Player $player) => !$player->isValid());
     }
 
     public function getInvalidImagePlayers()
     {
         return $this->getPlayers()
-            ->filter(fn (LineupPlayer $player) => !$player->hasImage());
+            ->filter(fn (Player $player) => !$player->hasImage());
     }
 
     public function getNeedsRegisterPlayerIds()
     {
         return $this->getPlayers()
-            ->filter(fn (LineupPlayer $player) => $player->needsRegister())
-            ->map(fn (LineupPlayer $player) => $player->getPlayerId());
+            ->filter(fn (Player $player) => $player->needsRegister())
+            ->map(fn (Player $player) => $player->getPlayerId());
     }
 }

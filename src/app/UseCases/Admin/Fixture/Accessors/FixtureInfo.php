@@ -97,21 +97,13 @@ class FixtureInfo
      */
     public function refreshPlayerInfos()
     {
-        $playerIds = $this->lineups
-            ->getInvalidPlayers()
-            ->map(fn (LineupPlayer $player) => $player->getPlayerId());
-
-        $playerInfoModels = PlayerInfoModel::query()
-            ->whereIn('api_player_id', $playerIds)
-            ->get();
-        
         return new self(
             $this->id,
             $this->score,
             $this->teams,
             $this->league,
             $this->fixture,
-            $this->lineups->updatePlayerInfos($playerInfoModels)
+            $this->lineups->refreshInvalidPlayerInfos()
         );
     }
     
@@ -122,19 +114,13 @@ class FixtureInfo
      */
     public function updatePlayerInfos()
     {
-        $playerIds = $this->lineups->getNeedsRegisterPlayerIds();
-
-        $playerInfoModels = PlayerInfoModel::query()
-            ->whereIn('api_player_id', $playerIds)
-            ->get();
-        
         return new self(
             $this->id,
             $this->score,
             $this->teams,
             $this->league,
             $this->fixture,
-            $this->lineups->updatePlayerInfos($playerInfoModels)
+            $this->lineups->refreshNeedsRegisterPlayerInfos()
         );
     }
 

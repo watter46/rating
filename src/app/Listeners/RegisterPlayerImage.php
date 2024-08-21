@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\FixtureInfoRegistered;
 use App\Events\PlayerInfosRegistered;
 use App\Http\Controllers\Util\PlayerImageFile;
-use App\UseCases\Admin\Fixture\Accessors\LineupPlayer;
 use App\UseCases\Admin\Fixture\Accessors\Player;
 use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
@@ -38,7 +37,7 @@ class RegisterPlayerImage
             if ($invalidPlayers->isEmpty()) return;
             
             $invalidPlayers
-                ->each(function (LineupPlayer $player) {
+                ->each(function (Player $player) {
                     $image = $this->repository->fetchPlayerImage($player->getPlayerInfo());
                     
                     $this->file->write($player->getPlayerId(), $image);

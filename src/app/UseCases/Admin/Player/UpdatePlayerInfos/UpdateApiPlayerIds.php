@@ -20,7 +20,7 @@ class UpdateApiPlayerIds
     {
         try {
             $data = $this->repository->fetchSquads()->upsert();
-            
+
             DB::transaction(function () use ($data) {
                 $unique = PlayerInfo::UPSERT_UNIQUE;
                 

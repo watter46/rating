@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 
 use App\Models\PlayerInfo as playerInfoModel;
 use App\Http\Controllers\Util\PlayerImageFile;
+use App\UseCases\Admin\Fixture\Accessors\Api\ApiPlayer;
 use App\UseCases\Admin\Fixture\Accessors\Flash\FlashPlayer;
 use App\UseCases\Admin\Fixture\PlayerMatcher;
 use App\UseCases\Util\Season;
@@ -14,6 +15,7 @@ use App\UseCases\Util\Season;
 class PlayerInfo
 {
     private PlayerImageFile $image;
+    private PlayerMatcher $matcher;
 
     private function __construct(
         private PlayerStatusType $status,
@@ -25,7 +27,20 @@ class PlayerInfo
         private ?string $flash_id = null,
         private ?string $flash_image_id = null
     ) {
-        $this->image = new PlayerImageFile;
+        $this->image   = new PlayerImageFile;
+        $this->matcher = new PlayerMatcher($name, $number);
+    }
+
+    public static function fromApiPlayer(ApiPlayer $apiPlayer)
+    {
+        return (new self(
+            name: $apiPlayer->getName(),
+            number: $apiPlayer->getNumber(),
+            season: Season::current(),
+            api_player_id: $apiPlayer->getId(),
+            status: PlayerStatusType::Created
+        ))
+        ->updateStatus();
     }
     
     public static function create(PlayerName $name, PlayerNumber $number, int $api_player_id)
@@ -69,10 +84,21 @@ class PlayerInfo
         ->updateStatus();
     }
     
+    public function updateApiPlayer(ApiPlayer $apiPlayer)
+    {
+        return $this->setAttribute(
+            status: PlayerStatusType::Updated,
+            name: $this->isShortenName() ? $apiPlayer->getName() : $this->name,
+            number: !$this->equalNumber($apiPlayer->getNumber()) ? $apiPlayer->getNumber() : $this->number,
+            api_player_id: $apiPlayer->getId()
+        );
+    }
+    
     public function updateFlash(FlashPlayer $flashPlayer)
     {
         return $this->setAttribute(
             status: PlayerStatusType::Updated,
+            name: $this->isShortenName() ? $flashPlayer->getName() : $this->name,
             flash_id: $flashPlayer->getFlashId(),
             flash_image_id: $flashPlayer->getFlashImageId(),
         );
@@ -108,11 +134,14 @@ class PlayerInfo
         return $this->status->isUpdated();
     }
 
-    public function match(array $player)
+    public function shouldUpdateFlash()
     {
-        $matcher = new PlayerMatcher($this->name, $this->number);
+        return $this->shouldFetchFlash() || $this->shouldUpdate($this->number);
+    }
 
-        return $matcher->match($player);
+    public function match(FlashPlayer $flashPlayer)
+    {
+        return $this->matcher->match($flashPlayer);
     }
 
     public function needsRegister(): bool
@@ -237,24 +266,6 @@ class PlayerInfo
         return $this->setAttribute(season: Season::current(), status: PlayerStatusType::Updated);
     }
 
-    public function updateIfShortenName(PlayerName $name)
-    {
-        if (!$this->isShortenName()) {
-            return $this;
-        }
-
-        return $this->updateName($name);
-    }
-
-    public function updateIfDifferentNumber(PlayerNumber $number)
-    {
-        if ($this->equalNumber($number)) {
-            return $this;
-        }
-
-        return $this->updateNumber($number);
-    }
-
     private function getStatus()
     {
         if (!$this->exist()) {
@@ -263,6 +274,10 @@ class PlayerInfo
 
         if ($this->shouldFetchFlash()) {
             return PlayerStatusType::NeedsFetchFlash;
+        }
+
+        if ($this->shouldUpdate($this->number)) {
+            return PlayerStatusType::NeedsUpdate;
         }
 
         if ($this->status->isUpdated()) {

@@ -13,6 +13,7 @@ use App\Http\Controllers\Util\TestPlayerImageFile;
 use App\UseCases\Admin\Fixture\Accessors\Flash\FlashPlayer;
 use App\UseCases\Admin\Fixture\Accessors\Flash\FlashSquad;
 use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
+use App\UseCases\Admin\Fixture\Accessors\PlayerInfos;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 
 
@@ -53,22 +54,20 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
         }
     }
 
-    public function fetchSquad(): FlashSquad
+    public function fetchSquad(): PlayerInfos
     {
         if ($this->isTest()) {
-            return FlashSquad::create($this->teamSquadFile->get());
+            return PlayerInfos::fromFlashSquad(FlashSquad::create($this->teamSquadFile->get()));
         }
         
         if ($this->isSeed()) {
             if ($this->teamSquadFile->exists()) {
-                return FlashSquad::create($this->teamSquadFile->get());
+                return PlayerInfos::fromFlashSquad(FlashSquad::create($this->teamSquadFile->get()));
             }
-
-            dd('not exists');
         }
 
         if ($this->teamSquadFile->exists()) {
-            return FlashSquad::create($this->teamSquadFile->get());
+            return PlayerInfos::fromFlashSquad(FlashSquad::create($this->teamSquadFile->get()));
         }
         
         $json = $this->httpClient('https://flashlive-sports.p.rapidapi.com/v1/teams/squad', [
@@ -81,7 +80,7 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
 
         $this->teamSquadFile->write($data);
         
-        return FlashSquad::create($data);
+        return PlayerInfos::fromFlashSquad(FlashSquad::create($data));
     }
 
     public function fetchPlayer(PlayerInfo $playerInfo): FlashPlayer
@@ -125,8 +124,6 @@ class MockFlashLiveSportsRepository implements FlashLiveSportsRepositoryInterfac
             if ($this->playersFile->exists($playerInfo->getPlayerId())) {
                 return FlashPlayer::fromPlayers($this->playersFile->get($playerInfo->getPlayerId()));
             }
-
-            dd('not exists');
         }
 
         if ($this->playersFile->exists($playerInfo->getPlayerId())) {

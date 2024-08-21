@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 
 use App\Events\PlayerInfosRegistered;
 use App\Models\PlayerInfo as PlayerInfoModel;
+use App\UseCases\Admin\Fixture\Accessors\Api\ApiPlayer;
+use App\UseCases\Admin\Fixture\Accessors\Api\ApiSquad;
 use App\UseCases\Admin\Fixture\Accessors\Flash\FlashSquad;
 use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
 
@@ -24,7 +26,7 @@ class PlayerInfos
         //
     }
 
-    public static function fromSquad(Squad $squad)
+    public static function fromSquad(ApiSquad $squad)
     {
         $models = playerInfoModel::query()
             ->currentSeason()
@@ -34,48 +36,37 @@ class PlayerInfos
             ->map(fn (PlayerInfoModel $model) => PlayerInfo::fromModel($model))
             ->pipe(function (Collection $playerInfos) use ($squad) {
                 $playerIds = $playerInfos
-                    ->map(function (PlayerInfo $playerInfo) {
-                        return $playerInfo->getPlayerId();
-                    });
+                    ->map(fn (PlayerInfo $playerInfo) => $playerInfo->getPlayerId());
 
-                $notInPlayers = $squad->getNotInIds($playerIds)
-                    ->pipe(function (Collection $players) {
-                        if ($players->isEmpty()) {
-                            return $players;
+                $unSavedPlayerInfos = $squad->getNotInIds($playerIds)
+                    ->pipe(function (Collection $apiPlayers) {
+                        if ($apiPlayers->isEmpty()) {
+                            return $apiPlayers;
                         }
 
-                        return $players
-                            ->map(function (array $player) {
-                                return PlayerInfo::create(
-                                    PlayerName::create($player['name']),
-                                    PlayerNumber::create($player['number']),
-                                    $player['id']
-                                );
-                            });
+                        return $apiPlayers->map(fn (ApiPlayer $apiPlayer) => PlayerInfo::fromApiPlayer($apiPlayer));
                     });
                 
-                $updatedPlayers = $playerInfos
+                $updatedPlayerInfos = $playerInfos
                     ->filter(fn(PlayerInfo $playerInfo) => $playerInfo->needsUpdate())
                     ->map(function (PlayerInfo $playerInfo) use ($squad) {
-                        $player = $squad->getById($playerInfo->getPlayerId());
+                        $apiPlayer = $squad->getById($playerInfo->getPlayerId());
 
-                        if (!$player) {
+                        if (!$apiPlayer) {
                             return $playerInfo;
                         }
 
-                        return $playerInfo
-                            ->updateIfShortenName(PlayerName::create($player['name']))
-                            ->updateIfDifferentNumber(PlayerNumber::create($player['number']));
+                        return $playerInfo->updateApiPlayer($apiPlayer);
                     });
 
-                return $notInPlayers->merge($updatedPlayers);
+                return $unSavedPlayerInfos->merge($updatedPlayerInfos);
             })
             ->values();
 
         return new self($playerInfos);
     }
 
-    public static function create(FlashSquad $flashPlayers)
+    public static function fromFlashSquad(FlashSquad $flashSquad)
     {
         $models = playerInfoModel::query()
             ->currentSeason()
@@ -87,26 +78,12 @@ class PlayerInfos
             
         $playerInfos = $models
             ->map(fn (PlayerInfoModel $model) => PlayerInfo::fromModel($model))
-            ->filter(fn (PlayerInfo $playerInfo) => $playerInfo->needsUpdate())
-            ->map(function (PlayerInfo $playerInfo) use ($flashPlayers) {
-                $player = $flashPlayers
-                    ->getAll()
-                    ->first(fn ($player) => $playerInfo->match($player));
+            ->filter(fn (PlayerInfo $playerInfo) => $playerInfo->shouldUpdateFlash())            
+            ->filter(fn(PlayerInfo $playerInfo) => $flashSquad->exist($playerInfo))
+            ->map(function (PlayerInfo $playerInfo) use ($flashSquad) {
+                $player = $flashSquad->getByPlayerInfo($playerInfo);
 
-                if (!$player) {
-                    return $playerInfo;
-                }
-
-                if ($playerInfo->isShortenName()) {
-                    return $playerInfo
-                        ->updateName($player['name'])
-                        ->updateFlashId($player['flash_id'])
-                        ->updateFlashImageId($player['flash_image_id']);
-                }
-
-                return $playerInfo
-                    ->updateFlashId($player['flash_id'])
-                    ->updateFlashImageId($player['flash_image_id']);
+                return $playerInfo->updateFlash($player);
             })
             ->values();
 

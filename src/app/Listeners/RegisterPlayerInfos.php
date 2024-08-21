@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Events\FixtureInfoRegistered;
 use App\Models\PlayerInfo as PlayerInfoModel;
-use App\UseCases\Admin\Fixture\Accessors\LineupPlayer;
+use App\UseCases\Admin\Fixture\Accessors\Player;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
 
@@ -27,7 +27,7 @@ class RegisterPlayerInfos
         }
         
         $data = $invalidPlayers
-            ->map(function (LineupPlayer $player) {
+            ->map(function (Player $player) {
                 $playerInfo = $player->getPlayerInfo();
 
                 if ($playerInfo->isUpdated()) {

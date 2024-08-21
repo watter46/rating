@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use App\Models\PlayerInfo as PlayerInfoModel;
 
 
-class LineupPlayer
+class Player
 {
     private function __construct(
         private int $id,
@@ -55,7 +55,7 @@ class LineupPlayer
         );
     }
 
-    public function assignPlayerInfo(PlayerInfoModel $model)
+    public function updatePlayerInfo(PlayerInfoModel $model)
     {
         return new self(
             $this->id,

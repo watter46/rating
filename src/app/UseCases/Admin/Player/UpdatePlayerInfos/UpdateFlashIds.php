@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\PlayerInfo;
-use App\UseCases\Admin\Fixture\Accessors\PlayerInfos;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 
 
@@ -21,9 +20,7 @@ class UpdateFlashIds
     public function execute()
     {
         try {
-            $flashSquad = $this->repository->fetchSquad();
-
-            $playerInfos = PlayerInfos::create($flashSquad);
+            $playerInfos = $this->repository->fetchSquad();
             
             DB::transaction(function () use ($playerInfos) {
                 $unique = PlayerInfo::UPSERT_UNIQUE;

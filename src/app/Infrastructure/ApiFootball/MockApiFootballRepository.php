@@ -15,11 +15,11 @@ use App\Http\Controllers\Util\TestFixtureInfosFile;
 use App\Http\Controllers\Util\TestLeagueImageFile;
 use App\Http\Controllers\Util\TestTeamImageFile;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
-use App\UseCases\Admin\Data\ApiFootball\SquadsData;
 use App\UseCases\Admin\Fixture\Accessors\FixtureInfo;
 use App\UseCases\Admin\Fixture\Accessors\FixtureInfos;
 use App\UseCases\Admin\Fixture\Accessors\PlayerInfos;
-use App\UseCases\Admin\Fixture\Accessors\Squad;
+use App\UseCases\Admin\Fixture\Accessors\Api\ApiSquad;
+
 
 class MockApiFootballRepository implements ApiFootballRepositoryInterface
 {
@@ -114,19 +114,19 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
     public function fetchSquads(): PlayerInfos
     {
         if ($this->isTest()) {
-            return PlayerInfos::fromSquad(Squad::create($this->squadsFile->get()));
+            return PlayerInfos::fromSquad(ApiSquad::create($this->squadsFile->get()));
         }
         
         if ($this->isSeed()) {
             if ($this->squadsFile->exists()) {
-                return PlayerInfos::fromSquad(Squad::create($this->squadsFile->get()));
+                return PlayerInfos::fromSquad(ApiSquad::create($this->squadsFile->get()));
             }
 
             dd('not exists');
         }
         
         if ($this->squadsFile->exists()) {
-            return PlayerInfos::fromSquad(Squad::create($this->squadsFile->get()));
+            return PlayerInfos::fromSquad(ApiSquad::create($this->squadsFile->get()));
         }
         
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/players/squads', [
@@ -137,7 +137,7 @@ class MockApiFootballRepository implements ApiFootballRepositoryInterface
 
         $this->squadsFile->write($data);
 
-        return PlayerInfos::fromSquad(Squad::create($this->squadsFile->get()));
+        return PlayerInfos::fromSquad(ApiSquad::create($this->squadsFile->get()));
     }
 
     public function fetchLeagueImage(int $leagueId): string
