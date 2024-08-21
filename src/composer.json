@@ -54,7 +54,7 @@
         ],
         "unit": [
             "@php artisan config:clear",
-            "@php artisan test --parallel --processes=1 tests/Unit/UseCases/Admin"
+            "@php artisan test --parallel --processes=1 tests/Unit/UseCases/Admin/"
         ]
     },
     "extra": {

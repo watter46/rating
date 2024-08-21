@@ -5,11 +5,11 @@ namespace Tests\Unit\UseCases\Admin\Player;
 use Tests\TestCase;
 use Illuminate\Support\Carbon;
 
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiPlayerIds;
+use App\UseCases\Admin\Fixture\UpdateApiPlayerIds;
 use Database\Seeders\Tests\Admin\PlayerInfosRemovedSeeder;
 
 
-class UpdateApiFootballIdsTest extends TestCase
+class UpdateApiPlayerIdsTest extends TestCase
 {
     protected $seeder = PlayerInfosRemovedSeeder::class;
     

@@ -6,7 +6,7 @@ use Tests\TestCase;
 use Illuminate\Support\Carbon;
 
 use App\Models\PlayerInfo;
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashIds;
+use App\UseCases\Admin\Fixture\UpdateFlashIds;
 use Database\Seeders\Tests\Admin\PlayerInfosSeeder;
 
 

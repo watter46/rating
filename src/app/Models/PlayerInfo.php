@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 use App\UseCases\Util\Season;
-use App\UseCases\Admin\Player\Processors\PlayerInfos\PlayerInfosBuilder;
 
 
 class PlayerInfo extends Model
@@ -37,11 +36,6 @@ class PlayerInfo extends Model
         'flash_id',
         'flash_image_id'
     ];
-
-    public function playerInfosBuilder(): PlayerInfosBuilder
-    {
-        return PlayerInfosBuilder::create();
-    }
     
     /**
      * 試合に出場した選手を取得する

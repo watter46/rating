@@ -85,9 +85,9 @@ class FixtureInfo extends Model
 
     public function playerInfos(): BelongsToMany
     {
-        return $this->belongsToMany(PlayerInfo::class, 'users_player_statistics')
-            ->using(UsersPlayerStatistic::class)
+        return $this->belongsToMany(PlayerInfo::class, 'users_player_ratings')
+            ->using(UsersPlayerRating::class)
             ->withPivot('id', 'rating', 'mom', 'fixture_info_id', 'player_info_id')
-            ->as('users_player_statistic');
+            ->as('users_player_rating');
     }
 }

@@ -8,8 +8,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiPlayerIds;
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashIds;
+use App\UseCases\Admin\Fixture\UpdateApiPlayerIds;
+use App\UseCases\Admin\Fixture\UpdateFlashIds;
 
 
 class UpdatePlayerInfos implements ShouldQueue
