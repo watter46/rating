@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 
-class UsersPlayerStatistic extends Pivot
+class UsersPlayerRating extends Pivot
 {
     use HasFactory;
     use HasUlids;
 
-    protected $table = 'users_player_statistics';
+    protected $table = 'users_player_ratings';
     
     public $incrementing = false;
     

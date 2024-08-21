@@ -1,46 +1,55 @@
 <?php declare(strict_types=1);
 
-namespace App\UseCases\Admin\Player\Processors\UsersRating;
+namespace App\UseCases\Admin\UsersPlayerRating\Accessors;
 
 use Illuminate\Support\Collection;
 
+use App\Models\Fixture as FixtureModel;
 
-class UsersRatingBuilder
+
+class UsersPlayerRating
 {
-    /**
-     * build
-     *
-     * @param  Collection $fixtures
-     * @return Collection
-     */
-    public function build( Collection $fixtures)
+    public function upsert(string $fixtureInfoId)
     {
-        $usersRatingsKeyByPlayerInfoId = $this->calculateUsersRatings($fixtures)->keyBy('player_info_id');
+        $fixtures = FixtureModel::query()
+            ->select(['id', 'fixture_info_id'])
+            ->with([
+                'fixtureInfo:id' => ['playerInfos:id'],
+                'players:fixture_id,rating,mom,player_info_id'
+            ])
+            ->byFixtureInfoId($fixtureInfoId)
+            ->get()
+            ->toCollection();
         
-        return $this->getUsersFixtureStatistics($fixtures)
-            ->map(function (Collection $statistic) use ($usersRatingsKeyByPlayerInfoId) {
-                $newStatistic = $usersRatingsKeyByPlayerInfoId->get($statistic['player_info_id']);
+        if ($fixtures->isEmpty()) return;
 
-                if (!$newStatistic) {
-                    return $statistic;
+        $usersRatingsById = $this->calculateRatings($fixtures)->keyBy('player_info_id');
+        
+        return $this->getUsersRatings($fixtures)
+            ->map(function (Collection $Rating) use ($usersRatingsById) {
+                $newRating = $usersRatingsById->get($Rating['player_info_id']);
+
+                if (!$newRating) {
+                    return $Rating;
                 }
 
                 return [
-                    'id'              => $statistic['id'],
-                    'player_info_id'  => $statistic['player_info_id'],
-                    'fixture_info_id' => $statistic['fixture_info_id'],
-                    'rating'          => $newStatistic['rating'],
-                    'mom'             => $newStatistic['mom'],
+                    'id'              => $Rating['id'],
+                    'player_info_id'  => $Rating['player_info_id'],
+                    'fixture_info_id' => $Rating['fixture_info_id'],
+                    'rating'          => $newRating['rating'],
+                    'mom'             => $newRating['mom'],
                 ];
-            });
+            })
+            ->toArray();
     }
 
-    private function getUsersFixtureStatistics(Collection $fixtures)
-    {
+    private function getUsersRatings(Collection $fixtures)
+    {        
         return $fixtures
             ->first()
             ->dataGet('fixture_info.player_infos')
-            ->pluck('users_player_statistic');
+            ->pluck('users_player_rating');
     }
     
     /**
@@ -49,7 +58,7 @@ class UsersRatingBuilder
      * @param  Collection $fixtures
      * @return Collection
      */
-    private function calculateUsersRatings(Collection $fixtures): Collection
+    private function calculateRatings(Collection $fixtures): Collection
     {
         return $fixtures
             ->pluck('players')

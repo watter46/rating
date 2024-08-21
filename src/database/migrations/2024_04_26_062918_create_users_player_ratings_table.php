@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users_player_statistics', function (Blueprint $table) {
+        Schema::create('users_player_ratings', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->unsignedFloat('rating', 3, 1)->nullable();
             $table->boolean('mom')->nullable();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users_player_statistics');
+        Schema::dropIfExists('users_player_ratings');
     }
 };
