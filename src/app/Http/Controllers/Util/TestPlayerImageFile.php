@@ -28,12 +28,12 @@ class TestPlayerImageFile
 
     private function generateBackupPath(): string
     {
-        return public_path(self::BACKUP_DIR.'/'.Season::current().'_'.self::API_FOOTBALL_ID);
+        return public_path(self::BACKUP_DIR.'/'.self::API_FOOTBALL_ID);
     }
 
     private function generatePath()
     {
-        return public_path(self::DIR_PATH.'/'.Season::current().'_'.self::API_FOOTBALL_ID);
+        return public_path(self::DIR_PATH.'/'.self::API_FOOTBALL_ID);
     }
 
     public function toBackup()

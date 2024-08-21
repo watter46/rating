@@ -24,6 +24,16 @@ class TestFixtureInfosFile
     {
         $data = json_decode(File::get($this->fileName($season ?? Season::current())));
 
-        return collect($data);
+        return collect($data)
+            ->reverse()
+            ->values()
+            ->map(function ($fixtureData, $index) {
+                $fixtureData->fixture->date = now()
+                    ->subDays(1)
+                    ->subDays($index * 5)
+                    ->format('Y-m-d\TH:i:sP');;
+
+                return $fixtureData;
+            });
     }
 }

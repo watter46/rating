@@ -28,16 +28,16 @@ class FixtureInfoFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($data) {
             return [
-                'external_fixture_id' => $data['external_fixture_id'],
-                'external_league_id'  => $data['external_league_id'],
-                'season'              => $data['season'],
-                'date'                => now('UTC'),
-                'status'              => $data['status'],
-                'score'               => collect($data['score']),
-                'teams'               => collect($data['teams']),
-                'league'              => collect($data['league']),
-                'fixture'             => collect($data['fixture']),
-                'lineups'             => collect($data['lineups'])
+                'api_fixture_id' => $data['api_fixture_id'],
+                'api_league_id'  => $data['api_league_id'],
+                'season'         => $data['season'],
+                'date'           => now('UTC'),
+                'is_end'         => $data['is_end'],
+                'score'          => collect($data['score']),
+                'teams'          => collect($data['teams']),
+                'league'         => collect($data['league']),
+                'fixture'        => collect($data['fixture']),
+                'lineups'        => collect($data['lineups'])
             ];
         });
     }
@@ -45,16 +45,16 @@ class FixtureInfoFactory extends Factory
     public function fromFileToArray(Collection $data): array
     {
         return [
-            'external_fixture_id' => $data['external_fixture_id'],
-            'external_league_id'  => $data['external_league_id'],
-            'season'              => $data['season'],
-            'date'                => now('UTC'),
-            'status'              => $data['status'],
-            'score'               => collect($data['score']),
-            'teams'               => collect($data['teams']),
-            'league'              => collect($data['league']),
-            'fixture'             => collect($data['fixture']),
-            'lineups'             => collect($data['lineups'])
+            'api_fixture_id' => $data['api_fixture_id'],
+            'api_league_id'  => $data['api_league_id'],
+            'season'         => $data['season'],
+            'date'           => now('UTC'),
+            'is_end'         => $data['is_end'],
+            'score'          => collect($data['score']),
+            'teams'          => collect($data['teams']),
+            'league'         => collect($data['league']),
+            'fixture'        => collect($data['fixture']),
+            'lineups'        => collect($data['lineups'])
         ];
     }
 
@@ -62,7 +62,7 @@ class FixtureInfoFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status'  => FixtureStatusType::NotStarted->value,
+                'is_end'  => false,
                 'score'   => $attributes['score']
                     ->dataSet('fulltime.away', null)
                     ->dataSet('fulltime.home', null),

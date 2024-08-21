@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Collection;
 
 use App\Models\TournamentType;
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
@@ -19,7 +21,7 @@ class FixtureInfoQueryBuilder extends Builder
      */
     public function tournament(TournamentType $tournament): Builder
     {        
-        return $this->whereIn('external_league_id', $tournament->toIds());
+        return $this->whereIn('api_league_id', $tournament->toIds());
     }
 
     /**
@@ -30,7 +32,7 @@ class FixtureInfoQueryBuilder extends Builder
     public function inSeasonTournament(): Builder
     {
         return $this
-            ->whereIn('external_league_id', [
+            ->whereIn('api_league_id', [
                 TournamentType::PREMIER_LEAGUE->toIds(),
                 TournamentType::FA_CUP->toIds(),
                 TournamentType::LEAGUE_CUP->toIds()
@@ -54,7 +56,7 @@ class FixtureInfoQueryBuilder extends Builder
      */
     public function finished(): Builder
     {
-        return $this->where('status', FixtureStatusType::MatchFinished->value);
+        return $this->where('is_end', FixtureStatusType::MatchFinished->value);
     }
     
     /**
@@ -79,8 +81,18 @@ class FixtureInfoQueryBuilder extends Builder
     {
         return $this
             ->whereDate('date', '<=', now('UTC'))
-            ->where('status', FixtureStatusType::MatchFinished)
+            ->where('is_end', true)
             ->orderBy('date', 'desc');
+    }
+
+    /**
+     * 1か月以内の試合から取得する
+     *
+     * @return Builder
+     */
+    public function withinOneMonth(): Builder
+    {
+        return $this->where('date', '>=', now('UTC')->subMonth());
     }
 
     /**
@@ -104,28 +116,6 @@ class FixtureInfoQueryBuilder extends Builder
     {
         return $this->where('season', Season::current());
     }
-
-    /**
-     * Timestamps以外のカラムを取得する
-     *
-     * @return Builder
-     */
-    public function selectWithoutTimestamps(): Builder
-    {
-        return $this->select([
-            'id',
-            'external_fixture_id',
-            'external_league_id',
-            'season',
-            'date',
-            'status',
-            'score',
-            'teams',
-            'league',
-            'fixture',
-            'lineups'
-        ]);
-    }
     
     /**
      * 指定したカラム名以外を取得する
@@ -136,12 +126,19 @@ class FixtureInfoQueryBuilder extends Builder
     public function selectWithout(array $except = []): Builder
     {
         return $this->select(
-                collect($this->model->getFillable())
+                $this->withOutTimeStamp()
                     ->flip()
                     ->except($except)
                     ->flip()
-                    ->merge(['id'])
                     ->toArray()
             );
+    }
+
+    private function withOutTimeStamp(): Collection
+    {
+        return collect(Schema::getColumnListing('fixture_infos'))
+            ->flip()
+            ->except(['created_at', 'updated_at'])
+            ->flip();
     }
 }

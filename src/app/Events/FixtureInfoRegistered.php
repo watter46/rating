@@ -7,14 +7,14 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoBuilder;
+use App\UseCases\Admin\Fixture\Accessors\FixtureInfo;
 
 
 class FixtureInfoRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public FixtureInfoBuilder $builder)
+    public function __construct(public FixtureInfo $fixtureInfo)
     {
         //
     }

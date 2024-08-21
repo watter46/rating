@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\Infrastructure\ApiFootball\MockApiFootballRepository;
+use App\Infrastructure\ApiFootball\ApiFootballRepository;
 use App\Infrastructure\FlashLiveSports\MockFlashLiveSportsRepository;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -62,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
             $data = $this->toArray();
             
             return $collection
-                ? collect(data_get($data, $key))
+                ? collect(data_get($data, $key))->toCollection()
                 : data_get($data, $key);
         });
 

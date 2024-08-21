@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 use App\Models\FixtureInfo;
 use App\Models\PlayerInfo;
-
+use Exception;
 
 class TestPlayerInfoFile
 {
@@ -19,32 +19,55 @@ class TestPlayerInfoFile
         return app_path(self::DIR_PATH);
     }
 
-    private function fileName(int $external_fixture_id)
+    public function gets()
     {
-        return $this->dirPath().'/'.$external_fixture_id.'.json';
+        collect(File::files($this->dirPath()))->each(function (SplFileInfo $file) {
+            try {
+                $f = collect(json_decode($file->getContents()))
+                    ->fromStd()
+                    ->toCollection();
+
+                $fixture = $f
+                    ->map(function ($player) {
+                        $player['name'] = Str::ascii($player['name']);
+                        
+                        return $player;
+                    });
+            
+                File::put($file->getPath().'/'.$file->getFilename(), $fixture->toJson());
+            } catch (Exception $e) {
+                // dd($file->getFilename());
+            }
+            
+        });
     }
 
-    public function get(int $external_fixture_id)
+    private function fileName(int $api_fixture_id)
     {
-        return collect(json_decode(File::get($this->fileName($external_fixture_id))));
+        return $this->dirPath().'/'.$api_fixture_id.'.json';
     }
 
-    public function write(int $external_fixture_id)
+    public function get(int $api_fixture_id)
+    {
+        return collect(json_decode(File::get($this->fileName($api_fixture_id))));
+    }
+
+    public function write(int $api_fixture_id)
     {
         $fixtureInfo = FixtureInfo::query()
-            ->where('external_fixture_id', $external_fixture_id)
+            ->where('api_fixture_id', $api_fixture_id)
             ->first();
 
         if (!$fixtureInfo?->lineups) return;
 
         $playerInfos = PlayerInfo::query()
-            ->whereIn('api_football_id', collect($fixtureInfo->lineups)
+            ->whereIn('api_player_id', collect($fixtureInfo->lineups)
                 ->flatten(1)
                 ->pluck('id')
                 ->toArray())
             ->get();
         
-        File::put($this->fileName($external_fixture_id), $playerInfos->toJson());
+        File::put($this->fileName($api_fixture_id), $playerInfos->toJson());
     }
 
     public function idList()
@@ -64,7 +87,7 @@ class TestPlayerInfoFile
         $file = new FixtureFile;
         $file->getIdList();
 
-        $testExternalFixtureIds = collect(File::files($this->dirPath()))
+        $testApiFixtureIds = collect(File::files($this->dirPath()))
             ->map(function (SplFileInfo $info) {
                 $fileName = $info->getFilename();
 
@@ -73,11 +96,11 @@ class TestPlayerInfoFile
                 return (int) $id;
             });
 
-        $invalidExternalFixtureIds = $file->getIdList()->diff($testExternalFixtureIds);
+        $invalidApiFixtureIds = $file->getIdList()->diff($testApiFixtureIds);
 
-        $invalidExternalFixtureIds
-            ->each(function (int $external_fixture_id) {
-                $this->write($external_fixture_id);
+        $invalidApiFixtureIds
+            ->each(function (int $api_fixture_id) {
+                $this->write($api_fixture_id);
             });
     }
 }

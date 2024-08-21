@@ -5,9 +5,9 @@ namespace App\Infrastructure\ApiFootball;
 use Illuminate\Support\Facades\Http;
 
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
-use App\UseCases\Admin\Fixture\FixtureInfoData\FixtureInfoData;
-use App\UseCases\Admin\Fixture\FixtureInfosData\FixtureInfosData;
 use App\UseCases\Admin\Data\ApiFootball\SquadsData;
+use App\UseCases\Admin\Fixture\Accessors\FixtureInfo;
+use App\UseCases\Admin\Fixture\Accessors\FixtureInfos;
 use App\UseCases\Util\Season;
 
 
@@ -25,34 +25,34 @@ class ApiFootballRepository implements ApiFootballRepositoryInterface
         return $response->throw()->body();
     }
 
-    public function fetchFixtures(): FixtureInfosData
+    public function fetchFixtures(): FixtureInfos
     {
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-                'season' => Season::current(),
-                'team'   => config('api-football.chelsea-id')
-            ]);
+            'season' => Season::current(),
+            'team'   => config('api-football.chelsea-id')
+        ]);
 
         $data = collect(json_decode($json)->response);
 
-        return FixtureInfosData::create($data);
+        return FixtureInfos::create($data);
     }
 
-    public function fetchFixture(int $fixtureId): FixtureInfoData
+    public function fetchFixture(int $apiFixtureId): FixtureInfo
     {
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/fixtures', [
-                'id' => $fixtureId
-            ]);
+            'id' => $apiFixtureId
+        ]);
 
         $data = collect(json_decode($json)->response[0]);
         
-        return FixtureInfoData::create($data);
+        return FixtureInfo::create($data);
     }
 
     public function fetchSquads(): SquadsData
     {
         $json = $this->httpClient('https://api-football-v1.p.rapidapi.com/v3/players/squads', [
-                'team' => config('api-football.chelsea-id')
-            ]);
+            'team' => config('api-football.chelsea-id')
+        ]);
 
         $data = collect(json_decode($json)->response[0]);
 

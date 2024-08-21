@@ -61,7 +61,7 @@ final readonly class RatePlayer
             throw new ModelNotFoundException('Player Not Found');
 
         } catch (Exception $e) {
-            dd($e);
+            // dd($e);
             throw $e;
         }
     }

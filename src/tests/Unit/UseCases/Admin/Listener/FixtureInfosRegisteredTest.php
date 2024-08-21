@@ -25,14 +25,14 @@ class FixtureInfosRegisteredTest extends TestCase
 
         $file->toBackup();
 
-        $this->assertFileDoesNotExist(public_path('teams/2023_49'));
+        $this->assertFileDoesNotExist(public_path('teams/49'));
         
         /** @var RegisterFixtureInfos $registerFixtureInfos */
         $registerFixtureInfos = app(RegisterFixtureInfos::class);
         
         $registerFixtureInfos->execute();
 
-        $this->assertFileExists(public_path('teams/2023_49'));
+        $this->assertFileExists(public_path('teams/49'));
 
         $file->deleteBackUp();
     }
@@ -43,14 +43,14 @@ class FixtureInfosRegisteredTest extends TestCase
         
         $file->toBackup();
 
-        $this->assertFileDoesNotExist(public_path('leagues/2023_39'));
+        $this->assertFileDoesNotExist(public_path('leagues/39'));
         
         /** @var RegisterFixtureInfos $registerFixtureInfos */
         $registerFixtureInfos = app(RegisterFixtureInfos::class);
         
         $registerFixtureInfos->execute();
 
-        $this->assertFileExists(public_path('leagues/2023_39'));
+        $this->assertFileExists(public_path('leagues/39'));
 
         $file->deleteBackUp();
     }

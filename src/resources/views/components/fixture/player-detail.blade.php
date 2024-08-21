@@ -1,7 +1,6 @@
 <div class="flex flex-col items-center justify-center gap-3">
     <x-player.player-image
         class="w-20 h-20"
-        :number="$player['number']"
         :img="$player['img']" />
 
     <div class="flex justify-center w-full gap-x-3">                    

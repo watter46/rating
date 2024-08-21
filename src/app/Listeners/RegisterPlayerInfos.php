@@ -5,62 +5,45 @@ namespace App\Listeners;
 use Illuminate\Support\Facades\DB;
 
 use App\Events\FixtureInfoRegistered;
-use App\Models\PlayerInfo;
+use App\Models\PlayerInfo as PlayerInfoModel;
+use App\UseCases\Admin\Fixture\Accessors\Player;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
-use App\UseCases\Util\Season;
-use Illuminate\Support\Collection;
+use App\UseCases\Admin\Fixture\Accessors\PlayerInfo;
+
 
 class RegisterPlayerInfos
 {
-    /**
-     * Create the event listener.
-     */
     public function __construct(private FlashLiveSportsRepositoryInterface $repository)
     {
         //
     }
 
-    /**
-     * Handle the event.
-     */
     public function handle(FixtureInfoRegistered $event): void
-    {
-        $invalidPlayerInfos = $event->builder->invalidPlayerInfos();
-
-        if ($invalidPlayerInfos->isEmpty()) return;
+    {        
+        $invalidPlayers = $event->fixtureInfo->getInvalidPlayers();
         
-        $data = $invalidPlayerInfos
-            ->map(function (Collection $playerInfo) {
-                $flashLiveSportsPlayer = $this->repository
-                    ->searchPlayer($playerInfo)
-                    ->get();
+        if ($invalidPlayers->isEmpty()) {
+            return;
+        }
+        
+        $data = $invalidPlayers
+            ->map(function (Player $player) {
+                $playerInfo = $player->getPlayerInfo();
 
-                if (!$playerInfo['id']) {
-                    return [
-                        'name' => $playerInfo['name'],
-                        'number' => $playerInfo['number'],
-                        'season' => Season::current(),
-                        'api_football_id' => $playerInfo['api_football_id'],
-                        'flash_live_sports_id' => $flashLiveSportsPlayer['id'],
-                        'flash_live_sports_image_id' => $flashLiveSportsPlayer['imageId']
-                    ];
+                if ($playerInfo->isUpdated()) {
+                    return $playerInfo;
                 }
+                
+                $flashPlayer = $this->repository->searchPlayer($player->getPlayerInfo());
 
-                return [
-                    'id' => $playerInfo['id'],
-                    'name' => $playerInfo['name'],
-                    'number' => $playerInfo['number'],
-                    'season' => Season::current(),
-                    'api_football_id' => $playerInfo['api_football_id'],
-                    'flash_live_sports_id' => $flashLiveSportsPlayer['id'],
-                    'flash_live_sports_image_id' => $flashLiveSportsPlayer['imageId']
-                ];
-            });
-
-        DB::transaction(function () use ($data) {
-            $unique = PlayerInfo::UPSERT_UNIQUE;
+                return $playerInfo->updateFlash($flashPlayer);
+            })
+            ->map(fn (PlayerInfo $playerInfo) => $playerInfo->toArray());
             
-            PlayerInfo::upsert($data->toArray(), $unique);
+        DB::transaction(function () use ($data) {
+            $unique = PlayerInfoModel::UPSERT_UNIQUE;
+            
+            PlayerInfoModel::upsert($data->toArray(), $unique);
         });
     }
 }

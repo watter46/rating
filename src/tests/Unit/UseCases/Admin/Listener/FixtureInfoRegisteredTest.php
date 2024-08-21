@@ -51,13 +51,41 @@ class FixtureInfoRegisteredTest extends TestCase
         $this->assertSame(16, $fixtureInfo->playerInfoCount);
     }
 
+    public function test_選手名が省略形ならフルネームで更新する(): void
+    {
+        // カイセドのPlayerInfoを登録する
+        $fixtureInfo = FixtureInfo::select(['id', 'api_fixture_id'])->first();
+        
+        $fixtureInfo
+            ->playerInfos()
+            ->saveMany(
+                (new TestPlayerInfoFile)
+                    ->get($fixtureInfo->api_fixture_id)
+                    ->filter(fn ($player) => $player->api_player_id === 116117)
+                    ->map(function ($player) {
+                        return PlayerInfo::factory()
+                            ->fromFile($player)
+                            ->make();
+                    })
+            );
+            
+        $this->assertDatabaseHas('player_infos', ['api_player_id' => 118307, 'name' => 'D. Petrovic']);
+        
+        /** @var RegisterFixtureInfo $registerFixtureInfo */
+        $registerFixtureInfo = app(RegisterFixtureInfo::class);
+        
+        $registerFixtureInfo->execute($fixtureInfo->id);
+        
+        $this->assertDatabaseHas('player_infos', ['api_player_id' => 118307, 'name' => 'Dorde Petrovic']);
+    }
+
     public function test_チームの画像が存在しないとき取得して画像をpublic下に保存できる(): void
     {
         $file = new TestTeamImageFile;
 
         $file->toBackup();
 
-        $this->assertFileDoesNotExist(public_path('teams/2023_49'));
+        $this->assertFileDoesNotExist(public_path('teams/49'));
         
         $fixtureInfo = FixtureInfo::select('id')->first();
 
@@ -66,7 +94,7 @@ class FixtureInfoRegisteredTest extends TestCase
         
         $registerFixtureInfo->execute($fixtureInfo->id);
 
-        $this->assertFileExists(public_path('teams/2023_49'));
+        $this->assertFileExists(public_path('teams/49'));
 
         $file->deleteBackUp();
     }
@@ -77,7 +105,7 @@ class FixtureInfoRegisteredTest extends TestCase
         
         $file->toBackup();
 
-        $this->assertFileDoesNotExist(public_path('leagues/2023_39'));
+        $this->assertFileDoesNotExist(public_path('leagues/39'));
         
         $fixtureInfo = FixtureInfo::select('id')->first();
 
@@ -86,7 +114,7 @@ class FixtureInfoRegisteredTest extends TestCase
         
         $registerFixtureInfo->execute($fixtureInfo->id);
 
-        $this->assertFileExists(public_path('leagues/2023_39'));
+        $this->assertFileExists(public_path('leagues/39'));
 
         $file->deleteBackUp();
     }
@@ -94,14 +122,14 @@ class FixtureInfoRegisteredTest extends TestCase
     public function test_選手の画像が存在しないとき取得して画像をpublic下に保存する(): void
     {
         // カイセドのPlayerInfoを登録する
-        $fixtureInfo = FixtureInfo::select(['id', 'external_fixture_id'])->first();
+        $fixtureInfo = FixtureInfo::select(['id', 'api_fixture_id'])->first();
 
         $fixtureInfo
             ->playerInfos()
             ->saveMany(
                 (new TestPlayerInfoFile)
-                    ->get($fixtureInfo->external_fixture_id)
-                    ->filter(fn ($player) => $player->api_football_id === 116117)
+                    ->get($fixtureInfo->api_fixture_id)
+                    ->filter(fn ($player) => $player->api_player_id === 116117)
                     ->map(function ($player) {
                         return PlayerInfo::factory()
                             ->fromFile($player)
@@ -113,14 +141,14 @@ class FixtureInfoRegisteredTest extends TestCase
         
         $file->toBackup();
         
-        $this->assertFileDoesNotExist(public_path('images/2023_116117'));
+        $this->assertFileDoesNotExist(public_path('images/116117'));
 
         /** @var RegisterFixtureInfo $registerFixtureInfo */
         $registerFixtureInfo = app(RegisterFixtureInfo::class);
         
         $registerFixtureInfo->execute($fixtureInfo->id);
 
-        $this->assertFileExists(public_path('images/2023_116117'));
+        $this->assertFileExists(public_path('images/116117'));
 
         $file->deleteBackUp();
     }

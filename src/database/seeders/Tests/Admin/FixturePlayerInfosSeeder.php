@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Http\Controllers\Util\TestPlayerInfoFile;
 use App\Models\FixtureInfo;
 use App\Models\PlayerInfo;
-
+use Illuminate\Support\Carbon;
 
 class FixturePlayerInfosSeeder extends Seeder
 {    
@@ -18,9 +18,8 @@ class FixturePlayerInfosSeeder extends Seeder
      * @return void
      */
     public function run(): void
-    {
+    {        
         // 1035480 utd
-
         $external_fixture_id = 1035480;
                 
         FixtureInfo::factory()

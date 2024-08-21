@@ -8,10 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
-use App\UseCases\Admin\Fixture\Processors\FixtureInfo\FixtureInfoBuilder;
-use App\UseCases\Admin\Fixture\Processors\FixtureInfos\FixtureInfosBuilder;
 use Illuminate\Support\Collection;
+
 
 class FixtureInfo extends Model
 {
@@ -21,26 +19,11 @@ class FixtureInfo extends Model
     public $incrementing = false;
     
     protected $keyType = 'string';
-    
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'external_fixture_id',
-        'external_league_id',
-        'season',
-        'date',
-        'status',
-        'score',
-        'teams',
-        'league',
-        'fixture',
-        'lineups'
-    ];
 
+    protected $guarded = ['id'];
+    
     protected $casts = [
+        'is_end' => 'boolean',
         'score' => AsCollection::class,
         'teams' => AsCollection::class,
         'league' => AsCollection::class,
@@ -50,21 +33,26 @@ class FixtureInfo extends Model
 
     public const UPSERT_UNIQUE = ['id'];
 
+    public const UPSERT_COLUMNS = [
+        'date',
+        'is_end',
+        'score',
+        'teams',
+        'league',
+        'fixture'
+    ];
+
     public const SELECT_COLUMNS = 'fixtureInfo:id,score,teams,league,fixture,lineups';
-
-    public function fixtureInfoBuilder(): FixtureInfoBuilder
-    {
-        return FixtureInfoBuilder::create($this);
-    }
-
-    public function fixtureInfosBuilder(): FixtureInfosBuilder
-    {
-        return FixtureInfosBuilder::create();
-    }
 
     public function castsToJson(): Collection
     {        
-        $jsonKeys = collect($this->getCasts())->keys();
+        $jsonKeys = collect([
+                'score',
+                'teams',
+                'league',
+                'fixture',
+                'lineups'
+            ]);
         
         return collect($this)
             ->map(function ($value, $key) use ($jsonKeys) {
@@ -97,9 +85,9 @@ class FixtureInfo extends Model
 
     public function playerInfos(): BelongsToMany
     {
-        return $this->belongsToMany(PlayerInfo::class, 'users_player_statistics')
-            ->using(UsersPlayerStatistic::class)
+        return $this->belongsToMany(PlayerInfo::class, 'users_player_ratings')
+            ->using(UsersPlayerRating::class)
             ->withPivot('id', 'rating', 'mom', 'fixture_info_id', 'player_info_id')
-            ->as('users_player_statistic');
+            ->as('users_player_rating');
     }
 }

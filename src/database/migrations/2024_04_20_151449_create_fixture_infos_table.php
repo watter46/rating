@@ -1,8 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 
 return new class extends Migration
 {
@@ -13,11 +14,11 @@ return new class extends Migration
     {
         Schema::create('fixture_infos', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->unsignedMediumInteger('external_fixture_id');
-            $table->unsignedMediumInteger('external_league_id');
+            $table->unsignedMediumInteger('api_fixture_id');
+            $table->unsignedMediumInteger('api_league_id');
             $table->unsignedSmallInteger('season')->length(4);
             $table->timestamp('date');
-            $table->tinyText('status');
+            $table->boolean('is_end')->default(false);
             $table->json('score');
             $table->json('teams');
             $table->json('league');

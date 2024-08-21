@@ -35,6 +35,7 @@ class RatedByUsersSeeder extends Seeder
         // FixtureInfo(1)を作成
         $fixtureInfo = FixtureInfo::factory()
             ->fromFile((new TestFixtureInfoFile)->get($external_fixture_id))
+            ->subDays(1)
             ->create();
 
         // PlayerInfo(16)を作成 UsersPlayerStatistics(16)を作成
@@ -52,12 +53,11 @@ class RatedByUsersSeeder extends Seeder
         
         // Fixture(5)を作成
         $fixtureInfoId = $fixtureInfo->id;
-        $playerInfoIds = $playerInfos->take(5)->pluck('id');
         
         $testFixtureData = User::pluck('id')
             ->map(function (int $userId) use ($fixtureInfoId) {
                 return [
-                    'mom_count' => 5,
+                    'mom_count' => 0,
                     'user_id' => $userId,
                     'fixture_info_id' => $fixtureInfoId
                 ];
@@ -82,6 +82,7 @@ class RatedByUsersSeeder extends Seeder
             [6.0, 8.6, 7.0, 5.5, 9.4] 
         ]);
 
+        $playerInfoIds = $playerInfos->take(5)->pluck('id');
         $momIndexes = collect([2, 1, 3, 0, 4, 2, 3, 1, 2, 0]);  // 最頻値のIndex: 2
         
         $testPlayerData = Fixture::pluck('id')

@@ -24,8 +24,15 @@ class FixtureInfoInPlayerInfoSeeder extends Seeder
             ->get()
             ->keyBy('api_football_id')
             ->map(fn(PlayerInfo $playerInfo) => $playerInfo->id);
+        
+        $lineupsExistFixtureInfos = $fixtureInfos
+            ->filter(function (FixtureInfo $fixtureInfo) {
+                return $fixtureInfo->lineups;
+            });
+
+        if ($lineupsExistFixtureInfos->isEmpty()) return;
             
-        $insertData = $fixtureInfos
+        $insertData = $lineupsExistFixtureInfos
             ->map(function (FixtureInfo $fixtureInfo) use ($playerInfoMap) {
                 return $fixtureInfo->lineups
                     ->flatten(1)

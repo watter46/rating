@@ -3,32 +3,30 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
-use App\Models\FixtureInfo;
-use App\Infrastructure\ApiFootball\MockApiFootballRepository;
+use App\Models\FixtureInfo as FixtureInfoModel;
+use App\Http\Controllers\Util\FixtureInfoFile;
 
 
 class FixtureInfosSeeder extends Seeder
 {
+    /** 2023年の試合をすべて保存する */
     public function run(): void
     {
-        /** @var MockApiFootballRepository $repository */
-        $repository = app(MockApiFootballRepository::class);
+        /** @var FixtureInfoFile $file */
+        $file = app(FixtureInfoFile::class);
 
-        $fixturesData = $repository->fetchFixtures();
+        $fixtureInfos = $file->get(2024)
+            ->map(function (Collection $fixture) {
+                $model = new FixtureInfoModel($fixture->toArray());
 
-        $data = (new FixtureInfo)
-            ->fixtureInfosBuilder()
-            ->bulkUpdate($fixturesData)
-            ->map(function (FixtureInfo $fixtureInfo) use ($repository) {                
-                $fixtureData = $repository->fetchFixture($fixtureInfo->external_fixture_id);
-                
-                return $fixtureInfo
-                    ->fixtureInfoBuilder()
-                    ->update($fixtureData)
-                    ->castsToJson();
+                return $model->castsToJson();
             });
 
-        FixtureInfo::upsert($data->toArray(), FixtureInfo::UPSERT_UNIQUE);
+        FixtureInfoModel::upsert(
+            $fixtureInfos->toArray(),
+            FixtureInfoModel::UPSERT_UNIQUE
+        );
     }
 }

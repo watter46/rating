@@ -19,7 +19,7 @@ class PlayerInfosRemovedSeeder extends Seeder
 
         $data = $file
             ->get()
-            ->reject(fn($player) => $player['api_football_id'] === 116117);
+            ->reject(fn($player) => $player['api_player_id'] === 116117);
         
         PlayerInfo::upsert($data->toArray(), ['id']);
     }

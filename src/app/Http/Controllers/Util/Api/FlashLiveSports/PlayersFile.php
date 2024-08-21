@@ -17,27 +17,27 @@ class PlayersFile
         $this->ensureDirExists();
     }
     
-    public function get(int $apiFootballId): Collection
+    public function get(int $apiPlayerId): Collection
     {
-        if (!$this->exists($apiFootballId)) {
+        if (!$this->exists($apiPlayerId)) {
             throw new Exception('PlayersFileが存在しません。');
         }
         
-        $path = $this->generatePath($apiFootballId);
+        $path = $this->generatePath($apiPlayerId);
 
         $squads = File::get($path);
 
         return collect(json_decode($squads));
     }
 
-    public function write(int $apiFootballId, Collection $playerData)
+    public function write(int $apiPlayerId, Collection $playerData)
     {
-        File::put($this->generatePath($apiFootballId), $playerData->toJson());
+        File::put($this->generatePath($apiPlayerId), $playerData->toJson());
     }
 
-    public function exists(int $apiFootballId): bool
+    public function exists(int $apiPlayerId): bool
     {
-        $path = $this->generatePath($apiFootballId);
+        $path = $this->generatePath($apiPlayerId);
 
         return file_exists($path);
     }
@@ -51,8 +51,8 @@ class PlayersFile
         }
     }
 
-    private function generatePath(int $apiFootballId): string
+    private function generatePath(int $apiPlayerId): string
     {                
-        return app_path(self::DIR_PATH.'/'.$apiFootballId.self::FILE_PATH);
+        return app_path(self::DIR_PATH.'/'.$apiPlayerId.self::FILE_PATH);
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Console;
 
-use App\Console\Commands\UpdateUsersRating;
-use App\Jobs\FetchFixture;
 use Carbon\Carbon;
 use DateTimeZone;
 use Illuminate\Console\Scheduling\Schedule;
@@ -12,8 +10,10 @@ use Illuminate\Support\Facades\Cache;
 
 use App\Models\FixtureInfo;
 use App\Jobs\FetchFixtureInfo;
-use App\UseCases\Admin\Fixture\Data\FixtureStatusType;
-use App\UseCases\Util\Season;
+use App\Jobs\UpdateFixtureInfos;
+use App\Jobs\UpdatePlayerInfos;
+use App\Jobs\UpdateUsersRating;
+
 
 class Kernel extends ConsoleKernel
 {
@@ -25,28 +25,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule
-            ->command('fixtureInfos:update')
-            ->withoutOverlapping()
-            ->runInBackground()
-            ->dailyAt('00:00');
-
-        $schedule
-            ->command('playerInfos:update')
-            ->withoutOverlapping()
-            ->runInBackground()
-            ->dailyAt('00:00');
-
-        $schedule
-            ->command('users-rating:update')
-            ->dailyAt('00:00');
-
-            $this->shouldHandle();
+        $schedule->job(new UpdateFixtureInfos)->dailyAt('00:00');
+        $schedule->job(new UpdatePlayerInfos)->dailyAt('00:00');
+        $schedule->job(new UpdateUsersRating)->dailyAt('00:00');
             
         $schedule
             ->job(new FetchFixtureInfo)
             ->when(fn () => $this->shouldHandle())
-            ->everyTenSeconds();
+            ->everyMinute();
     }
     
     /**

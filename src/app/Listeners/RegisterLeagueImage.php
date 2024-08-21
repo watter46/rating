@@ -10,9 +10,6 @@ use App\UseCases\Admin\ApiFootballRepositoryInterface;
 
 class RegisterLeagueImage
 {
-    /**
-     * Create the event listener.
-     */
     public function __construct(
         private LeagueImageFile $file,
         private ApiFootballRepositoryInterface $repository)
@@ -25,8 +22,13 @@ class RegisterLeagueImage
      */
     public function handle(FixtureInfosRegistered|FixtureInfoRegistered $event): void
     {
-        $invalidLeagueIds = $event->builder->getInvalidLeagueImageIds();
-                
+        $fixture = match (true) {
+            $event instanceof FixtureInfosRegistered => $event->fixtureInfos,
+            $event instanceof FixtureInfoRegistered  => $event->fixtureInfo,
+        };
+        
+        $invalidLeagueIds = $fixture->getInvalidLeagueImageIds();
+        
         if ($invalidLeagueIds->isEmpty()) return;
 
         $invalidLeagueIds

@@ -10,7 +10,6 @@
                     <!-- PlayerImage -->
                     <x-player.player-image
                         class="{{ $size }} cursor-default"
-                        :number="$player['number']"
                         :img="$player['img']" />
 
                     <!-- Goals -->

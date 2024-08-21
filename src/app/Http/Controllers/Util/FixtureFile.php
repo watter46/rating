@@ -46,6 +46,17 @@ final readonly class FixtureFile
         return file_exists($path);
     }
 
+    public function isFinished(int $fixtureId): bool
+    {
+        $fixture = $this->get($fixtureId);
+
+        if ($fixture['fixture']->status->long === 'Not Started') {
+            return false;
+        }
+
+        return true;
+    }
+
     public function bulkWrite(Collection $fixtures)
     {
         $fixtures->each(function (Fixture $fixture) {
