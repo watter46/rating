@@ -25,7 +25,7 @@ class ApiSquad
             ->toCollection()
             ->dataGet('players')
             ->map(fn (Collection $player) => ApiPlayer::create($player));
-        
+                    
         return new self($apiPlayers);
     }
 

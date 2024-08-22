@@ -23,10 +23,10 @@ class FlashPlayer
     }
 
     public static function create(
-        PlayerName $name,
-        PlayerNumber $number,
-        string $flash_id,
-        string $flash_image_id): self
+        ?PlayerName $name,
+        ?PlayerNumber $number,
+        ?string $flash_id,
+        ?string $flash_image_id): self
     {
         return new self(
             name: $name,

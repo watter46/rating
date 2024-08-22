@@ -2,13 +2,12 @@
 
 namespace App\UseCases\Admin\Fixture\Accessors;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 
 class PlayerName
 {
-    public function __construct(private Collection $names)
+    public function __construct(private string $firstName, private ?string $lastName = null)
     {
         //
     }
@@ -17,7 +16,13 @@ class PlayerName
     {
         $transliterated = Str::ascii($name);
         
-        return new self(Str::of($transliterated)->explode(' ')); 
+        $first = Str::of($transliterated)->explode(' ')->first();
+        $last  = Str::of($transliterated)->explode(' ')->last();
+        
+        return new self(
+            $first,
+            $first !== $last ? $last : null
+        );
     }
 
     public function isShorten(): bool
@@ -37,14 +42,14 @@ class PlayerName
         return $shortenFirstName.'. '.$this->getLastName();
     }
 
-    public function getFirstName(): string
+    private function getFirstName(): string
     {
-        return $this->names->first();
+        return $this->firstName;
     }
 
-    public function getLastName(): string
+    private function getLastName(): ?string
     {
-        return $this->names->last();
+        return $this->lastName;
     }
 
     public function equalsFullName(PlayerName $name)
@@ -64,6 +69,6 @@ class PlayerName
 
     public function swapFirstAndLastName(): self
     {                                
-        return new self($this->names->reverse());
+        return new self($this->lastName, $this->firstName);
     }
 }

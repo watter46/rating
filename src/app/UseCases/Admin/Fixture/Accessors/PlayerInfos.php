@@ -44,7 +44,10 @@ class PlayerInfos
                             return $apiPlayers;
                         }
 
-                        return $apiPlayers->map(fn (ApiPlayer $apiPlayer) => PlayerInfo::fromApiPlayer($apiPlayer));
+                        return $apiPlayers
+                            ->map(function (ApiPlayer $apiPlayer) {
+                                return PlayerInfo::fromApiPlayer($apiPlayer);
+                            });
                     });
                 
                 $updatedPlayerInfos = $playerInfos
@@ -71,16 +74,20 @@ class PlayerInfos
         $models = playerInfoModel::query()
             ->currentSeason()
             ->get();
-
+            
         if ($models->isEmpty()) {
             throw new Exception('PlayerInfo model does not exist.');
         }
             
         $playerInfos = $models
             ->map(fn (PlayerInfoModel $model) => PlayerInfo::fromModel($model))
-            ->filter(fn (PlayerInfo $playerInfo) => $playerInfo->shouldUpdateFlash())            
+            ->filter(fn (PlayerInfo $playerInfo) => $playerInfo->shouldUpdateFlash())
             ->filter(fn(PlayerInfo $playerInfo) => $flashSquad->exist($playerInfo))
             ->map(function (PlayerInfo $playerInfo) use ($flashSquad) {
+                if ($playerInfo->getPlayerId() === 392270) {
+                    dd($flashSquad->getByPlayerInfo($playerInfo));
+                }
+                
                 $player = $flashSquad->getByPlayerInfo($playerInfo);
 
                 return $playerInfo->updateFlash($player);

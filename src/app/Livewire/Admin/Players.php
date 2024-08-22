@@ -10,8 +10,8 @@ use Illuminate\Support\Collection;
 
 use App\Livewire\MessageType;
 use App\UseCases\Admin\Player\FetchPlayerInfosUseCase;
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateApiFootBallIds;
-use App\UseCases\Admin\Player\UpdatePlayerInfos\UpdateFlashLiveSportsIds;
+use App\UseCases\Admin\Fixture\UpdateApiPlayerIds;
+use App\UseCases\Admin\Fixture\UpdateFlashIds;
 
 
 class Players extends Component
@@ -48,16 +48,16 @@ class Players extends Component
     }
 
     public function refreshSquads(
-        UpdateApiFootBallIds $updateApiFootBallIds,
-        UpdateFlashLiveSportsIds $updateFlashLiveSportsIds)
+        UpdateApiPlayerIds $updateApiPlayerIds,
+        UpdateFlashIds $updateFlashIds)
     {
         try {
             if ($this->refreshKey !== config('refreshKey.key')) {
                 throw new Exception(self::ERROR_MESSAGE);
             }
 
-            $updateApiFootBallIds->execute();
-            $updateFlashLiveSportsIds->execute();
+            $updateApiPlayerIds->execute();
+            $updateFlashIds->execute();
     
             $this->dispatch('notify', message: MessageType::Success->toArray(self::SUCCESS_MESSAGE));
             $this->dispatch('close-players-modal');
