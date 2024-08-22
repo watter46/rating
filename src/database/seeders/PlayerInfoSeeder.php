@@ -16,10 +16,6 @@ class PlayerInfoSeeder extends Seeder
         /** @var PlayerInfoFile $playerInfos */
         $playerInfos = app(PlayerInfoFile::class);
 
-        PlayerInfo::upsert($playerInfos->get(2023)->map(function ($p) {
-            $p['season'] = 2024;
-            
-            return $p;
-        })->toArray(), PlayerInfo::UPSERT_UNIQUE);
+        PlayerInfo::upsert($playerInfos->get(2024)->toArray(), PlayerInfo::UPSERT_UNIQUE);
     }
 }

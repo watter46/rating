@@ -20,9 +20,9 @@ class FixtureInfoInPlayerInfoSeeder extends Seeder
         $fixtureInfos = FixtureInfo::get(['id', 'lineups']);
 
         $playerInfoMap = PlayerInfo::query()
-            ->select(['id', 'api_football_id'])
+            ->select(['id', 'api_player_id'])
             ->get()
-            ->keyBy('api_football_id')
+            ->keyBy('api_player_id')
             ->map(fn(PlayerInfo $playerInfo) => $playerInfo->id);
         
         $lineupsExistFixtureInfos = $fixtureInfos
@@ -37,11 +37,11 @@ class FixtureInfoInPlayerInfoSeeder extends Seeder
                 return $fixtureInfo->lineups
                     ->flatten(1)
                     ->pluck('id')
-                    ->map(function (int $apiFootballId) use ($fixtureInfo, $playerInfoMap) {
+                    ->map(function (int $api_player_id) use ($fixtureInfo, $playerInfoMap) {                        
                         return [
                             'id' => Str::ulid(),
                             'fixture_info_id' => $fixtureInfo->id,
-                            'player_info_id'  => $playerInfoMap[$apiFootballId]
+                            'player_info_id'  => $playerInfoMap[$api_player_id]
                         ];
                     });
             })
@@ -52,6 +52,6 @@ class FixtureInfoInPlayerInfoSeeder extends Seeder
 
     private function bulkInsert(array $data)
     {
-        DB::table('users_player_statistics')->insert($data);
+        DB::table('users_player_ratings')->insert($data);
     }
 }

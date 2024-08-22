@@ -35,7 +35,7 @@ class PlayerInfoFile
             ->get()
             ->toCollection()
             ->map(fn(Collection $p) => $p->except('id'));
-        
+            
         if (!File::exists($this->dirPath())) {
             File::makeDirectory($this->dirPath());
         }
