@@ -27,11 +27,11 @@ final readonly class FetchFixtures
                 ])
                 ->whereNotNull('lineups')
                 // ->tournament($tournament)
-                // ->finished()
+                ->finished()
                 ->orderBy('date', 'asc')
                 ->currentSeason()
-                // ->withinOneMonth()
-                // ->untilToday()
+                ->withinOneMonth()
+                ->untilToday()
                 ->simplePaginate();
                 
             $fixtureInfos->getCollection()

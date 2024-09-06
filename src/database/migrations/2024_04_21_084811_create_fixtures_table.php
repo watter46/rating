@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('fixtures', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->unsignedTinyInteger('mom_count');
+            // $table->unsignedTinyInteger('mom_count');
             $table->timestamps();
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');

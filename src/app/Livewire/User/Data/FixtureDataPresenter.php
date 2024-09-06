@@ -5,7 +5,6 @@ namespace App\Livewire\User\Data;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-use App\Models\Fixture;
 use App\Http\Controllers\Util\LeagueImageFile;
 use App\Http\Controllers\Util\PlayerImageFile;
 use App\Http\Controllers\Util\TeamImageFile;
@@ -18,7 +17,7 @@ readonly class FixtureDataPresenter
     private LeagueImageFile $leagueImage;
     private PlayerImageFile $playerImage;
 
-    private function __construct(private Fixture $fixture)
+    private function __construct(private Collection $fixture)
     {
         $this->teamImage   = new TeamImageFile;
         $this->leagueImage = new LeagueImageFile;
@@ -28,12 +27,12 @@ readonly class FixtureDataPresenter
         $this->formatLeagueImage();
     }
     
-    public static function create(Fixture $fixture)
+    public static function create(Collection $fixture)
     {
         return new self($fixture);
     }
 
-    public function get(): Fixture
+    public function get(): Collection
     {
         return $this->fixture;
     }
@@ -47,7 +46,7 @@ readonly class FixtureDataPresenter
                     ? $this->teamImage->generateViewPath($team['id'])
                     : $this->teamImage->defaultPath();
 
-                return $team;  
+                return $team;
             });
     }
 
@@ -122,7 +121,7 @@ readonly class FixtureDataPresenter
 
         $formatPlayer = function (array $playerData) use ($playerInfos, $players) {
             /** @var PlayerInfo $playerInfo */
-            $playerInfo = $playerInfos->keyBy('api_football_id')->get($playerData['id']);
+            $playerInfo = $playerInfos->keyBy('api_player_id')->get($playerData['id']);
             
             /** @var Player $player */
             $player = $players->get($playerInfo->id);

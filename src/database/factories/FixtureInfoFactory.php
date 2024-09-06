@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
 
 use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
+use App\UseCases\Util\Season;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FixtureInfo>
@@ -31,7 +32,7 @@ class FixtureInfoFactory extends Factory
                 'api_fixture_id' => $data['api_fixture_id'],
                 'api_league_id'  => $data['api_league_id'],
                 'season'         => $data['season'],
-                'date'           => now('UTC'),
+                'date'           => $data['date'],
                 'is_end'         => $data['is_end'],
                 'score'          => collect($data['score']),
                 'teams'          => collect($data['teams']),
@@ -48,7 +49,7 @@ class FixtureInfoFactory extends Factory
             'api_fixture_id' => $data['api_fixture_id'],
             'api_league_id'  => $data['api_league_id'],
             'season'         => $data['season'],
-            'date'           => now('UTC'),
+            'date'           => $data['date'],
             'is_end'         => $data['is_end'],
             'score'          => collect($data['score']),
             'teams'          => collect($data['teams']),
@@ -56,6 +57,16 @@ class FixtureInfoFactory extends Factory
             'fixture'        => collect($data['fixture']),
             'lineups'        => collect($data['lineups'])
         ];
+    }
+
+    public function nowDate()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'season' => Season::current(),
+                'date' => now('UTC')
+            ];
+        });
     }
 
     public function notStarted()

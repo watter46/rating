@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use Database\Seeders\Tests\Admin\FixturePlayerInfosSeeder;
-use Database\Seeders\Tests\Admin\RatedByUsersSeeder;
 use Illuminate\Database\Seeder;
 
 
@@ -17,11 +15,13 @@ class DatabaseSeeder extends Seeder
         config(['seeder.status' => true]);
                 
         $this->call([
-            FixtureInfosSeeder::class,
-            PlayerInfoSeeder::class,
+            // FixtureInfosSeeder::class,
+            // PlayerInfoSeeder::class,
             // FixtureInfoSeeder::class,
             // FixturePlayerInfosSeeder::class,
-            FixtureInfoInPlayerInfoSeeder::class,
+            // FixtureInfoInPlayerInfoSeeder::class,
+
+            FixtureInfoSeeder::class,
             UserSeeder::class,
             AdminSeeder::class
         ]);

@@ -6,6 +6,7 @@ use Exception;
 
 use App\UseCases\User\Fixture\FindFixture;
 use App\UseCases\User\Fixture\fetchLatestFixture;
+use App\Http\Controllers\Presenters\FixturePresenter;
 
 
 class FixtureController extends Controller
@@ -15,12 +16,12 @@ class FixtureController extends Controller
         return view('fixtures');
     }
 
-    public function find(string $fixtureInfoId, FindFixture $findFixture, FixturePresenter $presenter)
+    public function find(string $fixtureInfoId, FindFixture $findFixture)
     {
         try {
             $fixture = $findFixture->execute($fixtureInfoId);
             
-            return view('fixture', $presenter->format($fixture));
+            return view('fixture', (new FixturePresenter($fixture))->format());
 
         } catch (Exception $e) {
             throw $e;
