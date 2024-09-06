@@ -17,12 +17,11 @@ class DatabaseSeeder extends Seeder
         config(['seeder.status' => true]);
                 
         $this->call([
-            RatedByUsersSeeder::class,
-            // FixtureInfosSeeder::class,
-            // PlayerInfoSeeder::class,
+            FixtureInfosSeeder::class,
+            PlayerInfoSeeder::class,
             // FixtureInfoSeeder::class,
             // FixturePlayerInfosSeeder::class,
-            // FixtureInfoInPlayerInfoSeeder::class,
+            FixtureInfoInPlayerInfoSeeder::class,
             UserSeeder::class,
             AdminSeeder::class
         ]);
