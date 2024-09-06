@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\UseCases\User\Domain\FixtureInfoId;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,9 +59,9 @@ class Fixture extends Model
         return new FixtureDomain($this);
     }
 
-    public function scopeByFixtureInfoId(Builder $query, string $fixtureInfoId)
+    public function scopeByFixtureInfoId(Builder $query, FixtureInfoId $fixtureInfoId)
     {
-        $query->where('fixture_info_id', $fixtureInfoId);
+        $query->where('fixture_info_id', $fixtureInfoId->get());
     }
 
     public function scopeSelectWithout(Builder $query, array $except = [])

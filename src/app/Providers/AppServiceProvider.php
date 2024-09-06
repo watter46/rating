@@ -5,8 +5,12 @@ namespace App\Providers;
 use App\UseCases\Admin\ApiFootballRepositoryInterface;
 use App\Infrastructure\ApiFootball\MockApiFootballRepository;
 use App\Infrastructure\ApiFootball\ApiFootballRepository;
+use App\Infrastructure\Fixture\FixtureQueryService;
 use App\Infrastructure\FlashLiveSports\MockFlashLiveSportsRepository;
 use App\UseCases\Admin\FlashLiveSportsRepositoryInterface;
+use App\UseCases\User\Accessors\mapperInterface;
+use App\UseCases\User\Fixture\FixtureMapper;
+use App\UseCases\User\Fixture\FixtureQueryServiceInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public $bindings = [
         // ApiFootballRepositoryInterface::class => ApiFootballRepository::class,
         ApiFootballRepositoryInterface::class => MockApiFootballRepository::class,
-        FlashLiveSportsRepositoryInterface::class => MockFlashLiveSportsRepository::class
+        FlashLiveSportsRepositoryInterface::class => MockFlashLiveSportsRepository::class,
+        FixtureQueryServiceInterface::class => FixtureQueryService::class
     ];
 
     /**
@@ -40,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Collection::macro('toCollection', function () {
+        Collection::macro('toCollection', function (): Collection {
             $wrapCollectionRecursive = function ($items) use (&$wrapCollectionRecursive) {
                 if (is_array($items)) {
                     return collect($items)
@@ -59,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
             return $wrapCollectionRecursive($this->toArray());
         });
         
-        Collection::macro('dataGet', function ($key, bool $collection = true) {
+        Collection::macro('dataGet', function (string $key, bool $collection = true): Collection {
             $data = $this->toArray();
             
             return $collection
@@ -67,13 +72,13 @@ class AppServiceProvider extends ServiceProvider
                 : data_get($data, $key);
         });
 
-        Collection::macro('dataSet', function ($key, $value) {
+        Collection::macro('dataSet', function (string $key, $value): Collection {
             $data = $this->toArray();
             
             return collect(data_set($data, $key, $value));
         });
 
-        Collection::macro('fromStd', function () {
+        Collection::macro('fromStd', function (): Collection {
             return collect(json_decode($this, true));
         });
     }

@@ -36,26 +36,6 @@ class PlayerInfo extends Model
         'flash_id',
         'flash_image_id'
     ];
-    
-    /**
-     * 試合に出場した選手を取得する
-     *
-     * @param  Builder<PlayerInfo> $query
-     * @param  Fixture $fixture
-     * @return void
-     */
-    public function scopeLineups(Builder $query, Fixture $fixture): void
-    {
-        $lineupIdList = collect($fixture->fixture['lineups'])
-            ->dot()
-            ->filter(function ($p, $key) {
-                return Str::afterLast($key, '.') === 'id';
-            })
-            ->values()
-            ->toArray();
-                
-        $query->whereIn('api_player_id', $lineupIdList);
-    }
 
     /**
      * 今シーズンのプレイヤーを検索する
@@ -68,9 +48,8 @@ class PlayerInfo extends Model
         $query->where('season', Season::current());
     }
 
-    public function fixtureInfo()
+    public function player()
     {
-        return $this->belongsToMany(FixtureInfo::class, 'users_player_statistics')
-            ->withPivot('rating', 'comment');
+        return $this->hasOne(Player::class);
     }
 }

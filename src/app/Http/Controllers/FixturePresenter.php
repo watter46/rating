@@ -12,12 +12,13 @@ final readonly class FixturePresenter
 {    
     public function format(Fixture $fixture): Collection
     {        
-        $newFixture = FixtureDataPresenter::create($fixture)
+        $newFixture = FixtureDataPresenter::create(collect($fixture)->toCollection())
             ->formatFormation()
             ->formatSubstitutes()
             ->formatPlayerData($fixture->fixtureInfo->playerInfos)
             ->addPlayerCountColumn()
-            ->get();
+            ->get()
+            ->dd();
 
         $lineupsData = $this->addPlayerGridCss($newFixture->fixtureInfo->lineups);
             

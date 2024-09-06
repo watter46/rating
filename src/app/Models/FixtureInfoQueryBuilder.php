@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Collection;
 
 use App\Models\TournamentType;
-use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureStatusType;
+use App\UseCases\Util\FixtureStatusType;
 use App\UseCases\Util\Season;
 
 
@@ -56,7 +56,7 @@ class FixtureInfoQueryBuilder extends Builder
      */
     public function finished(): Builder
     {
-        return $this->where('is_end', FixtureStatusType::MatchFinished->value);
+        return $this->where('is_end', true);
     }
     
     /**

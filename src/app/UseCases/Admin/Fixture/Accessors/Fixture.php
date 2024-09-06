@@ -5,7 +5,7 @@ namespace App\UseCases\Admin\Fixture\Accessors;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
-use App\UseCases\Admin\Fixture\Accessors\FixtureStatusType;
+use App\UseCases\Util\FixtureStatusType;
 use App\UseCases\Util\Season;
 
 

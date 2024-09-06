@@ -5,46 +5,108 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 
+use App\Http\Controllers\Util\TestFixtureInfoFile;
+use App\Http\Controllers\Util\TestPlayerInfoFile;
+use App\Models\Fixture;
 use App\Models\FixtureInfo;
-use App\Infrastructure\ApiFootball\MockApiFootballRepository;
+use App\Models\Player;
 use App\Models\PlayerInfo;
-use App\UseCases\Admin\Data\ApiFootball\FixtureData\FixtureData;
-use App\UseCases\Util\Season;
+use App\Models\User;
+
 
 class FixtureInfoSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1035480 utd
-        $external_fixture_id = 1035480;
+        // 追加で4User作成(合計: 10)
+        User::factory(9)->create();
+
+        // 1035480 vs UTD
+        $api_fixture_id = 1035480;
         
-        /** @var MockApiFootballRepository $repository */
-        $repository = app(MockApiFootballRepository::class);
+        // FixtureInfo(1)を作成
+        $fixtureInfo = FixtureInfo::factory()
+            ->fromFile((new TestFixtureInfoFile)->get($api_fixture_id))
+            ->nowDate()
+            ->subDays(1)
+            ->create();
 
-        $fixtureData = $repository->fetchFixture($external_fixture_id);
-
-        $data = $fixtureData->getResultData();
+        // PlayerInfo(16)を作成 UsersPlayerStatistics(16)を作成
+        $playerInfos = $fixtureInfo
+            ->playerInfos()
+            ->saveMany(
+                (new TestPlayerInfoFile)
+                    ->get($api_fixture_id)
+                    ->map(function ($player) {
+                        return PlayerInfo::factory()
+                            ->fromFile($player)
+                            ->make();
+                    })
+            );
         
-        $fixtureInfo = new FixtureInfo([
-                'external_fixture_id' => $data['fixtureId'],
-                'external_league_id'  => $data['leagueId'],
-                'season'              => Season::current(),
-                'date'                => now('UTC'),
-                'status'              => $data['status'],
-                'score'               => $data['score'],
-                'teams'               => $data['teams'],
-                'league'              => $data['league'],
-                'fixture'             => $data['fixture'],
-                // 'lineups'             => $fixtureData->getLineups()
-                'lineups'             => null
-            ]);
-
-        $fixtureInfo->save();
-
-        $playerInfoIds = PlayerInfo::query()
-            ->whereIn('api_football_id', $fixtureData->getPlayedPlayers()->pluck('id'))
-            ->pluck('id');
+        // Fixture(5)を作成
+        $fixtureInfoId = $fixtureInfo->id;
         
-        $fixtureInfo->playerInfos()->sync($playerInfoIds);
+        $testFixtureData = User::pluck('id')
+            ->map(function (int $userId) use ($fixtureInfoId) {
+                return [
+                    'mom_count' => 0,
+                    'user_id' => $userId,
+                    'fixture_info_id' => $fixtureInfoId
+                ];
+            });
+
+        Fixture::upsert($testFixtureData->toArray(), ['id']);
+
+        /**
+         * Indexごとの平均
+         * 6.3 7.0 7.3 7.0 7.9
+         */
+        $ratings = collect([
+            [4.5, 6.2, 7.8, 5.9, 8.3],
+            [5.1, 7.3, 6.8, 9.0, 4.7],
+            [8.2, 5.6, 7.4, 6.9, 9.1],
+            [6.3, 8.7, 5.2, 7.1, 9.5],
+            [4.8, 6.5, 8.9, 7.2, 5.7],
+            [7.6, 5.3, 9.2, 6.7, 8.1],
+            [5.9, 7.8, 6.1, 8.5, 4.9],
+            [8.8, 6.4, 7.5, 5.0, 9.3],
+            [5.4, 7.9, 6.6, 8.2, 9.7],
+            [6.0, 8.6, 7.0, 5.5, 9.4] 
+        ]);
+
+        $playerInfoIds = $playerInfos->take(5)->pluck('id');
+        $momIndexes = collect([2, 1, 3, 0, 4, 2, 3, 1, 2, 0]);  // 最頻値のIndex: 2
+        
+        $testPlayerData = Fixture::pluck('id')
+            ->map(function (string $fixtureId, $arrayIndex) use ($playerInfoIds, $ratings) {
+                return $playerInfoIds
+                    ->map(function (string $playerInfoId, $index) use ($fixtureId, $arrayIndex, $ratings) {
+                        return [
+                            'rating' => $ratings->dataGet("$arrayIndex".'.'."$index", false),
+                            'mom' => false,
+                            'rate_count' => 1,
+                            'fixture_id' => $fixtureId,
+                            'player_info_id' => $playerInfoId
+                        ];
+                    });
+            })
+            ->map(function (Collection $players, $index) use ($momIndexes) {
+                $momIndex = $momIndexes[$index];
+                
+                return $players
+                    ->map(function (array $player, $index) use ($momIndex) {
+                        if ($index !== $momIndex) {
+                            return $player;
+                        }
+
+                        $player['mom'] = true;
+                
+                        return $player;
+                    });
+            })
+            ->flatten(1);
+
+        Player::upsert($testPlayerData->toArray(), ['id']);
     }
 }
